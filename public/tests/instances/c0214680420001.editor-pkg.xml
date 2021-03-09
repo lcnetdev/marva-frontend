@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:bf="http://id.loc.gov/ontologies/bibframe/" xmlns:bflc="http://id.loc.gov/ontologies/bflc/" xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pmo="http://performedmusicontology.org/ontology/"><bf:Instance rdf:about="http://id.loc.gov/resources/instances/c0214680420001"><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Print"/><bf:provisionActivity>
+      <bf:ProvisionActivity>
+        <bf:place>
+          <bf:Place rdf:about="http://id.loc.gov/vocabulary/countries/ru"/>
+        </bf:place>
+        <bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">2017</bf:date>
+      </bf:ProvisionActivity>
+    </bf:provisionActivity><bf:dimensions>24 cm</bf:dimensions><rdfs:label>Н.М. Карамзин - писатель, путешественник, историк</rdfs:label><bf:identifiedBy>
+      <bf:Local>
+        <rdf:value>on1079198780</rdf:value>
+        <bf:source>
+          <bf:Source>
+            <rdfs:label>OCoLC</rdfs:label>
+          </bf:Source>
+        </bf:source>
+      </bf:Local>
+    </bf:identifiedBy><bf:identifiedBy>
+      <bf:Lccn>
+        <rdf:value>  2020361686</rdf:value>
+      </bf:Lccn>
+    </bf:identifiedBy><bf:provisionActivity>
+      <bf:ProvisionActivity>
+        <bf:place>
+          <bf:Place>
+            <rdfs:label xml:lang="ru-cyrl">Москва</rdfs:label>
+          </bf:Place>
+        </bf:place>
+        <bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">2017</bf:date>
+        <bf:agent>
+          <bf:Agent>
+            <rdfs:label xml:lang="ru-cyrl">Никитский Клуб</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+      </bf:ProvisionActivity>
+    </bf:provisionActivity><bf:provisionActivityStatement xml:lang="ru-cyrl">Москва : Никитский Клуб, 2017.</bf:provisionActivityStatement><bf:seriesEnumeration xml:lang="ru-cyrl">выпуск 84</bf:seriesEnumeration><bf:extent>
+      <bf:Extent>
+        <rdfs:label>49 pages</rdfs:label>
+      </bf:Extent>
+    </bf:extent><bf:responsibilityStatement xml:lang="ru-cyrl">редактор А.Н. Привалов</bf:responsibilityStatement><bf:carrier>
+      <bf:Carrier rdf:about="http://id.loc.gov/vocabulary/carriers/nc">
+        <rdfs:label>volume</rdfs:label>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacarrier"/>
+        </bf:source>
+      </bf:Carrier>
+    </bf:carrier><bf:title>
+      <bf:Title>
+        <bf:subtitle xml:lang="ru-cyrl">в честь 250-летия именитийшего гражданина в государстве (круглый стол, 21 декабря 2016 г.)</bf:subtitle>
+        <bf:mainTitle xml:lang="ru-cyrl">Н.М. Карамзин - писатель, путешественник, историк</bf:mainTitle>
+        <bflc:titleSortKey>Н.М. Карамзин - писатель, путешественник, историк</bflc:titleSortKey>
+        <rdfs:label xml:lang="ru-cyrl">Н.М. Карамзин - писатель, путешественник, историк</rdfs:label>
+      </bf:Title>
+    </bf:title><bf:issuance>
+      <bf:Issuance rdf:about="http://id.loc.gov/vocabulary/issuance/mono"/>
+    </bf:issuance><bf:media>
+      <bf:Media rdf:about="http://id.loc.gov/vocabulary/mediaTypes/n">
+        <rdfs:label>unmediated</rdfs:label>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdamedia"/>
+        </bf:source>
+      </bf:Media>
+    </bf:media><bf:seriesStatement xml:lang="ru-cyrl">Цикл публичных дискуссий "Россия в глобальном контексте"</bf:seriesStatement><bf:note>
+      <bf:Note>
+        <bf:noteType>Physical details</bf:noteType>
+        <rdfs:label>portraits (colour)</rdfs:label>
+      </bf:Note>
+    </bf:note><bf:instanceOf rdf:resource="http://id.loc.gov/resources/works/c021468042"/><bf:hasItem rdf:resource="http://id.loc.gov/resources/items/c0214680420001-1"/><bf:adminMetadata>
+      <bf:AdminMetadata>
+        <bf:descriptionModifier rdf:resource="http://id.loc.gov/vocabulary/organizations/dlc"/>
+        <bf:descriptionConventions>
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda">
+            <rdfs:label>rda</rdfs:label>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+        <bf:descriptionModifier>
+          <bf:Agent>
+            <rdfs:label>OCL</rdfs:label>
+          </bf:Agent>
+        </bf:descriptionModifier>
+        <bf:identifiedBy>
+          <bf:Local>
+            <bf:assigner rdf:resource="http://id.loc.gov/vocabulary/organizations/dlc"/>
+            <rdf:value>21468042</rdf:value>
+          </bf:Local>
+        </bf:identifiedBy>
+        <bf:descriptionModifier>
+          <bf:Agent>
+            <rdfs:label>OCLCF</rdfs:label>
+          </bf:Agent>
+        </bf:descriptionModifier>
+        <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-03-08T21:55:03</bf:changeDate>
+        <bflc:encodingLevel>
+          <bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/f">
+            <rdfs:label>full</rdfs:label>
+          </bflc:EncodingLevel>
+        </bflc:encodingLevel>
+        <bf:descriptionModifier>
+          <bf:Agent>
+            <rdfs:label>OCLCQ</rdfs:label>
+          </bf:Agent>
+        </bf:descriptionModifier>
+        <bf:descriptionConventions>
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd">
+            <rdfs:label>isbd</rdfs:label>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+        <bf:source>
+          <bf:Source>
+            <rdfs:label>UKMGB</rdfs:label>
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Agent"/>
+          </bf:Source>
+        </bf:source>
+        <bf:descriptionModifier>
+          <bf:Agent>
+            <rdfs:label>OCLCO</rdfs:label>
+          </bf:Agent>
+        </bf:descriptionModifier>
+        <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2020-03-13</bf:creationDate>
+        <bf:source>
+          <bf:Source>
+            <rdfs:label>UKMGB</rdfs:label>
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Agent"/>
+          </bf:Source>
+        </bf:source>
+        <bf:descriptionLanguage>
+          <bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng">
+            <bf:code>eng</bf:code>
+          </bf:Language>
+        </bf:descriptionLanguage>
+        <bflc:profile>lc:RT:bf2:Monograph:Instance</bflc:profile>
+        <bf:generationProcess>
+          <bf:GenerationProcess>
+            <bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2020-06-27T04:53:43-04:00</bf:generationDate>
+            <rdfs:label>DLC marc2bibframe2 v1.6.0-SNAPSHOT</rdfs:label>
+          </bf:GenerationProcess>
+        </bf:generationProcess>
+        <bf:descriptionAuthentication>
+          <bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/lccopycat">
+            <rdf:value>lccopycat</rdf:value>
+          </bf:DescriptionAuthentication>
+        </bf:descriptionAuthentication>
+        <bf:status>
+          <bf:Status>
+            <bf:code>c</bf:code>
+            <rdfs:label>corrected or revised</rdfs:label>
+          </bf:Status>
+        </bf:status>
+        <bflc:catalogerId>ogol</bflc:catalogerId>
+        <bflc:procInfo>update instance</bflc:procInfo>
+        <bf:descriptionModifier>
+          <bf:Agent>
+            <rdfs:label>OCL</rdfs:label>
+          </bf:Agent>
+        </bf:descriptionModifier>
+      </bf:AdminMetadata>
+    </bf:adminMetadata></bf:Instance><bf:Work rdf:about="http://id.loc.gov/resources/works/c021468042"><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Work"/><bf:illustrativeContent>
+          <bf:Illustration rdf:about="http://id.loc.gov/vocabulary/millus/por">
+            <rdfs:label>portraits</rdfs:label>
+          </bf:Illustration>
+        </bf:illustrativeContent><rdfs:label>Н.М. Карамзин - писатель, путешественник, историк</rdfs:label><bf:genreForm>
+          <bf:GenreForm rdf:about="http://id.loc.gov/authorities/genreForms/gf2014026049">
+            <rdfs:label>biographies</rdfs:label>
+          </bf:GenreForm>
+        </bf:genreForm><bf:hasSeries rdf:resource="http://id.loc.gov/resources/works/c0214680420001"/><bf:title>
+          <bf:Title>
+            <bf:mainTitle>N.M. Karamzin - pisatelʹ, puteshestvennik, istorik</bf:mainTitle>
+            <bflc:titleSortKey>N.M. Karamzin - pisatelʹ, puteshestvennik, istorik</bflc:titleSortKey>
+            <rdfs:label>N.M. Karamzin - pisatelʹ, puteshestvennik, istorik</rdfs:label>
+          </bf:Title>
+        </bf:title><bf:subject>
+          <bf:Topic rdf:about="http://bibframe.example.org/21468042#Topic650-26">
+            <rdfs:label>Historians--Russia--Congresses.</rdfs:label>
+            <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+            <madsrdf:componentList rdf:parseType="Collection">
+              <madsrdf:Topic>
+                <madsrdf:authoritativeLabel>Historians</madsrdf:authoritativeLabel>
+              </madsrdf:Topic>
+              <madsrdf:Geographic rdf:about="https://id.loc.gov/authorities/names/n80001203">
+                <madsrdf:authoritativeLabel>Russia</madsrdf:authoritativeLabel>
+              </madsrdf:Geographic>
+              <madsrdf:GenreForm>
+                <madsrdf:authoritativeLabel>Congresses</madsrdf:authoritativeLabel>
+              </madsrdf:GenreForm>
+            </madsrdf:componentList>
+            <madsrdf:authoritativeLabel>Historians--Russia--Congresses.</madsrdf:authoritativeLabel>
+            <bf:source>
+              <bf:Source>
+                <bf:code>lcsh</bf:code>
+              </bf:Source>
+            </bf:source>
+          </bf:Topic>
+        </bf:subject><bf:adminMetadata>
+          <bf:AdminMetadata>
+            <bf:identifiedBy>
+              <bf:Local>
+                <bf:assigner rdf:resource="http://id.loc.gov/vocabulary/organizations/dlc"/>
+                <rdf:value>21468042</rdf:value>
+              </bf:Local>
+            </bf:identifiedBy>
+            <bf:descriptionConventions rdf:resource="http://id.loc.gov/vocabulary/descriptionConventions/rda"/>
+            <bf:status>
+              <bf:Status>
+                <bf:code>c</bf:code>
+                <rdfs:label>corrected or revised</rdfs:label>
+              </bf:Status>
+            </bf:status>
+            <bf:descriptionModifier>
+              <bf:Agent>
+                <rdfs:label>OCLCQ</rdfs:label>
+              </bf:Agent>
+            </bf:descriptionModifier>
+            <bf:descriptionLanguage rdf:resource="http://id.loc.gov/vocabulary/languages/eng"/>
+            <bf:descriptionModifier>
+              <bf:Agent>
+                <rdfs:label>OCLCO</rdfs:label>
+              </bf:Agent>
+            </bf:descriptionModifier>
+            <bf:source>
+              <bf:Source>
+                <rdfs:label>UKMGB</rdfs:label>
+                <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Agent"/>
+              </bf:Source>
+            </bf:source>
+            <bf:descriptionAuthentication rdf:resource="http://id.loc.gov/vocabulary/marcauthen/lccopycat"/>
+            <bf:descriptionConventions rdf:resource="http://id.loc.gov/vocabulary/descriptionConventions/isbd"/>
+            <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2020-03-13</bf:creationDate>
+            <bf:generationProcess>
+              <bf:GenerationProcess>
+                <bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2020-06-27T04:53:43-04:00</bf:generationDate>
+                <rdfs:label>DLC marc2bibframe2 v1.6.0-SNAPSHOT</rdfs:label>
+              </bf:GenerationProcess>
+            </bf:generationProcess>
+            <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-03-08T21:55:03</bf:changeDate>
+            <bf:descriptionModifier>
+              <bf:Agent>
+                <rdfs:label>OCL</rdfs:label>
+              </bf:Agent>
+            </bf:descriptionModifier>
+            <bf:source>
+              <bf:Source>
+                <rdfs:label>UKMGB</rdfs:label>
+                <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Agent"/>
+              </bf:Source>
+            </bf:source>
+            <bflc:procInfo>update instance</bflc:procInfo>
+            <bf:descriptionModifier>
+              <bf:Agent>
+                <rdfs:label>OCL</rdfs:label>
+              </bf:Agent>
+            </bf:descriptionModifier>
+            <bf:descriptionModifier rdf:resource="http://id.loc.gov/vocabulary/organizations/dlc"/>
+            <bflc:encodingLevel rdf:resource="http://id.loc.gov/vocabulary/menclvl/f"/>
+            <bf:descriptionModifier>
+              <bf:Agent>
+                <rdfs:label>OCLCF</rdfs:label>
+              </bf:Agent>
+            </bf:descriptionModifier>
+            <bflc:profile>lc:RT:bf2:Monograph:Instance</bflc:profile>
+          </bf:AdminMetadata>
+        </bf:adminMetadata><bf:subject>
+          <bf:Place rdf:about="http://bibframe.example.org/21468042#Place651-27">
+            <rdfs:label>Russia--History--1801-1917--Congresses.</rdfs:label>
+            <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
+            <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+            <madsrdf:componentList rdf:parseType="Collection">
+              <madsrdf:Geographic rdf:about="https://id.loc.gov/authorities/names/n80001203"/>
+              <madsrdf:Topic>
+                <madsrdf:authoritativeLabel>History</madsrdf:authoritativeLabel>
+              </madsrdf:Topic>
+              <madsrdf:Temporal>
+                <madsrdf:authoritativeLabel>1801-1917</madsrdf:authoritativeLabel>
+              </madsrdf:Temporal>
+              <madsrdf:GenreForm>
+                <madsrdf:authoritativeLabel>Congresses</madsrdf:authoritativeLabel>
+              </madsrdf:GenreForm>
+            </madsrdf:componentList>
+            <madsrdf:authoritativeLabel>Russia--History--1801-1917--Congresses.</madsrdf:authoritativeLabel>
+            <bf:source>
+              <bf:Source>
+                <bf:code>lcsh</bf:code>
+              </bf:Source>
+            </bf:source>
+          </bf:Place>
+        </bf:subject><bf:contribution>
+          <bf:Contribution>
+            <bf:role>
+              <bf:Role>
+                <rdfs:label>issuing body.</rdfs:label>
+              </bf:Role>
+            </bf:role>
+            <bf:agent>
+              <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n2003102583">
+                <bflc:name10MatchKey>Nikitskiĭ klub,</bflc:name10MatchKey>
+                <bflc:name10MarcKey>7102 $aNikitskiĭ klub,$eissuing body.</bflc:name10MarcKey>
+                <rdfs:label>Nikitskiĭ klub,</rdfs:label>
+                <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#CorporateName"/>
+              </bf:Agent>
+            </bf:agent>
+          </bf:Contribution>
+        </bf:contribution><bf:genreForm>
+          <bf:GenreForm rdf:about="http://id.loc.gov/authorities/genreForms/gf2014026068">
+            <rdfs:label>conference papers and proceedings</rdfs:label>
+          </bf:GenreForm>
+        </bf:genreForm><bf:identifiedBy>
+          <bf:Lccn>
+            <rdf:value>  2020361686</rdf:value>
+          </bf:Lccn>
+        </bf:identifiedBy><bf:content>
+          <bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/txt">
+            <rdfs:label>text</rdfs:label>
+            <bf:source>
+              <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacontent"/>
+            </bf:source>
+          </bf:Content>
+        </bf:content><bf:title>
+          <bf:Title>
+            <bf:mainTitle xml:lang="ru-cyrl">Н.М. Карамзин - писатель, путешественник, историк</bf:mainTitle>
+            <bflc:titleSortKey>Н.М. Карамзин - писатель, путешественник, историк</bflc:titleSortKey>
+            <rdfs:label xml:lang="ru-cyrl">Н.М. Карамзин - писатель, путешественник, историк</rdfs:label>
+          </bf:Title>
+        </bf:title><bf:subject>
+          <bf:Topic rdf:about="http://bibframe.example.org/21468042#Topic600-25">
+            <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+            <madsrdf:componentList rdf:parseType="Collection">
+              <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n80046331">
+                <rdfs:label>Karamzin, Nikolaĭ Mikhaĭlovich, 1766-1826</rdfs:label>
+                <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+                <madsrdf:authoritativeLabel>Karamzin, Nikolaĭ Mikhaĭlovich, 1766-1826</madsrdf:authoritativeLabel>
+                <bflc:name00MatchKey>Karamzin, Nikolaĭ Mikhaĭlovich, 1766-1826</bflc:name00MatchKey>
+                <bflc:name00MarcKey>60010$aKaramzin, Nikolaĭ Mikhaĭlovich,$d1766-1826$vCongresses.</bflc:name00MarcKey>
+                <rdfs:label>Karamzin, Nikolaĭ Mikhaĭlovich, 1766-1826,</rdfs:label>
+                <bflc:name00MarcKey>7001 $aKaramzin, Nikolaĭ Mikhaĭlovich,$d1766-1826,$ehonouree.</bflc:name00MarcKey>
+                <bf:source>
+                  <bf:Source>
+                    <bf:code>lcsh</bf:code>
+                  </bf:Source>
+                </bf:source>
+                <bflc:name00MatchKey>Karamzin, Nikolaĭ Mikhaĭlovich, 1766-1826,</bflc:name00MatchKey>
+                <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#PersonalName"/>
+              </bf:Agent>
+              <madsrdf:GenreForm>
+                <madsrdf:authoritativeLabel>Congresses</madsrdf:authoritativeLabel>
+              </madsrdf:GenreForm>
+            </madsrdf:componentList>
+            <madsrdf:authoritativeLabel>Karamzin, Nikolaĭ Mikhaĭlovich, 1766-1826--Congresses.</madsrdf:authoritativeLabel>
+            <bf:source>
+              <bf:Source>
+                <bf:code>lcsh</bf:code>
+              </bf:Source>
+            </bf:source>
+          </bf:Topic>
+        </bf:subject><bf:contribution>
+          <bf:Contribution>
+            <bf:role>
+              <bf:Role>
+                <rdfs:label>editor.</rdfs:label>
+              </bf:Role>
+            </bf:role>
+            <bf:agent>
+              <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n2001090723">
+                <bflc:name00MatchKey>Privalov, Aleksandr,</bflc:name00MatchKey>
+                <bflc:name00MarcKey>7001 $aPrivalov, Aleksandr,$eeditor.</bflc:name00MarcKey>
+                <rdfs:label>Privalov, Aleksandr,</rdfs:label>
+                <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#PersonalName"/>
+              </bf:Agent>
+            </bf:agent>
+          </bf:Contribution>
+        </bf:contribution><bf:language>
+          <bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/rus"/>
+        </bf:language><bf:contribution>
+          <bf:Contribution>
+            <bf:role>
+              <bf:Role>
+                <rdfs:label>honouree.</rdfs:label>
+              </bf:Role>
+            </bf:role>
+            <bf:agent rdf:resource="https://id.loc.gov/authorities/names/n80046331"/>
+          </bf:Contribution>
+        </bf:contribution><bf:geographicCoverage>
+          <bf:GeographicCoverage rdf:about="http://id.loc.gov/vocabulary/geographicAreas/e-ur"/>
+        </bf:geographicCoverage><bf:genreForm>
+          <bf:GenreForm rdf:about="http://id.loc.gov/authorities/genreForms/gf2016026082">
+            <rdfs:label>festschrift</rdfs:label>
+          </bf:GenreForm>
+        </bf:genreForm><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Text"/><bf:contribution>
+          <bf:Contribution>
+            <bf:role>
+              <bf:Role>
+                <rdfs:label>sponsoring body.</rdfs:label>
+              </bf:Role>
+            </bf:role>
+            <bf:agent>
+              <bf:Agent rdf:about="https://id.loc.gov/authorities/names/nr92040720">
+                <bflc:name10MatchKey>Moskovskai︠a︡ birzha,</bflc:name10MatchKey>
+                <bflc:name10MarcKey>7102 $aMoskovskai︠a︡ birzha,$esponsoring body.</bflc:name10MarcKey>
+                <rdfs:label>Moskovskai︠a︡ birzha,</rdfs:label>
+                <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#CorporateName"/>
+              </bf:Agent>
+            </bf:agent>
+          </bf:Contribution>
+        </bf:contribution><bf:classification>
+          <bf:ClassificationLcc>
+            <bf:itemPortion>N15 2016</bf:itemPortion>
+            <bf:classificationPortion>PG3314.Z7</bf:classificationPortion>
+            <bf:source rdf:resource="http://id.loc.gov/vocabulary/organizations/dlc"/>
+          </bf:ClassificationLcc>
+        </bf:classification></bf:Work><bf:Item rdf:about="http://id.loc.gov/resources/items/c0214680420001-1"><bf:shelfMark>
+          <bf:ShelfMarkLcc>
+            <rdfs:label>PG3314.Z7 N15 2016</rdfs:label>
+            <bf:source>
+              <bf:Source rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+                <rdfs:label>DLC</rdfs:label>
+                <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Agent"/>
+              </bf:Source>
+            </bf:source>
+          </bf:ShelfMarkLcc>
+        </bf:shelfMark><bflc:derivedFrom rdf:resource="http://id.loc.gov/resources/bibs/21468042"/><bf:itemOf rdf:resource="http://id.loc.gov/resources/instances/c0214680420001"/></bf:Item></rdf:RDF>

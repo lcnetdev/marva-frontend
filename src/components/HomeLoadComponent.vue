@@ -16,7 +16,7 @@
     <hr>
 
     
-    <h3>Load ICB record (Instance) from BFDB</h3>
+    <h3>Load ICB record from BFDB</h3>
 
     <ol>
       <li>1. Go to the <a href="https://preprod-8230.id.loc.gov" target="_blank">BFDB</a> and find and instance to load.</li>
@@ -44,7 +44,7 @@
 
 
     <hr style="margin-top:2em">
-
+<!-- 
     <h3>From id.loc.gov</h3>
 
 
@@ -67,7 +67,7 @@
 
     <hr style="margin-top:2em">
 
-    <h3>From IBC</h3>
+    <h3>From IBC</h3> -->
 
   </div>
 
@@ -86,13 +86,13 @@ const short = require('short-uuid');
 const decimalTranslator = short("0123456789");
 
 
-import MiscLoaderAnimation from "@/components/MiscLoaderAnimation.vue";
+// import MiscLoaderAnimation from "@/components/MiscLoaderAnimation.vue";
 
 export default {
   name: "HomeNewComponent",
   components: {
       // Keypress: () => import('vue-keypress')
-      MiscLoaderAnimation
+      // MiscLoaderAnimation
   },
   props: {
   },
@@ -282,7 +282,8 @@ export default {
 
 
       instanceTests:[
-        '/editor/tests/instances/c0010058400001.xml'
+        '/bfe2/editor/tests/instances/c0010058400001.editor-pkg.xml',
+        '/bfe2/editor/tests/instances/c0214680420001.editor-pkg.xml',
       ]
 
     }
