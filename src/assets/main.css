@@ -451,11 +451,20 @@ color: rgb(42, 42, 42);
 
 @font-face {
   font-family: 'fontello';
-  src: url('/fonts/fontello.eot?40152799');
-  src: url('/fonts/fontello.eot?40152799#iefix') format('embedded-opentype'),
+  src: url('/bfe2/editor/fonts/fontello.eot?40152799');
+  src: 
+       url('/bfe2/editor/fonts/fontello.eot?40152799#iefix') format('embedded-opentype'),
+       url('/bfe2/editor/fonts/fontello.woff?40152799') format('woff'),
+       url('/bfe2/editor/fonts/fontello.ttf?40152799') format('truetype'),
+       url('/bfe2/editor/fonts/fontello.svg?40152799#fontello') format('svg'),
+
+       url('/fonts/fontello.eot?40152799'),
+  	   url('/fonts/fontello.eot?40152799#iefix') format('embedded-opentype'),
        url('/fonts/fontello.woff?40152799') format('woff'),
        url('/fonts/fontello.ttf?40152799') format('truetype'),
        url('/fonts/fontello.svg?40152799#fontello') format('svg');
+
+
   font-weight: normal;
   font-style: normal;
 }
