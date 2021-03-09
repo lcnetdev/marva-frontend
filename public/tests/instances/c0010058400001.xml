@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+						<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+						  <bf:Instance rdf:about="http://id.loc.gov/resources/instances/c0010058400001" xmlns:bf="http://id.loc.gov/ontologies/bibframe/">
+						    <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Print"/>
+						    <bf:issuance>
+						      <bf:Issuance rdf:about="http://id.loc.gov/vocabulary/issuance/mono"/>
+						    </bf:issuance>
+						    <bf:issuance>
+						      <bf:Issuance rdf:about="http://id.loc.gov/vocabulary/issuance/serl"/>
+						    </bf:issuance>						    
+						    <bf:provisionActivity>
+						      <bf:ProvisionActivity>
+						        <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Distribution"/>
+						        <bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">1988</bf:date>
+						        <bf:place>
+						          <bf:Place rdf:about="http://id.loc.gov/vocabulary/countries/nyu"/>
+						        </bf:place>
+						      </bf:ProvisionActivity>
+						    </bf:provisionActivity>
+						    <bf:identifiedBy>
+						      <bf:Lccn>
+						        <rdf:value>87023915 </rdf:value>
+						      </bf:Lccn>
+						    </bf:identifiedBy>
+						    <bf:identifiedBy>
+						      <bf:Local>
+						        <rdf:value>111111111 </rdf:value>
+						      </bf:Local>
+						    </bf:identifiedBy>
+
+						    <bf:acquisitionTerms>$24.50</bf:acquisitionTerms>
+						    <bf:identifiedBy>
+						      <bf:Isbn>
+						        <rdf:value>1555460348</rdf:value>
+						        <bf:qualifier>alk. paper</bf:qualifier>
+						      </bf:Isbn>
+						    </bf:identifiedBy>
+						    <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Virginia Woolf's To the lighthouse</rdfs:label>
+						    <bf:title>
+						      <bf:Title>
+						        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Virginia Woolf's To the lighthouse</rdfs:label>
+						        <bflc:titleSortKey xmlns:bflc="http://id.loc.gov/ontologies/bflc/">Virginia Woolf's To the lighthouse</bflc:titleSortKey>
+						        <bf:mainTitle>Virginia Woolf's To the lighthouse</bf:mainTitle>
+							    
+							    <bf:note>
+							      <bf:Note>
+							        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">TITLE NOTE WOW.</rdfs:label>
+							        <bf:noteType>even worse</bf:noteType>
+							      </bf:Note>
+							    </bf:note>
+
+						      </bf:Title>
+						    </bf:title>
+						    <bf:responsibilityStatement>edited and with an introduction by Harold Bloom</bf:responsibilityStatement>
+						    <bf:provisionActivity>
+						      <bf:ProvisionActivity>
+						        <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Publication"/>
+						        <bf:place>
+						          <bf:Place>
+						            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">New York</rdfs:label>
+						          </bf:Place>
+						        </bf:place>
+						        <bf:agent>
+						          <bf:Agent rdf:about="https://id.loc.gov/entities/providers/c1d5943c1d6758970d330c5ac19b7955">
+						            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Chelsea House</rdfs:label>
+						          </bf:Agent>
+						        </bf:agent>
+						        <bf:date>1988</bf:date>
+						      </bf:ProvisionActivity>
+						    </bf:provisionActivity>
+						    <bf:provisionActivityStatement>New York : Chelsea House, 1988.</bf:provisionActivityStatement>
+						    <bf:extent>
+						      <bf:Extent>
+						        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">vii, 164 p.</rdfs:label>
+							    <bf:note>
+							      <bf:Note>
+							        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">EXTENT NOTE WOW.</rdfs:label>
+							      </bf:Note>
+							    </bf:note>
+
+						      </bf:Extent>
+						    </bf:extent>
+						    <bf:dimensions>24 cm.</bf:dimensions>
+						    <bf:seriesStatement>Modern critical interpretations</bf:seriesStatement>
+						    <bf:note>
+						      <bf:Note>
+						        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Includes index.</rdfs:label>
+						        <bf:noteType>Bad</bf:noteType>
+						      </bf:Note>
+						    </bf:note>
+						    <bf:instanceOf rdf:resource="http://id.loc.gov/resources/works/c001005840"/>
+						    <bf:adminMetadata>
+						      <bf:AdminMetadata>
+						        <bf:generationProcess>
+						          <bf:GenerationProcess>
+						            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">DLC marc2bibframe2 v1.6.0-SNAPSHOT</rdfs:label>
+						            <bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2020-06-26T05:25:04-04:00</bf:generationDate>
+						          </bf:GenerationProcess>
+						        </bf:generationProcess>
+						        <bf:status>
+						          <bf:Status>
+						            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">increase in encoding level from prepublication</rdfs:label>
+						            <bf:code>p</bf:code>
+						          </bf:Status>
+						        </bf:status>
+						        <bflc:encodingLevel xmlns:bflc="http://id.loc.gov/ontologies/bflc/">
+						          <bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/f">
+						            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">full</rdfs:label>
+						          </bflc:EncodingLevel>
+						        </bflc:encodingLevel>
+						        <bf:descriptionConventions>
+						          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/aacr">
+						            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">aacr</rdfs:label>
+						          </bf:DescriptionConventions>
+						        </bf:descriptionConventions>
+						        <bf:identifiedBy>
+						          <bf:Local>
+						            <rdf:value>1005840</rdf:value>
+						            <bf:assigner>
+						              <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"/>
+						            </bf:assigner>
+						          </bf:Local>
+						        </bf:identifiedBy>
+						        <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">1988-07-25T00:00:00</bf:changeDate>
+						        <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1987-08-13</bf:creationDate>
+						        <bf:source>
+						          <bf:Source rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+						            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Agent"/>
+						            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">DLC</rdfs:label>
+						          </bf:Source>
+						        </bf:source>
+						        <bf:source>
+						          <bf:Source rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+						            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Agent"/>
+						            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">DLC</rdfs:label>
+						          </bf:Source>
+						        </bf:source>
+						        <bf:descriptionModifier>
+						          <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+						            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">DLC</rdfs:label>
+						          </bf:Agent>
+						        </bf:descriptionModifier>
+						      </bf:AdminMetadata>
+						    </bf:adminMetadata>
+						  </bf:Instance>
+						</rdf:RDF>

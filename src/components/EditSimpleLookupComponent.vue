@@ -130,12 +130,17 @@ export default {
 
 
     // what URI was the data stored in
+
+    // HACK - figure out whats going on here
+    let altPropertyURI = this.structure.propertyURI.toLowerCase()
+
     let dataField = data.userValue[data.propertyURI]
     if (data.userValue[this.structure.propertyURI]){
       dataField = data.userValue[this.structure.propertyURI]
+    }else if (data.userValue[altPropertyURI]){
+      dataField = data.userValue[altPropertyURI]      
     }else if (data.userValue['@type'] && data.userValue[data.userValue['@type']]){
       dataField = data.userValue[this.structure.propertyURI]
-      console.log('okay',dataField)
 
     }
 
@@ -148,6 +153,10 @@ export default {
       if (dataField.literal){
         alv.literal = dataField.literal
       }
+      if (dataField['http://www.w3.org/2000/01/rdf-schema#label']){
+        alv.literal = dataField['http://www.w3.org/2000/01/rdf-schema#label']
+      }
+
       if (dataField.URI){
         alv.URI = dataField.URI
       }
@@ -302,11 +311,10 @@ export default {
 
 
 
-
-        this.activeValue = event.target.value
+        this.activeValue = event.target.value.trimStart()
         this.doubleDelete = false
-        this.activeValue = event.target.value
-        this.activeFilter = event.target.value
+        this.activeValue = event.target.value.trimStart()
+        this.activeFilter = event.target.value.trimStart()
         this.displayAutocomplete = true
         this.$store.dispatch("disableMacroNav")
         this.filter()
@@ -325,6 +333,7 @@ export default {
       
 
       this.activeValue = event.target.value
+
       if (event && event.key && this.displayAutocomplete == true && (event.key==='ArrowUp' || event.key==='ArrowDown')){
         this.doubleDelete = false
         if (this.displayList.length<=1){

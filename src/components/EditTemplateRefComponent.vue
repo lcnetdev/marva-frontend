@@ -153,12 +153,21 @@ export default {
       // loop thrugh all the refs and see if there is a URI that matches it better
       this.structure.valueConstraint.valueTemplateRefs.forEach((tmpid)=>{
 
+
         if (foundBetter) return false
 
         if (this.rtLookup[tmpid].resourceURI === this.structure.userValue['@type']){
           useId = tmpid
           foundBetter = true
         }
+
+        // also check here
+        if (this.rtLookup[tmpid].resourceURI === this.structure.userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#type']){
+          useId = tmpid
+          foundBetter = true
+        }
+
+
 
 
         // if (this.structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/subject'){

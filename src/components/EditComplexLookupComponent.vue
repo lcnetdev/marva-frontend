@@ -479,6 +479,7 @@ export default {
 
       let uv = parseProfile.returnUserValues(this.activeProfile, this.profileCompoent,this.structure.propertyURI)
       // console.log("<<<<",uv,this.parentStructureObj,"")
+      console.log(uv,"<<<<<<<uvuv uvuvuvuvuvuvuvuvuvuvuvuvuvuvuv")
       if (uv[this.structure.propertyURI]){
         // console.log('yehh',uv[this.structure.propertyURI])
         this.userData = uv[this.structure.propertyURI]

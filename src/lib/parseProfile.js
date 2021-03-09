@@ -7,10 +7,12 @@ const parseProfile = {
     rtLookup: {},
     profiles: {},
     startingPoints: {},
+    startingPointData: {},
+    // startingPointsData: null,
 
     // fetches the profile data from supplied URL or from the config URL if empty
     fetchProfiles: async function(url) {
-      url = url || config.profileUrl
+      url = url || config.returnUrls().profiles
       try{
         let response = await fetch(url);
         let data =  await response.json()
@@ -23,18 +25,34 @@ const parseProfile = {
       }
     },
 
+    fetchStartingPoints: async function(url) {
+      url = url || config.returnUrls().starting
+      try{
+        let response = await fetch(url);
+        let data =  await response.json()
+        return  data;
+
+      }catch(err){
+        console.error(err);
+
+        // Handle errors here
+      }
+    },
+
+
     // builds the lookup structure for the profiles
     buildProfiles: async function(){
 
         // save the profile data, wait for the promise to resolve 
         this.profileSource = await this.fetchProfiles()
+        this.startingPointData = await this.fetchStartingPoints()
 
 
         console.log(this.profileSource ,'this.profileSource ')
 
         // TEMP HACK, striping RDA fields for some things for the new editor
         for (let p of this.profileSource){
-            // console.log("p",p.json.Profile)
+            
             if (p.json.Profile.id == 'lc:profile:bf2:Agents:Attributes'){
 
                 for (let rt of p.json.Profile.resourceTemplates){
@@ -99,7 +117,7 @@ const parseProfile = {
 
         // we have starting points, generate those profiles based on their requirements
         // this is just converting the format of the old BFE starting points format
-        config.startingPoint.json.forEach((sp)=>{
+        this.startingPointData.json.forEach((sp)=>{
 
             this.startingPoints[sp.menuGroup] = {name:sp.menuGroup, work: null, instance: null, item: null }
             sp.menuItems.forEach((mi)=>{
@@ -166,8 +184,57 @@ const parseProfile = {
 
     removeProperty: function(id,profile,activeProfile){
         let propertyIndex = activeProfile.rt[profile].ptOrder.indexOf(id)
+
+        // is this the last pt with this uri and label?
+        let lastPtCount = 0
+        for (let pt of Object.keys(activeProfile.rt[profile].pt)){
+            if (activeProfile.rt[profile].pt[pt].propertyURI == activeProfile.rt[profile].pt[id].propertyURI && activeProfile.rt[profile].pt[pt].propertyLabel == activeProfile.rt[profile].pt[id].propertyLabel )
+            lastPtCount++
+        }
+
+        if (lastPtCount==1){
+
+            
+            let tmp = JSON.parse(JSON.stringify(activeProfile.rt[profile].pt[id]))
+            
+            // delete the one that is in there
+            activeProfile.rt[profile].ptOrder.splice(propertyIndex,1)
+            delete activeProfile.rt[profile].pt[id]  
+
+            // add in a new one with deleted flag
+            tmp.deleted = true
+            activeProfile.rt[profile].ptOrder.push(id)
+            activeProfile.rt[profile].pt[id] = tmp
+            
+
+        }else{
+
+            activeProfile.rt[profile].ptOrder.splice(propertyIndex,1)
+            delete activeProfile.rt[profile].pt[id]  
+
+        }
+
+      
+        return(activeProfile)
+
+    },
+
+    restoreProperty: function(id,profile,activeProfile){
+
+
+        let propertyIndex = activeProfile.rt[profile].ptOrder.indexOf(id)
+                
+        let tmp = JSON.parse(JSON.stringify(activeProfile.rt[profile].pt[id]))
+        
+        // delete the one that is in there
         activeProfile.rt[profile].ptOrder.splice(propertyIndex,1)
-        delete activeProfile.rt[profile].pt[id]        
+        delete activeProfile.rt[profile].pt[id]  
+
+        // add in a new one with deleted flag
+        delete tmp.deleted
+        activeProfile.rt[profile].ptOrder.push(id)
+        activeProfile.rt[profile].pt[id] = tmp
+
         return(activeProfile)
 
     },
@@ -175,10 +242,15 @@ const parseProfile = {
 
     setValue: function(currentState, component, key, activeProfileName, template, value){
 
+        // HACK - need to figure what is going on here
+        if (key==='http://id.loc.gov/ontologies/bibframe/Place'){
+            key='http://id.loc.gov/ontologies/bibframe/place'
+        }
+
         // loop through the profiles
         // Object.keys(currentState.rt).forEach((rt)=>{
-            // console.log(activeProfileName,"!!!!")
-            // console.log(template,'templatetemplatetemplatetemplatetemplatetemplate')
+            
+            
             // check if this profile has the pt we are looking for
             if (currentState.rt[activeProfileName].pt[component]){
 
@@ -192,7 +264,7 @@ const parseProfile = {
                     }else if (template && template.nested){
                         currentState.rt[activeProfileName].pt[component].userValue[key] = {literal: value.title,URI:value.uri, '@type': value.type, context: value}
                         currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI
-                        // console.log('valuevaluevaluevaluevaluevalue',value)      
+                        
                         // currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI
                         // currentState.rt[activeProfileName].pt[component].userValue[currentState.rt[activeProfileName].pt[component].propertyURI] = {literal: value.title,URI:value.uri, '@type': value.type}
                         // currentState.rt[activeProfileName].pt[component].userValue.context = value
@@ -208,8 +280,39 @@ const parseProfile = {
                         if (currentState.rt[activeProfileName].pt[component].userValue['uri']) delete currentState.rt[activeProfileName].pt[component].userValue['uri'] 
 
                     }else{
-                        currentState.rt[activeProfileName].pt[component].userValue[key] = value
-                        currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI
+                        console.log('here', activeProfileName, component, key, value)
+
+                        // when we a storing a literal we want to store it under the URI of its componet, not just a label, since all properties are co-mingling
+                        // bad idea
+                        // if (key === 'http://www.w3.org/2000/01/rdf-schema#label'){
+                        //     key = currentState.rt[activeProfileName].pt[component].propertyURI
+                        // }
+
+                        // notes hit differently
+                        if (template.resourceURI == 'http://id.loc.gov/ontologies/bibframe/Note'){
+                            
+                            console.log("DOING NOTE", currentState.rt[activeProfileName].pt[component])
+
+                            // doing a first level note, not a nested note
+                            if (currentState.rt[activeProfileName].pt[component].propertyURI == 'http://id.loc.gov/ontologies/bibframe/note'){
+
+                                currentState.rt[activeProfileName].pt[component].userValue[key] = value
+
+                            }else{
+                                // doing a bnode
+                                if (!currentState.rt[activeProfileName].pt[component].userValue['http://id.loc.gov/ontologies/bibframe/note']){
+                                    currentState.rt[activeProfileName].pt[component].userValue['http://id.loc.gov/ontologies/bibframe/note'] = {'@type':'http://id.loc.gov/ontologies/bibframe/Note'}
+                                }
+                                currentState.rt[activeProfileName].pt[component].userValue['http://id.loc.gov/ontologies/bibframe/note'][key] = value
+
+                            }
+                        }else{
+                            currentState.rt[activeProfileName].pt[component].userValue[key] = value
+                            currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI
+
+                        }
+
+
 
                     }
 
@@ -218,16 +321,16 @@ const parseProfile = {
                 
                 
 
-                // console.log(currentState.rt[activeProfileName].pt[component])
-                // console.log(currentState.rt[activeProfileName].pt)
-                // console.log(value, Object.keys(value))
-                // console.log(currentState,'currentState')
-                // console.log(component,'component')
-                // console.log(currentState.rt[activeProfileName].pt[component].userValue[key])
-                // console.log(key,'key')
-                // console.log(currentState.rt[activeProfileName].pt[component].userValue)
-                // console.log(activeProfileName,'activeProfileName')
-                // console.log("^^^^^^^^^^^^^^^^")
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
             }
 
         // })
@@ -238,24 +341,37 @@ const parseProfile = {
 
     returnUserValues: function(currentState, component, propertyURI){
         let results = false
-        // console.log(currentState,component)
+        
         Object.keys(currentState.rt).forEach((rt)=>{
+
+
             // check if this profile has the pt we are looking for
             if (currentState.rt[rt].pt[component]){
                 results = currentState.rt[rt].pt[component].userValue
+                
+                console.log("!!!!!!!!!!!!!!!!!!!")
+                console.log(rt)
+                console.log(currentState.rt[rt])
+                console.log(component)
+                console.log(propertyURI)
+                console.log(results)
+
+
 
                 // do some modifications to fit the user data in to the format a complex lookup components will expect
-                // console.log("zzzzzzzzzz")
-                // console.log(propertyURI)
-                // console.log(results)
-                // console.log("zzzzzzzzzz")
+                
+                
+                
+                
                 if (results.literal){
                     results[propertyURI] = {literal: results.literal, URI: results.URI, '@type':results['@type']}
                 }
 
             }
         })
+        console.log(results)
         return results
+
     }
 
 }

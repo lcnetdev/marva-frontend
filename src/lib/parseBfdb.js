@@ -14,10 +14,15 @@ const parseBfdb = {
 
 
 	namespace: {
-		'bf':'http://id.loc.gov/ontologies/bibframe/',
 		'bflc': 'http://id.loc.gov/ontologies/bflc/',
+		'bf':'http://id.loc.gov/ontologies/bibframe/',		
 		'madsrdf': 'http://www.loc.gov/mads/rdf/v1#',
-		'rdf' : 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
+		'rdfs':'http://www.w3.org/2000/01/rdf-schema#',
+		'rdf' : 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+		'lclocal':'http://id.loc.gov/ontologies/lclocal/', 		
+		'pmo' :'http://performedmusicontology.org/ontology/',
+		'datatypes': 'http://id.loc.gov/datatypes/',
+		'xsd': 'http://www.w3.org/2001/XMLSchema#'
 	},
 
 
@@ -44,12 +49,13 @@ const parseBfdb = {
 
 	},
 
+	// from prefiex to URI
 	UriNamespace: function(passedNS){
 
 		for (let ns in this.namespace){
 			let nsuri = this.namespace[ns]
 
-			if (passedNS.includes(ns)){
+			if (passedNS.startsWith(`${ns}:`)){
 				return passedNS.replace(`${ns}:`,nsuri)
 			}
 
@@ -57,16 +63,17 @@ const parseBfdb = {
 
 	},
 
+
 	returnOneWhereParentIs: function(selection, requiredParent){
 
-		// console.log(selection, requiredParent)
-		// console.log('-----',)
+		
+		
 
 
 		if (selection.length == 1){
 			return selection[0]
 		}
-		console.log('here')
+		
 		for (let el of selection){
 			if (el.parentNode.tagName === requiredParent){
 				return el
@@ -146,9 +153,9 @@ const parseBfdb = {
 			profile.userValue['http://www.loc.gov/mads/rdf/v1#componentList'] = componentList
 
 
-			// console.log('###################')
-			// console.log(profile.userValue)
-			// console.log('###################')
+			
+			
+			
 
 			return profile
 
@@ -156,10 +163,10 @@ const parseBfdb = {
 		},
 		'bf:Work' : function(xml,profile){
 
-			console.log("~~~~~~~~~~~~~~~~~~~")
-			console.log(xml)
-			console.log(xml.attributes['rdf:about'])
-			console.log(profile)
+			
+			
+			
+			
 
 			
 			
@@ -212,7 +219,7 @@ const parseBfdb = {
 				return profile
 			}
 
-			// console.log(this)
+			
 
 			profile.userValue['@type'] = this.UriNamespace(typeNode.tagName)
 			profile.userValue['URI'] = null
@@ -258,9 +265,9 @@ const parseBfdb = {
 
 
 
-			// console.log('#########specialTransformContribution##########')
-			// console.log(profile.userValue)
-			// console.log('#########specialTransformContribution##########')
+			
+			
+			
 
 			return profile
 
@@ -272,13 +279,44 @@ const parseBfdb = {
 	},
 
 
-	transform: function(profile){
+	transform: function(profile){ 
+
+		let profileOrginal = Object.assign(profile,{})
+		console.log('profileOrginal',profileOrginal)
+
+		let results = this.transformRts(profile)
 
 
+		// find the unused properties and see if we can add them into the profile ad hoc
 
-		console.log(profile)
+
+		// for (const pkey in results.rt) {
+
+			// TODO 
+			
+
+			// ALSO Look inside, at the missingProperties for each component, things like
+			// http://id.loc.gov/ontologies/bibframe/agent in the provision activity
+
+
+		// }
+
+		
+
+		return results
+	},
+
+
+	transformRts: function(profile){
+
+		// keep a copy of the profile passed
+
+		let toDeleteNoData = []
 
 		for (const pkey in profile.rt) {
+
+
+
 
 			let tle = ""			
 			if (pkey.endsWith(':Work')){
@@ -297,17 +335,26 @@ const parseBfdb = {
 
 			// only return the top level, no nested related things
 			xml = this.returnOneWhereParentIs(xml, "rdf:RDF")
-			console.log("Doing", tle)
+			
 			if (!xml){
 				console.warn('Could not find the requested XML fragment, looking for ', tle)
+				toDeleteNoData.push(pkey)
 				continue
 			}
 
 			// remove some things we will want to work with later but are just too complicated right now
 			let adminMetadata = xml.getElementsByTagName('bf:adminMetadata')
-			let adminMetadataData = Array.prototype.slice.call( adminMetadata )
-			for (let item of adminMetadata) {
-				item.parentNode.removeChild(item)
+			if (adminMetadata){
+				let adminMetadataData = Array.prototype.slice.call( adminMetadata )
+				for (let item of adminMetadata) {
+					item.parentNode.removeChild(item)
+				}
+
+
+				profile.rt[pkey].adminMetadataData=adminMetadataData[0]
+
+
+
 			}
 
 			let hasSeries = xml.getElementsByTagName('bf:hasSeries')
@@ -316,23 +363,67 @@ const parseBfdb = {
 				item.parentNode.removeChild(item)
 			}
 
+
+			// does this tle have a URI or a type?
+			
+
+			if (xml.attributes['rdf:resource']){
+				profile.rt[pkey].URI = xml.attributes['rdf:resource'].value
+			}else if(xml.attributes['rdf:about']){
+				profile.rt[pkey].URI = xml.attributes['rdf:about'].value
+			}
+
+
+
+			//let rdftype = xml.getElementsByTagName('rdf:type')
+			for (let child of xml.children){ 
+				if (child.tagName == 'rdf:type'){
+					if (child.attributes['rdf:resource']){
+						profile.rt[pkey]['@type'] = child.attributes['rdf:resource'].value
+						// remove it from the XML since we haev the data
+						child.parentNode.removeChild(child)
+					}
+				}
+			}
+
+
+
+
+
 			let sucessfulProperties  = []
+
+
+
+
 
 			// at this point we have the main piece of the xml tree that has all our data
 			// loop through properties we are looking for and build out the the profile
 
 			for (let k in pt){
-				// console.log(pt[k])
-				// console.log(pt[k].propertyURI)
+
+				// remove any default values since we will be populating from the record
+				pt[k].valueConstraint.defaults=[]
+				
+				
 				let propertyURI = pt[k].propertyURI
 				let prefixURI = this.namespaceUri(propertyURI)
 
 				// see if we have that specific propertry in the xml
-				let el = xml.getElementsByTagName(prefixURI)
+				// let el = xml.getElementsByTagName(prefixURI)
 
-				// console.log(prefixURI)
-				// console.log(el)
-				// console.log('******')
+				// we only want top level elements, not nested things like dupe notes etc.
+				let el = []
+				for (let e of xml.children){
+					if (this.UriNamespace(e.tagName) == propertyURI){
+						el.push(e)
+					}
+				}
+
+
+
+				
+				
+				
 
 				if (el.length>0){
 					// we have that element
@@ -340,7 +431,7 @@ const parseBfdb = {
 					// loop through all of them
 					let counter = 0
 					for (let e of el){
-						// console.log(e,counter, e.children[0].tagName)
+						
 
 						// start populating the data
 						let populateData = null
@@ -348,10 +439,10 @@ const parseBfdb = {
 						// save the source xml for later display
 						populateData.xmlSource = e.outerHTML
 
-						// console.log("----------DOING NOW-------------")
-						// console.log(e.outerHTML)
+						
+						
 
-						console.log(prefixURI)
+						
 						// we have some special functions to deal with tricky elements
 						if (this.specialTransforms[prefixURI]){
 							// make sure to pass the current 'this' context to the functions that use helper functions at this level like this.UriNamespace
@@ -359,15 +450,15 @@ const parseBfdb = {
 
 						}else if (e.children.length == 0){
 
-							console.log("GOT NO KIDS", (e.innerHTML===true), e.innerHTML.length)
+							
 							if (e.attributes && e.attributes['rdf:about'] && e.innerHTML.length == 0){
-								populateData.userValue ={
+								populateData.userValue[prefixURI] ={
 									URI: e.attributes['rdf:about'].value,
 									label: null
 								} 
 							}
 							if (e.attributes && e.attributes['rdf:resource']){
-								populateData.userValue ={
+								populateData.userValue[prefixURI] ={
 									URI: e.attributes['rdf:resource'].value,
 									label: null
 								} 								
@@ -375,10 +466,7 @@ const parseBfdb = {
 
 
 							if (e.innerHTML && e.innerHTML.length!=0){
-								populateData.userValue ={
-									URI: null,
-									label: e.innerHTML
-								}								
+								populateData.userValue[this.UriNamespace(prefixURI)] =e.innerHTML								
 
 							}
 
@@ -388,7 +476,7 @@ const parseBfdb = {
 
 
 							for (let child of e.children){
-								console.log(child.tagName,"~~~~",this.isClass(child.tagName))
+								
 
 
 
@@ -405,12 +493,13 @@ const parseBfdb = {
 									if (child.attributes && child.attributes['rdf:resource']){
 										childUri = child.attributes['rdf:resource'].value
 									}			
-									// console.log(child.tagName)
-									// console.log(child.attributes)
+									
+									
+									
 
 
 									let childLabel = null
-
+									let childProperty = null
 									// lvl 2, loop through all of its properties
 									for (let grandchild of child.children){
 
@@ -418,19 +507,21 @@ const parseBfdb = {
 										if (!this.isClass(grandchild.tagName)){
 
 											if (grandchild.tagName == 'rdfs:label'){
+												
+												childProperty = this.UriNamespace(grandchild.tagName)//this.UriNamespace(grandchild.tagName)
 												childLabel = grandchild.innerHTML
 											}else if (grandchild.tagName == 'rdf:type'){
 
-												console.log('rdf:type rdf:type rdf:type rdf:typerdf:type')
-												console.log(grandchild)
-												console.log(grandchild.attributes)
-												console.log(grandchild.attributes['rdf:resource'])
-												console.log(grandchild.attributes['rdf:resource'].value)
+												
+												
+												
+												
+												
 
 												if (grandchild.attributes['rdf:resource']){													
 													populateData.userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] = grandchild.attributes['rdf:resource'].value
 												}else{
-													console.log('something strange going on with rdf:resource of rdf:type')
+													console.warn('something strange going on with rdf:resource of rdf:type')
 												}
 
 
@@ -447,15 +538,16 @@ const parseBfdb = {
 													populateData.userValue[this.UriNamespace(grandchild.tagName)] = grandchild.innerHTML
 												}else{
 
-													// console.log("-----------NESTED Property------------")
-													// console.log(grandchild.innerHTML)
+													
+													
 
-													let greatgrandchildUri = null
-													let greatgrandchildValue = null
-													let greatgrandchildType = null
-
+													let greatgrandchildUriOther = {}
 													for (let greatgrandchild of grandchild.children){
 
+														let greatgrandchildUri = null
+														let greatgrandchildValue = null
+														let greatgrandchildType = null
+														let greatgrandchildProperty = null
 														if (this.isClass(greatgrandchild.tagName)){
 															// something like this
 															// <bf:classification>
@@ -466,19 +558,29 @@ const parseBfdb = {
 															// small usecases here, might need to expand
 
 															greatgrandchildType = this.UriNamespace(greatgrandchild.tagName)
-															// console.log(grandchild)
+															
 															if (greatgrandchild.attributes && greatgrandchild.attributes['rdf:about']){
 																greatgrandchildUri = greatgrandchild.attributes['rdf:about'].value
 															}
 
 															for (let greatgreatgrandchild of greatgrandchild.children){
 
+																
+
 																if (greatgreatgrandchild.tagName == 'rdfs:label'){
-																	greatgrandchildValue = greatgreatgrandchild.nnerHTML
+																	greatgrandchildValue = greatgreatgrandchild.innerHTML
+																	greatgrandchildProperty = this.UriNamespace(greatgreatgrandchild.tagName)
 																}else if (greatgreatgrandchild.tagName == 'madsrdf:authoritativeLabel'){
-																	greatgrandchildValue = greatgreatgrandchild.nnerHTML
+																	greatgrandchildValue = greatgreatgrandchild.innerHTML
+																	greatgrandchildProperty = this.UriNamespace(greatgreatgrandchild.tagName)
 																}else if (greatgreatgrandchild.tagName == 'bf:code'){
-																	greatgrandchildValue = greatgreatgrandchild.nnerHTML
+																	greatgrandchildValue = greatgreatgrandchild.innerHTML
+																	greatgrandchildProperty = this.UriNamespace(greatgreatgrandchild.tagName)
+																}else{
+
+																	// this is a note propery or something like that, save it for later, better be a literal
+																	greatgrandchildUriOther[this.UriNamespace(greatgreatgrandchild.tagName)] = greatgreatgrandchild.innerHTML
+
 																}
 
 															}
@@ -487,21 +589,49 @@ const parseBfdb = {
 															if (greatgrandchildUri && !greatgrandchildValue){
 																// so there is a URI, but no label or code for it, just use part of  the URI for the label then
 																greatgrandchildValue = greatgrandchildUri.split('/')[greatgrandchildUri.split('/').length-1]
+																greatgrandchildProperty = "http://www.w3.org/2000/01/rdf-schema#label"
 															}
 
-															// console.log(greatgrandchildUri)
-															// console.log(greatgrandchildValue)
-															// console.log(greatgrandchildType)
+															
 
 														}else{
 
-															console.log('not nested class? what is this',greatgrandchild.innerHTML)
+															console.warn('not nested class? what is this',greatgrandchild.innerHTML)
 														}
+
+
+
+														if (greatgrandchildUri && greatgrandchildValue && greatgrandchildType){
+															// if (!populateData.userValue[propertyURI]){
+															// 	populateData.userValue[propertyURI] = {}
+															// }
+															populateData.userValue[this.UriNamespace(grandchild.tagName)] = {'@type':greatgrandchildType,'URI':greatgrandchildUri}
+															populateData.userValue[this.UriNamespace(grandchild.tagName)][greatgrandchildProperty] = greatgrandchildValue
+
+														}else if (!greatgrandchildUri && greatgrandchildValue && greatgrandchildType){
+															// if (!populateData.userValue[propertyURI]){
+															// 	populateData.userValue[propertyURI] = {}
+															// }														
+															populateData.userValue[this.UriNamespace(grandchild.tagName)] = {'@type':greatgrandchildType, 'URI':greatgrandchildUri}
+															populateData.userValue[this.UriNamespace(grandchild.tagName)][greatgrandchildProperty] = greatgrandchildValue
+
+														}
+
+
 													}
 
-													if (greatgrandchildUri && greatgrandchildValue && greatgrandchildType){
-														populateData.userValue[this.UriNamespace(grandchild.tagName)] = {'@type':greatgrandchildType, 'literal':greatgrandchildValue, 'URI':greatgrandchildUri}
+													for (let u of Object.keys(greatgrandchildUriOther)){
+														// if (!populateData.userValue[propertyURI]){
+														// 	populateData.userValue[propertyURI] = {}
+														// }	
+														if (!populateData.userValue[this.UriNamespace(grandchild.tagName)]){
+															populateData.userValue[this.UriNamespace(grandchild.tagName)] = {}
+														}	
+
+														populateData.userValue[this.UriNamespace(grandchild.tagName)][u] = greatgrandchildUriOther[u]
 													}
+													
+
 
 
 												}
@@ -513,13 +643,83 @@ const parseBfdb = {
 										}
 									}
 
+									// Notes are special things
+									// if (propertyURI == 'http://id.loc.gov/ontologies/bibframe/note'){
+									// 	propertyURI= 'http://www.w3.org/2000/01/rdf-schema#label'
+									// }
+
+
+									
+									
+									
+
+									
 
 									if (childUri && childLabel){
+										// if (!populateData.userValue[propertyURI]){
+										// 	populateData.userValue[propertyURI] = {}
+										// }		
+										// populateData.userValue[propertyURI].literal = childLabel
+										// populateData.userValue[propertyURI].URI = childUri
+									
+
+										populateData.userValue.literal = childLabel
+										populateData.userValue.URI = childUri
+									
+
+
 										// populateData.userValue['@value'] = {literal: childLabel, URI: childUri}
-										populateData.userValue[propertyURI] = {literal: childLabel, URI: childUri}
-									}else if (!childUri && childLabel && Object.keys(populateData.userValue).length==1){
+										// populateData.userValue[propertyURI] = {literal: childLabel, URI: childUri}
+									// }else if (!childUri && childLabel && Object.keys(populateData.userValue).length==1){
+									}else if (!childUri && childLabel){
+
+
 										// populateData.userValue['@value'] = childLabel
-										populateData.userValue[propertyURI] = {literal: childLabel, URI: null}
+										// if (!populateData.userValue[propertyURI]){
+										// populateData.userValue[propertyURI] = {literal: childLabel, propertyURI: propertyURI, URI: null, '@type': this.UriNamespace(child.tagName)}	
+
+
+
+
+										// if (!populateData.userValue[propertyURI]){
+										// 	populateData.userValue[propertyURI] = {}
+										// }		
+
+										// populateData.userValue[propertyURI][childProperty] = childLabel
+										// populateData.userValue[propertyURI].URI = null
+										// populateData.userValue[propertyURI]['@type'] = this.UriNamespace(child.tagName)
+									
+
+
+
+										populateData.userValue[childProperty] = childLabel
+										populateData.userValue.URI = null
+										populateData.userValue['@type'] = this.UriNamespace(child.tagName)
+									
+
+
+
+
+
+
+										// }else{
+										// 	// add to it
+										// 	populateData.userValue[propertyURI][]
+										// }
+										
+
+										// just make it a literal if thetre is no URI
+										// populateData.userValue[propertyURI] = childLabel
+
+										// we don't need the higher level @type
+										// delete populateData.userValue['@type']
+
+										// testing some things with notes:								
+
+
+
+
+
 									}else if (childUri && !childLabel) {
 										// we have a URI but no label for that value, take the last piece of the URL
 
@@ -528,17 +728,37 @@ const parseBfdb = {
 										}else{
 											childLabel = childUri
 										}
-										populateData.userValue[propertyURI] = {literal: childLabel, URI: childUri}
+
+										// if (!populateData.userValue[propertyURI]){
+										// 	populateData.userValue[propertyURI] = {}
+										// }		
+
+										// populateData.userValue[propertyURI]['http://www.w3.org/2000/01/rdf-schema#label'] = childLabel
+										// populateData.userValue[propertyURI].URI = childUri
+
+
+
+										populateData.userValue['http://www.w3.org/2000/01/rdf-schema#label'] = childLabel
+										populateData.userValue.URI = childUri
+
+
+
+
+
+
+										// populateData.userValue[propertyURI] = {literal: childLabel, URI: childUri}
+										
+
 
 
 									}else{
 
-										// console.log("~~~~~~~~~~ HHERERERREREERERERER @#$%^&*(")
+										console.warn("Problem with child uri and child label")
 									}
 
 
 
-									// console.log(childLabel,childUri,populateData)
+									
 
 
 								}
@@ -548,8 +768,8 @@ const parseBfdb = {
 
 						}
 
-						// console.log('----~~~~~------')
-						// console.log(populateData,'populateData',counter)
+						
+						
 
 						// since we created a brand new populateData we either need to 
 						// replace the orginal in the profile or if there is more than one we 
@@ -595,7 +815,7 @@ const parseBfdb = {
 			// we are now going to do some ananlyis on profile, see how many properties are acutally used, what is not used, etc
 			for (let key in profile.rt[pkey].pt){
 
-				// console.log(key,'key here')
+				
 				if (Object.keys(uniquePropertyURIs).indexOf(profile.rt[pkey].pt[key].propertyURI)===-1){
 					uniquePropertyURIs[profile.rt[pkey].pt[key].propertyURI] = {status:false,data:[],resourceTemplates:{},unAssingedProperties:[]}
 				}
@@ -622,15 +842,15 @@ const parseBfdb = {
 						})	
 					})
 
-					// console.log(allUris)
-					// console.log(profile.rt[pkey].pt[key].userValue)
-					// console.log('##################~~~~!!!!')
+					
+					
+					
 					profile.rt[pkey].pt[key].missingProfile = []
 					// loop though the URIs we have
 					Object.keys(profile.rt[pkey].pt[key].userValue).forEach((userURI)=>{
 						if (userURI !== '@value' && userURI !== '@type' && userURI !== 'uri'){
 							if (allUris.indexOf(userURI)===-1){
-								console.log(userURI, 'not found')
+								
 								profile.rt[pkey].pt[key].missingProfile.push(userURI)
 
 								uniquePropertyURIs[profile.rt[pkey].pt[key].propertyURI].unAssingedProperties.push(userURI)
@@ -643,7 +863,7 @@ const parseBfdb = {
 						uniquePropertyURIs[profile.rt[pkey].pt[key].propertyURI].status='mixed'
 					}
 
-					// console.log('##################~~~~!!!!')
+					
 
 
 				}
@@ -655,23 +875,45 @@ const parseBfdb = {
 
 			profile.rt[pkey].propertyLoadRatio = parseInt(Object.keys(uniquePropertyURIs).filter((k)=>uniquePropertyURIs[k].status).length /Object.keys(uniquePropertyURIs).length * 100)
 
-			// console.log(uniquePropertyURIs)
-			// console.log('uniquePropertyURIs')
+			
+			
 			console.log(totalHasDataLoaded)
 
 
-			// console.log("here")
-			// console.log(pt,tle,xml)	
-			// console.log(profile)	
-			// console.log("^^^^^***")
-			// console.log(xml.outerHTML)
-			// console.log(sucessfulProperties)
-			console.log(adminMetadataData,hasSeriesData)
+			
+			
+			
+			
+			
+			
+			console.log(hasSeriesData)
 
-			console.log('profile',profile)
-			return profile
+
+
+
+
+
+
+
+
+
+
+			
+
+
 
 		}
+
+		// these RTs did not have any data parsed into them, because they were not present
+		// remove them from the profile
+		for (let x of toDeleteNoData){
+			profile.rt[x].noData=true			
+			// profile.rtOrder.splice(profile.rtOrder.indexOf(x), 1);
+		}
+
+		
+		return profile
+
 
 
 
@@ -686,6 +928,7 @@ const parseBfdb = {
 		if (window.DOMParser){
 			let parser = new DOMParser();
 			this.activeDom = parser.parseFromString(xml, "text/xml");
+		// the library very much doesn't work on anything but chrome
 		// }else{
 		// 	this.activeDom = new jsdom.JSDOM(xml, {
 		// 		contentType: "text/xml",
@@ -696,7 +939,7 @@ const parseBfdb = {
 
 
 
-		console.log(this.activeDom.getElementsByTagName("rdf:type")[0].attributes)
+		// console.log(this.activeDom.getElementsByTagName("rdf:type")[0].attributes)
 
 
 

@@ -322,11 +322,63 @@ export default {
 
 
     let data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]
-    // console.log(data,data.userValue[this.structure.propertyURI])
+    // console.log(this.structure.propertyURI, "HERE",data.propertyURI)
 
-    if (data.userValue[this.structure.propertyURI]){
+    // testing something with notes
+    if (this.structure.parent.includes('lc:RT:bf2:Noted')){
+
+      
+      if (data.userValue['http://id.loc.gov/ontologies/bibframe/note'] && data.userValue['http://id.loc.gov/ontologies/bibframe/note'][this.structure.propertyURI]){
+        this.inputValue = data.userValue['http://id.loc.gov/ontologies/bibframe/note'][this.structure.propertyURI]
+      }else if (data.userValue['http://id.loc.gov/ontologies/bibframe/note'] && data.userValue['http://id.loc.gov/ontologies/bibframe/note'][data.propertyURI]){
+        this.inputValue = data.userValue['http://id.loc.gov/ontologies/bibframe/note'][data.propertyURI]
+      }else{
+
+        // it is not a bnode
+        if (data.userValue['@type']=='http://id.loc.gov/ontologies/bibframe/Note'){
+          this.inputValue = data.userValue[this.structure.propertyURI]
+        }
+
+
+
+      }
+
+      // unless it is a note on the thing itself
+
+
+
+
+    }else if (data.userValue[this.structure.propertyURI]){
       this.inputValue = data.userValue[this.structure.propertyURI]
+
+
+    }else if (this.structure.propertyURI === 'http://www.w3.org/2000/01/rdf-schema#label'){
+
+      // check to see if it exists in the bnode
+      if (data.userValue[data.propertyURI] && data.userValue[data.propertyURI][this.structure.propertyURI]){
+        this.inputValue = data.userValue[data.propertyURI][this.structure.propertyURI]
+      }
+
+      
+      // console.log('no',data,data.propertyURI)
+      
     }
+
+
+
+
+    // }else if (data.userValue[data.propertyURI] && data.userValue[data.propertyURI][this.structure.propertyURI]){
+    //   this.inputValue = data.userValue[data.propertyURI][this.structure.propertyURI]
+    // }    
+
+    // }else if (data.userValue['http://id.loc.gov/ontologies/bibframe/note'] && data.userValue['http://id.loc.gov/ontologies/bibframe/note'][this.structure.propertyURI]){
+    //   this.inputValue = data.userValue['http://id.loc.gov/ontologies/bibframe/note'][this.structure.propertyURI]
+    // }
+    // bad idea
+    // }else if (this.structure.propertyURI === 'http://www.w3.org/2000/01/rdf-schema#label' && data.userValue[data.propertyURI]){
+    //   this.inputValue = data.userValue[data.propertyURI]
+    // }
+
 
     let d = localStorage.getItem('bfeDiacritics')
     if (d){

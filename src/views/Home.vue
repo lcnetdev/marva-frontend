@@ -14,7 +14,7 @@
        <Keypress key-event="keydown" :multiple-keys="[{keyCode: 73, modifiers: ['ctrlKey'],preventDefault: true}]" @success="navRoute" />
 
       <div class="grid">  
-        <aside class="sidebar-left" style="background-color: #2a2a2a; color: #ffffff" >
+        <aside class="sidebar-left" style="background-color: #2a2a2a; color: #ffffff; position: relative;" >
                   
           <svg viewBox="0 0 125 70" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12.0698 1.26944C10.5984 1.29437 8.02988 1.29437 7.48125 1.29437C6.9825 1.29437 3.56606 1.26944 2.76806 1.26944C2.21944 1.26944 1.74563 1.2445 1.24688 0.571186H1.07231L0 3.93775L0.29925 4.16219C1.04738 2.94025 2.26931 2.01756 3.96506 2.01756H6.1845C6.384 2.01756 6.48375 2.16719 6.48375 2.36669V17.8778L5.43638 18.6509V19H9.52613V18.6509L8.40394 17.8778V2.36669C8.40394 2.16719 8.50369 2.01756 8.70319 2.01756H9.99994C10.9476 2.01756 12.6932 1.89287 14.6882 3.96269L14.9376 3.71331L13.7655 0.571186H13.5909C13.0922 1.2445 12.6184 1.26944 12.0698 1.26944Z" fill="white"/>
@@ -45,9 +45,14 @@
 
               </ul>
 
+              
+              <div style="padding: 0.5em; font-size: 1.2em; position: absolute; bottom: 0;">Logged in as: {{catInitials}} <a @click="changeCatId" href="#" style="color:white !important;">Change</a></div>
+
 
 
         </aside>
+
+
       
         <article id="home-content">
 
@@ -117,6 +122,18 @@ export default {
     },
 
 
+    changeCatId(event){
+
+      localStorage.removeItem('bfeCatInitials')
+      this.$store.dispatch("setCatInitials", { self: this, catInitials: null }).then(() => {
+        
+      })  
+
+      event.preventDefault()
+
+    },
+
+
     navRoute(event){
 
       if (event.event.keyCode == 77 && this.$route.fullPath!="/myrecords"){
@@ -150,6 +167,7 @@ export default {
   computed: mapState({
     profilesLoaded: 'profilesLoaded',
     startingPoints: 'startingPoints',
+    catInitials: 'catInitials',
 
     // to access local state with `this`, a normal function must be used
     isMyRecords () {
@@ -186,6 +204,7 @@ export default {
     // kick off the fetching of profiles on load
     this.$store.dispatch("fetchProfiles", { self: this })    
     console.log(this.$route)
+
 
   },
 

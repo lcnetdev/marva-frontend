@@ -1,3 +1,3 @@
 module.exports = {
-  publicPath: '/editor/'
+  publicPath: '/bfe2/editor/'
 }

@@ -2,9 +2,51 @@
 
 const config = {
 
-	'profileUrl' : 'profiles.json',
 
-	startingPoint: {"id":"ec157852-4a16-4153-9a28-2a6abf48356b","name":"config","configType":"startingPoints","json":[{"menuGroup":"Monograph","menuItems":[{"label":"Instance","type":["http://id.loc.gov/ontologies/bibframe/Instance"],"useResourceTemplates":["lc:RT:bf2:Monograph:Instance"]},{"label":"Work","type":["http://id.loc.gov/ontologies/bibframe/Work"],"useResourceTemplates":["lc:RT:bf2:Monograph:Work"]}]},{"menuGroup":"Notated Music","menuItems":[{"label":"Create Work","type":["http://id.loc.gov/ontologies/bibframe/Work"],"useResourceTemplates":["lc:RT:bf2:NotatedMusic:Work"]},{"label":"Create Instance","type":["http://id.loc.gov/ontologies/bibframe/Instance"],"useResourceTemplates":["lc:RT:bf2:NotatedMusic:Instance"]}]},{"menuGroup":"Serial","menuItems":[{"label":"Instance","type":["http://id.loc.gov/ontologies/bibframe/Instance"],"useResourceTemplates":["lc:RT:bf2:Serial:Instance"]},{"label":"Work","type":["http://id.loc.gov/ontologies/bibframe/Work"],"useResourceTemplates":["lc:RT:bf2:Serial:Work"]}]},{"menuGroup":"Cartographic","menuItems":[{"label":"Instance","type":["http://id.loc.gov/ontologies/bibframe/Instance"],"useResourceTemplates":["lc:RT:bf2:Cartographic:Instance"]},{"label":"Work","type":["http://id.loc.gov/ontologies/bibframe/Work"],"useResourceTemplates":["lc:RT:bf2:Cartographic:Work"]}]},{"menuGroup":"Sound Recording: Audio CD","menuItems":[{"label":"Instance","type":["http://id.loc.gov/ontologies/bibframe/Instance"],"useResourceTemplates":["lc:RT:bf2:SoundRecording:Instance"]},{"label":"Work","type":["http://id.loc.gov/ontologies/bibframe/Work"],"useResourceTemplates":["lc:RT:bf2:SoundRecording:Work"]}]},{"menuGroup":"Sound Recording: Audio CD-R","menuItems":[{"label":"Instance","type":["http://id.loc.gov/ontologies/bibframe/Instance"],"useResourceTemplates":["lc:RT:bf2:SoundCDR:Instance"]},{"label":"Work","type":["http://id.loc.gov/ontologies/bibframe/Work"],"useResourceTemplates":["lc:RT:bf2:SoundCDR:Work"]}]},{"menuGroup":"Sound Recording: Analog","menuItems":[{"label":"Instance","type":["http://id.loc.gov/ontologies/bibframe/Instance"],"useResourceTemplates":["lc:RT:bf2:Analog:Instance"]},{"label":"Work","type":["http://id.loc.gov/ontologies/bibframe/Work"],"useResourceTemplates":["lc:RT:bf2:Analog:Work"]}]},{"menuGroup":"Sound Recording: Cassette","menuItems":[{"label":"Instance","type":["http://id.loc.gov/ontologies/bibframe/Instance"],"useResourceTemplates":["lc:RT:bf2:SoundCassette:Instance"]},{"label":"Work","type":["http://id.loc.gov/ontologies/bibframe/Work"],"useResourceTemplates":["lc:RT:bf2:SoundCassette:Work"]}]},{"menuGroup":"Moving Image: BluRay DVD","menuItems":[{"label":"Instance","type":["http://id.loc.gov/ontologies/bibframe/Instance"],"useResourceTemplates":["lc:RT:bf2:MIBluRayDVD:Instance"]},{"label":"Work","type":["http://id.loc.gov/ontologies/bibframe/Work"],"useResourceTemplates":["lc:RT:bf2:MIBluRayDVD:Work"]}]},{"menuGroup":"Moving Image: 35mm Feature Film","menuItems":[{"label":"Instance","type":["http://id.loc.gov/ontologies/bibframe/Instance"],"useResourceTemplates":["lc:RT:bf2:35mmFeatureFilm:Instance"]},{"label":"Work","type":["http://id.loc.gov/ontologies/bibframe/Work"],"useResourceTemplates":["lc:RT:bf2:35mmFeatureFilm:Work"]}]},{"menuGroup":"Rare Materials","menuItems":[{"label":"Instance","type":["http://id.loc.gov/ontologies/bibframe/Instance"],"useResourceTemplates":["lc:RT:bf2:RareMat:Instance"]},{"label":"Work","type":["http://id.loc.gov/ontologies/bibframe/Work"],"useResourceTemplates":["lc:RT:bf2:RareMat:Work"]}]}],"metadata":{"createDate":"2019-06-11T19:02:59.649Z","updateDate":"2020-03-20T18:06:28.173Z","updateUser":null}},
+	'regionUrls': {
+
+		'dev':{
+
+			'ldpjs' : 'http://localhost:9400/api-staging/',			
+			'util'  : 'http://localhost:9400/util/',
+			'profiles' : '/profiles.json',
+			'starting': '/starting.json',
+			'env' : 'staging'
+
+		},
+
+		'staging':{
+
+			'ldpjs' : 'https://preprod-3001/bfe2/api-staging/',
+			'util'  : 'https://preprod-3001/bfe2/util/',
+			'profiles' : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
+			'starting' : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:startingPoints&where=index.label:config',
+			'env' : 'staging'
+		}
+
+
+
+
+
+	},
+
+	returnUrls: function(){
+
+
+		if (window.location.href.startsWith('http://localhost')){
+			return this.regionUrls.dev
+		}else if (window.location.href.startsWith('https://preprod-3001')){
+			return this.regionUrls.staging
+		}
+
+
+
+
+
+	},
+
+
+
 
 	lookupConfig: {
 

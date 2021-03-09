@@ -157,7 +157,7 @@ export default {
       let useStartingPoint = this.returnSpByTemplateId(event.target.id)
       
       console.log(Object.assign({},this.profiles[useStartingPoint]), 'Object.assign({},this.profiles[useStartingPoint])')
-      this.$store.dispatch("setActiveProfile", { self: this, profile: Object.assign({},this.profiles[useStartingPoint]) }).then(() => {
+      this.$store.dispatch("setActiveProfile", { self: this, profile: JSON.parse(JSON.stringify(this.profiles[useStartingPoint])) }).then(() => {
         this.$router.push({ path: 'edit' })
       })
 

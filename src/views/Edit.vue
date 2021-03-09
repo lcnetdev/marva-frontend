@@ -2,7 +2,7 @@
     <div class="grid">
 
       <header>
-                    <div style="display: none">loaded profile -- {{profilesLoaded}} </div>
+                    <div style="display: ">loaded profile -- {{profilesLoaded}} </div>
 
       </header>
 
@@ -25,7 +25,7 @@
                 <!-- <div style="color:#bfbfbf; font-size: 1.5em; text-align: center;">{{sartingPoint}}</div> -->
                 <div v-for="profileName in activeProfile.rtOrder" :key="profileName">
 
-                    <div>
+                    <div v-if="activeProfile.rt[profileName].noData != true">
                         <div class="container-type-icon" style="color: #ffffff">
                             <div>   
                                 <svg v-if="profileName.split(':').slice(-1)[0] == 'Work'" width="1.5em" height="1.1em" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -40,8 +40,8 @@
 
                         <ul style="padding-left: 0;" :key="'leftmenu' + activeEditCounter">
                             <li v-bind:class="['left-menu-list-item', { 'left-menu-list-item-has-data' :  liHasData(activeProfile.rt[profileName].pt[profileCompoent]) && returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue) != '', 'left-menu-list-item-active':(activeComponent==profileCompoent &&activeProfileName==profileName)}]" :id="'menu'+profileCompoent"  v-for="profileCompoent in activeProfile.rt[profileName].ptOrder" :key="profileCompoent">
-                                <a @click="scrollFieldContainerIntoView($event,profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_'))" href="#">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}}</a>
-
+                                <a v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" @click="scrollFieldContainerIntoView($event,profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_'))" href="#">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}}</a>
+                                <a v-else href="#" style="color: rgba(255,255,255,0.75) !important;" @click="restoreDelete($event, profileName, profileCompoent)" class="simptip-position-right" data-tooltip="Click to restore">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}} [Deleted]</a>
 
                             </li>
                         </ul>
@@ -61,7 +61,7 @@
                 <div v-for="profileName in activeProfile.rtOrder" :key="profileName">
 
                     
-                    <div :class="['container-' + profileName.split(':').slice(-1)[0]]">
+                    <div v-if="activeProfile.rt[profileName].noData != true" :class="['container-' + profileName.split(':').slice(-1)[0]]">
                         <div class="container-type-icon">
                             <div>{{profileName.split(':').slice(-1)[0]}}</div>
                             <div>
@@ -76,7 +76,7 @@
                         </div>
 
                         <div v-for="profileCompoent in activeProfile.rt[profileName].ptOrder" :key="profileCompoent" :id="'container-for-'+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')">
-                              <EditMainComponent class="component" :activeTemplate="activeProfile.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :parentStructure="activeProfile.rtOrder" :structure="activeProfile.rt[profileName].pt[profileCompoent]"/>
+                              <EditMainComponent v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" class="component" :activeTemplate="activeProfile.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :parentStructure="activeProfile.rtOrder" :structure="activeProfile.rt[profileName].pt[profileCompoent]"/>
                         </div>
 
                         <div v-if="activeProfile.rt[profileName].unusedXml" style="background-color: #fde4b7; overflow-x: hidden;">
@@ -99,7 +99,7 @@
                 <!-- <div style="color:#bfbfbf; font-size: 1.5em; text-align: center;">{{sartingPoint}}</div> -->
                 <div v-for="profileName in activeProfile.rtOrder" :key="profileName">
 
-                        <div class="container-type-icon" style="color: #2c3e50">
+                        <div v-if="activeProfile.rt[profileName].noData != true" class="container-type-icon" style="color: #2c3e50">
                             <div>   
                                 
                               <div v-if="profileName.split(':').slice(-1)[0] == 'Work'">
@@ -118,13 +118,13 @@
                         </div>
 
 
-                        <div style="margin-left: 1%; border-left: 1px solid rgba(44, 62, 80, 0.25); padding-left: 0.2em">
+                        <div v-if="activeProfile.rt[profileName].noData != true" style="margin-left: 1%; border-left: 1px solid rgba(44, 62, 80, 0.25); padding-left: 0.2em">
                             
                             <div v-for="profileCompoent in activeProfile.rt[profileName].ptOrder" :key="profileCompoent">
 
 
 
-                              <div style="margin-bottom: 1em;" v-bind:class="[ {'opac-field-active':(activeComponent==profileCompoent &&activeProfileName==profileName)}]" v-if="Object.keys(activeProfile.rt[profileName].pt[profileCompoent].userValue).length>0 && returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue) != ''">
+                              <div style="margin-bottom: 1em;" v-bind:class="[ {'opac-field-active':(activeComponent==profileCompoent &&activeProfileName==profileName)}]" v-if="Object.keys(activeProfile.rt[profileName].pt[profileCompoent].userValue).length>0 && returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue) != '' && activeProfile.rt[profileName].pt[profileCompoent].deleted != true">
                                 <span class="opac-field-title">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}}</span>
                                 <div class="opac-field-value">{{returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue)}}</div>
 
@@ -274,6 +274,18 @@ export default {
     triggerXMLExport: function(){
 
       console.log(exportXML.toBFXML(this.activeProfile))
+
+
+    },
+
+
+    restoreDelete: function(event, profile, id){
+
+      this.$store.dispatch("restoreProperty", { self: this, id: id, profile:profile  }).then(() => {
+        
+      })   
+
+
 
 
     },

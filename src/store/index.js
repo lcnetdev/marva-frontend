@@ -52,6 +52,8 @@ export default new Vuex.Store({
 
     activeInput: null,
 
+    catInitials: null,
+
 
 
     // used for auto complete lookups 
@@ -74,7 +76,12 @@ export default new Vuex.Store({
 
 
     idWorkSearchResults: [],
-    idXML:""
+    idXML:"",
+    bfdbXML:"",
+
+
+    allRecords : [],
+    myRecords: []
 
   },
   mutations: {
@@ -110,6 +117,10 @@ export default new Vuex.Store({
       state.contextData = val
     },
 
+    
+    CATINITALS(state, val){
+      state.catInitials = val
+    },
 
     MACNAV(state,val) {
       state.disableMacroKeyNav = val
@@ -145,6 +156,19 @@ export default new Vuex.Store({
     IDXML(state, val) {
       state.idXML = val
     }, 
+
+    BFDBXML(state, val) {
+      state.bfdbXML = val
+    }, 
+    MYRECORDS(state, val) {
+      state.myRecords = val
+    }, 
+    ALLRECORDS(state, val) {
+      state.allRecords = val
+    }, 
+
+    
+
 
 
 
@@ -206,7 +230,11 @@ export default new Vuex.Store({
       let results = await lookupUtil.fetchIdXML(data.url)
       commit('IDXML', results)  
     },
-
+    async fetchBfdbXML ({ commit },data) {   
+      commit('BFDBXML', '')    
+      let results = await lookupUtil.fetchBfdbXML(data.url)
+      commit('BFDBXML', results)  
+    },
 
     async fetchOntology ({ commit },data) {   
 
@@ -218,6 +246,14 @@ export default new Vuex.Store({
     },
 
 
+    async fetchAllRecords ({ commit }) {
+      let results = await lookupUtil.fetchRecords()
+      commit('ALLRECORDS', results)
+    },
+    async fetchMyRecords ({ commit },data) {
+      let results = await lookupUtil.fetchRecords(data.user)
+      commit('MYRECORDS', results)
+    },
 
     clearContext ({ commit }) {   
       commit('CONTEXT', {})    
@@ -234,6 +270,9 @@ export default new Vuex.Store({
       // console.log("^^^^^^^^data")
     },
 
+    setCatInitials({ commit}, data){
+      commit('CATINITALS', data.catInitials)
+    },
     addValue ({ commit, state }, data) {   
       // we know the value bc it is the active context value in this case
       // console.log('-----------state.contextData-state.contextData-state.contextData------------')
@@ -244,6 +283,7 @@ export default new Vuex.Store({
       commit('ACTIVEEDITCOUNTER')      
     },
     addValueLiteral ({ commit, state }, data) {   
+      console.log(data)
       let nap = parseProfile.setValue(state.activeProfile, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, data.value)
       commit('ACTIVEPROFILE', nap)
       commit('ACTIVEEDITCOUNTER')      
@@ -272,6 +312,15 @@ export default new Vuex.Store({
       let newProfile = parseProfile.removeProperty(data.id,data.profile,state.activeProfile)
       commit('ACTIVEPROFILE', newProfile)    
     },
+
+    restoreProperty: ({commit, state}, data) => {
+      let newProfile = parseProfile.restoreProperty(data.id,data.profile,state.activeProfile)
+      commit('ACTIVEPROFILE', newProfile)    
+    },
+
+
+
+
 
     duplicateProperty: ({commit, state}, data) => {
       let newProfile = parseProfile.duplicateProperty(data.id,data.profile,state.activeProfile)

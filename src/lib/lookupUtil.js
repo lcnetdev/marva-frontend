@@ -16,7 +16,9 @@ const lookupUtil = {
     // fetches the profile data from supplied URL or from the config URL if empty
     fetchSimpleLookup: async function(url, json) {
       url = url || config.profileUrl
-      url = url.replace('http://','https://')
+      if (url.includes("id.loc.gov")){
+        url = url.replace('http://','https://')
+      }
 
       let options = {}
       if (json){
@@ -27,7 +29,7 @@ const lookupUtil = {
         let response = await fetch(url,options);
         let data = null
 
-        if (url.endsWith('.rdf')){
+        if (url.endsWith('.rdf') || url.endsWith('.xml')){
           data =  await response.text()
         }else{
           data =  await response.json()
@@ -40,6 +42,7 @@ const lookupUtil = {
         return  data;
 
       }catch(err){
+        //alert("There was an error retriving the record from:",url)
         console.error(err);
 
         // Handle errors here
@@ -453,6 +456,38 @@ const lookupUtil = {
     },
 
 
+    fetchRecords: async function(user){
+
+        let utilUrl = config.returnUrls().util
+        let utilPath = config.returnUrls().env
+
+        let url
+        if (user){
+          url = `${utilUrl}myrecords/${utilPath}/${user}`
+        }else{
+          url = `${utilUrl}allrecords/${utilPath}/`
+        }
+
+
+        let r = await this.fetchSimpleLookup(url)
+
+        let rSorted = [];
+        for (let id in r) {
+            rSorted.push(r[id]);
+        }
+
+        rSorted.sort(function(a, b) {
+            return b.timestamp - a.timestamp ;
+        });
+
+
+
+
+        return rSorted
+    },
+
+
+
 
 
     fetchIdXML: async function(url){
@@ -463,6 +498,15 @@ const lookupUtil = {
         let r = await this.fetchSimpleLookup(url)
         return r
     },
+
+    fetchBfdbXML: async function(url){
+
+        url = url.replace(/\.jsonld/,'.xml')
+
+        let r = await this.fetchSimpleLookup(url)
+        return r
+    },
+
 
 
     fetchOntology: async function(url){
