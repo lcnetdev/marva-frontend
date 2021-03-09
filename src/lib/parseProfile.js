@@ -117,6 +117,9 @@ const parseProfile = {
 
         // we have starting points, generate those profiles based on their requirements
         // this is just converting the format of the old BFE starting points format
+        if (Array.isArray(this.startingPointData)){
+            this.startingPointData = this.startingPointData[0]
+        }
         this.startingPointData.json.forEach((sp)=>{
 
             this.startingPoints[sp.menuGroup] = {name:sp.menuGroup, work: null, instance: null, item: null }
