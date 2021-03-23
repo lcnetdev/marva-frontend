@@ -37,13 +37,13 @@
     </div>
 
   </div>
-
+<!-- 
     <hr style="margin-top:2em">
 
     <h3>Load Work record from BFDB</h3>
 
 
-    <hr style="margin-top:2em">
+    <hr style="margin-top:2em"> -->
 <!-- 
     <h3>From id.loc.gov</h3>
 
@@ -129,12 +129,35 @@ export default {
 
         parseBfdb.parse(this.bfdbXML)
 
+        // alert(parseBfdb.hasItem)
+
         let useProfile = null
         // find the right profile to feed it
         for (let key in this.profiles){
           if (this.profiles[key].rtOrder.indexOf(this.instanceSelected)>-1){
             useProfile = JSON.parse(JSON.stringify(this.profiles[key]))
+            console.log("useProfileuseProfileuseProfileuseProfileuseProfile->",useProfile)            
           }
+        }
+
+        // we might need to load in a item
+        if (parseBfdb.hasItem>0){ 
+
+
+          // look for the RT for this item
+          let useItemRtLabel = this.instanceSelected.replace(':Instance',':Item')
+
+          for (let pkey in this.profiles){
+            for (let rtkey in this.profiles[pkey].rt){
+              if (rtkey == useItemRtLabel){
+                let useItem = JSON.parse(JSON.stringify(this.profiles[pkey].rt[rtkey]))
+                useProfile.rtOrder.push(useItemRtLabel)
+                useProfile.rt[useItemRtLabel] = useItem                
+              }
+            }
+          }
+
+
         }
 
         if (!useProfile.log){
@@ -142,6 +165,7 @@ export default {
         
         }
         useProfile.log.push({action:'loadInstance',from:this.instanceEditorLink})
+        useProfile.procInfo= "update instance"
 
 
         // also give it an ID for storage
@@ -164,12 +188,14 @@ export default {
 
         
 
-        // console.log(useProfile,'console.log(useProfile)')
+        console.log(useProfile,'console.log(useProfile)')
         this.transformResults  = parseBfdb.transform(useProfile)
 
         // let workkey = this.transformResults.rtOrder.filter((k)=> k.endsWith(":Instance"))[0]
         // this.transformResultsDisplay = this.transformResults.rt[workkey]
+        this.$store.dispatch("setActiveRecordSaved", { self: this}, false).then(() => {
 
+        })
 
         this.$store.dispatch("setActiveProfile", { self: this, profile: this.transformResults }).then(() => {
 
@@ -209,6 +235,8 @@ export default {
 
 
         this.transformResultsDisplay = this.transformResults.rt[workkey]
+
+
 
 
         if (goEdit){
@@ -283,7 +311,7 @@ export default {
 
       instanceTests:[
         '/bfe2/editor/tests/instances/c0010058400001.editor-pkg.xml',
-        '/bfe2/editor/tests/instances/c0214680420001.editor-pkg.xml',
+        // '/bfe2/editor/tests/instances/c0214680420001.editor-pkg.xml',
       ]
 
     }

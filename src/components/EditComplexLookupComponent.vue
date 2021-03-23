@@ -23,21 +23,24 @@
   <!--     <div class="component-container-title">{{structure.propertyLabel}}</div>
    -->    
 
-      <div v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search']">       
-        <div class="component-nested-container-title" style="top: 0;">{{structure.propertyLabel}}</div>
+      <div style="position: relative;" v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search']">       
+          <div class="component-nested-container-title" style="top: 0; width: 100%">{{structure.propertyLabel}}</div>
 
           <!-- if there is userdata for this type of componet then it is a lookedup entity, make the entity, dont display the inputfield -->
-          <div v-if="userData.literal" style="position: absolute;">
-             <div class="selected-value-container-nested" style="display: inline-block; position: relative; bottom: 7px;">
-                  <span  @click="toggleSelectedDetails" style="padding-right: 0.3em; font-weight: bold"><span class="selected-value-icon" v-html="returnAuthIcon(userData['@type'])"></span>{{userData.literal}}</span>
-                  <span  @click="removeValue" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">x</span>
+          <div v-if="userData['http://www.w3.org/2000/01/rdf-schema#label'] || userData.URI" style="position: absolute; width: 100%">
+              <div style="display: flex;">
+                <div class="selected-value-container-nested" style="display: inline-block; position: relative; bottom: 2px;">
+                    <span  @click="toggleSelectedDetails" style="padding-right: 0.3em; font-weight: bold"><span class="selected-value-icon" v-html="returnAuthIcon(userData['@type'])"></span>{{returnAuthLabel(userData)}}</span>
+                    <span  @click="removeValue" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">x</span>
+                </div>
+
+                <!-- We are displaying the input here to act as a landing pad for when moving through and also to double detel remove lookups -->
+                <form style="display: inline-block; width: 90%" autocomplete="off" v-on:submit.prevent>
+                  <input style="display: inline-block;"  bfeType="EditComplexLookupComponent" type="text" class="selectable-input input-nested" :id="assignedId" @keydown="doubleDeleteCheck"  v-on:focus="focused"   />
+                </form>
               </div>
 
-              <!-- We are displaying the input here to act as a landing pad for when moving through and also to double detel remove lookups -->
-              <form style="display: inline-block;" autocomplete="off" v-on:submit.prevent>
-                <input style="display: inline-block;"  bfeType="EditComplexLookupComponent" type="text" class="selectable-input input-nested" :id="assignedId" @keydown="doubleDeleteCheck"  v-on:focus="focused"   />
-              </form>
-
+              <!-- This is the detail drop down that can be click to show context of the entitiy -->
               <div v-if="displaySelectedDetails==true" class="selected-value-details">
                 
                 <button class="selected-value-details-close" @click="toggleSelectedDetails">Close</button>
@@ -252,6 +255,7 @@ export default {
     parentStructureObj: Object,
     profileName: String,
     activeTemplate: Object,
+    parentURI: String,
 
     nested: Boolean
 
@@ -348,6 +352,8 @@ export default {
 
     returnAuthIcon: uiUtils.returnAuthIcon,
 
+    returnAuthLabel: uiUtils.returnAuthLabel,
+
 
     camelize: function (str) {
       return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
@@ -375,7 +381,7 @@ export default {
         return false
       }
 
-      this.precoordinated.push({uri:uri,label:label,type:contextType})
+      this.precoordinated.push({uri:uri,label:label,type:contextType,typeFull:this.contextData.typeFull})
 
       this.$refs.searchInput.focus()
 
@@ -479,15 +485,17 @@ export default {
 
       let uv = parseProfile.returnUserValues(this.activeProfile, this.profileCompoent,this.structure.propertyURI)
       // console.log("<<<<",uv,this.parentStructureObj,"")
-      console.log(uv,"<<<<<<<uvuv uvuvuvuvuvuvuvuvuvuvuvuvuvuvuv")
+      console.log(uv,"<<<<<<<uvuv uvuvuvuvuvuvuvuvuvuvuvuvuvuvuv",this.structure.propertyURI)
+
       if (uv[this.structure.propertyURI]){
         // console.log('yehh',uv[this.structure.propertyURI])
         this.userData = uv[this.structure.propertyURI]
       }else  if (uv[this.parentStructureObj.propertyURI]){
         this.userData = uv[this.parentStructureObj.propertyURI]
 
-      }else{
-        this.userData ={} 
+      // we store subject headings in sameAs property
+      }else if (uv['http://www.w3.org/2002/07/owl#sameAs']){
+        this.userData =uv['http://www.w3.org/2002/07/owl#sameAs']
       }
 
       // console.log("IT IS NOW>",this.userData)

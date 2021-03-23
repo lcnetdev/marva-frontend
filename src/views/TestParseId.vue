@@ -97,24 +97,20 @@
 // import HelloWorld from "@/components/HelloWorld.vue";
 
 import { mapState } from 'vuex'
-import parseId from '@/lib/parseId'
-import uiUtils from "@/lib/uiUtils"
-import VueJsonPretty from 'vue-json-pretty'
+// import parseId from '@/lib/parseId'
+// import uiUtils from "@/lib/uiUtils"
 
 
 export default {
   name: "TestParseId",
   components: {
     // HelloWorld
-    VueJsonPretty
+    
   },
 
   data: function() {
     return {
-      useRtSelected: 'lc:RT:bf2:Monograph:Work',
-      searchTimeout: null,
-      transformResults: null,
-      transformResultsDisplay: null,
+
 
     }
   },
@@ -128,99 +124,13 @@ export default {
       idXML:'idXML',
       
 
-
-      prettyIDXML (state) {
-        if (state.idXML===null || state.idXML === '') return ''
-        return uiUtils.prettifyXml(state.idXML)
-      },
-
-      // to access local state with `this`, a normal function must be used
-      rtLookupWorks (state) {
-        let r = []
-        for (let k of Object.keys(state.rtLookup)){
-          if (k.endsWith(':Work')){
-            r.push(k)
-          }
-        }
-        return r
-      }
     }),
   methods: {
 
-    prettifyXml: uiUtils.prettifyXml,
-
-
-    search: function(event){
-      window.clearTimeout(this.searchTimeout)
-      this.searchTimeout = window.setTimeout(()=>{
-        this.$store.dispatch("fetchIdWorkSearch", { self: this, searchValue: event.target.value }).then(() => {
-
-        })
-      },500)
-    },
-
-    rtChange: function(event){
-      this.useRtSelected = event.target.value
-    },
-
-    load: function(useId,goEdit){
-
-
-      this.$store.dispatch("fetchIdXML", { self: this, url: useId }).then(() => {
-        // the xml is loaded
-        //console.log(this.idXML)
-        parseId.parse(this.idXML)
-
-        let useProfile = null
-        // find the right profile to feed it
-        for (let key in this.profiles){
-          if (this.profiles[key].rtOrder.indexOf(this.useRtSelected)>-1){
-            useProfile = this.profiles[key]
-          }
-        }
-
-        this.transformResults  = parseId.transform(useProfile)
-
-        let workkey = this.transformResults.rtOrder.filter((k)=> k.endsWith(":Work"))[0]
-
-
-        this.transformResultsDisplay = this.transformResults.rt[workkey]
-
-
-        if (goEdit){
-          this.$store.dispatch("setActiveProfile", { self: this, profile: this.transformResults }).then(() => {
-
-            this.$router.push({ path: 'edit' })
-          })
-        }
-
-        // this.$router.push({ path: 'edit' })
-
-        // console.log(this.transformResults)
-        // console.log(useProfile.id,workkey)
-
-      })
-
-
-
-    }
 
 
   },
   created: function () {
-    // kick off the fetching of profiles on load
-    this.$store.dispatch("fetchProfiles", { self: this }).then(() => {
-      parseId.parse()
-      // parseId.transform(this.activeProfile)
-
-      this.$store.dispatch("fetchIdWorkSearch", { self: this, searchValue: 'Woolf, Virginia, 1882-1941. To the lighthouse' }).then(() => {
-
-      })
-      
-    });    
-
-    // console.log(parseId)
-    
 
   }
 };

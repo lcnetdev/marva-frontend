@@ -2,7 +2,11 @@
     <div class="grid">
 
       <header>
-                    <div style="display: ">loaded profile -- {{profilesLoaded}} </div>
+                    <!-- <div style="display: ">loaded profile -- {{profilesLoaded}} </div> -->
+                    <div>
+                      <router-link style="font-size: 1.5em;color: black;text-decoration: none;padding-left: 0.5em;" to="/myrecords">&lt; Back</router-link>
+                      <a @click="reportError" href="#" style="float:right;font-size: 1.5em;color: black;text-decoration: none;padding-left: 0.5em;">Report Error</a>
+                    </div>
 
       </header>
 
@@ -55,7 +59,7 @@
 
         </aside>
 
-        <article>
+        <article v-if="displayPreview===false">
             
             <div v-if="profilesLoaded">
                 <div v-for="profileName in activeProfile.rtOrder" :key="profileName">
@@ -63,7 +67,10 @@
                     
                     <div v-if="activeProfile.rt[profileName].noData != true" :class="['container-' + profileName.split(':').slice(-1)[0]]">
                         <div class="container-type-icon">
-                            <div>{{profileName.split(':').slice(-1)[0]}}</div>
+
+                            <div>
+                              <span>{{profileName.split(':').slice(-1)[0]}}</span>
+                            </div>
                             <div>
                                 <svg v-if="profileName.split(':').slice(-1)[0] == 'Work'" width="3em" height="2.5em" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                     <circle fill="#7badad" cx="1.5em" cy="1em" r="0.75em"/>
@@ -75,13 +82,19 @@
                             </div>
                         </div>
 
+                       <div style="padding-left: 2em;" v-if="profileName.split(':').slice(-1)[0] == 'Item'"> {{activeProfile.rt[profileName].URI}}  </div>
+
+
                         <div v-for="profileCompoent in activeProfile.rt[profileName].ptOrder" :key="profileCompoent" :id="'container-for-'+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')">
-                              <EditMainComponent v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" class="component" :activeTemplate="activeProfile.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :parentStructure="activeProfile.rtOrder" :structure="activeProfile.rt[profileName].pt[profileCompoent]"/>
+                              <EditMainComponent v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" class="component" :parentURI="activeProfile.rt[profileName].URI" :activeTemplate="activeProfile.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :parentStructure="activeProfile.rtOrder" :structure="activeProfile.rt[profileName].pt[profileCompoent]"/>
                         </div>
 
                         <div v-if="activeProfile.rt[profileName].unusedXml" style="background-color: #fde4b7; overflow-x: hidden;">
                           <h3>There was some XML that could not be loaded into this profile ({{profileName}}):</h3>
-                          <code><pre>{{prettifyXml(activeProfile.rt[profileName].unusedXml)}}</pre></code>
+                          <details>
+                            <summary>View</summary>
+                            <code><pre>{{prettifyXml(activeProfile.rt[profileName].unusedXml)}}</pre></code>
+                          </details>
                         </div>
                     </div>
 
@@ -91,6 +104,19 @@
             </div>
 
 
+        </article>
+
+        <article v-else>
+          <div style="height: 100vh; background-color: #fffff1">
+            <h1 style="margin-top: 0;">RDF XML Preview</h1>
+            <button style="font-size: 1.5em" @click="togglePreview">CLOSE</button>
+            <textarea spellcheck="false" v-model="xmlPreview" style="width: 99%;font-size: 2em;height: 83vh;">
+
+            </textarea>
+            <button style="font-size: 1.5em" @click="togglePreview">CLOSE</button>
+
+
+          </div>
         </article>
 
         <aside class="sidebar-right" style="background-color: white" :key="activeEditCounter">
@@ -108,10 +134,15 @@
                                 </svg><span>Work</span>
                               </div>
 
+<!-- 
+                              <div v-if="profileName.split(':').slice(-1)[0] == 'Instance'" style="height: 1em;width: 1em; display: inline-block;" class="temp-icon-instance"></div>
+ -->
 
 
-                                <!-- <div v-if="profileName.split(':').slice(-1)[0] == 'Instance'" style="height: 1em;width: 1em; display: inline-block;" class="temp-icon-instance"></div>
-                                <span>{{profileName.split(':').slice(-1)[0]}}</span> -->
+
+                                <div v-if="profileName.split(':').slice(-1)[0] == 'Instance'" style="height: 1em;width: 1em; display: inline-block;" class="temp-icon-instance"></div>
+                                <span v-if="profileName.split(':').slice(-1)[0] == 'Instance'">{{profileName.split(':').slice(-1)[0]}}</span>
+
                             </div>
                             
 
@@ -146,8 +177,15 @@
 
 
                 </div>
+                <div style="margin-bottom: 2em; background-color: whitesmoke; padding: 1.5em">
+                  <button style="font-size: 1.5em" @click="togglePreview">PREVIEW</button>
 
-                <button @click="triggerXMLExport">EXPORT</button>
+                  <button v-if="!activeRecordSaved" style="font-size: 1.5em; margin-left: 0.5em;" @click="triggerSave">SAVE</button>
+                  <button v-if="activeRecordSaved" style="color: lawngreen; font-size: 1.5em; margin-left: 0.5em;" disabled="">SAVED</button>
+                  <button style="font-size: 1.5em; margin-left: 0.5em;" @click="publish">POST</button>
+
+
+                </div>
             </div>
 
 
@@ -176,6 +214,8 @@
 // @ is an alias to /src
 import EditMainComponent from "@/components/EditMainComponent.vue";
 
+import lookupUtil from "@/lib/lookupUtil"
+import config from "@/lib/config"
 
 import uiUtils from "@/lib/uiUtils"
 import labels from "@/lib/labels"
@@ -200,7 +240,8 @@ export default {
       activeProfile: 'activeProfile',
       activeComponent: 'activeComponent',
       activeProfileName: 'activeProfileName',
-      activeEditCounter: 'activeEditCounter'
+      activeEditCounter: 'activeEditCounter',
+      activeRecordSaved: 'activeRecordSaved'
 
       // to access local state with `this`, a normal function must be used
       // countPlusLocalState (state) {
@@ -253,7 +294,9 @@ export default {
   data: function() {
     return {
       labels: labels,
-      ontologyLookupTodo: []
+      ontologyLookupTodo: [],
+      displayPreview: false,
+      xmlPreview: 'Loading...'
     }
   },
 
@@ -269,7 +312,71 @@ export default {
 
     dupeProperty: uiUtils.dupeProperty,
 
+    togglePreview: async function(){
 
+      if (this.displayPreview){
+
+        this.displayPreview = false
+
+
+        this.xmlPreview = 'Loading...'
+
+
+
+      }else{
+
+        let xml = await exportXML.toBFXML(this.activeProfile)
+        this.xmlPreview = xml.xmlStringFormatted
+        
+        this.displayPreview = true
+      }
+
+
+    },
+
+    publish: async function(){
+
+      let xml = await exportXML.toBFXML(this.activeProfile)
+      lookupUtil.publish(xml.xlmString)
+
+    },
+
+          
+
+
+    reportError: async function(event){
+
+        let desc = prompt("Please enter descripion of the problem");
+
+        if (!desc){
+          return false
+        }
+
+        let contact = prompt("Contact Info (Optional) ");
+
+
+
+
+        const rawResponse = await fetch(config.returnUrls().util + 'error/report', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({eId: this.activeProfile.eId, desc:desc, contact:contact, activeProfile: this.activeProfile})
+        });
+        const content = await rawResponse.json();
+        if (content.result){
+          alert("Thanks!")
+        }
+        console.log(content);
+
+
+
+        event.preventDefault()
+        return false
+
+    },
 
     triggerXMLExport: function(){
 
@@ -277,6 +384,17 @@ export default {
 
 
     },
+    triggerSave: async function(){
+
+      let xml = await exportXML.toBFXML(this.activeProfile)
+      lookupUtil.saveRecord(xml.xlmStringBasic, this.activeProfile.eId)
+
+      this.$store.dispatch("setActiveRecordSaved", { self: this}, true).then(() => {
+
+      })
+
+    },
+
 
 
     restoreDelete: function(event, profile, id){
@@ -449,10 +567,8 @@ export default {
 
 
     returnOpacFormat: function(userValue){
-      // console.log(userValue)
       let r = ''
       Object.keys(userValue).forEach((k)=>{
-
         if (typeof userValue[k] == 'string' && !userValue[k].includes('http') && !r.includes(userValue[k])){
           r = r + userValue[k]
         }else{
@@ -461,10 +577,16 @@ export default {
             r = r + userValue[k].literal + ' '
           }
 
+        }
 
-
+        if (k == 'http://www.w3.org/2002/07/owl#sameAs'){
+          if (userValue[k]['http://www.w3.org/2000/01/rdf-schema#label']){
+            r = r + userValue[k]['http://www.w3.org/2000/01/rdf-schema#label']
+          }
 
         }
+
+
       })
       r=r.trim()
       return r

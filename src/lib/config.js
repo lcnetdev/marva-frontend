@@ -9,8 +9,9 @@ const config = {
 
 			'ldpjs' : 'http://localhost:9400/api-staging/',			
 			'util'  : 'http://localhost:9400/util/',
-			'profiles' : '/profiles.json',
-			'starting': '/starting.json',
+			'publish' : 'http://localhost:9400/util/publish/staging',
+			'profiles' : '/bfe2/editor/profiles.json',
+			'starting': '/bfe2/editor/starting.json',
 			'env' : 'staging'
 
 		},
@@ -18,7 +19,8 @@ const config = {
 		'staging':{
 
 			'ldpjs' : 'https://preprod-3001/bfe2/api-staging/',
-			'util'  : 'https://preprod-3001/bfe2/util/',
+			'util'  :  'https://preprod-3001/bfe2/util/',
+			'publish': 'https://preprod-3001/bfe2/util/publish/staging',
 			'profiles' : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
 			'starting' : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:startingPoints&where=index.label:config',
 			'env' : 'staging'
@@ -105,7 +107,14 @@ const config = {
 			]
 		},
 		"http://id.loc.gov/entities/providers" : {"name":"providers", "type":"complex", "modes":[]},
-		"http://id.loc.gov/entities/relationships" : {"name":"relationships", "type":"complex", "modes":[]},
+		"http://id.loc.gov/entities/relationships" : {"name":"relationships", "processor" : 'lcAuthorities', "type":"complex", "modes":[
+			{
+			"All":{"url":"https://id.loc.gov/entities/relationships/suggest/?q=<QUERY>&count=25", "all":true}, 					
+			}
+
+			
+
+		]},
 		"http://id.loc.gov/entities/roles" : {"name":"roles", "type":"complex", "modes":[]},
 		"http://id.loc.gov/resources/works" : {"name":"works", "type":"complex", "modes":[]},
 		"http://id.loc.gov/rwo/agents" : {"name":"agents", "type":"complex", "modes":[]},
@@ -116,7 +125,7 @@ const config = {
 		"http://id.loc.gov/vocabulary/descriptionConventions" : {"name":"descriptionConventions", "type":"simple", "modes":[]},
 		"http://id.loc.gov/vocabulary/frequencies" : {"name":"frequencies", "type":"simple", "modes":[]},
 		"http://id.loc.gov/vocabulary/genreFormSchemes" : {"name":"genreFormSchemes", "type":"simple", "modes":[]},
-		"http://id.loc.gov/vocabulary/geographicAreas" : {"name":"geographicAreas", "type":"complex", "modes":[]},
+		"http://id.loc.gov/vocabulary/geographicAreas" : {"name":"geographicAreas", "type":"simple", "modes":[]},
 		"http://id.loc.gov/vocabulary/graphicMaterials" : {"name":"graphicMaterials", "type":"simple", "modes":[]},
 		"http://id.loc.gov/vocabulary/issuance" : {"name":"issuance", "type":"simple", "modes":[]},
 		"http://id.loc.gov/vocabulary/languages" : {"name":"languages", "type":"simple", "modes":[]},

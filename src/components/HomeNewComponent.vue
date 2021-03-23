@@ -104,6 +104,8 @@
 
 import { mapState } from 'vuex'
 // import uiUtils from "@/lib/uiUtils"
+const short = require('short-uuid');
+const decimalTranslator = short("0123456789");
 
 
 export default {
@@ -151,15 +153,73 @@ export default {
 
     },
 
+
+    loadTemplate(useStartingPoint){
+
+
+      let useProfile = JSON.parse(JSON.stringify(this.profiles[useStartingPoint]))
+
+      if (!useProfile.log){
+        useProfile.log=[]
+      }
+      useProfile.log.push({action:'createWorkInstance'})
+      useProfile.procInfo= "create work"
+
+
+      // also give it an ID for storage
+      if (!useProfile.eId){
+      let uuid = 'e' + decimalTranslator.new()
+      uuid = uuid.substring(0,8)        
+      useProfile.eId= uuid
+
+      }
+
+      if (!useProfile.user){
+      useProfile.user = this.catInitials
+      }
+
+      if (!useProfile.status){
+      useProfile.status = 'unposted'
+      }
+
+      for (let rt in useProfile.rt){
+
+        // make a new uri for each one
+        let uri = 'http://id.loc.gov/resources/e' + decimalTranslator.new()
+        useProfile.rt[rt].URI = uri
+
+        for (let pt in useProfile.rt[rt].pt){
+
+          if (useProfile.rt[rt].pt[pt].propertyURI == "http://id.loc.gov/ontologies/bibframe/Work"){
+            useProfile.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/Work'] = uri
+          }
+        }
+
+
+      }
+
+      console.log(useProfile)
+      console.log("^^^^^^")
+
+
+
+      this.$store.dispatch("setActiveProfile", { self: this, profile: useProfile }).then(() => {
+        this.$router.push({ path: 'edit' })
+      })
+
+
+
+    },
+
+
+
     selectTemplateClick(event){
 
 
       let useStartingPoint = this.returnSpByTemplateId(event.target.id)
       
-      console.log(Object.assign({},this.profiles[useStartingPoint]), 'Object.assign({},this.profiles[useStartingPoint])')
-      this.$store.dispatch("setActiveProfile", { self: this, profile: JSON.parse(JSON.stringify(this.profiles[useStartingPoint])) }).then(() => {
-        this.$router.push({ path: 'edit' })
-      })
+      this.loadTemplate(useStartingPoint)
+
 
     },
 
@@ -169,11 +229,7 @@ export default {
 
       let useStartingPoint = this.returnSpByTemplateId(this.activeTemplateId)
 
-
-      this.$store.dispatch("setActiveProfile", { self: this, profile: this.profiles[useStartingPoint] }).then(() => {
-        this.$router.push({ path: 'edit' })
-      })
-
+      this.loadTemplate(useStartingPoint)
 
       event.event.preventDefault()
       return false
@@ -208,6 +264,7 @@ export default {
     startingPoints: 'startingPoints',
     profiles: 'profiles',
     profilesClean: 'profilesClean',
+    catInitials: 'catInitials'
 
     // assignedId (){
 

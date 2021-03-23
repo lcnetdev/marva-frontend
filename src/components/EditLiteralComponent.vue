@@ -112,7 +112,7 @@ export default {
     profileCompoent: String,
     profileName: String,
     activeTemplate: Object,
-
+    parentURI: String,
     nested: Boolean
   },
 

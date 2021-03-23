@@ -6,14 +6,16 @@
       <div style="flex:4;">   
 
 
-         <EditLiteralComponent v-if="structure.type == 'literal'"  :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditLiteralComponent>
+         <EditMetaComponent v-if="returnLookupType(structure) == 'meta'" :parentURI="parentURI" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditMetaComponent>
+
+         <EditLiteralComponent v-else-if="structure.type == 'literal'" :parentURI="parentURI"  :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditLiteralComponent>
 
 
-        <EditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested"  :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate" ></EditSimpleLookupComponent>
+        <EditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested"  :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate" ></EditSimpleLookupComponent>
         
-        <EditComplexLookupComponent v-else-if="returnLookupType(structure) == 'complex'" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditComplexLookupComponent>          
+        <EditComplexLookupComponent v-else-if="returnLookupType(structure) == 'complex'" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditComplexLookupComponent>          
 
-        <EditTemplateRefComponent v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditTemplateRefComponent>
+        <EditTemplateRefComponent v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditTemplateRefComponent>
       </div>
 
       <div class="property-button-container">
@@ -34,10 +36,10 @@
     <!-- This block renders the recursive componets being sent in from the TemplateRefComponent -->
     <div v-else>  
 
-        <EditLiteralComponent v-if="structure.type == 'literal'" :activeTemplate="activeTemplate" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" ></EditLiteralComponent>
-        <EditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested"  :profileName="profileName" :profileCompoent="profileCompoent"  ></EditSimpleLookupComponent>
-        <EditComplexLookupComponent v-else-if="returnLookupType(structure) == 'complex'" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent"   ></EditComplexLookupComponent>          
-        <EditTemplateRefComponent v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :profileName="profileName" :profileCompoent="profileCompoent" :nested="nested"></EditTemplateRefComponent>
+        <EditLiteralComponent v-if="structure.type == 'literal'" :parentURI="parentURI" :activeTemplate="activeTemplate" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" ></EditLiteralComponent>
+        <EditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" :parentURI="parentURI" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested"  :profileName="profileName" :profileCompoent="profileCompoent"  ></EditSimpleLookupComponent>
+        <EditComplexLookupComponent v-else-if="returnLookupType(structure) == 'complex'" :parentURI="parentURI" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent"   ></EditComplexLookupComponent>          
+        <EditTemplateRefComponent v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" :parentURI="parentURI" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :profileName="profileName" :profileCompoent="profileCompoent" :nested="nested"></EditTemplateRefComponent>
 
 
 
@@ -78,6 +80,9 @@ import EditSimpleLookupComponent from "@/components/EditSimpleLookupComponent.vu
 
 import EditTemplateRefComponent from "@/components/EditTemplateRefComponent.vue";
 import EditComplexLookupComponent from "@/components/EditComplexLookupComponent.vue";
+import EditMetaComponent from "@/components/EditMetaComponent.vue";
+
+
 
 
 import labels from "@/lib/labels"
@@ -96,6 +101,7 @@ export default {
     EditSimpleLookupComponent,
     EditTemplateRefComponent,
     EditComplexLookupComponent,
+    EditMetaComponent,
     VueJsonPretty
 
 
@@ -108,6 +114,7 @@ export default {
     profileCompoent: String,
     profileName: String,
     activeTemplate: Object,
+    parentURI: String
 
   },
   data: function() {
@@ -150,6 +157,29 @@ export default {
 
     // use the config data to see what type of lookup this componet should use
     returnLookupType(cStructure){
+
+      // these meta componets are structural things, like add new instances/items. etc
+      if (cStructure.propertyURI == "http://id.loc.gov/ontologies/bibframe/hasInstance"){
+
+        return "meta"
+      }
+      if (cStructure.propertyURI == "http://id.loc.gov/ontologies/bibframe/instanceOf"){
+
+        return "meta"
+      }
+
+      // we handle this structural thing elsewhere
+      if (cStructure.propertyURI == "http://id.loc.gov/ontologies/bibframe/hasItem"){
+
+        return "meta"
+      }
+
+    
+
+
+      
+      
+
       let type = 'simple'
       if (cStructure.valueConstraint.useValuesFrom.length==0) return null
       cStructure.valueConstraint.useValuesFrom.forEach((cs)=>{

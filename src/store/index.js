@@ -2,11 +2,26 @@ import Vue from "vue";
 import Vuex from "vuex";
 import parseProfile from "@/lib/parseProfile"
 import lookupUtil from "@/lib/lookupUtil"
+import exportXML from "@/lib/exportXML"
 
 Vue.use(Vuex);
 
+const debounce = (callback, wait) => {
+  let timeoutId = null;
+  return (...args) => {
+    window.clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(() => {
+      callback.apply(null, args);
+    }, wait);
+  };
+}
+
+
+
+
 export default new Vuex.Store({
   state: {
+
 
     // profile related
     profilesLoaded: false,
@@ -16,6 +31,8 @@ export default new Vuex.Store({
 
     activeProfile: {},
     activeProfileIdCounter: {},
+
+    activeRecordSaved: false,
 
     sartingPoint: 'lc:profile:bf2:Monograph',
     // sartingPoint: 'test:profile:bf2:TestProfile',
@@ -81,7 +98,23 @@ export default new Vuex.Store({
 
 
     allRecords : [],
-    myRecords: []
+    myRecords: [],
+
+
+    saveRecord : debounce((state,commit) => {
+
+
+      console.log(state)
+      exportXML.toBFXML(state.activeProfile)
+      .then((xml)=>{
+        console.log(xml)
+        lookupUtil.saveRecord(xml.xlmStringBasic, state.activeProfile.eId)
+        commit('ACTIVERECORDSAVED',true)  
+      })
+      
+
+    }, 2500),
+
 
   },
   mutations: {
@@ -165,7 +198,14 @@ export default new Vuex.Store({
     }, 
     ALLRECORDS(state, val) {
       state.allRecords = val
+    },     
+
+
+    ACTIVERECORDSAVED(state, val) {
+      state.activeRecordSaved = val
     }, 
+
+    
 
     
 
@@ -255,6 +295,8 @@ export default new Vuex.Store({
       commit('MYRECORDS', results)
     },
 
+
+
     clearContext ({ commit }) {   
       commit('CONTEXT', {})    
     },
@@ -273,20 +315,30 @@ export default new Vuex.Store({
     setCatInitials({ commit}, data){
       commit('CATINITALS', data.catInitials)
     },
-    addValue ({ commit, state }, data) {   
+    async  addValue ({ commit, state }, data) {   
       // we know the value bc it is the active context value in this case
       // console.log('-----------state.contextData-state.contextData-state.contextData------------')
       // console.log(state.contextData)
       console.log(data)
       let nap = parseProfile.setValue(state.activeProfile, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, state.contextData)
       commit('ACTIVEPROFILE', nap)
-      commit('ACTIVEEDITCOUNTER')      
+      commit('ACTIVEEDITCOUNTER') 
+
+
+      commit('ACTIVERECORDSAVED', false)
+      state.saveRecord(state,commit)
+
     },
-    addValueLiteral ({ commit, state }, data) {   
+    async addValueLiteral ({ commit, state }, data) {   
       console.log(data)
       let nap = parseProfile.setValue(state.activeProfile, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, data.value)
       commit('ACTIVEPROFILE', nap)
-      commit('ACTIVEEDITCOUNTER')      
+      commit('ACTIVEEDITCOUNTER')    
+
+      commit('ACTIVERECORDSAVED', false)
+      state.saveRecord(state,commit)
+
+
     },
 
 
@@ -307,10 +359,18 @@ export default new Vuex.Store({
       commit('ACTIVEPROFILECOUNTER', newValue)
     },
 
-    
-    removeProperty: ({commit, state}, data) => {
+    setActiveRecordSaved: ({commit}, newValue) => {
+      commit('ACTIVERECORDSAVED', newValue)
+    },
+
+
+
+    async removeProperty ({commit, state}, data) {
       let newProfile = parseProfile.removeProperty(data.id,data.profile,state.activeProfile)
       commit('ACTIVEPROFILE', newProfile)    
+
+
+      state.saveRecord(state)
     },
 
     restoreProperty: ({commit, state}, data) => {
@@ -322,9 +382,14 @@ export default new Vuex.Store({
 
 
 
-    duplicateProperty: ({commit, state}, data) => {
+
+
+    async duplicateProperty ({commit, state}, data) {
       let newProfile = parseProfile.duplicateProperty(data.id,data.profile,state.activeProfile)
-      commit('ACTIVEPROFILE', newProfile)    
+      commit('ACTIVEPROFILE', newProfile) 
+
+      state.saveRecord(state)
+
     },
 
 

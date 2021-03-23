@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+
 import Edit from "../views/Edit.vue";
 import TestParseId from "../views/TestParseId.vue";
 import TestParseBfdb from "../views/TestParseBfdb.vue";
@@ -28,7 +29,6 @@ const routes = [
     name: "TestParseBfdb",
     component: TestParseBfdb
   },
-  
   {
     path: "/edit",
     name: "Edit",

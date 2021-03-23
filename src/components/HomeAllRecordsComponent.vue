@@ -1,9 +1,11 @@
 <template>
   <div id="home-load">
 
-    Nothing Here Yet
+  <h1 style="padding: 0.5em;">All Records</h1>
+   <HomeRecordsComponent :allrecords="true" ></HomeRecordsComponent>
 
   </div>
+
 
 
 </template>
@@ -15,10 +17,12 @@ import { mapState } from 'vuex'
 // import uiUtils from "@/lib/uiUtils"
 
 // import HomeAllRecordsComponent from "@/components/HomeAllRecordsComponent.vue";
+import HomeRecordsComponent from "@/components/HomeRecordsComponent.vue";
 
 export default {
   name: "HomeAllRecordsComponent",
   components: {
+    HomeRecordsComponent
       // Keypress: () => import('vue-keypress')
   },
   props: {
@@ -32,6 +36,7 @@ export default {
     startingPoints: 'startingPoints',
     profiles: 'profiles',
     profilesLoaded: 'profilesLoaded',
+    allRecords: 'allRecords'
     // to access local state with `this`, a normal function must be used
    
     // assignedId (){
@@ -49,6 +54,10 @@ export default {
   },
   created: function(){
 
+
+    this.$store.dispatch("fetchAllRecords", { self: this}).then(() => {
+      // console.log("uh huh")
+    })  
 
   },
 };

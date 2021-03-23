@@ -1,5 +1,7 @@
 import config from "./config"
-
+// import store from "../store";
+const short = require('short-uuid');
+const translator = short();
 
 const lookupUtil = {
 
@@ -237,7 +239,7 @@ const lookupUtil = {
     },   
 
     extractContextData: function(data){
-          var results = { contextValue: true, source: [], type: null, variant : [], uri: data.uri, title: null, contributor:[], date:null, genreForm: null, nodeMap:{}};
+          var results = { contextValue: true, source: [], type: null, typeFull: null, variant : [], uri: data.uri, title: null, contributor:[], date:null, genreForm: null, nodeMap:{}};
           
           // if it is in jsonld format
           if (data['@graph']){
@@ -349,6 +351,7 @@ const lookupUtil = {
                 n['@type'].forEach((t)=>{
                     if (results.type===null){
                         results.type = this.rdfType(t)
+                        results.typeFull = t
                     }
                 })
               
@@ -508,6 +511,17 @@ const lookupUtil = {
     },
 
 
+    // jsut checks if there is a value stored for this item, if so then it exists
+    ontologyPropertyExists: async function(url){
+
+      if (window.localStorage && window.localStorage.getItem('ontology_'+url+'.rdf')){
+        return true
+      }else{
+        return false
+      }
+
+
+    },
 
     fetchOntology: async function(url){
 
@@ -568,7 +582,93 @@ const lookupUtil = {
 
       return allData
 
-    }
+    },
+
+    saveRecord: async function(xml, eId){
+
+
+
+     const putMethod = {
+       method: 'PUT', // Method itself
+       headers: {
+         'Content-type': 'application/xml', // Indicates the content 
+       },
+       body: xml // We send data in JSON format
+     }
+
+
+
+
+     let url = config.returnUrls().ldpjs +'ldp/' + eId
+     fetch(url, putMethod)
+     .then(response => console.log(response.text))
+     .then((responseText)=>{
+
+      console.log(responseText)
+     })
+     // .then(data => console.log(data)) // Manipulate the data retrieved back, if we want to do something with it
+     .catch((err) => {
+      console.log(err)
+      alert("Error: Could not save the record!", err)
+     }) // Do something with the error
+
+
+
+
+    },
+
+    loadSavedRecord: async function(id) {
+     
+      let url = config.returnUrls().ldpjs +'ldp/' + id
+
+      // let options = {}
+      // if (json){
+      //   options = {headers: {'Content-Type': 'application/json', 'Accept': 'application/json'}, mode: "cors"}        
+      // }
+      // console.log('options:',options)
+      try{
+        let response = await fetch(url);
+
+        let data =  await response.text()
+        
+        return  data;
+
+      }catch(err){
+        //alert("There was an error retriving the record from:",url)
+        console.error(err);
+
+        // Handle errors here
+      }
+    },
+
+
+    publish: async function(xml){
+
+
+
+      let url = config.returnUrls().publish
+
+      
+      let uuid = translator.toUUID(translator.new())
+      console.log(url,uuid)
+
+      const rawResponse = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({name: uuid, rdfxml:xml})
+      });
+      const content = await rawResponse.json();
+
+      console.log(content);
+      
+
+    },        
+
+
+
 
 }
 

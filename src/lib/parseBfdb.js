@@ -85,6 +85,7 @@ const parseBfdb = {
 	},
 
 	activeDom: null,
+	hasItem: false,
 
 
 	specialTransforms: {
@@ -110,6 +111,31 @@ const parseBfdb = {
 			//      </bf:Place>
 			//    </bf:subject>
 
+			// ---------------------
+
+			// <bf:subject xmlns:bf="http://id.loc.gov/ontologies/bibframe/">
+			//   <bf:Topic xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://bibframe.example.org/21468042#Topic650-26">
+			//     <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Historians--Russia--Congresses.</rdfs:label>
+			//     <madsrdf:isMemberOfMADSScheme xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" rdf:resource="http://id.loc.gov/authorities/subjects"/>
+			//     <madsrdf:componentList xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" rdf:parseType="Collection">
+			//       <madsrdf:Topic>
+			//         <madsrdf:authoritativeLabel>Historians</madsrdf:authoritativeLabel>
+			//       </madsrdf:Topic>
+			//       <madsrdf:Geographic rdf:about="https://id.loc.gov/authorities/names/n80001203">
+			//         <madsrdf:authoritativeLabel>Russia</madsrdf:authoritativeLabel>
+			//       </madsrdf:Geographic>
+			//       <madsrdf:GenreForm>
+			//         <madsrdf:authoritativeLabel>Congresses</madsrdf:authoritativeLabel>
+			//       </madsrdf:GenreForm>
+			//     </madsrdf:componentList>
+			//     <madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Historians--Russia--Congresses.</madsrdf:authoritativeLabel>
+			//     <bf:source>
+			//       <bf:Source>
+			//         <bf:code>lcsh</bf:code>
+			//       </bf:Source>
+			//     </bf:source>
+			//   </bf:Topic>
+			// </bf:subject>
 
 			// grab the label and uri and type
 			let typeNode = xml.children[0]
@@ -118,21 +144,55 @@ const parseBfdb = {
 				return profile
 			}
 
-			profile.userValue['@type'] = this.UriNamespace(typeNode.tagName)
-			profile.userValue['URI'] = null
+			profile.userValue['http://www.w3.org/2002/07/owl#sameAs'] = {}
+			let userValue = profile.userValue['http://www.w3.org/2002/07/owl#sameAs']
+
+
+
+
+			userValue['@type'] = this.UriNamespace(typeNode.tagName)
+			userValue['URI'] = null
 			let label = null
 
 			if (typeNode.attributes && typeNode.attributes['rdf:about']){
-				profile.userValue['URI'] = typeNode.attributes['rdf:about'].value
+				userValue['URI'] = typeNode.attributes['rdf:about'].value
 			}
 
-			if (typeNode.getElementsByTagName('madsrdf:authoritativeLabel').length>0){
-				label = typeNode.getElementsByTagName('madsrdf:authoritativeLabel')[0].innerHTML
+			for (let el of typeNode.children){
+				if (el.tagName == 'madsrdf:authoritativeLabel' || el.tagName == this.UriNamespace('madsrdf:authoritativeLabel') ){
+					label = el.innerHTML
+					userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'] = el.innerHTML
+				}else if (el.tagName == 'http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme' || el.tagName == this.UriNamespace('madsrdf:isMemberOfMADSScheme') ){
+					if (el.attributes && el.attributes['rdf:resource']){
+						userValue['http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme'] = el.attributes['rdf:resource'].value
+					}
+				}
+
+
 			}
+
+			for (let el of typeNode.children){
+				if ( (el.tagName == 'rdfs:label' || el.tagName == this.UriNamespace('rdfs:label ')) && label === null ){
+					label = el.innerHTML
+				}
+			}
+
+			if (typeNode.getElementsByTagName('bf:Source').length>0){
+				for (let el of typeNode.getElementsByTagName('bf:Source')){
+
+					userValue[this.UriNamespace('bf:source')] = {}
+
+					for (let elc of el.children){
+						userValue[this.UriNamespace('bf:source')][this.UriNamespace(elc.tagName)] = elc.innerHTML
+					}
+
+				}
+			}
+
 			let componentList = []
 
 			
-			profile.userValue['literal'] = label
+			userValue['http://www.w3.org/2000/01/rdf-schema#label'] = label
 
 			if (typeNode.getElementsByTagName('madsrdf:componentList').length>0){
 
@@ -143,14 +203,21 @@ const parseBfdb = {
 					if (child.getElementsByTagName('madsrdf:authoritativeLabel').length>0){
 						clabel = child.getElementsByTagName('madsrdf:authoritativeLabel')[0].innerHTML
 					}
+					let URI = null
 
-					componentList.push({'literal':clabel, '@type':ctype})
+					
+					if (child.attributes && child.attributes['rdf:about']){
+						URI = child.attributes['rdf:about'].value
+					}
+
+					componentList.push({'http://www.w3.org/2000/01/rdf-schema#label':clabel, URI:URI, '@type':ctype})
 
 
 				}
 
 			}
-			profile.userValue['http://www.loc.gov/mads/rdf/v1#componentList'] = componentList
+			userValue['http://www.loc.gov/mads/rdf/v1#componentList'] = componentList
+
 
 
 			
@@ -161,32 +228,30 @@ const parseBfdb = {
 
 
 		},
-		'bf:Work' : function(xml,profile){
+		// 'bf:Work' : function(xml,profile){
 
 			
 			
+		// 	let titleStr = xml.attributes['rdf:about'].value
 			
-			
+		// 	let titleEl = xml.getElementsByTagName("bflc:aap")[0]
+		// 	if (titleEl){
+		// 		titleStr = titleEl.innerHTML
+		// 	}
 
-			
-			
-			let titleStr = xml.attributes['rdf:about'].value
-			
-			let titleEl = xml.getElementsByTagName("bflc:aap")[0]
-			if (titleEl){
-				titleStr = titleEl.innerHTML
-			}
+		// 	// "http://www.w3.org/2002/07/owl#sameAs": {
+		// 	profile.userValue['http://www.w3.org/2002/07/owl#sameAs'] = {
+		// 		'http://www.w3.org/2000/01/rdf-schema#label': titleStr,
+		// 		'URI' : xml.attributes['rdf:about'].value
+		// 	}
 
-			// "http://www.w3.org/2002/07/owl#sameAs": {
-			profile.userValue['http://www.w3.org/2002/07/owl#sameAs'] = {
-				'literal': titleStr,
-				'URI' : xml.attributes['rdf:about'].value
-			}
+		// 	console.log("BF WORK", xml,profile)
 
-			profile.userValue.URI = xml.attributes['rdf:about'].value
-			profile.userValue.literal = titleStr
-			return profile
-		},
+
+		// 	profile.userValue.URI = xml.attributes['rdf:about'].value
+		// 	profile.userValue['http://www.w3.org/2000/01/rdf-schema#label'] = titleStr
+		// 	return profile
+		// },
 
 
 		'bf:contribution' : function(xml,profile){
@@ -209,54 +274,143 @@ const parseBfdb = {
 			//   </bf:Contribution>
 			// </bf:contribution>
 
+			// console.log('~~~~~~~~XML')
+			// console.log(xml)
+			// console.log('~~~~~~~~PROFILE')
+			// console.log(profile)
 
 			// grab the label and uri and type
 
 			let typeNode = xml.getElementsByTagName("bf:agent")[0].children[0]
 
-			if (!typeNode){
-				console.error('xml.children[0] for this subject does not exist')
-				return profile
+			if (typeNode){
+
+				profile.userValue['http://www.w3.org/2002/07/owl#sameAs'] = {}
+
+				profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type'] = this.UriNamespace(typeNode.tagName)
+				profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['URI'] = null
+				let label = null
+
+				if (typeNode.getElementsByTagName('rdf:type').length>0){
+					profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type'] = typeNode.getElementsByTagName('rdf:type')[0].attributes['rdf:resource'].value
+				}
+
+				if (typeNode.attributes && typeNode.attributes['rdf:about']){
+					profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['URI'] = typeNode.attributes['rdf:about'].value
+				}
+
+				if (typeNode.getElementsByTagName('madsrdf:authoritativeLabel').length>0){
+					label = typeNode.getElementsByTagName('madsrdf:authoritativeLabel')[0].innerHTML
+				}else if (typeNode.getElementsByTagName('rdfs:label').length>0){
+					label = typeNode.getElementsByTagName('rdfs:label')[0].innerHTML
+				}
+
+		
+
+				profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['http://www.w3.org/2000/01/rdf-schema#label'] = label
+
+
+				// add in any other properties in the agent bnode
+				for (let c of typeNode.children){
+
+					if (c.tagName != 'rdfs:label' && c.tagName != 'rdf:type'){
+						profile.userValue['http://www.w3.org/2002/07/owl#sameAs'][this.UriNamespace(c.tagName)] = c.innerHTML
+					}
+
+				}
+
+
+
+			}else{
+
+				// no <bf:agent><bf:Person> or whatever
+				// just <bf:agent/> with a rdf:resource
+
+				//console.error('xml.children[0] for this agent does not exist')
+				//return profile
+
+				let justAgent = xml.getElementsByTagName("bf:agent")[0]
+
+				profile.userValue['http://www.w3.org/2002/07/owl#sameAs'] = {}
+
+				profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type'] = this.UriNamespace("bf:Agent")
+				profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['URI'] = null
+				let label = null
+
+
+				if (justAgent.attributes && justAgent.attributes['rdf:about']){
+					profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['URI'] = justAgent.attributes['rdf:about'].value
+				}
+				if (justAgent.attributes && justAgent.attributes['rdf:resource']){
+					profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['URI'] = justAgent.attributes['rdf:resource'].value
+				}
+
+				if (justAgent.getElementsByTagName('madsrdf:authoritativeLabel').length>0){
+					label = justAgent.getElementsByTagName('madsrdf:authoritativeLabel')[0].innerHTML
+				}else if (justAgent.getElementsByTagName('rdfs:label').length>0){
+					label = justAgent.getElementsByTagName('rdfs:label')[0].innerHTML
+				}
+
+				profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['http://www.w3.org/2000/01/rdf-schema#label'] = label
+
+
 			}
 
-			
-
-			profile.userValue['@type'] = this.UriNamespace(typeNode.tagName)
-			profile.userValue['URI'] = null
-			let label = null
-
-			if (typeNode.getElementsByTagName('rdf:type').length>0){
-				profile.userValue['@type'] = typeNode.getElementsByTagName('rdf:type')[0].attributes['rdf:resource'].value
-			}
-
-			if (typeNode.attributes && typeNode.attributes['rdf:about']){
-				profile.userValue['URI'] = typeNode.attributes['rdf:about'].value
-			}
-
-			if (typeNode.getElementsByTagName('madsrdf:authoritativeLabel').length>0){
-				label = typeNode.getElementsByTagName('madsrdf:authoritativeLabel')[0].innerHTML
-			}else if (typeNode.getElementsByTagName('rdfs:label').length>0){
-				label = typeNode.getElementsByTagName('rdfs:label')[0].innerHTML
-			}
-
-			profile.userValue['literal'] = label
 
 
 
 			if (xml.getElementsByTagName('bf:Role').length>0){
-				let role = xml.getElementsByTagName('bf:Role')[0]
 
-				let roleuri = null
-				let rolelabel = null
-				if (role.attributes && role.attributes['rdf:about']){
-					roleuri = role.attributes['rdf:about'].value
+				for (let roleEl of xml.getElementsByTagName('bf:Role')){
+
+					// console.log("DOING roleEl",xml, roleEl)
+
+
+					let roleuri = null
+					let rolelabel = null
+					if (roleEl.attributes && roleEl.attributes['rdf:about']){
+						roleuri = roleEl.attributes['rdf:about'].value
+					}
+
+					if (roleEl.getElementsByTagName('rdfs:label').length>0){
+						rolelabel= roleEl.getElementsByTagName('rdfs:label')[0].innerHTML
+					}
+
+					
+	
+
+
+
+					//if it already exists then there are multiple
+					if (profile.userValue['http://id.loc.gov/ontologies/bibframe/role']){
+						if (!Array.isArray(profile.userValue['http://id.loc.gov/ontologies/bibframe/role'])){
+							profile.userValue['http://id.loc.gov/ontologies/bibframe/role'] = []
+						}
+						
+						let val = {'URI':roleuri, 'http://www.w3.org/2000/01/rdf-schema#label': rolelabel}
+
+						// if it does not have a URI then it is a non controlled term
+						if (!roleuri){
+							val.BFE2METAnotControled = true 
+						}
+
+						profile.userValue['http://id.loc.gov/ontologies/bibframe/role'].push(val)
+
+					}else{
+						profile.userValue['http://id.loc.gov/ontologies/bibframe/role'] = {'URI':roleuri, 'http://www.w3.org/2000/01/rdf-schema#label': rolelabel}	
+						if (!roleuri){
+							profile.userValue['http://id.loc.gov/ontologies/bibframe/role'].BFE2METAnotControled = true 
+						}
+
+					}
+
+
+
+					
+
+
+
 				}
-
-				if (role.getElementsByTagName('rdfs:label').length>0){
-					rolelabel= role.getElementsByTagName('rdfs:label')[0].innerHTML
-				}
-
-				profile.userValue['http://id.loc.gov/ontologies/bibframe/role'] = {'URI':roleuri, 'literal': rolelabel}
 
 
 			}
@@ -281,8 +435,8 @@ const parseBfdb = {
 
 	transform: function(profile){ 
 
-		let profileOrginal = Object.assign(profile,{})
-		console.log('profileOrginal',profileOrginal)
+		// let profileOrginal = Object.assign(profile,{})
+		// console.log('profileOrginal',profileOrginal)
 
 		let results = this.transformRts(profile)
 
@@ -309,14 +463,14 @@ const parseBfdb = {
 
 	transformRts: function(profile){
 
-		// keep a copy of the profile passed
-
 		let toDeleteNoData = []
+
+		// console.log("THIS IS profile.rt",profile.rt)
 
 		for (const pkey in profile.rt) {
 
 
-
+			// console.log("DOING:",pkey)
 
 			let tle = ""			
 			if (pkey.endsWith(':Work')){
@@ -332,6 +486,8 @@ const parseBfdb = {
 			
 			// select the right part of the XML
 			let xml = this.activeDom.getElementsByTagName(tle)
+			// console.log(this.activeDom)
+			// console.log("TLE:",xml)
 
 			// only return the top level, no nested related things
 			xml = this.returnOneWhereParentIs(xml, "rdf:RDF")
@@ -357,11 +513,11 @@ const parseBfdb = {
 
 			}
 
-			let hasSeries = xml.getElementsByTagName('bf:hasSeries')
-			let hasSeriesData = Array.prototype.slice.call( hasSeries )
-			for (let item of hasSeries) {
-				item.parentNode.removeChild(item)
-			}
+			// let hasSeries = xml.getElementsByTagName('bf:hasSeries')
+			// let hasSeriesData = Array.prototype.slice.call( hasSeries )
+			// for (let item of hasSeries) {
+			// 	item.parentNode.removeChild(item)
+			// }
 
 
 			// does this tle have a URI or a type?
@@ -387,6 +543,40 @@ const parseBfdb = {
 			}
 
 
+			// find the instanceOfs
+			if (tle == 'bf:Instance'){
+				if (xml.getElementsByTagName('bf:instanceOf').length>0){
+					let instanceOf = xml.getElementsByTagName('bf:instanceOf')[0]
+					if (instanceOf.attributes['rdf:resource']){
+						profile.rt[pkey].instanceOf = instanceOf.attributes['rdf:resource'].value
+					}else if(instanceOf.attributes['rdf:about']){
+						profile.rt[pkey].instanceOf = instanceOf.attributes['rdf:about'].value
+					}					
+
+
+				}
+				
+			}
+
+			// find itemOf
+			if (tle == 'bf:Item'){
+				if (xml.getElementsByTagName('bf:itemOf').length>0){
+					let itemOf = xml.getElementsByTagName('bf:itemOf')[0]
+					if (itemOf.attributes['rdf:resource']){
+						profile.rt[pkey].itemOf = itemOf.attributes['rdf:resource'].value
+					}else if(itemOf.attributes['rdf:about']){
+						profile.rt[pkey].itemOf = itemOf.attributes['rdf:about'].value
+					}			
+
+					// delete it
+					itemOf.remove()
+
+
+
+				}
+				
+			}
+
 
 
 
@@ -401,11 +591,13 @@ const parseBfdb = {
 
 			for (let k in pt){
 
+				let ptk = JSON.parse(JSON.stringify(pt[k]))
+
 				// remove any default values since we will be populating from the record
-				pt[k].valueConstraint.defaults=[]
+				ptk.valueConstraint.defaults=[]
 				
 				
-				let propertyURI = pt[k].propertyURI
+				let propertyURI = ptk.propertyURI
 				let prefixURI = this.namespaceUri(propertyURI)
 
 				// see if we have that specific propertry in the xml
@@ -420,6 +612,21 @@ const parseBfdb = {
 				}
 
 
+				// Some structural things here to hardcode
+				if (propertyURI==='http://id.loc.gov/ontologies/bibframe/Work'){
+					// did we find a URI for it?
+					if (profile.rt[pkey].URI){
+						ptk.userValue={}
+						ptk.userValue['http://id.loc.gov/ontologies/bibframe/Work'] = profile.rt[pkey].URI
+					}
+					console.log(ptk,"<<ptk",el.length)
+					pt[k] = ptk
+					continue
+
+				}
+
+
+
 
 				
 				
@@ -428,6 +635,8 @@ const parseBfdb = {
 				if (el.length>0){
 					// we have that element
 					sucessfulProperties.push(prefixURI)
+
+					// console.log(prefixURI)
 					// loop through all of them
 					let counter = 0
 					for (let e of el){
@@ -435,12 +644,12 @@ const parseBfdb = {
 
 						// start populating the data
 						let populateData = null
-						populateData = JSON.parse(JSON.stringify(pt[k]))
+						populateData = JSON.parse(JSON.stringify(ptk))
 						// save the source xml for later display
 						populateData.xmlSource = e.outerHTML
 
-						
-						
+						// console.log(populateData)
+						// console.log(JSON.stringify(populateData.userValue,null,2))
 
 						
 						// we have some special functions to deal with tricky elements
@@ -506,17 +715,13 @@ const parseBfdb = {
 										// example > <bf:title><bf:Title> <bf:mainTitle>
 										if (!this.isClass(grandchild.tagName)){
 
+											// console.log(child.tagName, ' -child-to-grand-> ', grandchild.tagName)
+
 											if (grandchild.tagName == 'rdfs:label'){
 												
 												childProperty = this.UriNamespace(grandchild.tagName)//this.UriNamespace(grandchild.tagName)
 												childLabel = grandchild.innerHTML
 											}else if (grandchild.tagName == 'rdf:type'){
-
-												
-												
-												
-												
-												
 
 												if (grandchild.attributes['rdf:resource']){													
 													populateData.userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] = grandchild.attributes['rdf:resource'].value
@@ -544,6 +749,9 @@ const parseBfdb = {
 													let greatgrandchildUriOther = {}
 													for (let greatgrandchild of grandchild.children){
 
+														// console.log(grandchild.tagName, ' -grand-to-greatgrandchild-> ', greatgrandchild.tagName)
+
+
 														let greatgrandchildUri = null
 														let greatgrandchildValue = null
 														let greatgrandchildType = null
@@ -565,7 +773,8 @@ const parseBfdb = {
 
 															for (let greatgreatgrandchild of greatgrandchild.children){
 
-																
+																// console.log(greatgrandchild.tagName, ' -grand-to-greatgreatgrandchild-> ', greatgreatgrandchild.tagName)
+
 
 																if (greatgreatgrandchild.tagName == 'rdfs:label'){
 																	greatgrandchildValue = greatgreatgrandchild.innerHTML
@@ -576,6 +785,9 @@ const parseBfdb = {
 																}else if (greatgreatgrandchild.tagName == 'bf:code'){
 																	greatgrandchildValue = greatgreatgrandchild.innerHTML
 																	greatgrandchildProperty = this.UriNamespace(greatgreatgrandchild.tagName)
+																}else if (greatgreatgrandchild.tagName == 'rdf:type'){
+
+																	greatgrandchildUriOther[this.UriNamespace(greatgreatgrandchild.tagName)] = greatgreatgrandchild.attributes['rdf:resource'].value
 																}else{
 
 																	// this is a note propery or something like that, save it for later, better be a literal
@@ -656,16 +868,21 @@ const parseBfdb = {
 									
 
 									if (childUri && childLabel){
-										// if (!populateData.userValue[propertyURI]){
-										// 	populateData.userValue[propertyURI] = {}
-										// }		
+										if (!populateData.userValue['http://www.w3.org/2002/07/owl#sameAs']){
+											populateData.userValue['http://www.w3.org/2002/07/owl#sameAs'] = {}
+										}		
 										// populateData.userValue[propertyURI].literal = childLabel
 										// populateData.userValue[propertyURI].URI = childUri
-									
+										// console.log("yo11")
 
-										populateData.userValue.literal = childLabel
-										populateData.userValue.URI = childUri
-									
+										populateData.userValue['http://www.w3.org/2002/07/owl#sameAs']['http://www.w3.org/2000/01/rdf-schema#label'] = childLabel
+										populateData.userValue['http://www.w3.org/2002/07/owl#sameAs'].URI = childUri
+										populateData.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type'] = this.UriNamespace(child.tagName)
+										
+										// if we set the type undo it because we have mor specific bnode here
+										if (populateData.userValue['@type']){
+											delete populateData.userValue['@type']
+										}
 
 
 										// populateData.userValue['@value'] = {literal: childLabel, URI: childUri}
@@ -674,31 +891,19 @@ const parseBfdb = {
 									}else if (!childUri && childLabel){
 
 
-										// populateData.userValue['@value'] = childLabel
-										// if (!populateData.userValue[propertyURI]){
-										// populateData.userValue[propertyURI] = {literal: childLabel, propertyURI: propertyURI, URI: null, '@type': this.UriNamespace(child.tagName)}	
-
-
-
-
-										// if (!populateData.userValue[propertyURI]){
-										// 	populateData.userValue[propertyURI] = {}
-										// }		
-
-										// populateData.userValue[propertyURI][childProperty] = childLabel
-										// populateData.userValue[propertyURI].URI = null
-										// populateData.userValue[propertyURI]['@type'] = this.UriNamespace(child.tagName)
-									
-
-
+										// console.log(JSON.stringify(populateData.userValue,null,2))
 
 										populateData.userValue[childProperty] = childLabel
 										populateData.userValue.URI = null
 										populateData.userValue['@type'] = this.UriNamespace(child.tagName)
-									
+										populateData.userValue.BFE2METAnotControled=true
 
+										// console.log("yo")
 
-
+										// if we set the type undo it because we have mor specific bnode here
+										if (populateData.userValue['@type']){
+											delete populateData.userValue['@type']
+										}
 
 
 
@@ -723,26 +928,28 @@ const parseBfdb = {
 									}else if (childUri && !childLabel) {
 										// we have a URI but no label for that value, take the last piece of the URL
 
-										if (childUri.includes('id.loc.gov/vocabulary/')){
-											childLabel = childUri.split('/')[childUri.split('/').length-1]
-										}else{
-											childLabel = childUri
+										// if (childUri.includes('id.loc.gov/vocabulary/')){
+										// 	childLabel = childUri.split('/')[childUri.split('/').length-1]
+										// }else{
+										// 	childLabel = childUri
+										// }
+
+
+										if (!populateData.userValue['http://www.w3.org/2002/07/owl#sameAs']){
+											populateData.userValue['http://www.w3.org/2002/07/owl#sameAs'] = {}
+										}		
+
+
+
+										populateData.userValue['http://www.w3.org/2002/07/owl#sameAs']['http://www.w3.org/2000/01/rdf-schema#label'] = childLabel
+										populateData.userValue['http://www.w3.org/2002/07/owl#sameAs'].URI = childUri
+										populateData.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type'] = this.UriNamespace(child.tagName)
+
+
+										// if we set the type undo it because we have mor specific bnode here
+										if (populateData.userValue['@type']){
+											delete populateData.userValue['@type']
 										}
-
-										// if (!populateData.userValue[propertyURI]){
-										// 	populateData.userValue[propertyURI] = {}
-										// }		
-
-										// populateData.userValue[propertyURI]['http://www.w3.org/2000/01/rdf-schema#label'] = childLabel
-										// populateData.userValue[propertyURI].URI = childUri
-
-
-
-										populateData.userValue['http://www.w3.org/2000/01/rdf-schema#label'] = childLabel
-										populateData.userValue.URI = childUri
-
-
-
 
 
 
@@ -753,7 +960,7 @@ const parseBfdb = {
 
 									}else{
 
-										console.warn("Problem with child uri and child label")
+										console.warn("Problem with child uri and child label", childUri, childLabel,populateData);
 									}
 
 
@@ -794,23 +1001,39 @@ const parseBfdb = {
 
 
 				}
-			}
 
+				// we did something with it, so remove it from the xml
+				// doing this inside the loop because some PT use the same element (like primary contribuitor vs contributor)
 
-
-			// we did something with it, so remove it from the xml
-			for (let p of sucessfulProperties){
-				let els = xml.getElementsByTagName(p)
-				// this is a strange loop here because we need to remvoe elements without changing the parent order which will mess up the dom tree and the loop
-				for (let step = els.length-1; step >= 0; step=step-1) {
-					els[step].remove()
+				for (let p of sucessfulProperties){
+					let els = xml.getElementsByTagName(p)
+					// this is a strange loop here because we need to remvoe elements without changing the parent order which will mess up the dom tree and the loop
+					for (let step = els.length-1; step >= 0; step=step-1) {
+						els[step].remove()
+					}
 				}
+
+
+
+
 			}
+
+
+
+
 
 			// store the unused xml
 			profile.rt[pkey].unusedXml = xml.outerHTML;
 
-			let totalHasDataLoaded = 0
+			let parser = new DOMParser();
+			
+
+			profile.rt[pkey].unusedXmlNodes = parser.parseFromString(xml.outerHTML, "text/xml").children[0];
+
+			// console.log(pkey,pkey,pkey)
+			// console.log(profile.rt[pkey].unusedXmlNodes)
+
+			// let totalHasDataLoaded = 0
 			let uniquePropertyURIs  = {}
 			// we are now going to do some ananlyis on profile, see how many properties are acutally used, what is not used, etc
 			for (let key in profile.rt[pkey].pt){
@@ -824,7 +1047,7 @@ const parseBfdb = {
 					profile.rt[pkey].pt[key].dataLoaded=false
 				}else{
 					profile.rt[pkey].pt[key].dataLoaded=true
-					totalHasDataLoaded++
+					// totalHasDataLoaded++
 					uniquePropertyURIs[profile.rt[pkey].pt[key].propertyURI].status = true
 
 					uniquePropertyURIs[profile.rt[pkey].pt[key].propertyURI].data.push({'json':profile.rt[pkey].pt[key].userValue,'propertyLabel': profile.rt[pkey].pt[key].propertyLabel, 'xml':profile.rt[pkey].pt[key].xmlSource})
@@ -877,7 +1100,7 @@ const parseBfdb = {
 
 			
 			
-			console.log(totalHasDataLoaded)
+			// console.log(totalHasDataLoaded)
 
 
 			
@@ -886,7 +1109,7 @@ const parseBfdb = {
 			
 			
 			
-			console.log(hasSeriesData)
+			// console.log(hasSeriesData)
 
 
 
@@ -928,6 +1151,12 @@ const parseBfdb = {
 		if (window.DOMParser){
 			let parser = new DOMParser();
 			this.activeDom = parser.parseFromString(xml, "text/xml");
+
+
+			// test to see if there are any Items,
+			this.hasItem = this.activeDom.getElementsByTagName('bf:Item').length
+
+
 		// the library very much doesn't work on anything but chrome
 		// }else{
 		// 	this.activeDom = new jsdom.JSDOM(xml, {

@@ -1,5 +1,10 @@
 import config from "./config"
+import lookupUtil from "./lookupUtil";
 
+function setCharAt(str,index,chr) {
+    if(index > str.length-1) return str;
+    return str.substring(0,index) + chr + str.substring(index+1);
+}
 
 const parseProfile = {
 
@@ -47,9 +52,6 @@ const parseProfile = {
         this.profileSource = await this.fetchProfiles()
         this.startingPointData = await this.fetchStartingPoints()
 
-
-        console.log(this.profileSource ,'this.profileSource ')
-
         // TEMP HACK, striping RDA fields for some things for the new editor
         for (let p of this.profileSource){
             
@@ -62,7 +64,112 @@ const parseProfile = {
                 }
 
             }
+
+            
+            // remove certine properties from the RTs
+            p.json.Profile.resourceTemplates = p.json.Profile.resourceTemplates.filter((rt)=>{
+
+                rt.propertyTemplates = rt.propertyTemplates.filter((pt)=>{
+
+                    
+
+                    if (pt.propertyLabel.startsWith('Input RDA relationship designator ter') ||
+                        pt.propertyLabel.startsWith('Input Geographic Coverage (if not on list)')){
+                        return false
+                    }else{
+                        return true
+                    }
+                })
+
+
+
+
+                if (rt){
+                    return true
+                }
+
+
+            })
+
+            // modify specific PT values
+            for (let rt of p.json.Profile.resourceTemplates){
+
+
+                // modify the subject headings to match the new editor
+                if (rt.id == 'lc:RT:bf2:Components'){
+                    console.log('lc:RT:bf2:Componentslc:RT:bf2:Componentslc:RT:bf2:Componentslc:RT:bf2:Componentslc:RT:bf2:Components')
+                    console.log(rt)
+                    for (let pt of rt.propertyTemplates){
+                        pt.valueConstraint.valueTemplateRefs = pt.valueConstraint.valueTemplateRefs.filter((ref)=>{if (ref == 'lc:RT:bf2:Topic:madsTopic'){ return true}})
+                    }
+                }        
+                if (rt.id == 'lc:RT:bf2:Topic:Place:Components'){                    
+                    for (let pt of rt.propertyTemplates){
+                        pt.valueConstraint.valueTemplateRefs = pt.valueConstraint.valueTemplateRefs.filter((ref)=>{if (ref == 'lc:RT:bf2:Topic:madsGeogHeading'){ return true}})
+                    }
+                }   
+                if (rt.id == 'lc:RT:bf2:Topic:Childrens:Components'){                    
+                    for (let pt of rt.propertyTemplates){
+                        pt.valueConstraint.valueTemplateRefs = pt.valueConstraint.valueTemplateRefs.filter((ref)=>{if (ref == 'lc:RT:bf2:Topic:Childrens:Topic'){ return true}})
+                    }
+                }   
+
+                // if (['lc:RT:bf2:RelatedWork','lc:RT:bf2:RelatedExpression','lc:RT:bf2:RelatedInstance'].indexOf(rt.id)>-1){
+                //     for (let pt of rt.propertyTemplates){                        
+                //     }
+                // }
+
+                if (rt.id == 'lc:RT:bf2:Brief:Work'){                    
+                    rt.propertyTemplates = [
+                            {
+                                "mandatory": "false",
+                                "propertyLabel": "Lookup",
+                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/Work",
+                                "repeatable": "true",
+                                "resourceTemplates": [],
+                                "type": "lookup",
+                                "valueConstraint": {
+                                    "defaults": [],
+                                    "useValuesFrom": [
+                                        "https://preprod-8230.id.loc.gov/resources/works"
+                                    ],
+                                    "valueDataType": {
+                                        "dataTypeURI": ""
+                                    },
+                                    "valueTemplateRefs": []
+                                }
+                            }]
+
+                }   
+
+
+
+                if (rt.id.endsWith('Work')){
+                    for (let pt of rt.propertyTemplates){
+                        if (pt.propertyURI === 'http://id.loc.gov/ontologies/bibframe/Work'){
+                            pt.type = 'literal'
+                            pt.propertyLabel = 'Work URI'
+                        }
+                    }
+
+                   
+                }
+
+
+
+
+
+
+
+
+            }
+
+
+
         }
+
+
+        // -------- end HACKKCKCKCKCK
 
 
         this.profileSource.forEach((p)=>{
@@ -154,6 +261,8 @@ const parseProfile = {
 
 
         console.log(this.rtLookup)
+        console.log("profiles:")
+        console.log(this.profiles)
 
         return { profiles: this.profiles, lookup: this.rtLookup, startingPoints: this.startingPoints}
     },
@@ -260,28 +369,53 @@ const parseProfile = {
                 // is this a lookup entitiy or a literal / simple value
                 if (value.contextValue){
 
-                    // is it a nested lookup entitiy or a standa alone component
-                    if (template && !template.nested){
-                        currentState.rt[activeProfileName].pt[component].userValue[key] = {literal: value.title,URI:value.uri, '@type': value.type, context: value}
-                        currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI
-                    }else if (template && template.nested){
-                        currentState.rt[activeProfileName].pt[component].userValue[key] = {literal: value.title,URI:value.uri, '@type': value.type, context: value}
-                        currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI
-                        
-                        // currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI
-                        // currentState.rt[activeProfileName].pt[component].userValue[currentState.rt[activeProfileName].pt[component].propertyURI] = {literal: value.title,URI:value.uri, '@type': value.type}
-                        // currentState.rt[activeProfileName].pt[component].userValue.context = value
+                    console.log("Doing entitiy")
+                    console.log(currentState, component, key, activeProfileName, template, value)
+
+
+                    
+                    currentState.rt[activeProfileName].pt[component].userValue['http://www.w3.org/2002/07/owl#sameAs'] = {'http://www.w3.org/2000/01/rdf-schema#label': value.title,URI:value.uri, '@type': value.typeFull, context: value}
+
+
+                    // is it precoordinated
+                    if (value.precoordinated){
+                        currentState.rt[activeProfileName].pt[component].userValue['http://www.w3.org/2002/07/owl#sameAs']['http://www.loc.gov/mads/rdf/v1#componentList'] = []
+                        for (let pc of value.precoordinated){                            
+                            currentState.rt[activeProfileName].pt[component].userValue['http://www.w3.org/2002/07/owl#sameAs']['http://www.loc.gov/mads/rdf/v1#componentList'].push({
+                                'http://www.w3.org/2000/01/rdf-schema#label': pc.label,
+                                '@type': pc.typeFull,
+                                'URI': pc.uri
+                            })
+                        }
+
                     }
+
+                    //
+
+
+                    // is it a nested lookup entitiy or a standa alone component
+                    // if (template && !template.nested){
+                    //     currentState.rt[activeProfileName].pt[component].userValue[key] = {'http://www.w3.org/2000/01/rdf-schema#label': value.title,URI:value.uri, '@type': value.type, context: value}
+                    //     currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI
+                    // }else if (template && template.nested){
+                    //     currentState.rt[activeProfileName].pt[component].userValue[key] = {'http://www.w3.org/2000/01/rdf-schema#label': value.title,URI:value.uri, '@type': value.type, context: value}
+                    //     currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI
+                        
+                    //     // currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI
+                    //     // currentState.rt[activeProfileName].pt[component].userValue[currentState.rt[activeProfileName].pt[component].propertyURI] = {literal: value.title,URI:value.uri, '@type': value.type}
+                    //     // currentState.rt[activeProfileName].pt[component].userValue.context = value
+                    // }
                 }else{
 
-
+                    
                     // are we clearing the state
                     if (typeof value === 'object' && Object.keys(value).length==0){
-                        if (currentState.rt[activeProfileName].pt[component].userValue[key]) delete currentState.rt[activeProfileName].pt[component].userValue[key]                        
-                        if (currentState.rt[activeProfileName].pt[component].userValue['literal']) delete currentState.rt[activeProfileName].pt[component].userValue['literal'] 
-                        if (currentState.rt[activeProfileName].pt[component].userValue['@type']) delete currentState.rt[activeProfileName].pt[component].userValue['@type'] 
-                        if (currentState.rt[activeProfileName].pt[component].userValue['uri']) delete currentState.rt[activeProfileName].pt[component].userValue['uri'] 
+                        // if (currentState.rt[activeProfileName].pt[component].userValue[key]) delete currentState.rt[activeProfileName].pt[component].userValue[key]                        
+                        // if (currentState.rt[activeProfileName].pt[component].userValue['http://www.w3.org/2000/01/rdf-schema#label']) delete currentState.rt[activeProfileName].pt[component].userValue['http://www.w3.org/2000/01/rdf-schema#label'] 
+                        // if (currentState.rt[activeProfileName].pt[component].userValue['@type']) delete currentState.rt[activeProfileName].pt[component].userValue['@type'] 
+                        // if (currentState.rt[activeProfileName].pt[component].userValue['uri']) delete currentState.rt[activeProfileName].pt[component].userValue['uri'] 
 
+                        if (currentState.rt[activeProfileName].pt[component].userValue['http://www.w3.org/2002/07/owl#sameAs']) delete currentState.rt[activeProfileName].pt[component].userValue['http://www.w3.org/2002/07/owl#sameAs']
                     }else{
                         console.log('here', activeProfileName, component, key, value)
 
@@ -294,8 +428,6 @@ const parseProfile = {
                         // notes hit differently
                         if (template.resourceURI == 'http://id.loc.gov/ontologies/bibframe/Note'){
                             
-                            console.log("DOING NOTE", currentState.rt[activeProfileName].pt[component])
-
                             // doing a first level note, not a nested note
                             if (currentState.rt[activeProfileName].pt[component].propertyURI == 'http://id.loc.gov/ontologies/bibframe/note'){
 
@@ -310,8 +442,36 @@ const parseProfile = {
 
                             }
                         }else{
-                            currentState.rt[activeProfileName].pt[component].userValue[key] = value
-                            currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI
+
+                            // get the class/prdicate
+                            let keySegment = key.split('/')[key.split('/').length-1]
+                            if (keySegment.charAt(0) === keySegment.charAt(0).toUpperCase()){
+
+                                // make the property version of it                                
+                                keySegment = setCharAt(keySegment,0,keySegment.charAt(0).toLowerCase())
+                                let url = key.split('/')
+                                url.splice(url.length-1,1)
+                                url.push(keySegment)
+                                url = url.join('/')
+                                
+                                // does it exist in our ontology
+                                if (lookupUtil.ontologyPropertyExists(url)){
+                                    currentState.rt[activeProfileName].pt[component].userValue[url] = value
+                                    // currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI                                    
+
+                                }else{
+
+                                    currentState.rt[activeProfileName].pt[component].userValue[key] = value
+                                    currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI                                
+                                }
+
+                                
+
+                            }else{
+                                currentState.rt[activeProfileName].pt[component].userValue[key] = value
+                                currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI                                
+                            }
+
 
                         }
 
@@ -350,31 +510,93 @@ const parseProfile = {
 
             // check if this profile has the pt we are looking for
             if (currentState.rt[rt].pt[component]){
+
+
                 results = currentState.rt[rt].pt[component].userValue
-                
-                console.log("!!!!!!!!!!!!!!!!!!!")
-                console.log(rt)
-                console.log(currentState.rt[rt])
-                console.log(component)
-                console.log(propertyURI)
+                console.log('resultsresultsresultsresultsresultsresultsresultsresultsresults')
                 console.log(results)
+                console.log(propertyURI)
+                // console.log("!!!!!!!!!!!!!!!!!!!")
+                // console.log(rt)
+                // console.log(currentState.rt[rt])
+                // console.log(component)
+                // console.log(propertyURI)
+                // console.log(results)
 
 
 
-                // do some modifications to fit the user data in to the format a complex lookup components will expect
-                
-                
-                
-                
-                if (results.literal){
-                    results[propertyURI] = {literal: results.literal, URI: results.URI, '@type':results['@type']}
-                }
+                // // do some modifications to fit the user data in to the format a complex lookup components will expect
+                // console.log("~~~~",currentState.rt[rt].pt[component].userValue,'!!!!!')
+                // if (currentState.rt[rt].pt[component].userValue['http://www.w3.org/2002/07/owl#sameAs']){
+                //     console.log('http://www.w3.org/2002/07/owl#sameAs')
+                //     console.log('http://www.w3.org/2002/07/owl#sameAs')
+                //     console.log('http://www.w3.org/2002/07/owl#sameAs')
+                //     console.log('http://www.w3.org/2002/07/owl#sameAs')
+                //     console.log('http://www.w3.org/2002/07/owl#sameAs')
+                //     console.log('http://www.w3.org/2002/07/owl#sameAs')
+                //     console.log('http://www.w3.org/2002/07/owl#sameAs')
+                //     results = currentState.rt[rt].pt[component].userValue['http://www.w3.org/2002/07/owl#sameAs']
+
+                // }else if (results.literal){
+                //     results[propertyURI] = {literal: results.literal, URI: results.URI, '@type':results['@type']}
+                // }
 
             }
         })
         console.log(results)
         return results
 
+    },
+
+
+    returnMetaFromSavedXML: function(xml){
+
+
+        let parser = new DOMParser();
+        xml = parser.parseFromString(xml, "text/xml");
+
+        let voidData = xml.getElementsByTagName('void:DatasetDescription')[0]
+
+        let rts = []
+
+        for (let rt of voidData.getElementsByTagName('lclocal:rtsused')){
+            rts.push(rt.innerHTML)
+        }
+
+        let eid = null
+        for (let el of voidData.getElementsByTagName('lclocal:eid')){
+            eid = el.innerHTML
+        }
+
+        let status = null
+        for (let el of voidData.getElementsByTagName('lclocal:status')){
+            status = el.innerHTML
+        }
+
+        let profile = null
+        for (let el of voidData.getElementsByTagName('lclocal:typeid')){
+            profile = el.innerHTML
+        }
+        let procInfo = null
+        for (let el of voidData.getElementsByTagName('lclocal:procinfo')){
+            procInfo = el.innerHTML
+        }
+
+
+        voidData.remove()
+
+        xml = (new XMLSerializer()).serializeToString(xml)
+
+
+        return {
+            rts:rts,
+            xml:xml,
+            eid: eid,
+            status:status,
+            profile:profile,
+            procInfo:procInfo
+
+        }
     }
 
 }

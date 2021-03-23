@@ -42,6 +42,7 @@
                 <li v-bind:class="{ active: isNew }"><router-link v-bind:class="{ active: isNew }" to="/new">Create new record</router-link><span v-bind:class="{ active: isNew }">CTRL+N</span></li>
                 <li v-bind:class="{ active: isLoad }"><router-link v-bind:class="{ active: isLoad }" to="/load">Load existing record</router-link><span v-bind:class="{ active: isLoad }">CTRL+O</span></li>
                 <li v-bind:class="{ active: isSettings }"><router-link v-bind:class="{ active: isSettings }" to="/settings">Settings</router-link><span v-bind:class="{ active: isSettings }">CTRL+I</span></li>
+                <li v-bind:class="{ active: isHelp }"><router-link v-bind:class="{ active: isHelp }" to="/help">Help</router-link><span v-bind:class="{ active: isHelp }"></span></li>
 
               </ul>
 
@@ -62,6 +63,8 @@
         <HomeSettingsComponent v-if="isSettings"></HomeSettingsComponent>
         <HomeMyRecordsComponent v-if="isMyRecords"></HomeMyRecordsComponent>
         <HomeAllRecordsComponent v-if="isAllRecords"></HomeAllRecordsComponent>
+        <HomeHelpComponent v-if="isHelp"></HomeHelpComponent>
+
 
 
 
@@ -83,6 +86,7 @@ import HomeSettingsComponent from "@/components/HomeSettingsComponent.vue";
 
 import HomeMyRecordsComponent from "@/components/HomeMyRecordsComponent.vue";
 import HomeAllRecordsComponent from "@/components/HomeAllRecordsComponent.vue";
+import HomeHelpComponent from "@/components/HomeHelpComponent.vue";
 
 
 
@@ -98,6 +102,7 @@ export default {
     HomeSettingsComponent,
     HomeMyRecordsComponent,
     HomeAllRecordsComponent,
+    HomeHelpComponent,
     Keypress: () => import('vue-keypress')
 
   },
@@ -195,7 +200,10 @@ export default {
 
     isSettings () {
       return (this.$route.fullPath.startsWith('/settings'))
-    }
+    },
+    isHelp () {
+      return (this.$route.fullPath.startsWith('/help'))
+    }    
 
 
 
@@ -203,7 +211,6 @@ export default {
   created: function () {
     // kick off the fetching of profiles on load
     this.$store.dispatch("fetchProfiles", { self: this })    
-    console.log(this.$route)
 
 
   },

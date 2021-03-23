@@ -8,8 +8,8 @@
             <!-- <input autocomplete="off" v-bind:value="activeSelect"  type="text" disabled style="width: 95%; border:none; height: 90%; font-size: 1.5em; padding: 0.1em; position: relative; background: none; color: lightgray"> -->
               
               <div v-for="(avl,idx) in activeLookupValue" :key="idx" class="selected-value-container">
-                  <span style="padding-right: 0.3em; font-weight: bold">{{avl.literal}}</span>
-                  <span style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">x</span>
+                  <span style="padding-right: 0.3em; font-weight: bold">{{avl['http://www.w3.org/2000/01/rdf-schema#label']}}<span class="uncontrolled" v-if="avl.BFE2METAnotControled">(uncontrolled)</span></span>
+                  <span @click="removeValue(idx)" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em; cursor: pointer;">x</span>
               </div>
               <input bfeType="EditSimpleLookupComponent-unnested" ref="lookupInput"  :id="assignedId" autocomplete="off" v-on:blur="blur" v-bind:value="activeValue"  type="text" @focus="autoFocus($event)" @keydown="keyDownEvent($event)" @keyup="keyUpEvent($event)" class="input-single selectable-input">
             </div>
@@ -31,16 +31,15 @@
 
 
   <div v-else style="position: relative;">
-      <div v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search']" style="">          
+      <div  v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search']" style="">          
         <form autocomplete="off" v-on:submit.prevent style="">
           <div style="">
           <!-- <input autocomplete="off" v-bind:value="activeSelect"  type="text" disabled style="width: 95%; border:none; height: 90%; font-size: 1.5em; padding: 0.1em; position: relative; background: none; color: lightgray"> -->
             <div class="component-nested-container-title component-nested-container-title-simple-lookup" >{{structure.propertyLabel}}</div>            
             <div style="display: flex">
-
               <div v-for="(avl,idx) in activeLookupValue" :key="idx" class="selected-value-container-nested">
-                  <span style="padding-right: 0.3em; font-weight: bold">{{avl.literal}}</span>
-                  <span @click="removeValue" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em; cursor: pointer;">x</span>
+                  <span style="padding-right: 0.3em; font-weight: bold">{{avl['http://www.w3.org/2000/01/rdf-schema#label']}}<span class="uncontrolled" v-if="avl.BFE2METAnotControled">(uncontrolled)</span></span>
+                  <span @click="removeValue(idx)" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em; cursor: pointer;">x</span>
               </div>
 
 
@@ -111,10 +110,13 @@ export default {
 
 
     // fill in the defaults if it comes with them
-    if (this.structure.valueConstraint.defaults.length>0){
-      this.activeLookupValue.push({})
-      this.activeLookupValue[0].literal = this.structure.valueConstraint.defaults[0].defaultLiteral
-      this.activeLookupValue[0].URI = this.structure.valueConstraint.defaults[0].defaultURI
+    // only if this was not loaded from a record
+    if (!this.activeProfile.procInfo || (this.activeProfile.procInfo && !this.activeProfile.procInfo.includes("update"))){
+      if (this.structure.valueConstraint.defaults.length>0){
+        this.activeLookupValue.push({})
+        this.activeLookupValue[0]['http://www.w3.org/2000/01/rdf-schema#label'] = this.structure.valueConstraint.defaults[0].defaultLiteral
+        this.activeLookupValue[0].URI = this.structure.valueConstraint.defaults[0].defaultURI
+      }
     }
 
     let data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]
@@ -133,45 +135,80 @@ export default {
 
     // HACK - figure out whats going on here
     let altPropertyURI = this.structure.propertyURI.toLowerCase()
-
     let dataField = data.userValue[data.propertyURI]
+
+
     if (data.userValue[this.structure.propertyURI]){
       dataField = data.userValue[this.structure.propertyURI]
+
+
     }else if (data.userValue[altPropertyURI]){
-      dataField = data.userValue[altPropertyURI]      
+      dataField = data.userValue[altPropertyURI]    
+      
+    }else if (data.userValue['http://www.w3.org/2002/07/owl#sameAs'] && data.userValue['http://www.w3.org/2002/07/owl#sameAs'][this.structure.propertyURI]){
+      dataField = data.userValue['http://www.w3.org/2002/07/owl#sameAs'][this.structure.propertyURI]
+    
+    }else if (data.userValue['http://www.w3.org/2002/07/owl#sameAs'] && data.userValue['http://www.w3.org/2002/07/owl#sameAs'][altPropertyURI]){
+      dataField = data.userValue['http://www.w3.org/2002/07/owl#sameAs'][altPropertyURI]  
+
+
+
+    }else if (data.userValue['http://www.w3.org/2002/07/owl#sameAs']){
+      dataField = data.userValue['http://www.w3.org/2002/07/owl#sameAs']         
     }else if (data.userValue['@type'] && data.userValue[data.userValue['@type']]){
       dataField = data.userValue[this.structure.propertyURI]
 
     }
 
     // Kind of a HACK here, need to sort out what URI the data is being stored under here
-    
+    // console.log(this.structure.propertyURI)
+    // console.log("dataField",dataField, 'data.userValue:',data.userValue, )
 
-
-    if (data.userValue && dataField){
-      let alv = {}
-      if (dataField.literal){
-        alv.literal = dataField.literal
-      }
-      if (dataField['http://www.w3.org/2000/01/rdf-schema#label']){
-        alv.literal = dataField['http://www.w3.org/2000/01/rdf-schema#label']
-      }
-
-      if (dataField.URI){
-        alv.URI = dataField.URI
-      }
-
-      // no literal
-      if (!alv.literal && alv.URI){
-        alv.literal = alv.URI.split('/').slice(-1)[0] + " (label missing)"
-      }
-
-      this.activeLookupValue.push(alv)
+    if (!Array.isArray(dataField)){
+      dataField = [dataField]
     }
 
+    for (let aDataField of dataField){
+      
+      // console.log(aDataField,'<<<<<aDataField')
+      if (data.userValue && aDataField){
+        let alv = {}
+        if (aDataField.literal){
+          alv['http://www.w3.org/2000/01/rdf-schema#label'] = aDataField.literal
+        }
+        if (aDataField['http://www.w3.org/2000/01/rdf-schema#label']){
+          alv['http://www.w3.org/2000/01/rdf-schema#label'] = aDataField['http://www.w3.org/2000/01/rdf-schema#label']
+        }
+
+        if (aDataField['http://id.loc.gov/ontologies/bibframe/code']){
+          alv['http://www.w3.org/2000/01/rdf-schema#label'] = aDataField['http://id.loc.gov/ontologies/bibframe/code']
+        }
 
 
+        if (aDataField.URI){
+          alv.URI = aDataField.URI
+        }else{
+          alv.URI = null
+          alv.BFE2METAnotControled = true
+        }
 
+        if (aDataField.BFE2METAnotControled){
+          alv.BFE2METAnotControled = aDataField.BFE2METAnotControled
+        }
+
+        // no literal
+        if (!alv['http://www.w3.org/2000/01/rdf-schema#label'] && alv.URI){
+          alv['http://www.w3.org/2000/01/rdf-schema#label'] = alv.URI.split('/').slice(-1)[0] + " (no label)"
+        }
+        // console.log("ALV")
+        // console.dir(alv)
+        this.activeLookupValue.push(alv)
+      }
+
+    }
+
+    // console.log('activeLookupValue activeLookupValue activeLookupValue')
+    // console.dir(this.activeLookupValue)
 
 
 
@@ -206,13 +243,24 @@ export default {
   }),  
   methods:{
 
-    removeValue: function(){
+    fakeContainerFocus: function(event){
 
-      if (this.activeLookupValue.length>1){
-        this.activeLookupValue.splice(-1,1)
-      }else{
-        this.activeLookupValue = []
-      }
+        console.log(event.target.querySelectorAll('input'))
+
+
+    },
+
+    removeValue: function(idx){
+
+
+      this.activeLookupValue.splice(idx,1)
+
+
+      // if (this.activeLookupValue.length>1){
+      //   this.activeLookupValue.splice(-1,1)
+      // }else{
+      //   this.activeLookupValue = []
+      // }
 
     },  
 
@@ -258,7 +306,7 @@ export default {
         this.displayAutocomplete = true
       }
       if (this.displayList.length==0){
-        this.displayList.push('No Match')
+        this.displayList.push('No Match - Press [Enter] to add uncontrolled value')
         this.displayAutocomplete = true
       }
       if (this.activeFilter.length==0){
@@ -415,11 +463,12 @@ export default {
 
           let idx = metadata[key].displayLabel.indexOf(this.activeSelect)
           if (idx >-1){
-            this.activeLookupValue.push({literal:metadata[key].label[idx],URI:metadata[key].uri})
+            this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':metadata[key].label[idx],URI:metadata[key].uri})
             this.activeFilter = ''
             this.activeValue = ''
             this.activeSelect = ''
             this.displayAutocomplete=false
+            event.target.value = ''
             this.$store.dispatch("addValueLiteral", { self: this, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, value:this.activeLookupValue }).then(() => {
              
             })               
@@ -433,9 +482,28 @@ export default {
           // }
         })
 
+
         if (event.target.value == ''){
           this.submitField()
         }
+
+        // if there is a value still that means the value did not match a item in the list
+        // so add the value as a uncontrolled value
+        if (event.target.value !== ''){  
+          this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':event.target.value,URI:null, BFE2METAnotControled:true})
+          this.activeFilter = ''
+          this.activeValue = ''
+          this.activeSelect = ''
+          this.displayAutocomplete=false
+          this.$store.dispatch("addValueLiteral", { self: this, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, value:this.activeLookupValue }).then(() => {
+
+
+          })
+  
+          this.submitField()
+
+        }
+
 
         event.preventDefault()
 
@@ -491,7 +559,7 @@ export default {
 
         let idx = metadata[key].displayLabel.indexOf(label)
         if (idx >-1){
-          this.activeLookupValue.push({literal:metadata[key].label[idx],URI:metadata[key].uri})
+          this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':metadata[key].label[idx],URI:metadata[key].uri})
           this.activeFilter = ''
           this.activeValue = ''
           this.activeSelect = ''
@@ -559,6 +627,10 @@ li span{
 }
 input{
   outline: none;
+}
+.uncontrolled{
+  margin-left: 0.25em;
+  color: darkred;
 }
 .component-container-fake-input:focus-within {
   border: solid 1px #a6acb7;
