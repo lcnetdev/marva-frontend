@@ -5,8 +5,14 @@
                     <!-- <div style="display: ">loaded profile -- {{profilesLoaded}} </div> -->
                     <div>
                       <router-link style="font-size: 1.5em;color: black;text-decoration: none;padding-left: 0.5em;" to="/myrecords">&lt; Back</router-link>
+
+                      <span style="color:red; margin-left:20%" v-if="!isProd()"> THIS IS THE STAGING (TEST) REGION DATA IS NOT SAVED TO PRODUCTION</span>
+
                       <a @click="reportError" href="#" style="float:right;font-size: 1.5em;color: black;text-decoration: none;padding-left: 0.5em;">Report Error</a>
                     </div>
+
+
+
 
       </header>
 
@@ -119,7 +125,7 @@
           </div>
         </article>
 
-        <aside class="sidebar-right" style="background-color: white" :key="activeEditCounter">
+        <aside id="sidebar-right" class="sidebar-right" style="background-color: white" :key="activeEditCounter">
 
             <div ref="editRightMenuFixed"  style="height: 100vh; overflow-y:scroll; position: fixed; width: 100%;"  v-if="profilesLoaded">
                 <!-- <div style="color:#bfbfbf; font-size: 1.5em; text-align: center;">{{sartingPoint}}</div> -->
@@ -178,11 +184,21 @@
 
                 </div>
                 <div style="margin-bottom: 2em; background-color: whitesmoke; padding: 1.5em">
+
+                  <div v-for="rl in resourceLinks" v-bind:key="rl.url">
+                    <a :href="rl.url" target="_blank">View {{rl.type}} on {{rl.env}}</a>
+
+                  </div>
+
                   <button style="font-size: 1.5em" @click="togglePreview">PREVIEW</button>
+
+
+
 
                   <button v-if="!activeRecordSaved" style="font-size: 1.5em; margin-left: 0.5em;" @click="triggerSave">SAVE</button>
                   <button v-if="activeRecordSaved" style="color: lawngreen; font-size: 1.5em; margin-left: 0.5em;" disabled="">SAVED</button>
                   <button style="font-size: 1.5em; margin-left: 0.5em;" @click="publish">POST</button>
+
 
 
                 </div>
@@ -296,7 +312,8 @@ export default {
       labels: labels,
       ontologyLookupTodo: [],
       displayPreview: false,
-      xmlPreview: 'Loading...'
+      xmlPreview: 'Loading...',
+      resourceLinks: []
     }
   },
 
@@ -337,10 +354,46 @@ export default {
     publish: async function(){
 
       let xml = await exportXML.toBFXML(this.activeProfile)
-      lookupUtil.publish(xml.xlmString)
+      let pubResuts = lookupUtil.publish(xml.xlmString)
+
+      if (pubResuts){
+        // if it posted we want to also save the record and mark it as posted
+
+        this.activeProfile.status = 'published'
+
+        this.$store.dispatch("setActiveProfile", { self: this, profile: this.activeProfile }).then(() => {
+
+          this.resourceLinks=[]
+
+
+          for (let rt in this.activeProfile.rt){
+            let type = rt.split(':').slice(-1)[0]
+            let url = config.convertToRegionUrl(this.activeProfile.rt[rt].URI)
+            let env = config.returnUrls().env
+            this.resourceLinks.push({
+              'type':type,
+              'url': url,
+              'env': env
+            })
+          }
+
+
+
+
+        })
+
+
+      }
 
     },
 
+
+    isProd: function(){
+
+      if (config.returnUrls().env == 'dev') return false
+      if (config.returnUrls().env == 'staging') return false
+      if (config.returnUrls().env == 'prod') return true  
+    },
           
 
 

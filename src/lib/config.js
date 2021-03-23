@@ -10,6 +10,7 @@ const config = {
 			'ldpjs' : 'http://localhost:9400/api-staging/',			
 			'util'  : 'http://localhost:9400/util/',
 			'publish' : 'http://localhost:9400/util/publish/staging',
+			'bfdb' : 'https://preprod-8210.id.loc.gov/',
 			'profiles' : '/bfe2/editor/profiles.json',
 			'starting': '/bfe2/editor/starting.json',
 			'env' : 'staging'
@@ -21,6 +22,7 @@ const config = {
 			'ldpjs' : 'https://preprod-3001.id.loc.gov/bfe2/api-staging/',
 			'util'  :  'https://preprod-3001.id.loc.gov/bfe2/util/',
 			'publish': 'https://preprod-3001.id.loc.gov/bfe2/util/publish/staging',
+			'bfdb' : 'https://preprod-8210.id.loc.gov/',
 			'profiles' : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
 			'starting' : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:startingPoints&where=index.label:config',
 			'env' : 'staging'
@@ -40,11 +42,19 @@ const config = {
 		}else if (window.location.href.startsWith('https://preprod-3001')){
 			return this.regionUrls.staging
 		}
+	},
 
 
+	convertToRegionUrl: function(url){
 
+		let urls = this.returnUrls()
 
-
+		if ((url.includes('/works/') || url.includes('/instances/') || url.includes('/items/') ) && url.includes('http://id.loc.gov') ){
+			console.log('yes')
+			url = url.replace('http://id.loc.gov/',urls.bfdb)
+		}
+	
+		return url
 	},
 
 

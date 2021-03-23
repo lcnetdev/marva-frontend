@@ -663,7 +663,20 @@ const lookupUtil = {
       const content = await rawResponse.json();
 
       console.log(content);
-      alert(JSON.stringify(content.publish,null,2))
+
+      if (content && content.publish && content.publish.status && content.publish.status == 'published'){
+
+        return true
+
+      }else{
+
+        alert("Did not post, please report this error--" + JSON.stringify(content.publish,null,2))
+        return false
+      }
+
+      
+
+
       
 
     },        

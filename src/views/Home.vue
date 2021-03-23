@@ -35,6 +35,7 @@
             <path d="M67.3751 50.9203C62.2629 50.9203 58.3477 55.1098 58.3477 60.1971C58.3477 65.5586 62.238 69.3741 67.6245 69.3741C72.7366 69.3741 76.6518 65.1846 76.6518 60.0973C76.6518 54.7358 72.7616 50.9203 67.3751 50.9203ZM67.7491 68.5761C63.6843 68.5761 60.5422 65.1596 60.5422 59.9477C60.5422 55.0101 63.3601 51.7183 67.2504 51.7183C71.3152 51.7183 74.4573 55.1347 74.4573 60.3467C74.4573 65.2843 71.6394 68.5761 67.7491 68.5761Z" fill="white"/>
             <path d="M79.9079 69H84.0725V68.7007L82.8755 67.9027V60.2719H83.9727C85.7433 60.2719 86.5912 61.419 87.1398 62.3916C87.6884 63.3392 89.4839 66.7806 89.6336 67.1047C90.257 68.4264 91.3293 69.2494 92.8754 69.2743C94.3966 69.2743 94.8206 68.8254 94.8206 68.8254L94.7707 68.6509C93.1996 68.7756 92.9004 68.3766 91.9029 66.8554C91.5537 66.3317 90.2819 63.7881 89.7582 62.7158C88.8854 61.02 87.7134 60.1971 87.7134 60.1971V60.0474C89.5837 59.5736 92.2769 58.4764 92.2769 55.6834C92.2769 52.8654 89.4341 51.2944 85.8431 51.2944H79.8331V51.5437L80.9304 52.5662V67.8529L79.9079 68.7007V69ZM82.8755 59.4489V52.0674H84.7209C86.5912 52.0674 90.0326 52.1173 90.0326 55.7083C90.0326 59.3492 86.0426 59.4489 84.0725 59.4489H82.8755Z" fill="white"/>
             </svg>
+            <div v-if="!isProd()">THIS IS THE STAGING (TEST) REGION DATA IS NOT SAVED TO PRODUCTION</div>
 
               <ul class="sidebar-menu">
                 <li v-bind:class="{ active: isMyRecords }"><router-link v-bind:class="{ active: isMyRecords }" to="/myrecords">My records</router-link><span v-bind:class="{ active: isMyRecords }">CTRL+M</span></li>
@@ -87,6 +88,7 @@ import HomeSettingsComponent from "@/components/HomeSettingsComponent.vue";
 import HomeMyRecordsComponent from "@/components/HomeMyRecordsComponent.vue";
 import HomeAllRecordsComponent from "@/components/HomeAllRecordsComponent.vue";
 import HomeHelpComponent from "@/components/HomeHelpComponent.vue";
+import config from "@/lib/config"
 
 
 
@@ -138,6 +140,13 @@ export default {
 
     },
 
+    isProd: function(){
+
+      if (config.returnUrls().env == 'dev') return false
+      if (config.returnUrls().env == 'staging') return false
+      if (config.returnUrls().env == 'prod') return true  
+    },
+          
 
     navRoute(event){
 
