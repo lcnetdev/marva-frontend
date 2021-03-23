@@ -663,6 +663,7 @@ const lookupUtil = {
       const content = await rawResponse.json();
 
       console.log(content);
+      alert(content.publish)
       
 
     },        
