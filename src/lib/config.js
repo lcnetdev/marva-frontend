@@ -18,9 +18,9 @@ const config = {
 
 		'staging':{
 
-			'ldpjs' : 'https://preprod-3001/bfe2/api-staging/',
-			'util'  :  'https://preprod-3001/bfe2/util/',
-			'publish': 'https://preprod-3001/bfe2/util/publish/staging',
+			'ldpjs' : 'https://preprod-3001.id.loc.gov/bfe2/api-staging/',
+			'util'  :  'https://preprod-3001.id.loc.gov/bfe2/util/',
+			'publish': 'https://preprod-3001.id.loc.gov/bfe2/util/publish/staging',
 			'profiles' : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
 			'starting' : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:startingPoints&where=index.label:config',
 			'env' : 'staging'
