@@ -312,6 +312,18 @@ export default new Vuex.Store({
       // console.log("^^^^^^^^data")
     },
 
+
+    addNewItem({ commit},data){
+      // commit('ACTIVEPROFILE', data.profile)
+      console.log(data.profileName,commit)
+      // console.log("^^^^^^^^data")
+      // let nap = parseProfile.addNewItem(state.activeProfile)
+
+
+    },
+
+    
+
     setCatInitials({ commit}, data){
       commit('CATINITALS', data.catInitials)
     },

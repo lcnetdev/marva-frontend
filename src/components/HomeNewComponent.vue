@@ -184,8 +184,17 @@ export default {
 
       for (let rt in useProfile.rt){
 
+        let uri = null
+
         // make a new uri for each one
-        let uri = 'http://id.loc.gov/resources/e' + decimalTranslator.new()
+        if (rt.endsWith(':Work')){
+          uri = 'http://id.loc.gov/resources/instances/e' + decimalTranslator.new()
+        }else if (rt.endsWith(':Instance')){
+          uri = 'http://id.loc.gov/resources/works/e' + decimalTranslator.new()
+        }else if (rt.endsWith(':Item')){  
+          uri = 'http://id.loc.gov/resources/items/e' + decimalTranslator.new()
+        
+        }        
         useProfile.rt[rt].URI = uri
 
         for (let pt in useProfile.rt[rt].pt){
@@ -198,8 +207,6 @@ export default {
 
       }
 
-      console.log(useProfile)
-      console.log("^^^^^^")
 
 
 

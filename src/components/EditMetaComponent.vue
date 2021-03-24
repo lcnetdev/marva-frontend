@@ -44,7 +44,7 @@
              <td style="background-color: whitesmoke;">{{io}}</td><td  style="text-align: right; background-color: whitesmoke;"><a href="#" @click="duplicateInstance($event)" style="color:#2c3e50">duplicate</a></td><td  style="text-align: right; background-color: whitesmoke;"><a href="#" @click="deleteInstance($event)" style="color:#2c3e50">delete</a></td>
            </tr>
            <tr>
-             <td ><a @click="deleteInstance($event)" href="#" style="color:#2c3e50">Add</a> another Item</td>
+             <td ><a @click="addItem($event)" href="#" style="color:#2c3e50">Add</a> another Item</td>
            </tr>
 
          </table> 
@@ -103,6 +103,29 @@ export default {
 
       event.preventDefault()
       return false
+    },
+
+
+    addItem(event){
+
+      console.log(this.structure)
+      console.log(this.parentStructure)
+      console.log(this.profileName)
+
+
+      this.$store.dispatch("addNewItem", { self: this, profileName: this.profileName }).then(() => {
+
+
+
+      })
+
+
+
+
+
+      event.preventDefault()
+      return false
+
     },
    
     buildData: function(){

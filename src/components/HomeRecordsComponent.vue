@@ -24,7 +24,20 @@
           <td><div v-for="profile in record.profiletypes" v-bind:key="profile">{{profile}}</div></td>
           <td>{{record.eid}}</td>
           <td>{{record.contributor}}</td>
-          <td>{{record.lccn}}</td>
+
+          <td :title="record.status" v-if="record.status=='unposted'">{{record.lccn}}</td>
+          <td :title="record.status" v-else-if="record.status=='published'" style="background-color: lawngreen">
+            {{record.lccn}}
+            <div v-for="rl in resourceLinks(record)" v-bind:key="rl.url">
+              <a :href="rl.url" target="_blank">View {{rl.type}} on {{rl.env}}</a>
+
+            </div>
+          </td>
+
+          <td :title="record.status" v-else>{{record.lccn}}</td>
+
+
+
           <td>{{record.user}}</td>
           <td>{{record.time}}</td>
           <td style="    cursor: pointer;" @click="selectTemplateClickLoad(record.eid)">Load</td>
@@ -50,6 +63,7 @@ import { mapState } from 'vuex'
 import lookupUtil from "@/lib/lookupUtil"
 import parseProfile from "@/lib/parseProfile"
 import parseBfdb from '@/lib/parseBfdb'
+import config from '@/lib/config'
 
 // import HomeAllRecordsComponent from "@/components/HomeAllRecordsComponent.vue";
 
@@ -75,6 +89,30 @@ export default {
       })
 
       return sp
+
+    },
+
+    resourceLinks(record){
+
+      let results = []
+
+      for (let uri of record.externalid){
+        let type
+        if (uri.includes("/items/"))(type = 'Item')
+        if (uri.includes("/works/"))(type = 'Work')
+        if (uri.includes("/instances/"))(type = 'Instance')
+
+        let url = config.convertToRegionUrl(uri)
+        let env = config.returnUrls().env
+
+        results.push({
+          'type':type,
+          'url': url,
+          'env': env
+        })
+      }
+
+      return results
 
     },
 

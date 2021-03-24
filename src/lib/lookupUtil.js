@@ -683,6 +683,44 @@ const lookupUtil = {
 
 
 
+    checkVersionOutOfDate: async function(){
+
+      let url = config.returnUrls().util + 'version/editor' + "?blastdacache=" + Date.now()
+      let content
+
+      try{
+
+
+        const rawResponse = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          
+        });
+        content = await rawResponse.json();
+      }catch{
+        // if sometihng network goes wrong just say were not out of date
+        return false
+
+      }
+
+
+      let ourVer = config.versionMajor + (config.versionMinor * 0.1) + (config.versionPatch* 0.01) 
+      let curVer = content.major + (content.minor* 0.1) + (content.patch* 0.01) 
+      console.log("ourVer:",ourVer,"curVer:",curVer)
+      if (ourVer < curVer){
+        return true
+      }else{
+        return false
+      }
+
+
+    }
+
+
+
 
 }
 

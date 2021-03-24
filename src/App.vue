@@ -16,6 +16,36 @@
 
 
     </div>
+
+    {{outOfDate}}
+    <div v-if="outOfDate == true" style="position: fixed; width: 100vw; height: 100vh; top: 0; left: 0; background-color: rgba(0,0,0,0.6); z-index: 1000">
+      
+      <div style="border: solid 1px #a6acb7; border-radius:0.5em; margin: auto; width: 25%; background-color: white; margin-top: 10%; min-height: 25%; padding: 1em;">
+          
+          <div v-if="systemType=='mac'">
+            <h1>Out of Date</h1>
+            <div>The editor version open in your browser is out of date. Please do a hard refresh to use the latest version.</div><br>
+            <div>On your keyboard press <strong>Cmd</strong> and <strong>Shift</strong> and the letter <strong>R</strong> </div>
+
+          </div>
+          <div v-if="systemType=='win'">
+            <h1>Out of Date</h1>
+            <div>The editor version open in your browser is out of date. Please do a hard refresh to use the latest version.</div><br>
+            <div>On your keyboard press <strong>Ctrl</strong> and <strong>F5</strong> </div>
+
+          </div>
+          <div v-if="systemType=='other'">
+            <h1>Out of Date</h1>
+            <div>The editor version open in your browser is out of date. Please do a hard refresh to use the latest version.</div><br>
+
+
+          </div>
+
+      </div>
+
+
+    </div>
+
     
     <router-view />
   </div>
@@ -49,6 +79,7 @@
 <script>
 
 import { mapState } from 'vuex'
+import lookupUtil from "@/lib/lookupUtil"
 
 
 export default {
@@ -64,17 +95,31 @@ export default {
 
 
         return true
+      },
+
+      systemType: function(){
+        if (navigator.platform.indexOf('Mac') > -1){
+          return 'mac'
+        }else if (navigator.platform.indexOf('Win') > -1){
+          return 'win'
+        }else{
+          return 'other'
+        }
+
+
       }
+
 
     }),
   data: function() {
     return {
 
-
+      outOfDate: false,
       catInitialsForm:""
 
     }
   },
+
 
   methods: {
 
@@ -96,7 +141,7 @@ export default {
 
   },
 
-  created: function () {
+  created: async function () {
   
 
 
@@ -113,6 +158,12 @@ export default {
     }else{
       // this.isLoggedIn=false;
     }
+
+
+    let r = await lookupUtil.checkVersionOutOfDate()
+    this.outOfDate = r
+    
+    
 
 
 
