@@ -500,14 +500,14 @@ const parseBfdb = {
 
 			// remove some things we will want to work with later but are just too complicated right now
 			let adminMetadata = xml.getElementsByTagName('bf:adminMetadata')
-			if (adminMetadata){
+			if (adminMetadata.length>0){
 				let adminMetadataData = Array.prototype.slice.call( adminMetadata )
 				for (let item of adminMetadata) {
 					item.parentNode.removeChild(item)
 				}
 
-
-				profile.rt[pkey].adminMetadataData=adminMetadataData[0]
+				console.log(adminMetadataData)
+				profile.rt[pkey].adminMetadataData= (new XMLSerializer()).serializeToString(adminMetadataData[0])
 
 
 
@@ -1025,10 +1025,8 @@ const parseBfdb = {
 			// store the unused xml
 			profile.rt[pkey].unusedXml = xml.outerHTML;
 
-			let parser = new DOMParser();
-			
-
-			profile.rt[pkey].unusedXmlNodes = parser.parseFromString(xml.outerHTML, "text/xml").children[0];
+			// let parser = new DOMParser();
+			// profile.rt[pkey].unusedXmlNodes = parser.parseFromString(xml.outerHTML, "text/xml").children[0];
 
 			// console.log(pkey,pkey,pkey)
 			// console.log(profile.rt[pkey].unusedXmlNodes)

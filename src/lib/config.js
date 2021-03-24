@@ -2,30 +2,35 @@
 
 const config = {
 
+	versionMajor: 0,
+	versionMinor: 5,
+	versionPatch: 0,
 
-	'regionUrls': {
 
-		'dev':{
 
-			'ldpjs' : 'http://localhost:9400/api-staging/',			
-			'util'  : 'http://localhost:9400/util/',
-			'publish' : 'http://localhost:9400/util/publish/staging',
-			'bfdb' : 'https://preprod-8210.id.loc.gov/',
-			'profiles' : '/bfe2/editor/profiles.json',
-			'starting': '/bfe2/editor/starting.json',
-			'env' : 'staging'
+	regionUrls: {
+
+		dev:{
+
+			ldpjs : 'http://localhost:9400/api-staging/',			
+			util  : 'http://localhost:9400/util/',
+			publish : 'http://localhost:9400/util/publish/staging',
+			bfdb : 'https://preprod-8210.id.loc.gov/',
+			profiles : '/bfe2/editor/profiles.json',
+			starting: '/bfe2/editor/starting.json',
+			env : 'staging'
 
 		},
 
-		'staging':{
+		staging:{
 
-			'ldpjs' : 'https://preprod-3001.id.loc.gov/bfe2/api-staging/',
-			'util'  :  'https://preprod-3001.id.loc.gov/bfe2/util/',
-			'publish': 'https://preprod-3001.id.loc.gov/bfe2/util/publish/staging',
-			'bfdb' : 'https://preprod-8210.id.loc.gov/',
-			'profiles' : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
-			'starting' : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:startingPoints&where=index.label:config',
-			'env' : 'staging'
+			ldpjs : 'https://preprod-3001.id.loc.gov/bfe2/api-staging/',
+			util  :  'https://preprod-3001.id.loc.gov/bfe2/util/',
+			publish: 'https://preprod-3001.id.loc.gov/bfe2/util/publish/staging',
+			bfdb : 'https://preprod-8210.id.loc.gov/',
+			profiles : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
+			starting : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:startingPoints&where=index.label:config',
+			env : 'staging'
 		}
 
 

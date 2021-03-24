@@ -865,9 +865,11 @@ const exportXML = {
 			// add in the admindata
 			if (orginalProfile.rt[rt].adminMetadataData){
 
+				
+				let parser = new DOMParser();
+				let adm = parser.parseFromString(orginalProfile.rt[rt].adminMetadataData, "text/xml");
 
-
-				let adm = orginalProfile.rt[rt].adminMetadataData
+				adm = adm.children[0]
 
 				if (adm.getElementsByTagName('bflc:procInfo').length>0){
 					adm.getElementsByTagName('bflc:procInfo')[0].remove()
@@ -883,10 +885,17 @@ const exportXML = {
 				rootEl.appendChild(adm)
 			}
 
-			if (orginalProfile.rt[rt].unusedXmlNodes){
 
-				for (let el of orginalProfile.rt[rt].unusedXmlNodes.children){
 
+			if (orginalProfile.rt[rt].unusedXml){
+				console.log(orginalProfile.rt[rt].unusedXml)
+				let parser = new DOMParser();
+
+				let unusedXmlNode = parser.parseFromString(orginalProfile.rt[rt].unusedXml, "text/xml")
+				unusedXmlNode = unusedXmlNode.children[0]
+
+				for (let el of unusedXmlNode.children){
+					console.log("UNUSED XML DOING:",el)
 					if (el.tagName != 'rdfs:label'){
 						rootEl.appendChild(el)
 					}

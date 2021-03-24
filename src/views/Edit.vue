@@ -6,7 +6,7 @@
                     <div>
                       <router-link style="font-size: 1.5em;color: black;text-decoration: none;padding-left: 0.5em;" to="/myrecords">&lt; Back</router-link>
 
-                      <span style="color:red; margin-left:20%" v-if="!isProd()"> THIS IS THE STAGING (TEST) REGION DATA IS NOT SAVED TO PRODUCTION</span>
+                      <span style="color:red; margin-left:20%" v-if="!isProd()"> THIS IS THE STAGING (TEST) REGION -- DATA IS NOT SAVED TO PRODUCTION</span>
 
                       <a @click="reportError" href="#" style="float:right;font-size: 1.5em;color: black;text-decoration: none;padding-left: 0.5em;">Report Error</a>
                     </div>
@@ -354,16 +354,21 @@ export default {
     publish: async function(){
 
       let xml = await exportXML.toBFXML(this.activeProfile)
-      let pubResuts = lookupUtil.publish(xml.xlmString)
+      let pubResuts = await lookupUtil.publish(xml.xlmString)
 
       if (pubResuts){
         // if it posted we want to also save the record and mark it as posted
 
         this.activeProfile.status = 'published'
 
-        this.$store.dispatch("setActiveProfile", { self: this, profile: this.activeProfile }).then(() => {
+        this.$store.dispatch("setActiveProfile", { self: this, profile: this.activeProfile }).then(async () => {
 
           this.resourceLinks=[]
+
+          // build it again for the new status
+          xml = await exportXML.toBFXML(this.activeProfile)
+          lookupUtil.saveRecord(xml.xlmStringBasic, this.activeProfile.eId)
+
 
 
           for (let rt in this.activeProfile.rt){
