@@ -132,7 +132,7 @@ const exportXML = {
 					}
 					if (sameAs['http://id.loc.gov/ontologies/bibframe/source']['http://id.loc.gov/ontologies/bibframe/code']){
 
-						let label = document.createElementNS(this.namespace.rdfs,"bf:code")
+						let label = document.createElementNS(this.namespace.bf,"bf:code")
 						label.innerHTML = sameAs['http://id.loc.gov/ontologies/bibframe/source']['http://id.loc.gov/ontologies/bibframe/code']
 						sourceNode.appendChild(label)
 					}
