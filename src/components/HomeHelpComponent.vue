@@ -1,8 +1,13 @@
 <template>
-  <div id="home-settings">
+  <div id="home-settings" >
 
 
-    hello
+    <div style="padding:1em;">
+    <h1>Beta Quick Start Video</h1>
+    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/lYCWSghcQok" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <hr>
+    </div>
+
 
   </div>
 
