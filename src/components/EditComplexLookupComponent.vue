@@ -22,7 +22,6 @@
     <div v-else>
   <!--     <div class="component-container-title">{{structure.propertyLabel}}</div>
    -->    
-
       <div style="position: relative;" v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search']">       
           <div class="component-nested-container-title" style="top: 0; width: 100%">{{structure.propertyLabel}}</div>
 
@@ -340,6 +339,7 @@ export default {
       // }else{
       //   return []
       // }
+
       return state.lookupLibrary[this.structure.valueConstraint.useValuesFrom[0]]
 
       

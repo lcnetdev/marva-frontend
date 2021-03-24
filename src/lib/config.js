@@ -97,6 +97,26 @@ const config = {
 				}
 			]
 		},
+
+		"http://preprod.id.loc.gov/authorities/names" :{
+			"name":"names", 
+			"type":"complex", 
+			"processor" : 'lcAuthorities',
+			"modes":[
+				{
+					'NAF All':{"url":"http://preprod.id.loc.gov/authorities/names/suggest/?q=<QUERY>&count=25", "all":true}, 
+					'NAF Personal Names':{"url":"http://preprod.id.loc.gov/authorities/names/suggest/?q=<QUERY>&rdftype=PersonalName&count=25"},
+					'NAF Corporate Name':{"url":"http://preprod.id.loc.gov/authorities/names/suggest/?q=<QUERY>&rdftype=CorporateName&count=25"},
+					'NAF Name/Title':{"url":"http://preprod.id.loc.gov/authorities/names/suggest/?q=<QUERY>&rdftype=NameTitle&count=25"},
+					'NAF Title':{"url":"http://preprod.id.loc.gov/authorities/names/suggest/?q=<QUERY>&rdftype=Title&count=25"},
+					'NAF Geographic':{"url":"http://preprod.id.loc.gov/authorities/names/suggest/?q=<QUERY>&rdftype=Geographic&count=25"},
+					'NAF Conference Name':{"url":"http://preprod.id.loc.gov/authorities/names/suggest/?q=<QUERY>&rdftype=ConferenceName&count=25"}					
+				}
+			]
+
+
+		},
+
 		"http://id.loc.gov/authorities/performanceMediums" : {"name":"performanceMediums", "type":"complex", "modes":[]},
 		"http://id.loc.gov/authorities/subjects" : {
 			"name":"subjects", 
