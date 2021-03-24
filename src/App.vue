@@ -17,7 +17,6 @@
 
     </div>
 
-    {{outOfDate}}
     <div v-if="outOfDate == true" style="position: fixed; width: 100vw; height: 100vh; top: 0; left: 0; background-color: rgba(0,0,0,0.6); z-index: 1000">
       
       <div style="border: solid 1px #a6acb7; border-radius:0.5em; margin: auto; width: 25%; background-color: white; margin-top: 10%; min-height: 25%; padding: 1em;">
