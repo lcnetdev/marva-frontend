@@ -410,6 +410,7 @@ const exportXML = {
 
 		for (let rt of profile.rtOrder){
 
+			console.log(profile)
 
 			if (profile.rt[rt].noData) continue
 
@@ -907,7 +908,7 @@ const exportXML = {
 			// console.log(rootEl,orginalProfile.rt[rt].unusedXmlNodes,orginalProfile.rt[rt].unusedXml)
 
 
-
+			console.log(rootEl)
 
 			// build the lookup
 
@@ -1070,13 +1071,14 @@ const exportXML = {
 
 
 			let work = this.returnWorkFromInstance(URI,orginalProfile,tleLookup)
-
+			console.log('da work:',work)
+			console.log(URI,orginalProfile,tleLookup)
 			if (work){
 				let p = this.createElByBestNS('bf:instanceOf')
 
 				p.appendChild(work)
 				instance.appendChild(p)
-
+				console.log(instance,'instance')
 
 			}
 
@@ -1273,6 +1275,15 @@ const exportXML = {
 
 				// results = tleLookup['Work'][profile.rt[rt].instanceOf].cloneNode( true )
 
+			}
+
+		}
+
+		// if that didnt work just pick the first work
+		if (!results){
+			for (let wUri in tleLookup['Work']){
+				results = tleLookup['Work'][wUri]
+				break
 			}
 
 		}

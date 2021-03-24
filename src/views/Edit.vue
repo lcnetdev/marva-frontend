@@ -31,7 +31,7 @@
 
         <aside id="edit-left-menu" class="sidebar-left" style="background-color: #2a2a2a; color: #ffffff" >
         
-            <div id="edit-left-menu-fixed" ref="editLeftMenuFixed" style="height: 100vh; overflow-y:scroll; position: fixed; width: 20%;" v-if="profilesLoaded">
+            <div id="edit-left-menu-fixed" ref="editLeftMenuFixed" style="height: 98vh; overflow-y:scroll; position: fixed; width: 20%;" v-if="profilesLoaded">
                 <!-- <div style="color:#bfbfbf; font-size: 1.5em; text-align: center;">{{sartingPoint}}</div> -->
                 <div v-for="profileName in activeProfile.rtOrder" :key="profileName">
 
@@ -675,6 +675,7 @@ export default {
 #edit-left-menu-fixed::-webkit-scrollbar { 
   display: none;  /* Safari and Chrome */
 }
+
 
 
 </style>
