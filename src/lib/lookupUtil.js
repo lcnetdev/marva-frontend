@@ -717,7 +717,64 @@ const lookupUtil = {
       }
 
 
-    }
+    },
+
+
+
+    returnErrors: async function(){
+
+      let url = config.returnUrls().util + 'error/report' + "?blastdacache=" + Date.now()
+      let content
+
+      try{
+
+
+        const rawResponse = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          
+        });
+        content = await rawResponse.json();
+      }catch{
+        // if sometihng network goes wrong just say were not out of date
+        return false
+
+      }
+
+      return content
+
+    },
+
+
+    returnError: async function(id){
+
+      let url = config.returnUrls().util + 'error/' + id + "?blastdacache=" + Date.now()
+      let content
+
+      try{
+
+
+        const rawResponse = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          
+        });
+        content = await rawResponse.json();
+      }catch{
+        // if sometihng network goes wrong just say were not out of date
+        return false
+
+      }
+
+      return content
+
+    }    
 
 
 

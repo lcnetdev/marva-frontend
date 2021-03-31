@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:bf="http://id.loc.gov/ontologies/bibframe/" xmlns:bflc="http://id.loc.gov/ontologies/bflc/" xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pmo="http://performedmusicontology.org/ontology/"><bf:Instance rdf:about="http://id.loc.gov/resources/instances/c0010058400001"><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Print"/><bf:issuance>
+<rdf:RDF xmlns:bf="http://id.loc.gov/ontologies/bibframe/" xmlns:bflc="http://id.loc.gov/ontologies/bflc/" xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" xmlns:pmo="http://performedmusicontology.org/ontology/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <bf:Instance rdf:about="http://id.loc.gov/resources/instances/c0010058400001">
+    <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Print"/>
+    <bf:issuance>
       <bf:Issuance rdf:about="http://id.loc.gov/vocabulary/issuance/mono"/>
-    </bf:issuance><bf:provisionActivity>
+    </bf:issuance>
+    <bf:provisionActivity>
       <bf:ProvisionActivity>
         <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Publication"/>
         <bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">1988</bf:date>
@@ -9,22 +13,29 @@
           <bf:Place rdf:about="http://id.loc.gov/vocabulary/countries/nyu"/>
         </bf:place>
       </bf:ProvisionActivity>
-    </bf:provisionActivity><bf:identifiedBy>
+    </bf:provisionActivity>
+    <bf:identifiedBy>
       <bf:Lccn>
-        <rdf:value>   87023915 </rdf:value>
+        <rdf:value>87023915 </rdf:value>
       </bf:Lccn>
-    </bf:identifiedBy><bf:acquisitionTerms>$24.50</bf:acquisitionTerms><bf:identifiedBy>
+    </bf:identifiedBy>
+    <bf:acquisitionTerms>$24.50</bf:acquisitionTerms>
+    <bf:identifiedBy>
       <bf:Isbn>
         <rdf:value>1555460348</rdf:value>
         <bf:qualifier>alk. paper</bf:qualifier>
       </bf:Isbn>
-    </bf:identifiedBy><rdfs:label>Virginia Woolf's To the lighthouse</rdfs:label><bf:title>
+    </bf:identifiedBy>
+    <rdfs:label>Virginia Woolf's To the lighthouse</rdfs:label>
+    <bf:title>
       <bf:Title>
         <rdfs:label>Virginia Woolf's To the lighthouse</rdfs:label>
         <bflc:titleSortKey>Virginia Woolf's To the lighthouse</bflc:titleSortKey>
         <bf:mainTitle>Virginia Woolf's To the lighthouse</bf:mainTitle>
       </bf:Title>
-    </bf:title><bf:responsibilityStatement>edited and with an introduction by Harold Bloom</bf:responsibilityStatement><bf:provisionActivity>
+    </bf:title>
+    <bf:responsibilityStatement>edited and with an introduction by Harold Bloom</bf:responsibilityStatement>
+    <bf:provisionActivity>
       <bf:ProvisionActivity>
         <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Publication"/>
         <bf:place>
@@ -39,15 +50,23 @@
         </bf:agent>
         <bf:date>1988</bf:date>
       </bf:ProvisionActivity>
-    </bf:provisionActivity><bf:provisionActivityStatement>New York : Chelsea House, 1988.</bf:provisionActivityStatement><bf:extent>
+    </bf:provisionActivity>
+    <bf:provisionActivityStatement>New York : Chelsea House, 1988.</bf:provisionActivityStatement>
+    <bf:extent>
       <bf:Extent>
         <rdfs:label>vii, 164 p.</rdfs:label>
       </bf:Extent>
-    </bf:extent><bf:dimensions>24 cm.</bf:dimensions><bf:seriesStatement>Modern critical interpretations</bf:seriesStatement><bf:note>
+    </bf:extent>
+    <bf:dimensions>24 cm.</bf:dimensions>
+    <bf:seriesStatement>Modern critical interpretations</bf:seriesStatement>
+    <bf:note>
       <bf:Note>
         <rdfs:label>Includes index.</rdfs:label>
       </bf:Note>
-    </bf:note><bf:instanceOf rdf:resource="http://id.loc.gov/resources/works/c001005840"/><bf:hasItem rdf:resource="http://id.loc.gov/resources/items/c0010058400001-1"/><bf:adminMetadata>
+    </bf:note>
+    <bf:instanceOf rdf:resource="http://id.loc.gov/resources/works/c001005840"/>
+    <bf:hasItem rdf:resource="http://id.loc.gov/resources/items/c0010058400001-1"/>
+    <bf:adminMetadata>
       <bf:AdminMetadata>
         <bf:generationProcess>
           <bf:GenerationProcess>
@@ -99,7 +118,10 @@
           </bf:Agent>
         </bf:descriptionModifier>
       </bf:AdminMetadata>
-    </bf:adminMetadata></bf:Instance><bf:Work rdf:about="http://id.loc.gov/resources/works/c001005840"><bf:adminMetadata>
+    </bf:adminMetadata>
+  </bf:Instance>
+  <bf:Work rdf:about="http://id.loc.gov/resources/works/c001005840">
+    <bf:adminMetadata>
       <bf:AdminMetadata>
         <bf:generationProcess>
           <bf:GenerationProcess>
@@ -151,21 +173,27 @@
           </bf:Agent>
         </bf:descriptionModifier>
       </bf:AdminMetadata>
-    </bf:adminMetadata><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Text"/><bf:language>
+    </bf:adminMetadata>
+    <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Text"/>
+    <bf:language>
       <bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/>
-    </bf:language><bf:supplementaryContent>
+    </bf:language>
+    <bf:supplementaryContent>
       <bf:SupplementaryContent rdf:about="http://id.loc.gov/authorities/genreForms/gf2014026048">
         <rdfs:label>bibliographies</rdfs:label>
       </bf:SupplementaryContent>
-    </bf:supplementaryContent><bf:supplementaryContent>
+    </bf:supplementaryContent>
+    <bf:supplementaryContent>
       <bf:SupplementaryContent rdf:about="http://id.loc.gov/vocabulary/msupplcont/index">
         <rdfs:label>Index present</rdfs:label>
       </bf:SupplementaryContent>
-    </bf:supplementaryContent><bf:identifiedBy>
+    </bf:supplementaryContent>
+    <bf:identifiedBy>
       <bf:Lccn>
-        <rdf:value>   87023915 </rdf:value>
+        <rdf:value>87023915 </rdf:value>
       </bf:Lccn>
-    </bf:identifiedBy><bf:classification>
+    </bf:identifiedBy>
+    <bf:classification>
       <bf:ClassificationLcc>
         <bf:source>
           <bf:Source rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"/>
@@ -173,7 +201,8 @@
         <bf:classificationPortion>PR6045.O72</bf:classificationPortion>
         <bf:itemPortion>T6867 1988</bf:itemPortion>
       </bf:ClassificationLcc>
-    </bf:classification><bf:classification>
+    </bf:classification>
+    <bf:classification>
       <bf:ClassificationDdc>
         <bf:classificationPortion>823/.912</bf:classificationPortion>
         <bf:edition rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://id.loc.gov/vocabulary/classSchemes/ddc19</bf:edition>
@@ -182,17 +211,21 @@
           <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"/>
         </bf:assigner>
       </bf:ClassificationDdc>
-    </bf:classification><rdfs:label>Virginia Woolf's To the lighthouse</rdfs:label><bf:title>
+    </bf:classification>
+    <rdfs:label>Virginia Woolf's To the lighthouse</rdfs:label>
+    <bf:title>
       <bf:Title>
         <rdfs:label>Virginia Woolf's To the lighthouse</rdfs:label>
         <bflc:titleSortKey>Virginia Woolf's To the lighthouse</bflc:titleSortKey>
         <bf:mainTitle>Virginia Woolf's To the lighthouse</bf:mainTitle>
       </bf:Title>
-    </bf:title><bf:supplementaryContent>
+    </bf:title>
+    <bf:supplementaryContent>
       <bf:SupplementaryContent>
         <rdfs:label>Bibliography: p. 153-155.</rdfs:label>
       </bf:SupplementaryContent>
-    </bf:supplementaryContent><bf:subject>
+    </bf:supplementaryContent>
+    <bf:subject>
       <bf:Work rdf:about="http://bibframe.example.org/1005840#Work600-18">
         <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#NameTitle"/>
         <madsrdf:authoritativeLabel>Woolf, Virginia, 1882-1941. To the lighthouse.</madsrdf:authoritativeLabel>
@@ -228,7 +261,8 @@
           </bf:Title>
         </bf:title>
       </bf:Work>
-    </bf:subject><bf:contribution>
+    </bf:subject>
+    <bf:contribution>
       <bf:Contribution>
         <bf:agent>
           <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n79003258">
@@ -242,11 +276,19 @@
           <bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/ctb"/>
         </bf:role>
       </bf:Contribution>
-    </bf:contribution><bf:hasSeries rdf:resource="http://id.loc.gov/resources/works/c0010058400001"/></bf:Work><bf:Item rdf:about="http://id.loc.gov/resources/items/c0010058400001-1"><bf:shelfMark>
-          <bf:ShelfMarkLcc>
-            <rdfs:label>PR6045.O72 T6867 1988</rdfs:label>
-            <bf:source>
-              <bf:Source rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"/>
-            </bf:source>
-          </bf:ShelfMarkLcc>
-        </bf:shelfMark><bflc:derivedFrom rdf:resource="http://id.loc.gov/resources/bibs/1005840"/><bf:itemOf rdf:resource="http://id.loc.gov/resources/instances/c0010058400001"/></bf:Item></rdf:RDF>
+    </bf:contribution>
+    <bf:hasSeries rdf:resource="http://id.loc.gov/resources/works/c0010058400001"/>
+  </bf:Work>
+  <bf:Item rdf:about="http://id.loc.gov/resources/items/c0010058400001-1">
+    <bf:shelfMark>
+      <bf:ShelfMarkLcc>
+        <rdfs:label>PR6045.O72 T6867 1988</rdfs:label>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"/>
+        </bf:source>
+      </bf:ShelfMarkLcc>
+    </bf:shelfMark>
+    <bflc:derivedFrom rdf:resource="http://id.loc.gov/resources/bibs/1005840"/>
+    <bf:itemOf rdf:resource="http://id.loc.gov/resources/instances/c0010058400001"/>
+  </bf:Item>
+</rdf:RDF>

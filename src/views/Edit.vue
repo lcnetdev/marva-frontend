@@ -68,6 +68,7 @@
         <article v-if="displayPreview===false">
             
             <div v-if="profilesLoaded">
+
                 <div v-for="profileName in activeProfile.rtOrder" :key="profileName">
 
                     
@@ -268,7 +269,6 @@ export default {
 
   created: function () {
 
-    
     // load them profiles if they aint  
     if (!this.profilesLoaded){
         this.$store.dispatch("fetchProfiles", { self: this }).then(() => {
