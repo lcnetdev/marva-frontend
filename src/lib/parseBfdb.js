@@ -282,7 +282,11 @@ const parseBfdb = {
 
 
 
-			// 
+			// a little tricky here because there are possibly multiple bf:contributor properties, one might be the primary contributor
+			// the others are just other contributor
+			// so test to see if they match, if we have the primary contributor xml and not the primary contributor PT then kick back
+			// so it can be picked up by another correct PT
+
 
 
 			// grab the label and uri and type
@@ -388,8 +392,9 @@ const parseBfdb = {
 
 					//if it already exists then there are multiple
 					if (profile.userValue['http://id.loc.gov/ontologies/bibframe/role']){
+						console.log('multiple')						
 						if (!Array.isArray(profile.userValue['http://id.loc.gov/ontologies/bibframe/role'])){
-							profile.userValue['http://id.loc.gov/ontologies/bibframe/role'] = []
+							profile.userValue['http://id.loc.gov/ontologies/bibframe/role'] = [profile.userValue['http://id.loc.gov/ontologies/bibframe/role']]
 						}
 						
 						let val = {'URI':roleuri, 'http://www.w3.org/2000/01/rdf-schema#label': rolelabel}
@@ -400,6 +405,7 @@ const parseBfdb = {
 						}
 
 						profile.userValue['http://id.loc.gov/ontologies/bibframe/role'].push(val)
+
 
 					}else{
 						profile.userValue['http://id.loc.gov/ontologies/bibframe/role'] = {'URI':roleuri, 'http://www.w3.org/2000/01/rdf-schema#label': rolelabel}	
