@@ -181,7 +181,14 @@ const lookupUtil = {
             urlTemplate=[urlTemplate]
         }
         let results = []
-        for (const url of urlTemplate) {
+        for (let url of urlTemplate) {
+
+            // kind of hack, change to the public endpoint if we are in dev or public mode
+            if (config.returnUrls().dev){
+              console.log(url)
+              url = url.replace('http://preprod.id.','https://id.')
+            }
+
             let r = await this.fetchSimpleLookup(url)
             if (searchPayload.processor == 'lcAuthorities'){
                 // process the results as a LC suggest service

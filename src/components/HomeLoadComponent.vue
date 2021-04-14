@@ -310,8 +310,12 @@ export default {
 
 
       instanceTests:[
-        '/bfe2/editor/tests/instances/c0010058400001.editor-pkg.xml',
+        // '/bfe2/editor/tests/instances/c0010058400001.editor-pkg.xml',
         // '/bfe2/editor/tests/instances/c0214680420001.editor-pkg.xml',
+        // '/bfe2/editor/tests/instances/c0210643040001.editor-pkg.xml',
+        '/bfe2/editor/tests/instances/c0122950980001.editor-pkg.xml',
+
+
       ]
 
     }

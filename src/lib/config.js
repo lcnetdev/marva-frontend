@@ -18,7 +18,8 @@ const config = {
 			bfdb : 'https://preprod-8210.id.loc.gov/',
 			profiles : '/bfe2/editor/profiles.json',
 			starting: '/bfe2/editor/starting.json',
-			env : 'staging'
+			env : 'staging',
+			dev: true
 
 		},
 

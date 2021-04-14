@@ -274,13 +274,18 @@ const parseBfdb = {
 			//   </bf:Contribution>
 			// </bf:contribution>
 
-			// console.log('~~~~~~~~XML')
-			// console.log(xml)
-			// console.log('~~~~~~~~PROFILE')
-			// console.log(profile)
+			console.log('~~~~~~~~XML')
+			console.log(xml)
+			console.log('~~~~~~~~PROFILE')
+			console.log(profile)
+
+
+
+
+			// 
+
 
 			// grab the label and uri and type
-
 			let typeNode = xml.getElementsByTagName("bf:agent")[0].children[0]
 
 			if (typeNode){

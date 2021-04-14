@@ -1,0 +1,728 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:bf="http://id.loc.gov/ontologies/bibframe/" xmlns:bflc="http://id.loc.gov/ontologies/bflc/" xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" xmlns:pmo="http://performedmusicontology.org/ontology/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <bf:Instance rdf:about="http://id.loc.gov/resources/instances/c0122950980001">
+    <bf:issuance>
+      <bf:Issuance rdf:about="http://id.loc.gov/vocabulary/issuance/mono"/>
+    </bf:issuance>
+    <bf:soundCharacteristic>
+      <bf:PlayingSpeed rdf:about="http://id.loc.gov/vocabulary/mplayspeed/f">
+        <rdfs:label>1.4 m. per sec.</rdfs:label>
+      </bf:PlayingSpeed>
+    </bf:soundCharacteristic>
+    <bf:soundCharacteristic>
+      <bf:PlaybackChannels rdf:about="http://id.loc.gov/vocabulary/mplayback/ste">
+        <rdfs:label>stereo</rdfs:label>
+      </bf:PlaybackChannels>
+    </bf:soundCharacteristic>
+    <bf:baseMaterial>
+      <bf:BaseMaterial rdf:about="http://id.loc.gov/vocabulary/mmaterial/pla">
+        <rdfs:label>plastic</rdfs:label>
+      </bf:BaseMaterial>
+    </bf:baseMaterial>
+    <bf:baseMaterial>
+      <bf:BaseMaterial rdf:about="http://id.loc.gov/vocabulary/mmaterial/mtl">
+        <rdfs:label>metal</rdfs:label>
+      </bf:BaseMaterial>
+    </bf:baseMaterial>
+    <bf:soundCharacteristic>
+      <bf:RecordingMethod rdf:about="http://id.loc.gov/vocabulary/mrectype/digital">
+        <rdfs:label>digital</rdfs:label>
+      </bf:RecordingMethod>
+    </bf:soundCharacteristic>
+    <bf:soundCharacteristic>
+      <bflc:CaptureStorage rdf:about="http://id.loc.gov/vocabulary/mcapturestorage/dist">
+        <rdfs:label>Electrical capture, digital storage</rdfs:label>
+      </bflc:CaptureStorage>
+    </bf:soundCharacteristic>
+    <bf:provisionActivity>
+      <bf:ProvisionActivity>
+        <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Publication"/>
+        <bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">2000</bf:date>
+        <bf:place>
+          <bf:Place rdf:about="http://id.loc.gov/vocabulary/countries/nyu"/>
+        </bf:place>
+      </bf:ProvisionActivity>
+    </bf:provisionActivity>
+    <bf:identifiedBy>
+      <bf:Lccn>
+        <rdf:value>2001540682</rdf:value>
+      </bf:Lccn>
+    </bf:identifiedBy>
+    <bf:identifiedBy>
+      <bf:Upc>
+        <rdf:value>731454311526</rdf:value>
+      </bf:Upc>
+    </bf:identifiedBy>
+    <bf:identifiedBy>
+      <bf:AudioIssueNumber>
+        <rdf:value>314 543 115-2</rdf:value>
+        <bf:assigner>
+          <bf:Agent>
+            <rdfs:label>Decca Broadway</rdfs:label>
+          </bf:Agent>
+        </bf:assigner>
+      </bf:AudioIssueNumber>
+    </bf:identifiedBy>
+    <bf:identifiedBy>
+      <bf:Local>
+        <rdf:value>ocm45213982</rdf:value>
+        <bf:assigner>
+          <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/ocolc"/>
+        </bf:assigner>
+      </bf:Local>
+    </bf:identifiedBy>
+    <rdfs:label>Mamma mia! : the musical based on the songs of ABBA.</rdfs:label>
+    <bf:title>
+      <bf:Title>
+        <rdfs:label>Mamma mia! : the musical based on the songs of ABBA.</rdfs:label>
+        <bflc:titleSortKey>Mamma mia! : the musical based on the songs of ABBA.</bflc:titleSortKey>
+        <bf:mainTitle>Mamma mia!</bf:mainTitle>
+        <bf:subtitle>the musical based on the songs of ABBA</bf:subtitle>
+      </bf:Title>
+    </bf:title>
+    <bf:provisionActivity>
+      <bf:ProvisionActivity>
+        <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Publication"/>
+        <bf:place>
+          <bf:Place>
+            <rdfs:label>New York, NY</rdfs:label>
+          </bf:Place>
+        </bf:place>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/entities/providers/b835143b9366bb0c9497175539821cf2">
+            <rdfs:label>Decca Broadway</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:date>2000</bf:date>
+      </bf:ProvisionActivity>
+    </bf:provisionActivity>
+    <bf:provisionActivityStatement>New York, NY : Decca Broadway, [2000]</bf:provisionActivityStatement>
+    <bf:provisionActivity>
+      <bf:ProvisionActivity>
+        <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Distribution"/>
+        <bf:place>
+          <bf:Place>
+            <rdfs:label>New York</rdfs:label>
+          </bf:Place>
+        </bf:place>
+        <bf:agent>
+          <bf:Agent>
+            <rdfs:label>Distributed by Universal Music &amp; Video Distribution</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+      </bf:ProvisionActivity>
+    </bf:provisionActivity>
+    <bf:provisionActivityStatement>New York : Distributed by Universal Music &amp; Video Distribution</bf:provisionActivityStatement>
+    <bf:copyrightDate>℗1999</bf:copyrightDate>
+    <bf:extent>
+      <bf:Extent>
+        <rdfs:label>1 audio disc</rdfs:label>
+      </bf:Extent>
+    </bf:extent>
+    <bf:note>
+      <bf:Note>
+        <bf:noteType>Physical details</bf:noteType>
+        <rdfs:label>CD audio</rdfs:label>
+      </bf:Note>
+    </bf:note>
+    <bf:dimensions>4 3/4 in.</bf:dimensions>
+    <bf:media>
+      <bf:Media rdf:about="http://id.loc.gov/vocabulary/mediaTypes/s">
+        <rdfs:label>audio</rdfs:label>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdamedia"/>
+        </bf:source>
+      </bf:Media>
+    </bf:media>
+    <bf:carrier>
+      <bf:Carrier rdf:about="http://id.loc.gov/vocabulary/carriers/sd">
+        <rdfs:label>audio disc</rdfs:label>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacarrier"/>
+        </bf:source>
+      </bf:Carrier>
+    </bf:carrier>
+    <bf:soundCharacteristic>
+      <bf:RecordingMethod rdf:about="http://id.loc.gov/vocabulary/mrectype/digital">
+        <rdfs:label>digital</rdfs:label>
+        <bf:source>
+          <bf:Source>
+            <bf:code>rdatr</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:RecordingMethod>
+    </bf:soundCharacteristic>
+    <bf:soundCharacteristic>
+      <bf:RecordingMedium rdf:about="http://id.loc.gov/vocabulary/mrecmedium/opt">
+        <rdfs:label>optical</rdfs:label>
+        <bf:source>
+          <bf:Source>
+            <bf:code>rdarm</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:RecordingMedium>
+    </bf:soundCharacteristic>
+    <bf:soundCharacteristic>
+      <bf:PlaybackChannels rdf:about="http://id.loc.gov/vocabulary/mplayback/ste">
+        <rdfs:label>stereo</rdfs:label>
+        <bf:source>
+          <bf:Source>
+            <bf:code>rdacpc</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:PlaybackChannels>
+    </bf:soundCharacteristic>
+    <bf:digitalCharacteristic>
+      <bf:FileType rdf:about="http://id.loc.gov/vocabulary/mfiletype/audio">
+        <rdfs:label>audio file</rdfs:label>
+        <bf:source>
+          <bf:Source>
+            <bf:code>rdaft</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:FileType>
+    </bf:digitalCharacteristic>
+    <bf:digitalCharacteristic>
+      <bf:EncodingFormat>
+        <rdfs:label>CD audio</rdfs:label>
+      </bf:EncodingFormat>
+    </bf:digitalCharacteristic>
+    <bf:note>
+      <bf:Note>
+        <rdfs:label>Music and lyrics by Benny Andersson and Björn Ulvaeus ; some songs by Stig Anderson ; additional material, arrangements, Martin Koch ; book by Catherine Johnson.</rdfs:label>
+      </bf:Note>
+    </bf:note>
+    <bf:note>
+      <bf:Note>
+        <rdfs:label>Title from disc label.</rdfs:label>
+      </bf:Note>
+    </bf:note>
+    <bf:credits>Original London cast: Siobhán McCarthy (Donna Sheridan), Lisa Stokke (Sophie Sheridan), vocals ; with supporting singers, instrumental ensemble, and band ; Martin Lowe, conductor.</bf:credits>
+    <bf:credits>Musical supervisor, additional material and arrangements by Martin Koch ; band musical director, Martin Lowe.</bf:credits>
+    <bf:note>
+      <bf:Note>
+        <rdfs:label>Originally released by Polydor in 1999.</rdfs:label>
+      </bf:Note>
+    </bf:note>
+    <bf:note>
+      <bf:Note>
+        <rdfs:label>Song texts (14 unnumbered pages : illustrations), inserted in container.</rdfs:label>
+      </bf:Note>
+    </bf:note>
+    <bf:instanceOf rdf:resource="http://id.loc.gov/resources/works/c012295098"/>
+    <bf:hasItem rdf:resource="http://id.loc.gov/resources/items/c0122950980001-1"/>
+    <bf:adminMetadata>
+      <bf:AdminMetadata>
+        <bf:generationProcess>
+          <bf:GenerationProcess>
+            <rdfs:label>DLC marc2bibframe2 v1.7.0-SNAPSHOT</rdfs:label>
+            <bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-03-26T01:35:47-04:00</bf:generationDate>
+          </bf:GenerationProcess>
+        </bf:generationProcess>
+        <bf:status>
+          <bf:Status>
+            <rdfs:label>corrected or revised</rdfs:label>
+            <bf:code>c</bf:code>
+          </bf:Status>
+        </bf:status>
+        <bflc:encodingLevel>
+          <bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/f">
+            <rdfs:label>full</rdfs:label>
+          </bflc:EncodingLevel>
+        </bflc:encodingLevel>
+        <bf:descriptionConventions>
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd">
+            <rdfs:label>isbd</rdfs:label>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+        <bf:identifiedBy>
+          <bf:Local>
+            <rdf:value>12295098</rdf:value>
+            <bf:assigner>
+              <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+                <bf:code>DLC</bf:code>
+              </bf:Agent>
+            </bf:assigner>
+          </bf:Local>
+        </bf:identifiedBy>
+        <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-03-25T17:56:34</bf:changeDate>
+        <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2001-01-31</bf:creationDate>
+        <bf:assigner>
+          <bf:Agent>
+            <bf:code>JED</bf:code>
+          </bf:Agent>
+        </bf:assigner>
+        <bf:descriptionLanguage>
+          <bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/>
+        </bf:descriptionLanguage>
+        <bf:descriptionModifier>
+          <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+            <bf:code>DLC</bf:code>
+          </bf:Agent>
+        </bf:descriptionModifier>
+        <bf:descriptionConventions>
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda">
+            <rdf:value>rda</rdf:value>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+        <bf:descriptionAuthentication>
+          <bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/lccopycat">
+            <bf:code>lccopycat</bf:code>
+          </bf:DescriptionAuthentication>
+        </bf:descriptionAuthentication>
+      </bf:AdminMetadata>
+    </bf:adminMetadata>
+  </bf:Instance>
+  <bf:Work rdf:about="http://id.loc.gov/resources/works/c012295098">
+    <bf:adminMetadata>
+      <bf:AdminMetadata>
+        <bf:generationProcess>
+          <bf:GenerationProcess>
+            <rdfs:label>DLC marc2bibframe2 v1.7.0-SNAPSHOT</rdfs:label>
+            <bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-03-26T01:35:47-04:00</bf:generationDate>
+          </bf:GenerationProcess>
+        </bf:generationProcess>
+        <bf:status>
+          <bf:Status>
+            <rdfs:label>corrected or revised</rdfs:label>
+            <bf:code>c</bf:code>
+          </bf:Status>
+        </bf:status>
+        <bflc:encodingLevel>
+          <bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/f">
+            <rdfs:label>full</rdfs:label>
+          </bflc:EncodingLevel>
+        </bflc:encodingLevel>
+        <bf:descriptionConventions>
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd">
+            <rdfs:label>isbd</rdfs:label>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+        <bf:identifiedBy>
+          <bf:Local>
+            <rdf:value>12295098</rdf:value>
+            <bf:assigner>
+              <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+                <bf:code>DLC</bf:code>
+              </bf:Agent>
+            </bf:assigner>
+          </bf:Local>
+        </bf:identifiedBy>
+        <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-03-25T17:56:34</bf:changeDate>
+        <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2001-01-31</bf:creationDate>
+        <bf:assigner>
+          <bf:Agent>
+            <bf:code>JED</bf:code>
+          </bf:Agent>
+        </bf:assigner>
+        <bf:descriptionLanguage>
+          <bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/>
+        </bf:descriptionLanguage>
+        <bf:descriptionModifier>
+          <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+            <bf:code>DLC</bf:code>
+          </bf:Agent>
+        </bf:descriptionModifier>
+        <bf:descriptionConventions>
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda">
+            <rdf:value>rda</rdf:value>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+        <bf:descriptionAuthentication>
+          <bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/lccopycat">
+            <bf:code>lccopycat</bf:code>
+          </bf:DescriptionAuthentication>
+        </bf:descriptionAuthentication>
+      </bf:AdminMetadata>
+    </bf:adminMetadata>
+    <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Audio"/>
+    <bf:language>
+      <bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/>
+    </bf:language>
+    <bf:supplementaryContent>
+      <bf:SupplementaryContent rdf:about="http://id.loc.gov/vocabulary/msupplcont/libretto">
+        <rdfs:label>libretto or text</rdfs:label>
+      </bf:SupplementaryContent>
+    </bf:supplementaryContent>
+    <bf:capture>
+      <bf:Capture>
+        <bf:place>
+          <bf:Place>
+            <rdf:value>5754 L7</rdf:value>
+            <bf:source>
+              <bf:Source rdf:about="http://id.loc.gov/authorities/classification/G"/>
+            </bf:source>
+          </bf:Place>
+        </bf:place>
+      </bf:Capture>
+    </bf:capture>
+    <bf:genreForm>
+      <bf:GenreForm rdf:about="http://id.loc.gov/authorities/genreForms/gf2014027050">
+        <rdfs:label>revues</rdfs:label>
+      </bf:GenreForm>
+    </bf:genreForm>
+    <bf:genreForm>
+      <bf:GenreForm rdf:about="http://id.loc.gov/authorities/genreForms/gf2014027054">
+        <rdfs:label>rock music</rdfs:label>
+      </bf:GenreForm>
+    </bf:genreForm>
+    <bf:classification>
+      <bf:ClassificationDdc>
+        <bf:classificationPortion>782.1/4</bf:classificationPortion>
+        <bf:source>
+          <bf:Source>
+            <bf:code>21</bf:code>
+          </bf:Source>
+        </bf:source>
+        <bf:edition>full</bf:edition>
+      </bf:ClassificationDdc>
+    </bf:classification>
+    <bf:contribution>
+      <bf:Contribution>
+        <rdf:type rdf:resource="http://id.loc.gov/ontologies/bflc/PrimaryContribution"/>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n82243153">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+            <bflc:name00MatchKey>Andersson, Benny,</bflc:name00MatchKey>
+            <bflc:primaryContributorName00MatchKey>Andersson, Benny,</bflc:primaryContributorName00MatchKey>
+            <bflc:name00MarcKey>1001 $aAndersson, Benny,$ecomposer,$elyricist.</bflc:name00MarcKey>
+            <rdfs:label>Andersson, Benny,</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label>composer</rdfs:label>
+          </bf:Role>
+        </bf:role>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label>lyricist.</rdfs:label>
+          </bf:Role>
+        </bf:role>
+      </bf:Contribution>
+    </bf:contribution>
+    <rdfs:label>Mamma mia! (Musical)</rdfs:label>
+    <bf:title>
+      <bf:Title>
+        <bflc:title40MatchKey>Mamma mia! (Musical)</bflc:title40MatchKey>
+        <bflc:title40MarcKey>24010$aMamma mia! (Musical)</bflc:title40MarcKey>
+        <rdfs:label>Mamma mia! (Musical)</rdfs:label>
+        <bflc:titleSortKey>Mamma mia! (Musical)</bflc:titleSortKey>
+        <bf:mainTitle>Mamma mia! (Musical)</bf:mainTitle>
+      </bf:Title>
+    </bf:title>
+    <bf:content>
+      <bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/prm">
+        <rdfs:label>performed music</rdfs:label>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacontent"/>
+        </bf:source>
+      </bf:Content>
+    </bf:content>
+    <bf:musicMedium>
+      <bf:MusicMedium rdf:about="https://id.loc.gov/authorities/performanceMediums/mp2013015841">
+        <rdfs:label>solo vocal ensemble</rdfs:label>
+        <bf:count>1</bf:count>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/musiccodeschemes/lcmpt">
+            <bf:code>lcmpt</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:MusicMedium>
+    </bf:musicMedium>
+    <bf:musicMedium>
+      <bf:MusicMedium rdf:about="https://id.loc.gov/authorities/performanceMediums/mp2013015789">
+        <rdfs:label>vocal ensemble</rdfs:label>
+        <bf:count>1</bf:count>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/musiccodeschemes/lcmpt">
+            <bf:code>lcmpt</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:MusicMedium>
+    </bf:musicMedium>
+    <bf:musicMedium>
+      <bf:MusicMedium rdf:about="https://id.loc.gov/authorities/performanceMediums/mp2013015812">
+        <rdfs:label>instrumental ensemble</rdfs:label>
+        <bf:count>1</bf:count>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/musiccodeschemes/lcmpt">
+            <bf:code>lcmpt</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:MusicMedium>
+    </bf:musicMedium>
+    <bf:musicMedium>
+      <bf:MusicMedium>
+        <bf:note>
+          <bf:Note>
+            <rdfs:label>Total ensembles: 3</rdfs:label>
+          </bf:Note>
+        </bf:note>
+      </bf:MusicMedium>
+    </bf:musicMedium>
+    <bf:summary>
+      <bf:Summary>
+        <rdfs:label>The music of Abba makes its way to the theater stage in the musical Mamma Mia. This recording features the original London cast and their performances of Abba classics including Take a Chance on Me and Dancing Queen.</rdfs:label>
+      </bf:Summary>
+    </bf:summary>
+    <bf:tableOfContents>
+      <bf:TableOfContents>
+        <rdfs:label>Overture/Prologue -- Honey, honey -- Money, money, money -- Thank you for the music -- Mamma mia -- Chiquitita -- Dancing queen -- Lay all your love on me -- Super trouper -- Gimme! gimme! gimme! -- The name of the game -- Voulez-vous -- Entr'acte -- Under attack -- One of us -- S.O.S. -- Does your mother know -- Knowing me, knowing you -- Our last summer -- Slipping through my fingers -- The winner takes it all -- Take a chance on me -- I do, I do, I do, I do, I do -- I have a dream.</rdfs:label>
+      </bf:TableOfContents>
+    </bf:tableOfContents>
+    <bf:subject>
+      <bf:Topic rdf:about="https://id.loc.gov/authorities/subjects/sh85089018">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <rdfs:label>Musicals.</rdfs:label>
+        <madsrdf:authoritativeLabel>Musicals.</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/authorities/subjects">
+            <bf:code>lcsh</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:Topic>
+    </bf:subject>
+    <bf:subject>
+      <bf:Topic rdf:about="https://id.loc.gov/authorities/subjects/sh2015002101">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <rdfs:label>Jukebox musicals.</rdfs:label>
+        <madsrdf:authoritativeLabel>Jukebox musicals.</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/authorities/subjects">
+            <bf:code>lcsh</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:Topic>
+    </bf:subject>
+    <bf:subject>
+      <bf:Topic rdf:about="https://id.loc.gov/authorities/subjects/sh91003898">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
+        <rdfs:label>Rock music--1991-2000.</rdfs:label>
+        <madsrdf:authoritativeLabel>Rock music--1991-2000.</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+        <madsrdf:componentList rdf:parseType="Collection">
+          <madsrdf:Topic rdf:about="https://id.loc.gov/authorities/subjects/sh85114675">
+            <madsrdf:authoritativeLabel>Rock music</madsrdf:authoritativeLabel>
+          </madsrdf:Topic>
+          <madsrdf:Temporal>
+            <madsrdf:authoritativeLabel>1991-2000</madsrdf:authoritativeLabel>
+          </madsrdf:Temporal>
+        </madsrdf:componentList>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/authorities/subjects">
+            <bf:code>lcsh</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:Topic>
+    </bf:subject>
+    <bf:genreForm>
+      <bf:GenreForm rdf:about="https://id.loc.gov/authorities/genreForms/gf2014026957">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <rdfs:label>Musicals.</rdfs:label>
+        <madsrdf:authoritativeLabel>Musicals.</madsrdf:authoritativeLabel>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/lcgft">
+            <bf:code>lcgft</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:GenreForm>
+    </bf:genreForm>
+    <bf:genreForm>
+      <bf:GenreForm rdf:about="https://id.loc.gov/authorities/genreForms/gf2014027054">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <rdfs:label>Rock music.</rdfs:label>
+        <madsrdf:authoritativeLabel>Rock music.</madsrdf:authoritativeLabel>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/lcgft">
+            <bf:code>lcgft</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:GenreForm>
+    </bf:genreForm>
+    <bf:genreForm>
+      <bf:GenreForm rdf:about="https://id.loc.gov/authorities/genreForms/gf2017026030">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <rdfs:label>Jukebox musicals.</rdfs:label>
+        <madsrdf:authoritativeLabel>Jukebox musicals.</madsrdf:authoritativeLabel>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/lcgft">
+            <bf:code>lcgft</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:GenreForm>
+    </bf:genreForm>
+    <bf:genreForm>
+      <bf:GenreForm rdf:about="https://id.loc.gov/authorities/genreForms/gf2014026030">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <rdfs:label>Original cast recordings.</rdfs:label>
+        <madsrdf:authoritativeLabel>Original cast recordings.</madsrdf:authoritativeLabel>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/lcgft">
+            <bf:code>lcgft</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:GenreForm>
+    </bf:genreForm>
+    <bf:contribution>
+      <bf:Contribution>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n87102948">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+            <bflc:name00MatchKey>Ulvaeus, Björn,</bflc:name00MatchKey>
+            <bflc:name00MarcKey>7001 $aUlvaeus, Björn,$ecomposer,$elyricist.</bflc:name00MarcKey>
+            <rdfs:label>Ulvaeus, Björn,</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label>composer</rdfs:label>
+          </bf:Role>
+        </bf:role>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label>lyricist.</rdfs:label>
+          </bf:Role>
+        </bf:role>
+      </bf:Contribution>
+    </bf:contribution>
+    <bf:contribution>
+      <bf:Contribution>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n84234024">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+            <bflc:name00MatchKey>Anderson, Stikkan,</bflc:name00MatchKey>
+            <bflc:name00MarcKey>7001 $aAnderson, Stikkan,$ecomposer.</bflc:name00MarcKey>
+            <rdfs:label>Anderson, Stikkan,</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label>composer.</rdfs:label>
+          </bf:Role>
+        </bf:role>
+      </bf:Contribution>
+    </bf:contribution>
+    <bf:contribution>
+      <bf:Contribution>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n2008069732">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+            <bflc:name00MatchKey>Johnson, Catherine, 1957-</bflc:name00MatchKey>
+            <bflc:name00MarcKey>7001 $aJohnson, Catherine,$d1957-$elibrettist.</bflc:name00MarcKey>
+            <rdfs:label>Johnson, Catherine, 1957-</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label>librettist.</rdfs:label>
+          </bf:Role>
+        </bf:role>
+      </bf:Contribution>
+    </bf:contribution>
+    <bf:contribution>
+      <bf:Contribution>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n93092066">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+            <bflc:name00MatchKey>Koch, Martin (Musician),</bflc:name00MatchKey>
+            <bflc:name00MarcKey>7001 $aKoch, Martin$c(Musician),$earranger of music.</bflc:name00MarcKey>
+            <rdfs:label>Koch, Martin (Musician),</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label>arranger of music.</rdfs:label>
+          </bf:Role>
+        </bf:role>
+      </bf:Contribution>
+    </bf:contribution>
+    <bf:contribution>
+      <bf:Contribution>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/no2012005186">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+            <bflc:name00MatchKey>McCarthy, Siobhán (Actress),</bflc:name00MatchKey>
+            <bflc:name00MarcKey>7001 $aMcCarthy, Siobhán$c(Actress),$esinger.</bflc:name00MarcKey>
+            <rdfs:label>McCarthy, Siobhán (Actress),</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label>singer.</rdfs:label>
+          </bf:Role>
+        </bf:role>
+      </bf:Contribution>
+    </bf:contribution>
+    <bf:contribution>
+      <bf:Contribution>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n2002075504">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+            <bflc:name00MatchKey>Stokke, Lisa,</bflc:name00MatchKey>
+            <bflc:name00MarcKey>7001 $aStokke, Lisa,$esinger.</bflc:name00MarcKey>
+            <rdfs:label>Stokke, Lisa,</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label>singer.</rdfs:label>
+          </bf:Role>
+        </bf:role>
+      </bf:Contribution>
+    </bf:contribution>
+    <bf:contribution>
+      <bf:Contribution>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/no2001043170">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+            <bflc:name00MatchKey>Lowe, Martin (Conductor),</bflc:name00MatchKey>
+            <bflc:name00MarcKey>7001 $aLowe, Martin$c(Conductor),$econductor.</bflc:name00MarcKey>
+            <rdfs:label>Lowe, Martin (Conductor),</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label>conductor.</rdfs:label>
+          </bf:Role>
+        </bf:role>
+      </bf:Contribution>
+    </bf:contribution>
+    <bf:contribution>
+      <bf:Contribution>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n78090836">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Organization"/>
+            <bflc:name10MatchKey>ABBA (Musical group).</bflc:name10MatchKey>
+            <bflc:name10MarcKey>7102 $aABBA (Musical group).</bflc:name10MarcKey>
+            <rdfs:label>ABBA (Musical group).</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:role>
+          <bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/ctb"/>
+        </bf:role>
+      </bf:Contribution>
+    </bf:contribution>
+    <bf:relatedTo rdf:resource="http://id.loc.gov/resources/works/c017483429"/>
+    <bf:relatedTo rdf:resource="http://id.loc.gov/resources/works/c017483429"/>
+  </bf:Work>
+  <bf:Item rdf:about="http://id.loc.gov/resources/items/c0122950980001-1">
+    <bf:heldBy>
+      <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+        <bf:code>DLC</bf:code>
+      </bf:Agent>
+    </bf:heldBy>
+    <bf:shelfMark>
+      <bf:ShelfMark>
+        <rdfs:label>SDA 22520</rdfs:label>
+        <bf:assigner>
+          <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"/>
+        </bf:assigner>
+      </bf:ShelfMark>
+    </bf:shelfMark>
+    <bflc:derivedFrom rdf:resource="http://id.loc.gov/resources/bibs/12295098"/>
+    <bf:itemOf rdf:resource="http://id.loc.gov/resources/instances/c0122950980001"/>
+  </bf:Item>
+</rdf:RDF>

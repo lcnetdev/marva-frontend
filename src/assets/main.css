@@ -534,6 +534,7 @@ color: rgb(42, 42, 42);
   visibility: hidden;
   opacity: 0;
   z-index: 999999;
+  pointer-events: none;
 }
 
 [data-tooltip]:before {
