@@ -147,9 +147,6 @@ const config = {
 			{
 			"All":{"url":"https://id.loc.gov/entities/relationships/suggest/?q=<QUERY>&count=25", "all":true}, 					
 			}
-
-			
-
 		]},
 		"http://id.loc.gov/vocabulary/geographicAreas" : {"name":"geographicAreas", "processor" : 'lcAuthorities', "type":"complex", "modes":[
 			{
