@@ -287,7 +287,32 @@ const parseBfdb = {
 			// so test to see if they match, if we have the primary contributor xml and not the primary contributor PT then kick back
 			// so it can be picked up by another correct PT
 
+			let isPrimaryContribXML = false
 
+			for (let el of xml.getElementsByTagName('rdf:type')){
+				if (el.attributes['rdf:resource'] && el.attributes['rdf:resource'].value == 'http://id.loc.gov/ontologies/bflc/PrimaryContribution'){
+					isPrimaryContribXML = true
+				}
+			}
+
+
+			if (profile.valueConstraint.valueDataType.dataTypeURI && profile.valueConstraint.valueDataType.dataTypeURI == "http://id.loc.gov/ontologies/bflc/PrimaryContribution"){
+				// the profile says yes, if the xml doesn't kick it back
+				if (!isPrimaryContribXML){
+					console.log("MITCHMASTCH contributor",isPrimaryContribXML)
+					return false
+				}
+			}else{
+				// the profile says no, if the xml says yesh then kick it back
+				if (isPrimaryContribXML){
+					console.log("MITCHMASTCH contributor",isPrimaryContribXML)
+					return false
+				}
+			}
+
+
+
+			console.log("^^^^^^^")
 
 			// grab the label and uri and type
 			let typeNode = xml.getElementsByTagName("bf:agent")[0].children[0]
@@ -392,7 +417,6 @@ const parseBfdb = {
 
 					//if it already exists then there are multiple
 					if (profile.userValue['http://id.loc.gov/ontologies/bibframe/role']){
-						console.log('multiple')						
 						if (!Array.isArray(profile.userValue['http://id.loc.gov/ontologies/bibframe/role'])){
 							profile.userValue['http://id.loc.gov/ontologies/bibframe/role'] = [profile.userValue['http://id.loc.gov/ontologies/bibframe/role']]
 						}
@@ -593,6 +617,7 @@ const parseBfdb = {
 
 			let sucessfulProperties  = []
 
+			let sucessfulElements  = []
 
 
 
@@ -607,7 +632,8 @@ const parseBfdb = {
 				// remove any default values since we will be populating from the record
 				ptk.valueConstraint.defaults=[]
 				
-				
+				console.log(ptk.propertyURI)
+
 				let propertyURI = ptk.propertyURI
 				let prefixURI = this.namespaceUri(propertyURI)
 
@@ -621,6 +647,7 @@ const parseBfdb = {
 						el.push(e)
 					}
 				}
+				console.log('el len:',el.length)
 
 
 				// Some structural things here to hardcode
@@ -667,6 +694,7 @@ const parseBfdb = {
 						if (this.specialTransforms[prefixURI]){
 							// make sure to pass the current 'this' context to the functions that use helper functions at this level like this.UriNamespace
 							populateData = this.specialTransforms[prefixURI].call(this,e,populateData)	
+							
 
 						}else if (e.children.length == 0){
 
@@ -987,6 +1015,15 @@ const parseBfdb = {
 						}
 
 						
+
+						if (populateData===false){
+							// if it is false it means that the special transform kicked it back as not the right pt for the xml, so skip this one
+							continue
+						}else{
+
+							sucessfulElements.push(e.outerHTML)
+
+						}
 						
 
 						// since we created a brand new populateData we either need to 
@@ -1013,6 +1050,8 @@ const parseBfdb = {
 
 				}
 
+				console.log("sucessfulElements")
+				console.log(sucessfulElements)
 				// we did something with it, so remove it from the xml
 				// doing this inside the loop because some PT use the same element (like primary contribuitor vs contributor)
 
@@ -1020,7 +1059,12 @@ const parseBfdb = {
 					let els = xml.getElementsByTagName(p)
 					// this is a strange loop here because we need to remvoe elements without changing the parent order which will mess up the dom tree and the loop
 					for (let step = els.length-1; step >= 0; step=step-1) {
-						els[step].remove()
+
+						console.log(sucessfulElements.indexOf(els[step].outerHTML))
+						console.log(els[step].outerHTML)
+						if (sucessfulElements.indexOf(els[step].outerHTML)> -1){
+							els[step].remove()
+						}
 					}
 				}
 
