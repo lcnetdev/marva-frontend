@@ -245,7 +245,7 @@ const parseBfdb = {
 		// 		'URI' : xml.attributes['rdf:about'].value
 		// 	}
 
-		// 	console.log("BF WORK", xml,profile)
+		
 
 
 		// 	profile.userValue.URI = xml.attributes['rdf:about'].value
@@ -274,12 +274,7 @@ const parseBfdb = {
 			//   </bf:Contribution>
 			// </bf:contribution>
 
-			console.log('~~~~~~~~XML')
-			console.log(xml)
-			console.log('~~~~~~~~PROFILE')
-			console.log(profile)
-
-
+			
 
 
 			// a little tricky here because there are possibly multiple bf:contributor properties, one might be the primary contributor
@@ -299,20 +294,20 @@ const parseBfdb = {
 			if (profile.valueConstraint.valueDataType.dataTypeURI && profile.valueConstraint.valueDataType.dataTypeURI == "http://id.loc.gov/ontologies/bflc/PrimaryContribution"){
 				// the profile says yes, if the xml doesn't kick it back
 				if (!isPrimaryContribXML){
-					console.log("MITCHMASTCH contributor",isPrimaryContribXML)
+					
 					return false
 				}
 			}else{
 				// the profile says no, if the xml says yesh then kick it back
 				if (isPrimaryContribXML){
-					console.log("MITCHMASTCH contributor",isPrimaryContribXML)
+					
 					return false
 				}
 			}
 
 
 
-			console.log("^^^^^^^")
+			
 
 			// grab the label and uri and type
 			let typeNode = xml.getElementsByTagName("bf:agent")[0].children[0]
@@ -397,7 +392,7 @@ const parseBfdb = {
 
 				for (let roleEl of xml.getElementsByTagName('bf:Role')){
 
-					// console.log("DOING roleEl",xml, roleEl)
+					
 
 
 					let roleuri = null
@@ -471,7 +466,7 @@ const parseBfdb = {
 	transform: function(profile){ 
 
 		// let profileOrginal = Object.assign(profile,{})
-		// console.log('profileOrginal',profileOrginal)
+		
 
 		let results = this.transformRts(profile)
 
@@ -500,12 +495,12 @@ const parseBfdb = {
 
 		let toDeleteNoData = []
 
-		// console.log("THIS IS profile.rt",profile.rt)
+		
 
 		for (const pkey in profile.rt) {
 
 
-			// console.log("DOING:",pkey)
+			
 
 			let tle = ""			
 			if (pkey.endsWith(':Work')){
@@ -521,8 +516,8 @@ const parseBfdb = {
 			
 			// select the right part of the XML
 			let xml = this.activeDom.getElementsByTagName(tle)
-			// console.log(this.activeDom)
-			// console.log("TLE:",xml)
+			
+			
 
 			// only return the top level, no nested related things
 			xml = this.returnOneWhereParentIs(xml, "rdf:RDF")
@@ -541,7 +536,7 @@ const parseBfdb = {
 					item.parentNode.removeChild(item)
 				}
 
-				console.log(adminMetadataData)
+				
 				profile.rt[pkey].adminMetadataData= (new XMLSerializer()).serializeToString(adminMetadataData[0])
 
 
@@ -632,7 +627,7 @@ const parseBfdb = {
 				// remove any default values since we will be populating from the record
 				ptk.valueConstraint.defaults=[]
 				
-				console.log(ptk.propertyURI)
+				
 
 				let propertyURI = ptk.propertyURI
 				let prefixURI = this.namespaceUri(propertyURI)
@@ -647,7 +642,7 @@ const parseBfdb = {
 						el.push(e)
 					}
 				}
-				console.log('el len:',el.length)
+				
 
 
 				// Some structural things here to hardcode
@@ -657,7 +652,7 @@ const parseBfdb = {
 						ptk.userValue={}
 						ptk.userValue['http://id.loc.gov/ontologies/bibframe/Work'] = profile.rt[pkey].URI
 					}
-					console.log(ptk,"<<ptk",el.length)
+					
 					pt[k] = ptk
 					continue
 
@@ -674,7 +669,9 @@ const parseBfdb = {
 					// we have that element
 					sucessfulProperties.push(prefixURI)
 
-					// console.log(prefixURI)
+					console.log("---------------")
+					console.log(prefixURI)
+
 					// loop through all of them
 					let counter = 0
 					for (let e of el){
@@ -686,8 +683,8 @@ const parseBfdb = {
 						// save the source xml for later display
 						populateData.xmlSource = e.outerHTML
 
-						// console.log(populateData)
-						// console.log(JSON.stringify(populateData.userValue,null,2))
+						
+						
 
 						
 						// we have some special functions to deal with tricky elements
@@ -754,7 +751,7 @@ const parseBfdb = {
 										// example > <bf:title><bf:Title> <bf:mainTitle>
 										if (!this.isClass(grandchild.tagName)){
 
-											// console.log(child.tagName, ' -child-to-grand-> ', grandchild.tagName)
+											
 
 											if (grandchild.tagName == 'rdfs:label'){
 												
@@ -788,7 +785,7 @@ const parseBfdb = {
 													let greatgrandchildUriOther = {}
 													for (let greatgrandchild of grandchild.children){
 
-														// console.log(grandchild.tagName, ' -grand-to-greatgrandchild-> ', greatgrandchild.tagName)
+														
 
 
 														let greatgrandchildUri = null
@@ -812,7 +809,7 @@ const parseBfdb = {
 
 															for (let greatgreatgrandchild of greatgrandchild.children){
 
-																// console.log(greatgrandchild.tagName, ' -grand-to-greatgreatgrandchild-> ', greatgreatgrandchild.tagName)
+																
 
 
 																if (greatgreatgrandchild.tagName == 'rdfs:label'){
@@ -904,15 +901,19 @@ const parseBfdb = {
 									
 									
 
-									
+									console.log("childUri:",childUri)
+									console.log("childLabel:",childLabel)
+									console.log("TYPE?",populateData.userValue['@type'])
 
+
+									
 									if (childUri && childLabel){
 										if (!populateData.userValue['http://www.w3.org/2002/07/owl#sameAs']){
 											populateData.userValue['http://www.w3.org/2002/07/owl#sameAs'] = {}
 										}		
 										// populateData.userValue[propertyURI].literal = childLabel
 										// populateData.userValue[propertyURI].URI = childUri
-										// console.log("yo11")
+										
 
 										populateData.userValue['http://www.w3.org/2002/07/owl#sameAs']['http://www.w3.org/2000/01/rdf-schema#label'] = childLabel
 										populateData.userValue['http://www.w3.org/2002/07/owl#sameAs'].URI = childUri
@@ -930,19 +931,19 @@ const parseBfdb = {
 									}else if (!childUri && childLabel){
 
 
-										// console.log(JSON.stringify(populateData.userValue,null,2))
+										
 
 										populateData.userValue[childProperty] = childLabel
 										populateData.userValue.URI = null
 										populateData.userValue['@type'] = this.UriNamespace(child.tagName)
 										populateData.userValue.BFE2METAnotControled=true
 
-										// console.log("yo")
+										
 
 										// if we set the type undo it because we have mor specific bnode here
-										if (populateData.userValue['@type']){
-											delete populateData.userValue['@type']
-										}
+										// if (populateData.userValue['@type']){
+										// 	delete populateData.userValue['@type']
+										// }
 
 
 
@@ -1050,8 +1051,8 @@ const parseBfdb = {
 
 				}
 
-				console.log("sucessfulElements")
-				console.log(sucessfulElements)
+				
+				
 				// we did something with it, so remove it from the xml
 				// doing this inside the loop because some PT use the same element (like primary contribuitor vs contributor)
 
@@ -1060,8 +1061,8 @@ const parseBfdb = {
 					// this is a strange loop here because we need to remvoe elements without changing the parent order which will mess up the dom tree and the loop
 					for (let step = els.length-1; step >= 0; step=step-1) {
 
-						console.log(sucessfulElements.indexOf(els[step].outerHTML))
-						console.log(els[step].outerHTML)
+						
+						
 						if (sucessfulElements.indexOf(els[step].outerHTML)> -1){
 							els[step].remove()
 						}
@@ -1083,8 +1084,8 @@ const parseBfdb = {
 			// let parser = new DOMParser();
 			// profile.rt[pkey].unusedXmlNodes = parser.parseFromString(xml.outerHTML, "text/xml").children[0];
 
-			// console.log(pkey,pkey,pkey)
-			// console.log(profile.rt[pkey].unusedXmlNodes)
+			
+			
 
 			// let totalHasDataLoaded = 0
 			let uniquePropertyURIs  = {}
@@ -1153,7 +1154,7 @@ const parseBfdb = {
 
 			
 			
-			// console.log(totalHasDataLoaded)
+			
 
 
 			
@@ -1162,7 +1163,7 @@ const parseBfdb = {
 			
 			
 			
-			// console.log(hasSeriesData)
+			
 
 
 
@@ -1221,7 +1222,7 @@ const parseBfdb = {
 
 
 
-		// console.log(this.activeDom.getElementsByTagName("rdf:type")[0].attributes)
+		
 
 
 
