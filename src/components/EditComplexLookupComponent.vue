@@ -916,6 +916,7 @@ input{
   overflow-x: none;
   overflow-y: auto;
   outline:none;
+
 }
 .modal-context{
   height: 85%;
@@ -966,6 +967,7 @@ input{
 .modal-entity-select option{
   font-family: "fontello", Avenir, Helvetica, Arial, sans-serif;
   font-size: 1.25em;
+  white-space: pre-wrap;
 
 }
 .selected-value-icon{
