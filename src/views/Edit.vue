@@ -645,6 +645,19 @@ export default {
         }
 
 
+        if (Array.isArray(userValue[k])){
+          for (let userValueAryItem of userValue[k]){
+
+            Object.keys(userValueAryItem).forEach((kk)=>{
+              if (typeof userValueAryItem[kk] == 'string' && !userValueAryItem[kk].includes('http') && !r.includes(userValueAryItem[kk])){
+                r = r + userValueAryItem[kk] + ' '   
+              }      
+            })
+
+          }
+        }
+
+
       })
       r=r.trim()
       return r

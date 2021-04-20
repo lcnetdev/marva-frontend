@@ -1,6 +1,7 @@
 // import store from "../store";
 import lookupUtil from "./lookupUtil";
 import uiUtils from "./uiUtils";
+import parseProfile from "./parseProfile";
 
 
 
@@ -343,6 +344,7 @@ const exportXML = {
 
 	suggestType: async function(propertyURI){
 
+		console.log('propertyURI:',propertyURI)
 
 		// at this point we have a well cached lookup of the whole onotlogy in localstorage
 		// ask for this one, if it idoesnt have it, it will relookup (or if it is expired)
@@ -351,16 +353,23 @@ const exportXML = {
 		let range = prop.getElementsByTagName("rdfs:range")
 
 		// if it has a range return it
-		if (range){
+		if (range.length > 0){
 			range=range[0]
 			if (range.attributes['rdf:resource']){
 				return range.attributes['rdf:resource'].value
 			}
 		}
 
-		// no range, do something else to try to figure out what the rdf:type is
-		// TODO if needed
+		let profileLookup = parseProfile.suggestType(propertyURI)
+		if (profileLookup != false){
+			return profileLookup
+		}
 
+
+
+		console.log("HEREZZZZ")
+		// some try something else
+		// TODO if needed
 
 
 		// if fails
@@ -678,15 +687,18 @@ const exportXML = {
 						let userValue = ptObj.userValue;
 
 
-						// is there only one key, and is it the same as the propertyuri?
-						let allKeys = Object.keys(userValue).filter((k)=>{ return (k != '@type') })						
-						// over write the uservalue with just that key 
-						if (allKeys.length==1){		
-							// and it is a property
-							if (typeof userValue[allKeys[0]] == 'object'){
-								userValue = userValue[allKeys[0]]
-							}
-						}
+						// // is there only one key, and is it the same as the propertyuri?
+						// let allKeys = Object.keys(userValue).filter((k)=>{ return (k != '@type') })						
+						// // over write the uservalue with just that key 
+						// if (allKeys.length==1){		
+						// 	// and it is a property
+						// 	if (typeof userValue[allKeys[0]] == 'object'){
+						// 		userValue = userValue[allKeys[0]]
+						// 	}
+						// }
+
+
+
 
 						if (!userValue['@type']){
 							// figure out the type it should be from the ontology
@@ -711,9 +723,12 @@ const exportXML = {
 								bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', userValue['URI'])
 							}
 
+							console.log('userValue:',userValue)
 
 							// // now loop through all the other properties here and build the bnode out
 							for (let subkey of Object.keys(userValue)){
+
+								console.log('typeof userValue[subkey]:',typeof userValue[subkey])
 
 								// there are some special keys we want to not try to serailize 
 								if (subkey == '@type' || subkey == 'URI' || subkey == 'context' || subkey.startsWith('BFE2META')){continue}
@@ -726,86 +741,138 @@ const exportXML = {
 									bnode.appendChild(pp)
 
 								}else if (userValue[subkey] === null){
+
 									console.warn('null value for ',subkey, 'in', ptObj)
 
 								}else if (typeof userValue[subkey] === 'object' && userValue[subkey] !== null){
 
 
 
-									// do the same thing...
-									let userChildValue = userValue[subkey];
 
-									if (!userChildValue['@type']){
-										// figure out the type it should be from the ontology
-										userChildValue['@type'] = await this.suggestType(subkey);	
+									// do the same thing...
+									let userChildValues = userValue[subkey];
+
+									if (!Array.isArray(userChildValues)){
+										userChildValues = [userChildValues]
 									}
 
 
+									if (Array.isArray(userChildValues)){
+										console.log("userChildValueuserChildValueuserChildValue is array")
+									}
 
-									// if that worked
-									if (userChildValue['@type']){
+									if (subkey == 'http://id.loc.gov/ontologies/bibframe/frequency'){
+										console.log('----herez')
+										console.log("userChildValueuserChildValueuserChildValue:",userChildValues)
+										console.log("subkey:",subkey)
+										console.log(Array.isArray(userValue[subkey]))
 
-										// construct the predicate
-										let ppp = this.createElByBestNS(subkey)
-										bnode.appendChild(ppp)
+									}
 
-										// the bnode
-										let childBnode = this.createElByBestNS(userChildValue['@type'])
-										ppp.appendChild(childBnode)
+									let iterCount = 0
 
-										// if it has a URI
-										if (userChildValue['URI']){
-											childBnode.setAttributeNS(this.namespace.rdf, 'rdf:about', userChildValue['URI'])
+									for (let userChildValue of userChildValues){
+
+
+										if (!userChildValue['@type']){
+											// figure out the type it should be from the ontology
+											userChildValue['@type'] = await this.suggestType(subkey);	
 										}
 
-										// add in all the other properties, special usecase for rdf:type
 
-										for (let subChildkey of Object.keys(userChildValue)){
 
-											// there are some special keys we want to not try to serailize 
-											if (subChildkey == '@type' || subChildkey == 'URI' || subChildkey == 'context' || subChildkey.startsWith('BFE2META')){continue}
-											let subChildkeyFull = subChildkey
-											if (!subChildkey.startsWith('http')){
-												subChildkeyFull = this.UriNamespace(subChildkey)
+										// if that worked
+										if (userChildValue['@type']){
+
+											let ppp
+											let childBnode
+
+											// if it is the same type as the parent, attach to parent
+											if (userChildValue['@type'] == userValue['@type']){
+
+												// only on the first occurance though, if we have repeated fields
+												// then make a new bnode for it to live in
+												if (iterCount==0){
+													ppp = p
+													childBnode = bnode
+												}else{
+
+													ppp = p
+													childBnode = this.createElByBestNS(userChildValue['@type'])
+													ppp.appendChild(childBnode)
+												}
+
+
+											}else{
+
+												// construct the predicate
+												ppp = this.createElByBestNS(subkey)
+												bnode.appendChild(ppp)
+
+												// the bnode
+												childBnode = this.createElByBestNS(userChildValue['@type'])
+												ppp.appendChild(childBnode)
+
 											}
 
-											// should only be literals, if not we need to handle that differently
-											if (typeof userChildValue[subChildkey] === 'string' || userChildValue[subChildkey] instanceof String){
+	
+											// if it has a URI
+											if (userChildValue['URI']){
+												childBnode.setAttributeNS(this.namespace.rdf, 'rdf:about', userChildValue['URI'])
+											}
+
+											// add in all the other properties, special usecase for rdf:type
+
+											for (let subChildkey of Object.keys(userChildValue)){
+
+												// there are some special keys we want to not try to serailize 
+												if (subChildkey == '@type' || subChildkey == 'URI' || subChildkey == 'context' || subChildkey.startsWith('BFE2META')){continue}
+												let subChildkeyFull = subChildkey
+												if (!subChildkey.startsWith('http')){
+													subChildkeyFull = this.UriNamespace(subChildkey)
+												}
+
+												// should only be literals, if not we need to handle that differently
+												if (typeof userChildValue[subChildkey] === 'string' || userChildValue[subChildkey] instanceof String){
 
 
-												if (subChildkeyFull == 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'){
+													if (subChildkeyFull == 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'){
 
-													let pppp = this.createElByBestNS(subChildkey)
-													pppp.setAttributeNS(this.namespace.rdf, 'rdf:resource', userChildValue[subChildkey])
-													childBnode.appendChild(pppp)
+														let pppp = this.createElByBestNS(subChildkey)
+														pppp.setAttributeNS(this.namespace.rdf, 'rdf:resource', userChildValue[subChildkey])
+														childBnode.appendChild(pppp)
 
+
+													}else{
+
+														let pppp = this.createElByBestNS(subChildkey)
+														pppp.innerHTML = userChildValue[subChildkey]
+														childBnode.appendChild(pppp)
+
+													}
+
+
+
+												}else if (userChildValue[subChildkey] === null){
+													console.warn('null value for ',subChildkey, 'in', ptObj)
 
 												}else{
 
-													let pppp = this.createElByBestNS(subChildkey)
-													pppp.innerHTML = userChildValue[subChildkey]
-													childBnode.appendChild(pppp)
+													console.error('could not make bnode from ', subChildkey, 'in',ptObj)
 
 												}
 
 
-
-											}else if (userChildValue[subChildkey] === null){
-												console.warn('null value for ',subChildkey, 'in', ptObj)
-
-											}else{
-
-												console.error('could not make bnode from ', subChildkey, 'in',ptObj)
-
 											}
 
 
+
+										}else{
+											console.error("In a sameAs entitiy with a non-literal value, don't know what to do!", ptObj)
 										}
 
+										iterCount++
 
-
-									}else{
-										console.error("In a sameAs entitiy with a non-literal value, don't know what to do!", ptObj)
 									}
 
 								}

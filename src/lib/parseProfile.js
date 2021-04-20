@@ -684,6 +684,23 @@ const parseProfile = {
 
     },
 
+    // returns a Class type basedon the predicate from the the profiles
+    suggestType: function(propertyURI){
+
+
+        for (let key in this.rtLookup){
+            for (let pt of parseProfile.rtLookup[key].propertyTemplates ){
+                if (pt.propertyURI == propertyURI){
+                    if (pt.valueConstraint.valueDataType && pt.valueConstraint.valueDataType.dataTypeURI)
+                    return pt.valueConstraint.valueDataType.dataTypeURI
+                }
+            }
+        }
+
+
+        return false
+    },
+
 
     returnMetaFromSavedXML: function(xml){
 
