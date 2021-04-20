@@ -114,11 +114,11 @@ export default {
 
     //   // let returnVal = []
     //   // Object.keys(state.lookupLibrary).forEach((s)=>{
-    //   //   console.log(s,this.structure.valueConstraint.useValuesFrom[0])
+    
     //   // })
-    //   // console.log(this.structure.valueConstraint.useValuesFrom[0])
+    
     //   // if (state.lookupLibrary[this.structure.valueConstraint.useValuesFrom[0]]){
-    //   //   console.log('yehhhh')
+    
     //   //   return state.lookupLibrary[this.structure.valueConstraint.useValuesFrom[0]]
     //   // }else{
     //   //   return []
@@ -134,14 +134,14 @@ export default {
     // if (this.structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/classification'){
 
     //   let data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]
-    //   console.log(data,data.userValue[this.structure.propertyURI], this.structure.propertyURI, 'here')
+    
 
     //   if (data.userValue[this.structure.propertyURI]){
     //     this.inputValue = data.userValue[this.structure.propertyURI]
     //   }
 
-    //   console.log(data,"!")
-    //   console.log(this.structure.userValue['@type'])
+    
+    
 
     // }
 
@@ -149,8 +149,8 @@ export default {
     let useId = this.structure.valueConstraint.valueTemplateRefs[0]
     let foundBetter = false
 
-    console.log("STARTING YPU WITH:",useId)
-    console.log("this.structure.valueConstraint.valueTemplateRefs",this.structure.valueConstraint.valueTemplateRefs)
+    
+    
     // do we have user data and a possible @type to use
     if (this.structure.userValue['@type'] || (this.parentStructureObj && this.parentStructureObj.userValue['@type'])){
 
@@ -158,7 +158,7 @@ export default {
       // loop thrugh all the refs and see if there is a URI that matches it better
       this.structure.valueConstraint.valueTemplateRefs.forEach((tmpid)=>{
 
-        console.log('tmpid-<',tmpid)
+        
         if (foundBetter) return false
 
         if (this.rtLookup[tmpid].resourceURI === this.structure.userValue['@type']){
@@ -173,9 +173,8 @@ export default {
         }
 
 
-        // and here
+        // and here, check the parent, since it might be a nested  ref component
         if (this.parentStructureObj && this.parentStructureObj.userValue['@type']){
-
           if (this.rtLookup[tmpid].resourceURI === this.parentStructureObj.userValue['@type']){
             useId = tmpid
             foundBetter = true
@@ -184,65 +183,19 @@ export default {
 
         }
 
-        // look into this one's valueTemplateRefs
-        // for (let pt of this.rtLookup[tmpid].propertyTemplates){
-        //   if (pt.valueConstraint.valueTemplateRefs){
-        //     for (let vtr of pt.valueConstraint.valueTemplateRefs){
-        //         if (this.rtLookup[vtr].resourceURI == this.structure.userValue['@type']){
-        //           useId = vtr
-        //           foundBetter = true                  
-        //         }
-        //     }
-        //   }
-        // }
-
-        console.log(this.rtLookup[tmpid])
-
-
-
-
-        console.log(useId,foundBetter)
-
-
-        // if (this.structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/subject'){
-          
-        //   console.log(this.rtLookup[tmpid].resourceURI, "||",this.structure.userValue['@type'] )
-        //   console.log('this.rtLookup[useId] HEREERw')
-        //   console.log(this.rtLookup[tmpid])
-        //   console.log(useId)
-
-
-        // }
-
-
-
 
 
       })
     } 
 
-    console.log('~~~~~~~~~~~USERVAL @TYPE IS ',this.structure.userValue['@type'])
-
-    if (this.parentStructureObj){
-      console.log('~~~~~~~~~~~USERVAL @TYPE IS ',this.parentStructureObj.userValue['@type'])
-    }
-
-    console.log('this.parentStructure->',this.parentStructure)
-    console.log('this.parentURI->',this.parentURI)
-    console.log('this.structure',this.structure)
-    console.log('this.parentStructureObj',this.parentStructureObj)
-
-
-
-
-    console.log('`````````````USE ID IS ',useId)
-    console.log('---------->',this.rtLookup[useId])
+       
+    
     
     // do not render recursivly if the thing we are trying to render recursivly is one the of the things thAT WER ARE RENDERING TO BEGIN WITHHHHH!!!1
     if (this.parentStructure && this.parentStructure.indexOf(useId) ==-1){
       if (this.rtLookup[useId]){
         this.multiTemplateSelect = this.rtLookup[useId].resourceLabel
-        console.log('this.multiTemplateSelect',this.multiTemplateSelect)
+        
         this.multiTemplateSelectURI = useId
         this.activeTemplate = this.rtLookup[useId]     
         this.buildPropertyTemplatesOrderLookup()        
@@ -260,7 +213,7 @@ export default {
 
     }
     // }else{
-    //   console.log(this.parentStructure, 'do not render this one!')
+    
     // else if (!this.parentStructure){
     //   this.multiTemplateSelect = this.rtLookup[useId].resourceLabel
     //   this.multiTemplateSelectURI = useId
@@ -347,7 +300,7 @@ export default {
           this.multiTemplateSelect = this.rtLookup[nextRefID].resourceLabel
           this.multiTemplateSelectURI = nextRefID
           this.activeTemplate = this.rtLookup[nextRefID]
-          console.log(nextRefID)
+          
           this.buildPropertyTemplatesOrderLookup()
           this.focused(event)
           uiUtils.renderBorders(true)  
@@ -374,7 +327,7 @@ export default {
 
     },
     focused: function(event){
-      // console.log('regsrerd',this.activeInput)
+      
       this.$store.dispatch("setActiveInput", { self: this, id: event.target.id, profileCompoent: this.profileCompoent, profileName: this.profileName }).then(()=>{
 
         // now focus the side bars

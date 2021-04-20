@@ -305,17 +305,32 @@ export default {
 
           // loop through each one, each is a array, so each element of array
           this.lookupLibrary[this.uri][v].forEach((x)=>{
+            console.log(x)
             // simple includes value check
             if (x.toLowerCase().startsWith(this.activeFilter.toLowerCase())){
                 if (this.displayList.indexOf(x)==-1){
                   this.displayList.push(x)    
                 }
-            }            
+            }       
+
+            if (x.toLowerCase().includes(' (' +this.activeFilter.toLowerCase())){
+                if (this.displayList.indexOf(x)==-1){
+                  this.displayList.push(x)    
+                }
+            }  
+
+
+
           })
         }
 
 
       })
+
+
+
+      this.displayList.sort()
+
       
       // take the first hit and make it the autocomplete text
       if (this.displayList.length>0 && this.activeFilter.length>0){
