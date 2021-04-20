@@ -307,9 +307,14 @@ export default new Vuex.Store({
       // console.log("^^^^^^^^data")
     },
     setActiveProfile({ commit}, data){
+
+      if (data.useDefaultValues){
+        data.profile = parseProfile.populateDefaultValuesIntoUserValues(data.profile)
+      }
+
       commit('ACTIVEPROFILE', data.profile)
-      // console.log(data)
-      // console.log("^^^^^^^^data")
+      console.log(data)
+      console.log("^^^^^^^^data")
     },
 
 
@@ -343,12 +348,25 @@ export default new Vuex.Store({
     },
     async addValueLiteral ({ commit, state }, data) {   
       console.log(data)
-      let nap = parseProfile.setValue(state.activeProfile, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, data.value)
+      console.log('addValueLiteral:',data)
+
+      let profileName = (data.profileName) ? data.profileName : state.activeProfileName;
+
+      let nap = parseProfile.setValue(state.activeProfile, data.profileComponet, data.structure.propertyURI, profileName, data.template, data.value)
       commit('ACTIVEPROFILE', nap)
       commit('ACTIVEEDITCOUNTER')    
 
       commit('ACTIVERECORDSAVED', false)
       state.saveRecord(state,commit)
+
+
+    },
+
+
+    async refTemplateChange ({ commit, state }, data) {   
+
+      let nap = parseProfile.refTemplateChange(state.activeProfile, data.profileComponet, data.structure.propertyURI,  state.activeProfileName, data.template, data.parentId, data.nextRef)
+      commit('ACTIVEPROFILE', nap)    
 
 
     },
@@ -365,6 +383,7 @@ export default new Vuex.Store({
       commit('ACTIVEINPUT', data.id)
       commit('ACTIVECOMPONET', data.profileCompoent)
       commit('ACTIVEPROFILENAME', data.profileName)
+      console.log("data.profileName",data.profileName)
     },
 
     setActiveProfileCounter: ({commit}, newValue) => {

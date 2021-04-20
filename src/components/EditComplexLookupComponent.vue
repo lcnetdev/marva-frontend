@@ -392,7 +392,7 @@ export default {
       if (this.precoordinated.length>0){
         this.precoordinated.splice(-1,1)
       }
-      console.log(this.precoordinated)
+      
 
     },
 
@@ -410,7 +410,7 @@ export default {
       if (this.displayPreCoordinated == false && this.displayModal == true){
 
         this.displayPreCoordinated = true
-        console.log('hery heree',this.displayPreCoordinated )
+        
         if(event && event.event){
           event.event.preventDefault()
           return false
@@ -484,11 +484,11 @@ export default {
     checkForUserData: function(){
 
       let uv = parseProfile.returnUserValues(this.activeProfile, this.profileCompoent,this.structure.propertyURI)
-      // console.log("<<<<",uv,this.parentStructureObj,"")
-      console.log(uv,"<<<<<<<uvuv uvuvuvuvuvuvuvuvuvuvuvuvuvuvuv",this.structure.propertyURI)
+      
+      
 
       if (uv[this.structure.propertyURI]){
-        // console.log('yehh',uv[this.structure.propertyURI])
+        
         this.userData = uv[this.structure.propertyURI]
       }else  if (uv[this.parentStructureObj.propertyURI]){
         this.userData = uv[this.parentStructureObj.propertyURI]
@@ -498,7 +498,7 @@ export default {
         this.userData =uv['http://www.w3.org/2002/07/owl#sameAs']
       }
 
-      // console.log("IT IS NOW>",this.userData)
+      
 
     },
 
@@ -806,9 +806,9 @@ export default {
     // add this entity to the data for this component
     add: function(){
 
-      // console.log(this.profileCompoent)
-      // console.log(this.structure)
-      // console.log(this.activeProfile)
+      
+      
+      
 
       // are we adding a URI or building a pre-coordinated thing
       if (this.precoordinated.length > 0){

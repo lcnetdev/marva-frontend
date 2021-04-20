@@ -111,24 +111,41 @@ export default {
 
     // fill in the defaults if it comes with them
     // only if this was not loaded from a record
-    if (!this.activeProfile.procInfo || (this.activeProfile.procInfo && !this.activeProfile.procInfo.includes("update"))){
-      if (this.structure.valueConstraint.defaults.length>0){
-        this.activeLookupValue.push({})
-        this.activeLookupValue[0]['http://www.w3.org/2000/01/rdf-schema#label'] = this.structure.valueConstraint.defaults[0].defaultLiteral
-        this.activeLookupValue[0].URI = this.structure.valueConstraint.defaults[0].defaultURI
-      }
-    }
+    // if (!this.activeProfile.procInfo || (this.activeProfile.procInfo && !this.activeProfile.procInfo.includes("update"))){
+    //   if (this.structure.valueConstraint.defaults.length>0){
+
+    //     console.log("SIMPLE DEFUALTS")
+    //     console.log(this.structure.valueConstraint.defaults)
+        
+
+    //     this.activeLookupValue.push({})
+    //     this.activeLookupValue[0]['http://www.w3.org/2000/01/rdf-schema#label'] = this.structure.valueConstraint.defaults[0].defaultLiteral
+    //     this.activeLookupValue[0].URI = this.structure.valueConstraint.defaults[0].defaultURI
+
+
+    //     // this.$store.dispatch("addValueLiteral", { self: this, profileName:this.profileName, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, value:this.activeLookupValue }).then(() => {
+         
+    //     // })  
+
+    //     console.log('createdddd')
+    //     // dispatch and add to the acutal data
+
+
+
+
+    //   }
+    // }
 
     let data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]
 
 
-      // console.log('&&&&&&&&&&&s')
-      // console.log(this.profileCompoent)
-      // console.log(data.userValue)
-      // console.log(data)
-      // console.log(data.propertyURI)
-      // console.log(this.structure)
-      // console.log('&&&&&&&&&&&')
+      
+      
+      
+      
+      
+      
+      
 
 
     // what URI was the data stored in
@@ -161,8 +178,8 @@ export default {
     }
 
     // Kind of a HACK here, need to sort out what URI the data is being stored under here
-    // console.log(this.structure.propertyURI)
-    // console.log("dataField",dataField, 'data.userValue:',data.userValue, )
+    
+    
 
     if (!Array.isArray(dataField)){
       dataField = [dataField]
@@ -170,7 +187,7 @@ export default {
 
     for (let aDataField of dataField){
       
-      // console.log(aDataField,'<<<<<aDataField')
+      
       if (data.userValue && aDataField){
         let alv = {}
         if (aDataField.literal){
@@ -200,15 +217,15 @@ export default {
         if (!alv['http://www.w3.org/2000/01/rdf-schema#label'] && alv.URI){
           alv['http://www.w3.org/2000/01/rdf-schema#label'] = alv.URI.split('/').slice(-1)[0] + " (no label)"
         }
-        // console.log("ALV")
-        // console.dir(alv)
+        
+        
         this.activeLookupValue.push(alv)
       }
 
     }
 
-    // console.log('activeLookupValue activeLookupValue activeLookupValue')
-    // console.dir(this.activeLookupValue)
+    
+    
 
 
 
@@ -227,11 +244,11 @@ export default {
 
       // let returnVal = []
       // Object.keys(state.lookupLibrary).forEach((s)=>{
-      //   console.log(s,this.structure.valueConstraint.useValuesFrom[0])
+      
       // })
-      // console.log(this.structure.valueConstraint.useValuesFrom[0])
+      
       // if (state.lookupLibrary[this.structure.valueConstraint.useValuesFrom[0]]){
-      //   console.log('yehhhh')
+      
       //   return state.lookupLibrary[this.structure.valueConstraint.useValuesFrom[0]]
       // }else{
       //   return []
@@ -245,9 +262,9 @@ export default {
 
     fakeContainerFocus: function(event){
 
-        console.log(event.target.querySelectorAll('input'))
+        // console.log(event.target.querySelectorAll('input'))
 
-
+        return event
     },
 
     removeValue: function(idx){
@@ -299,7 +316,7 @@ export default {
 
 
       })
-      // console.log(this.displayList)
+      
       // take the first hit and make it the autocomplete text
       if (this.displayList.length>0 && this.activeFilter.length>0){
         this.activeSelect = this.displayList[0]
@@ -334,7 +351,7 @@ export default {
       this.activeFilter = event.target.value;
       // tell the store to load this specific lookup table into memory
       this.$store.dispatch("fetchLookupValues", { self: this, url: this.structure.valueConstraint.useValuesFrom[0] }).then(() => {
-        // console.log(this.lookupLibrary[this.uri],"<<!<!<!<<!<!<")
+        
         // if there is already a value don't open up the full list, they can type ahead but dont open everything
         // if (this.activeLookupValue.length==0){
           // this.filter()
@@ -475,7 +492,7 @@ export default {
 
           }
           // let data = this.lookupLibrary[this.uri].metadata[v]
-          // console.log(data,this.lookupLibrary[this.uri].metadata[data])
+          
           // let idx = data.defaultsisplayLabel.indexOf(this.activeSelect)
           // if (idx > -1){
           //   this.structure.valueConstraint.defaults.push({defaultLiteral:data.label[idx],defaultURI:data.uri[idx]})

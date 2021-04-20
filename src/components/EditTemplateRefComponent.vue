@@ -81,7 +81,9 @@ export default {
   props: {
     structure: Object,
     parentStructure: Array,
+    parentStructureObj: Object,
     profileCompoent: String,
+    parentURI: String,
     profileName: String,
     nested: Boolean,
   },  
@@ -146,14 +148,17 @@ export default {
     // grab the first component from the struecture, but there might be mutluple ones
     let useId = this.structure.valueConstraint.valueTemplateRefs[0]
     let foundBetter = false
+
+    console.log("STARTING YPU WITH:",useId)
+    console.log("this.structure.valueConstraint.valueTemplateRefs",this.structure.valueConstraint.valueTemplateRefs)
     // do we have user data and a possible @type to use
-    if (this.structure.userValue['@type']){
+    if (this.structure.userValue['@type'] || (this.parentStructureObj && this.parentStructureObj.userValue['@type'])){
 
 
       // loop thrugh all the refs and see if there is a URI that matches it better
       this.structure.valueConstraint.valueTemplateRefs.forEach((tmpid)=>{
 
-
+        console.log('tmpid-<',tmpid)
         if (foundBetter) return false
 
         if (this.rtLookup[tmpid].resourceURI === this.structure.userValue['@type']){
@@ -168,6 +173,35 @@ export default {
         }
 
 
+        // and here
+        if (this.parentStructureObj && this.parentStructureObj.userValue['@type']){
+
+          if (this.rtLookup[tmpid].resourceURI === this.parentStructureObj.userValue['@type']){
+            useId = tmpid
+            foundBetter = true
+          }
+
+
+        }
+
+        // look into this one's valueTemplateRefs
+        // for (let pt of this.rtLookup[tmpid].propertyTemplates){
+        //   if (pt.valueConstraint.valueTemplateRefs){
+        //     for (let vtr of pt.valueConstraint.valueTemplateRefs){
+        //         if (this.rtLookup[vtr].resourceURI == this.structure.userValue['@type']){
+        //           useId = vtr
+        //           foundBetter = true                  
+        //         }
+        //     }
+        //   }
+        // }
+
+        console.log(this.rtLookup[tmpid])
+
+
+
+
+        console.log(useId,foundBetter)
 
 
         // if (this.structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/subject'){
@@ -186,11 +220,29 @@ export default {
 
       })
     } 
+
+    console.log('~~~~~~~~~~~USERVAL @TYPE IS ',this.structure.userValue['@type'])
+
+    if (this.parentStructureObj){
+      console.log('~~~~~~~~~~~USERVAL @TYPE IS ',this.parentStructureObj.userValue['@type'])
+    }
+
+    console.log('this.parentStructure->',this.parentStructure)
+    console.log('this.parentURI->',this.parentURI)
+    console.log('this.structure',this.structure)
+    console.log('this.parentStructureObj',this.parentStructureObj)
+
+
+
+
+    console.log('`````````````USE ID IS ',useId)
+    console.log('---------->',this.rtLookup[useId])
     
     // do not render recursivly if the thing we are trying to render recursivly is one the of the things thAT WER ARE RENDERING TO BEGIN WITHHHHH!!!1
     if (this.parentStructure && this.parentStructure.indexOf(useId) ==-1){
       if (this.rtLookup[useId]){
         this.multiTemplateSelect = this.rtLookup[useId].resourceLabel
+        console.log('this.multiTemplateSelect',this.multiTemplateSelect)
         this.multiTemplateSelectURI = useId
         this.activeTemplate = this.rtLookup[useId]     
         this.buildPropertyTemplatesOrderLookup()        
@@ -266,35 +318,50 @@ export default {
       }
 
 
-      if (event.key==='ArrowRight'){
+      if (event.key==='ArrowRight' || event.key==='ArrowLeft'){
         // get the current pos, and if we are at the end loop back to the beginning
-        let currPos = this.structure.valueConstraint.valueTemplateRefs.indexOf(this.multiTemplateSelectURI)
-        if (currPos+1 > this.structure.valueConstraint.valueTemplateRefs.length-1){
-          currPos=-1
+        let nextRefID
+
+        if (event.key==='ArrowRight'){
+          let currPos = this.structure.valueConstraint.valueTemplateRefs.indexOf(this.multiTemplateSelectURI)
+          if (currPos+1 > this.structure.valueConstraint.valueTemplateRefs.length-1){
+            currPos=-1
+          }
+          nextRefID = this.structure.valueConstraint.valueTemplateRefs[currPos+1]
+
+        }else{
+
+          let currPos = this.structure.valueConstraint.valueTemplateRefs.indexOf(this.multiTemplateSelectURI)
+          if (currPos == 0){
+            currPos=this.structure.valueConstraint.valueTemplateRefs.length
+          }
+
+          nextRefID = this.structure.valueConstraint.valueTemplateRefs[currPos-1]
+
         }
-        let nextRefID = this.structure.valueConstraint.valueTemplateRefs[currPos+1]
-        this.multiTemplateSelect = this.rtLookup[nextRefID].resourceLabel
-        this.multiTemplateSelectURI = nextRefID
-        this.activeTemplate = this.rtLookup[nextRefID]
-        this.buildPropertyTemplatesOrderLookup()
-        this.focused(event)
-        uiUtils.renderBorders(true)  
 
         
-      
-      }else if (event.key==='ArrowLeft'){
-        let currPos = this.structure.valueConstraint.valueTemplateRefs.indexOf(this.multiTemplateSelectURI)
-        if (currPos == 0){
-          currPos=this.structure.valueConstraint.valueTemplateRefs.length
-        }
+        // get the profile ready before we change the UI
+        this.$store.dispatch("refTemplateChange", { self: this, profileName:this.profileName, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, parentId: this.structure.parentId, nextRef:this.rtLookup[nextRefID] }).then(() => {
+         
+          this.multiTemplateSelect = this.rtLookup[nextRefID].resourceLabel
+          this.multiTemplateSelectURI = nextRefID
+          this.activeTemplate = this.rtLookup[nextRefID]
+          console.log(nextRefID)
+          this.buildPropertyTemplatesOrderLookup()
+          this.focused(event)
+          uiUtils.renderBorders(true)  
 
-        let nextRefID = this.structure.valueConstraint.valueTemplateRefs[currPos-1]
-        this.multiTemplateSelect = this.rtLookup[nextRefID].resourceLabel
-        this.multiTemplateSelectURI = nextRefID
-        this.activeTemplate = this.rtLookup[nextRefID]
-        this.buildPropertyTemplatesOrderLookup()
-        this.focused(event)
-        uiUtils.renderBorders(true)
+
+
+
+        }) 
+
+
+
+
+
+
       }else if (event.key==='Tab'){
         return true
 

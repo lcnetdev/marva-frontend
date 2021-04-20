@@ -194,6 +194,8 @@ const parseBfdb = {
 			
 			userValue['http://www.w3.org/2000/01/rdf-schema#label'] = label
 
+
+
 			if (typeNode.getElementsByTagName('madsrdf:componentList').length>0){
 
 				for (let child of typeNode.getElementsByTagName('madsrdf:componentList')[0].children){
@@ -219,6 +221,9 @@ const parseBfdb = {
 			userValue['http://www.loc.gov/mads/rdf/v1#componentList'] = componentList
 
 
+			if (userValue['http://id.loc.gov/ontologies/bibframe/source']['http://id.loc.gov/ontologies/bibframe/code']=='lcsh' && !userValue['http://id.loc.gov/ontologies/bibframe/source'].URI){
+				userValue['http://id.loc.gov/ontologies/bibframe/source'].URI = 'http://id.loc.gov/vocabulary/subjectSchemes/lcsh'
+			}
 
 			
 			
@@ -274,7 +279,25 @@ const parseBfdb = {
 			//   </bf:Contribution>
 			// </bf:contribution>
 
-			
+
+
+			let madsToBf = {
+
+				//http://id.loc.gov/ontologies/bibframe/Jurisdiction
+
+				'http://www.loc.gov/mads/rdf/v1#CorporateName': 'http://id.loc.gov/ontologies/bibframe/Organization',
+				'http://www.loc.gov/mads/rdf/v1#ConferenceName': 'http://id.loc.gov/ontologies/bibframe/Meeting',
+				'http://www.loc.gov/mads/rdf/v1#PersonalName': 'http://id.loc.gov/ontologies/bibframe/Person',
+				'http://www.loc.gov/mads/rdf/v1#FamilyName': 'http://id.loc.gov/ontologies/bibframe/Family'
+			}
+
+
+
+
+
+
+
+
 
 
 			// a little tricky here because there are possibly multiple bf:contributor properties, one might be the primary contributor
@@ -445,12 +468,13 @@ const parseBfdb = {
 
 			}
 
-			
 
-
-
-			
-			
+			// if it has a MADs try to map it
+			if (profile.userValue['http://www.w3.org/2002/07/owl#sameAs'] && profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type']){
+				if (madsToBf[profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type']]){
+					profile.userValue["@type"] = madsToBf[profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type']]
+				}
+			}
 			
 
 			return profile
@@ -906,7 +930,7 @@ const parseBfdb = {
 									console.log("TYPE?",populateData.userValue['@type'])
 
 
-									
+
 									if (childUri && childLabel){
 										if (!populateData.userValue['http://www.w3.org/2002/07/owl#sameAs']){
 											populateData.userValue['http://www.w3.org/2002/07/owl#sameAs'] = {}

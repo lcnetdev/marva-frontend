@@ -210,7 +210,9 @@ export default {
 
 
 
-      this.$store.dispatch("setActiveProfile", { self: this, profile: useProfile }).then(() => {
+
+
+      this.$store.dispatch("setActiveProfile", { self: this, profile: useProfile, useDefaultValues: true }).then(() => {
         this.$router.push({ path: 'edit' })
       })
 

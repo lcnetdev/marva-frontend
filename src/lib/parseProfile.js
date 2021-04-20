@@ -97,8 +97,6 @@ const parseProfile = {
 
                 // modify the subject headings to match the new editor
                 if (rt.id == 'lc:RT:bf2:Components'){
-                    console.log('lc:RT:bf2:Componentslc:RT:bf2:Componentslc:RT:bf2:Componentslc:RT:bf2:Componentslc:RT:bf2:Components')
-                    console.log(rt)
                     for (let pt of rt.propertyTemplates){
                         pt.valueConstraint.valueTemplateRefs = pt.valueConstraint.valueTemplateRefs.filter((ref)=>{if (ref == 'lc:RT:bf2:Topic:madsTopic'){ return true}})
                     }
@@ -191,6 +189,7 @@ const parseProfile = {
                         if (rt.propertyTemplates){
                             rt.propertyTemplates.forEach((pt)=>{
                                 pt.parent = p.json.Profile.id + rt.id + p.id
+                                pt.parentId = rt.id
                                 pt.userValue =  {}
                                 let key = pt.propertyURI + '|' + ((pt.propertyLabel) ? pt.propertyLabel : "plabel")
                                 this.profiles[p.json.Profile.id].rt[rt.id].ptOrder.push(key)
@@ -265,6 +264,72 @@ const parseProfile = {
         console.log(this.profiles)
 
         return { profiles: this.profiles, lookup: this.rtLookup, startingPoints: this.startingPoints}
+    },
+
+
+    populateDefaultValuesIntoUserValues: function(profile){
+
+
+        // loop thorugh the profile being passed and add in the default values to all the userValue property
+
+        for (let rt in profile.rt){
+
+            for (let pt in profile.rt[rt].pt){
+
+                pt = profile.rt[rt].pt[pt]
+                
+                // if its right there in the PT
+                if (pt.valueConstraint.defaults && pt.valueConstraint.defaults.length>0){
+                    pt.userValue[pt.propertyURI] = {}
+                    if (pt.valueConstraint.defaults[0].defaultLiteral){
+                        pt.userValue[pt.propertyURI]['http://www.w3.org/2000/01/rdf-schema#label'] = pt.valueConstraint.defaults[0].defaultLiteral
+                    }
+                    if (pt.valueConstraint.defaults[0].defaultURI){
+                        pt.userValue[pt.propertyURI].URI = pt.valueConstraint.defaults[0].defaultURI
+                    }
+                }
+
+                // it might be in the reference template, so look at the first one and populate the 
+                // default value if it is there, since the first one will be the one on inital display in the editor
+
+                
+
+                if (pt.valueConstraint.valueTemplateRefs && pt.valueConstraint.valueTemplateRefs.length > 0){
+                    
+                    // does it have reftemplates
+                    if (this.rtLookup[pt.valueConstraint.valueTemplateRefs[0]]){
+                        // loop through all of the ref templates PTs
+                        for (let subpt of this.rtLookup[pt.valueConstraint.valueTemplateRefs[0]].propertyTemplates ){
+                            if (subpt.valueConstraint.defaults && subpt.valueConstraint.defaults.length>0){
+                                pt.userValue[subpt.propertyURI] = {}
+                                if (subpt.valueConstraint.defaults[0].defaultLiteral){
+                                    pt.userValue[subpt.propertyURI]['http://www.w3.org/2000/01/rdf-schema#label'] = subpt.valueConstraint.defaults[0].defaultLiteral
+                                }
+                                if (subpt.valueConstraint.defaults[0].defaultURI){
+                                    pt.userValue[subpt.propertyURI].URI = subpt.valueConstraint.defaults[0].defaultURI
+                                }
+                            }
+                        }
+
+                    }
+
+
+
+                }
+
+
+            }
+        }
+
+
+        // console.log('----profile----')
+        // console.log(profile)
+
+
+        return profile
+
+
+
     },
 
 
@@ -351,6 +416,70 @@ const parseProfile = {
 
     },
 
+    refTemplateChange: function(currentState, component, key, activeProfileName, template, parentId, nextRef){
+
+        console.log('yeet')
+        console.log('currentState:',currentState)
+        console.log('component:',component)
+        console.log('key:',key)
+        console.log('activeProfileName:',activeProfileName)
+        console.log('template:',template)
+        console.log('nextRef:',nextRef)
+
+        console.log('parentId',parentId)
+        console.log('parentId',this.rtLookup[parentId])
+
+        if (currentState.rt[activeProfileName].pt[component]){
+
+            console.log('component',currentState.rt[activeProfileName].pt[component])
+
+            // we want to change the @type for sure at least
+            // if there is a sameAs then we change it inside the sameAs otherwise just at the top level
+            // if (currentState.rt[activeProfileName].pt[component].userValue)
+            currentState.rt[activeProfileName].pt[component].userValue['@type'] = nextRef.resourceURI
+
+            // if there are properties in the old template that are not in the new one then we need to remove them from the userValue
+            let possibleProperties = nextRef.propertyTemplates.map((p) => {return p.propertyURI})
+
+            // also add in the properties at the parent level, because there could be other pts that are not in this level RT but in the parent's children
+            if (this.rtLookup[parentId]){
+                possibleProperties =  possibleProperties.concat(this.rtLookup[parentId].propertyTemplates.map((p) => {return p.propertyURI}))
+            }
+
+            if (!currentState.rt[activeProfileName].pt[component].refTemplateUserValue){
+                currentState.rt[activeProfileName].pt[component].refTemplateUserValue = {}
+            }
+            console.log("possibleProperties->",possibleProperties)
+
+
+            for (let key in currentState.rt[activeProfileName].pt[component].userValue){
+                if (key != '@type' && !key.includes('sameAs')){
+                    if (possibleProperties.indexOf(key)==-1){
+                        // console.log(key,'not in possible list')
+                        // this property has no place in the ref template we are about to switch to
+                        // so store them over in the refTemplateUserValue for later if needed
+                        currentState.rt[activeProfileName].pt[component].refTemplateUserValue[key] =JSON.parse(JSON.stringify(currentState.rt[activeProfileName].pt[component].userValue[key]))
+                        delete currentState.rt[activeProfileName].pt[component].userValue[key]
+                    }
+                }
+            }
+
+
+            // do the same thing but this time check to see if there are properties in the next refTemplate that matches the ones stored, if so move them over
+            for (let pp of possibleProperties){
+                if (currentState.rt[activeProfileName].pt[component].refTemplateUserValue[pp]){
+                    currentState.rt[activeProfileName].pt[component].userValue[pp]= JSON.parse(JSON.stringify(currentState.rt[activeProfileName].pt[component].refTemplateUserValue[pp]))
+                    delete currentState.rt[activeProfileName].pt[component].refTemplateUserValue[pp]
+                }
+            }
+
+        }
+
+
+        return currentState
+    },
+
+
 
     setValue: function(currentState, component, key, activeProfileName, template, value){
 
@@ -362,7 +491,14 @@ const parseProfile = {
         // loop through the profiles
         // Object.keys(currentState.rt).forEach((rt)=>{
             
-            
+            // console.log('currentState:',currentState)
+            // console.log('component:',component)
+            // console.log('key:',key)
+            // console.log('activeProfileName:',activeProfileName)
+            // console.log('template:',template)
+            // console.log('value:',value)
+
+
             // check if this profile has the pt we are looking for
             if (currentState.rt[activeProfileName].pt[component]){
 

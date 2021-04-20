@@ -263,16 +263,21 @@ const exportXML = {
 
 				let agentBnode
 
-				if (sameAs['@type']){
+				// see if outside the sameAs we have the BF type that it is
 
-					let bftype = this.namespaceUri(sameAs['@type'])
+				if (userValue['@type']){
+					let bftype = this.namespaceUri(userValue['@type'])
 					agentBnode = document.createElementNS(this.namespace.bf,bftype)
-
 				}else{
-
 					agentBnode = document.createElementNS(this.namespace.bf,'bf:Agent')
+				}
 
 
+				// but add a rdf type to it if we have the MADs too
+				if (sameAs['@type']){
+					let type = this.createElByBestNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#type')
+					type.setAttributeNS(this.namespace.rdf, 'rdf:resource', sameAs['@type'])
+					agentBnode.appendChild(type)
 				}
 
 				if (sameAs.URI){
@@ -671,6 +676,17 @@ const exportXML = {
 					}else if (ptObj.type == "resource"){
 
 						let userValue = ptObj.userValue;
+
+
+						// is there only one key, and is it the same as the propertyuri?
+						let allKeys = Object.keys(userValue).filter((k)=>{ return (k != '@type') })						
+						// over write the uservalue with just that key 
+						if (allKeys.length==1){		
+							// and it is a property
+							if (typeof userValue[allKeys[0]] == 'object'){
+								userValue = userValue[allKeys[0]]
+							}
+						}
 
 						if (!userValue['@type']){
 							// figure out the type it should be from the ontology
