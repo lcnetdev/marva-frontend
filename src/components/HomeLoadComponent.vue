@@ -231,7 +231,7 @@ export default {
         // console.log(useProfile,'console.log(useProfile)')
         this.transformResults  = parseId.transform(useProfile)
 
-        let workkey = this.transformResults.rtOrder.filter((k)=> k.endsWith(":Work"))[0]
+        let workkey = this.transformResults.rtOrder.filter((k)=> k.includes(":Work"))[0]
 
 
         this.transformResultsDisplay = this.transformResults.rt[workkey]
@@ -273,7 +273,7 @@ export default {
     rtLookupWorks (state) {
       let r = []
       for (let k of Object.keys(state.rtLookup)){
-        if (k.endsWith(':Work')){
+        if (k.includes(':Work')){
           r.push(k)
         }
       }
@@ -282,7 +282,7 @@ export default {
     rtLookupInstances (state) {
       let r = []
       for (let k of Object.keys(state.rtLookup)){
-        if (k.endsWith(':Instance')){
+        if (k.includes(':Instance')){
           r.push(k)
         }
       }
@@ -310,9 +310,9 @@ export default {
 
 
       instanceTests:[
-        // '/bfe2/editor/tests/instances/c0010058400001.editor-pkg.xml',
+        '/bfe2/editor/tests/instances/c0010058400001.editor-pkg.xml', //book
         // '/bfe2/editor/tests/instances/c0214680420001.editor-pkg.xml',
-        '/bfe2/editor/tests/instances/c0210643040001.editor-pkg.xml',   // serial 
+        // '/bfe2/editor/tests/instances/c0210643040001.editor-pkg.xml',   // serial 
         // '/bfe2/editor/tests/instances/c0122950980001.editor-pkg.xml', // sound recording
 
 

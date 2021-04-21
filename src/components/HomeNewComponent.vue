@@ -187,11 +187,11 @@ export default {
         let uri = null
 
         // make a new uri for each one
-        if (rt.endsWith(':Work')){
+        if (rt.includes(':Work')){
           uri = 'http://id.loc.gov/resources/instances/e' + decimalTranslator.new()
-        }else if (rt.endsWith(':Instance')){
+        }else if (rt.includes(':Instance')){
           uri = 'http://id.loc.gov/resources/works/e' + decimalTranslator.new()
-        }else if (rt.endsWith(':Item')){  
+        }else if (rt.includes(':Item')){  
           uri = 'http://id.loc.gov/resources/items/e' + decimalTranslator.new()
         
         }        

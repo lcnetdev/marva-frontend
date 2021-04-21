@@ -5,12 +5,12 @@
 
       <div class="component-container-title">Manage Instances</div>
       <div>
-         <table style="width: 100%">
+         <table style="width: 100%; border-top: 1px solid #c6c9cc;">
            <tr v-for="io in hasInstance" v-bind:key="io">
-             <td style="background-color: whitesmoke;">{{io}}</td><td  style="text-align: right; background-color: whitesmoke;"><a href="#" @click="duplicateInstance($event)" style="color:#2c3e50">duplicate</a></td><td  style="text-align: right; background-color: whitesmoke;"><a href="#" @click="deleteInstance($event)" style="color:#2c3e50">delete</a></td>
+             <td style="background-color: whitesmoke;">{{io}}</td><td  style="text-align: right; background-color: whitesmoke;"><a href="#" @click="duplicateInstance($event,io)" style="color:#2c3e50">replace with clone</a></td><td  style="text-align: right; background-color: whitesmoke;"><a href="#" @click="deleteInstance($event, io)" style="color:#2c3e50">delete</a></td>
            </tr>
            <tr>
-             <td ><a @click="deleteInstance($event)" href="#" style="color:#2c3e50">Add</a> another Instance</td>
+             <td style="background-color: whitesmoke;"><a @click="addInstance($event)" href="#" style="color:#2c3e50">Add</a> another Instance</td>
            </tr>
 
          </table> 
@@ -25,7 +25,7 @@
 
       <div class="component-container-title">Instance Of</div>
 
-         <table style="width: 100%">
+         <table style="width: 100%; border-top: 1px solid #c6c9cc;">
            <tr >
              <td style="background-color: whitesmoke;">{{instanceOf}}</td>
            </tr>
@@ -39,12 +39,12 @@
 
       <div class="component-container-title">Has Item</div>
 
-         <table style="width: 100%">
+         <table style="width: 100%; border-top: 1px solid #c6c9cc;">
            <tr v-for="io in hasItem" v-bind:key="io">
-             <td style="background-color: whitesmoke;">{{io}}</td><td  style="text-align: right; background-color: whitesmoke;"><a href="#" @click="duplicateInstance($event)" style="color:#2c3e50">duplicate</a></td><td  style="text-align: right; background-color: whitesmoke;"><a href="#" @click="deleteInstance($event)" style="color:#2c3e50">delete</a></td>
+             <td style="background-color: whitesmoke;">{{io}}</td><td  style="text-align: right; background-color: whitesmoke;"><a href="#" @click="duplicateItem($event,io)" style="color:#2c3e50">duplicate</a></td><td  style="text-align: right; background-color: whitesmoke;"><a href="#" @click="deleteItem($event,io)" style="color:#2c3e50">delete</a></td>
            </tr>
            <tr>
-             <td ><a @click="addItem($event)" href="#" style="color:#2c3e50">Add</a> another Item</td>
+             <td style="background-color: whitesmoke;"><a @click="addItem($event)" href="#" style="color:#2c3e50">Add</a> another Item</td>
            </tr>
 
          </table> 
@@ -92,36 +92,86 @@ export default {
 
   methods: { 
 
-    duplicateInstance:function(event){
+    duplicateInstance:function(event,uri){
 
+      this.$store.dispatch("cloneInstance",{uri:uri}).then(() => {
+
+        this.buildData()
+
+
+
+      })
 
       event.preventDefault()
       return false
     },
-    deleteInstance: function(event){
+    duplicateItem:function(event,uri){
 
+
+      this.$store.dispatch("duplicateItem",{uri:uri}).then(() => {
+
+        this.buildData()
+
+      })
+      event.preventDefault()
+      return false
+
+    },
+
+
+
+    
+
+    deleteItem: function(event,uri){
+
+      this.$store.dispatch("deleteItem",{uri:uri}).then(() => {
+
+        this.buildData()
+
+      })
+      event.preventDefault()
+      return false
+
+
+    },
+
+    deleteInstance: function(event,uri){
+
+
+
+      this.$store.dispatch("deleteInstance",{uri:uri}).then(() => {
+
+        this.buildData()
+
+
+
+      })
 
       event.preventDefault()
       return false
     },
 
-
-    addItem(event){
-
-      console.log(this.structure)
-      console.log(this.parentStructure)
-      console.log(this.profileName)
+    addInstance: function(event){
 
 
-      this.$store.dispatch("addNewItem", { self: this, profileName: this.profileName }).then(() => {
+      this.$store.dispatch("addInstance").then(() => {
+
+        this.buildData()
 
 
 
       })
 
 
+      event.preventDefault()
+      return false
+    },
 
+    addItem(event){
 
+      this.$store.dispatch("addItem",{uri:this.profileName}).then(() => {
+        this.buildData()
+      })
 
       event.preventDefault()
       return false
@@ -129,23 +179,27 @@ export default {
     },
    
     buildData: function(){
+      
+      this.hasInstance = []
+      this.hasItem = []
+      this.instanceOf = null
 
-      for (let rt of Object.keys(this.activeProfile.rt)){
 
+      for (let rt of Object.keys(this.activeProfile.rt)){        
         // there can be only one work, so build the instances this work has in this record
         if (this.activeProfile.rt[rt].instanceOf){
           this.hasInstance.push(this.activeProfile.rt[rt].URI)
         }
 
         // there is only one work, so all instances are instancOf that work...
-        if (rt.endsWith(':Work')){
+        if (rt.includes(':Work')){
           
           this.instanceOf = this.activeProfile.rt[rt].URI
 
         }
 
 
-        if (rt.endsWith(':Instance')){
+        if (rt.includes(':Instance') && rt == this.profileName){
 
           let thisURI = this.activeProfile.rt[rt].URI
           

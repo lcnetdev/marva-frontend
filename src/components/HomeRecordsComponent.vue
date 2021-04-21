@@ -166,13 +166,13 @@ export default {
         
         let useItemRtLabel
         // look for the RT for this item
-        let instanceId = meta.rts.filter((id)=>{ return id.endsWith(':Instance')  })
+        let instanceId = meta.rts.filter((id)=>{ return id.includes(':Instance')  })
         if (instanceId.length>0){
           useItemRtLabel = instanceId[0].replace(':Instance',':Item')          
         }
 
         if (!useItemRtLabel){
-          let instanceId = meta.rts.filter((id)=>{ return id.endsWith(':Work')  })
+          let instanceId = meta.rts.filter((id)=>{ return id.includes(':Work')  })
           if (instanceId.length>0){
             useItemRtLabel = instanceId[0].replace(':Work',':Item')          
           }
@@ -217,7 +217,7 @@ export default {
       console.log(useProfile,'console.log(useProfile)')
       this.transformResults  = parseBfdb.transform(useProfile)
 
-      // let workkey = this.transformResults.rtOrder.filter((k)=> k.endsWith(":Instance"))[0]
+      // let workkey = this.transformResults.rtOrder.filter((k)=> k.includes(":Instance"))[0]
       // this.transformResultsDisplay = this.transformResults.rt[workkey]
       this.$store.dispatch("setActiveRecordSaved", { self: this}, false).then(() => {
 

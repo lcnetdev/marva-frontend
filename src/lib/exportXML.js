@@ -353,7 +353,7 @@ const exportXML = {
 		let range = prop.getElementsByTagName("rdfs:range")
 
 		// if it has a range return it
-		if (range.length > 0){
+		if (range.length>0){
 			range=range[0]
 			if (range.attributes['rdf:resource']){
 				return range.attributes['rdf:resource'].value
@@ -365,9 +365,6 @@ const exportXML = {
 			return profileLookup
 		}
 
-
-
-		console.log("HEREZZZZ")
 		// some try something else
 		// TODO if needed
 
@@ -384,6 +381,25 @@ const exportXML = {
 
 
 	toBFXML: async function(profile){
+
+
+
+
+		try{
+			return await this.toBFXMLProcess(profile)	
+		}catch{
+
+			alert("There was an error building the XML - Please 'Report Error'")
+			return false
+		}
+		
+
+
+	},
+
+
+
+	toBFXMLProcess: async function(profile){
 
 		let orginalProfile = profile
 		// cut the ref to the orginal
@@ -434,15 +450,15 @@ const exportXML = {
 			let rootEl
 			let rootElName
 
-			if (rt.endsWith(':Work')){
+			if (rt.includes(':Work')){
 				tleArray = tleWork
 				rootEl = document.createElementNS(this.namespace.bf,"bf:Work");
 				rootElName = "Work"
-			}else if (rt.endsWith(':Instance')){
+			}else if (rt.includes(':Instance')){
 				tleArray = tleInstance
 				rootEl = document.createElementNS(this.namespace.bf,"bf:Instance");
 				rootElName = "Instance"
-			}else if (rt.endsWith(':Item')){
+			}else if (rt.includes(':Item')){
 				tleArray = tleItem
 				rootEl = document.createElementNS(this.namespace.bf,"bf:Item");
 				rootElName = "Item"
@@ -1029,7 +1045,7 @@ const exportXML = {
 
 
 			let items = this.returnHasItem(URI,orginalProfile,tleLookup)
-
+			// alert(items.length)s
 			for (let item of items){
 				let uri = null
 				if (item.attributes['rdf:resource']){

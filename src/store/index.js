@@ -372,6 +372,40 @@ export default new Vuex.Store({
     },
 
 
+
+    cloneInstance ({ commit, state }, data) {    
+      let nap = parseProfile.cloneInstance(state.activeProfile, data.uri)
+      commit('ACTIVEPROFILE', nap)   
+    },
+
+    addInstance ({ commit, state }) {    
+      let nap = parseProfile.addInstance(state.activeProfile)
+      commit('ACTIVEPROFILE', nap)   
+    },
+    deleteInstance ({ commit, state }, data) {    
+      let nap = parseProfile.deleteInstance(state.activeProfile, data.uri)
+      commit('ACTIVEPROFILE', nap)   
+    },
+    deleteItem ({ commit, state }, data) {    
+      let nap = parseProfile.deleteItem(state.activeProfile, data.uri)
+      commit('ACTIVEPROFILE', nap)   
+    },
+    duplicateItem ({ commit, state }, data) {    
+      let nap = parseProfile.duplicateItem(state.activeProfile, data.uri)
+      commit('ACTIVEPROFILE', nap)   
+    },
+    
+
+
+
+    addItem ({ commit, state }, data) {    
+      let nap = parseProfile.addItem(state.activeProfile, data.uri)
+      commit('ACTIVEPROFILE', nap)   
+    },
+
+
+
+
     disableMacroNav ({ commit }) {
       commit('MACNAV', true)
     },

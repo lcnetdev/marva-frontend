@@ -527,11 +527,11 @@ const parseBfdb = {
 			
 
 			let tle = ""			
-			if (pkey.endsWith(':Work')){
+			if (pkey.includes(':Work')){
 				tle = "bf:Work"
-			}else if (pkey.endsWith(':Instance')){
+			}else if (pkey.includes(':Instance')){
 				tle = "bf:Instance"
-			}else if (pkey.endsWith(':Item')){
+			}else if (pkey.includes(':Item')){
 				tle = "bf:Item"
 			}
 

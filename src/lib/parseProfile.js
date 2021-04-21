@@ -1,6 +1,11 @@
 import config from "./config"
 import lookupUtil from "./lookupUtil";
 
+
+const short = require('short-uuid');
+const decimalTranslator = short("0123456789");
+
+
 function setCharAt(str,index,chr) {
     if(index > str.length-1) return str;
     return str.substring(0,index) + chr + str.substring(index+1);
@@ -142,7 +147,7 @@ const parseProfile = {
 
 
 
-                if (rt.id.endsWith('Work')){
+                if (rt.id.includes(':Work')){
                     for (let pt of rt.propertyTemplates){
                         if (pt.propertyURI === 'http://id.loc.gov/ontologies/bibframe/Work'){
                             pt.type = 'literal'
@@ -699,6 +704,412 @@ const parseProfile = {
 
 
         return false
+    },
+
+
+    addItem: function(profile, uri){
+
+        // the URI is acutally the profile name, so turn that into a URI
+
+        uri = profile.rt[uri].URI
+
+        console.log(uri)
+        console.log(profile)
+
+
+        console.log(profile)
+        console.log(this.profiles)
+        // find the RT for the instance of this profile orginally
+        // get the work rt
+
+        let itemName
+        let itemRt
+
+        for (let rtId in profile.rt){
+            if (rtId.includes(":Work")){
+
+
+                // now find the corosponding instance id
+                for (let allRt in this.profiles){
+                    if (this.profiles[allRt].rtOrder.indexOf(rtId)>-1){
+                        console.log(this.profiles[allRt])
+                        itemName = this.profiles[allRt].rtOrder.filter(i => i.includes(":Item"))[0]
+
+                        // jsut in case the profile doesnt have an item.... 
+                        if (!itemName){
+                            continue
+                        }
+                        console.log(itemName)
+                        console.log(this.profiles[allRt].rt[itemName])
+                        itemRt = JSON.parse(JSON.stringify(this.profiles[allRt].rt[itemName]))
+
+                        break
+                    }
+                }
+
+            }
+        }
+
+        console.log(itemName)
+        console.log(itemRt)
+
+        let itemCount = 0;
+
+        // gather info to add it 
+        let items = Object.keys(profile.rt).filter(i => i.includes(":Item"))
+        itemCount = items.length
+        
+
+        for (let i of items){
+            if (i.includes('-')){
+                let nid = parseInt(i.split('-')[1])
+                if (nid > items.length){
+                    itemCount = nid
+                    
+
+                }
+            }
+        }
+        
+        itemCount++
+
+        let newRdId = itemName+'-'+itemCount  
+        profile.rt[newRdId] = itemRt
+        profile.rtOrder.push(newRdId)
+
+        // setup the new instance's properies
+        profile.rt[newRdId].URI = 'http://id.loc.gov/resources/item/e' + decimalTranslator.new()
+        profile.rt[newRdId].itemOf = uri
+
+
+        // add it into the pts as well
+
+
+        for (let rtId in profile.rt){
+            if (rtId.includes(":Instance")){
+
+                if (profile.rt.URI == uri){
+
+                    for (let ptId in profile.rt[rtId].pt){
+                        if (profile.rt[rtId].pt[ptId].propertyURI == 'http://id.loc.gov/ontologies/bibframe/hasItem' ){
+                            
+                            // is it empty?
+                            if (!profile.rt[rtId].pt[ptId].userValue['bf:hasItem']){                            
+                                profile.rt[rtId].pt[ptId].userValue['bf:hasItem'] = {URI: profile.rt[newRdId].URI, label: null}
+                            }
+
+                        }
+                    }
+
+
+
+                }
+
+
+            }
+        }
+
+
+
+
+
+
+
+        console.log(profile)
+
+
+
+        return profile
+
+
+
+
+
+
+    },
+
+
+
+    deleteItem: function(profile, uri){
+
+        console.log(uri)
+        console.log(profile)
+
+        // find the items also and remove everything
+        for (let rtId in profile.rt){
+
+            if (profile.rt[rtId].URI && profile.rt[rtId].URI == uri){
+
+                let toRemove = []                
+
+                // and remove the orginal
+                toRemove.push(rtId)
+
+                for (let i of toRemove){
+                    delete profile.rt[i]
+                    profile.rtOrder.splice(profile.rtOrder.indexOf(i), 1)
+
+                }
+
+
+
+
+            }
+
+        }
+
+        return profile
+
+    },
+
+
+
+
+    duplicateItem: function(profile, uri){
+
+        console.log(uri)
+        console.log(profile)
+
+
+        // find the instance first
+        for (let rtId in profile.rt){
+
+            if (profile.rt[rtId].URI && profile.rt[rtId].URI == uri){
+
+                //see how many of these there are
+                let itemCount = Object.keys(profile.rt).filter(i => i.includes(":Item")).length
+
+                //unless we are cloning a cloned item....
+                if (rtId.includes('-')){
+                    itemCount = parseInt(rtId.split('-')[1])
+                }
+
+                itemCount++
+
+                let newRdId = rtId.split('-')[0]+'-'+itemCount                
+                profile.rt[newRdId] = JSON.parse(JSON.stringify(profile.rt[rtId]))
+
+
+                // insert into the rtOrder
+                profile.rtOrder.splice(profile.rtOrder.indexOf(rtId), 0, newRdId)
+
+                // setup the new instance's properies
+                profile.rt[newRdId].URI = 'http://id.loc.gov/resources/instances/e' + decimalTranslator.new()
+
+
+
+            }
+
+        }
+
+
+
+
+        return profile
+
+
+    },
+
+
+
+    deleteInstance: function(profile, uri){
+
+        console.log(uri)
+        console.log(profile)
+
+        // find the items also and remove everything
+        for (let rtId in profile.rt){
+
+            if (profile.rt[rtId].URI && profile.rt[rtId].URI == uri){
+
+                let toRemove = []
+                for (let rtId2 in profile.rt){
+
+                    if (rtId2.includes(":Item")){
+
+                        if (profile.rt[rtId2].itemOf && profile.rt[rtId2].itemOf == uri){
+                            toRemove.push(rtId2)
+
+                        }
+
+                    }
+
+                }
+
+                // and remove the orginal
+                toRemove.push(rtId)
+
+                for (let i of toRemove){
+
+                    delete profile.rt[i]
+                    profile.rtOrder.splice(profile.rtOrder.indexOf(i), 1)
+
+                }
+
+
+
+
+            }
+
+        }
+
+
+
+
+
+        return profile
+
+    },
+
+
+
+
+
+    addInstance: function(profile){
+
+        console.log(profile)
+        console.log(this.profiles)
+        // find the RT for the instance of this profile orginally
+        // get the work rt
+
+        let instanceName
+        let instanceRt
+        let workUri
+
+        for (let rtId in profile.rt){
+            if (rtId.includes(":Work")){
+
+                workUri = profile.rt[rtId].URI
+
+                // now find the corosponding instance id
+                for (let allRt in this.profiles){
+                    if (this.profiles[allRt].rtOrder.indexOf(rtId)>-1){
+
+                        instanceName = this.profiles[allRt].rtOrder.filter(i => i.includes(":Instance"))[0]
+                        instanceRt = JSON.parse(JSON.stringify(this.profiles[allRt].rt[instanceName]))
+                    }
+                }
+
+            }
+        }
+
+        console.log(instanceName)
+        console.log(instanceRt)
+
+        let instanceCount = 0;
+
+        // gather info to add it 
+        let instances = Object.keys(profile.rt).filter(i => i.includes(":Instance"))
+
+        for (let i of instances){
+            if (i.includes('-')){
+                let nid = parseInt(i.split('-')[1])
+                if (nid > instances.length){
+                    instanceCount = nid
+                }
+            }
+        }
+        
+        instanceCount++
+
+        let newRdId = instanceName+'-'+instanceCount  
+        profile.rt[newRdId] = instanceRt
+        profile.rtOrder.push(newRdId)
+
+        // setup the new instance's properies
+        profile.rt[newRdId].URI = 'http://id.loc.gov/resources/instances/e' + decimalTranslator.new()
+        profile.rt[newRdId].instanceOf = workUri
+
+
+
+
+
+        return profile
+
+    },
+
+
+    cloneInstance: function(profile, uri){
+
+        console.log(uri)
+        console.log(profile)
+
+
+        // find the instance first
+        for (let rtId in profile.rt){
+
+            if (profile.rt[rtId].URI && profile.rt[rtId].URI == uri){
+
+                //see how many of these there are
+                let instanceCount = Object.keys(profile.rt).filter(i => i.includes(":Instance")).length
+
+                //unless we are cloning a cloned instance....
+                if (rtId.includes('-')){
+                    instanceCount = parseInt(rtId.split('-')[1])
+                }
+
+                instanceCount++
+
+                let newRdId = rtId.split('-')[0]+'-'+instanceCount                
+                profile.rt[newRdId] = JSON.parse(JSON.stringify(profile.rt[rtId]))
+
+
+                // insert into the rtOrder
+                profile.rtOrder.splice(profile.rtOrder.indexOf(rtId), 0, newRdId)
+
+                // setup the new instance's properies
+                profile.rt[newRdId].URI = 'http://id.loc.gov/resources/instances/e' + decimalTranslator.new()
+
+
+
+
+                // items, if it has items remove them from the profile, remove them from the http://id.loc.gov/ontologies/bibframe/hasItem
+                for (let ptId in profile.rt[newRdId].pt){
+                    if (profile.rt[newRdId].pt[ptId].propertyURI == 'http://id.loc.gov/ontologies/bibframe/hasItem' ){
+                        profile.rt[newRdId].pt[ptId].userValue = {}
+                    }
+                }
+
+                // find the item connteced to this one and remove it
+                let toRemove = []
+                for (let rtId2 in profile.rt){
+
+                    if (rtId2.includes(":Item")){
+
+                        if (profile.rt[rtId2].itemOf && profile.rt[rtId2].itemOf == uri){
+                            toRemove.push(rtId2)
+
+                        }
+
+                    }
+
+                }
+
+                // and remove the orginal
+                toRemove.push(rtId)
+
+
+
+                for (let i of toRemove){
+
+                    delete profile.rt[i]
+                    profile.rtOrder.splice(profile.rtOrder.indexOf(i), 1)
+
+                }
+
+
+                
+
+            }
+
+        }
+
+        console.log(profile)
+
+
+        return profile
+
+
     },
 
 

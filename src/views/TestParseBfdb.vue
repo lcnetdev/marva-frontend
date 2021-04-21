@@ -167,7 +167,7 @@ export default {
       rtLookupWorks (state) {
         let r = []
         for (let k of Object.keys(state.rtLookup)){
-          if (k.endsWith(':Work')){
+          if (k.includes(':Work')){
             r.push(k)
           }
         }
@@ -176,7 +176,7 @@ export default {
       rtLookupInstances (state) {
         let r = []
         for (let k of Object.keys(state.rtLookup)){
-          if (k.endsWith(':Instance')){
+          if (k.includes(':Instance')){
             r.push(k)
           }
         }
@@ -227,7 +227,7 @@ export default {
 
         this.transformResults  = parseBfdb.transform(useProfile)
 
-        let workkey = this.transformResults.rtOrder.filter((k)=> k.endsWith(":Instance"))[0]
+        let workkey = this.transformResults.rtOrder.filter((k)=> k.includes(":Instance"))[0]
 
 
         this.transformResultsDisplay = this.transformResults.rt[workkey]
@@ -253,7 +253,7 @@ export default {
 
         this.transformResults  = parseId.transform(useProfile)
 
-        let workkey = this.transformResults.rtOrder.filter((k)=> k.endsWith(":Work"))[0]
+        let workkey = this.transformResults.rtOrder.filter((k)=> k.includes(":Work"))[0]
 
 
         this.transformResultsDisplay = this.transformResults.rt[workkey]

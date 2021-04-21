@@ -41,7 +41,7 @@
                                 <svg v-if="profileName.split(':').slice(-1)[0] == 'Work'" width="1.5em" height="1.1em" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                     <circle fill="#7badad" cx="0.55em" cy="0.6em" r="0.45em"/>
                                 </svg>
-                                <div v-if="profileName.split(':').slice(-1)[0] == 'Instance'" style="height: 1em;width: 1em; display: inline-block;" class="temp-icon-instance"></div>
+                                <div v-if="profileName.includes('Instance')" style="height: 1em;width: 1em; display: inline-block;" class="temp-icon-instance"></div>
                                 <span>{{profileName.split(':').slice(-1)[0]}}</span>
                             </div>
                             
@@ -72,24 +72,23 @@
                 <div v-for="profileName in activeProfile.rtOrder" :key="profileName">
 
                     
-                    <div v-if="activeProfile.rt[profileName].noData != true" :class="['container-' + profileName.split(':').slice(-1)[0]]">
-                        <div class="container-type-icon">
+                    <div v-if="activeProfile.rt[profileName].noData != true" :class="['container-' + profileName.split(':').slice(-1)[0].split('-')[0]]">
 
-                            <div>
-                              <span>{{profileName.split(':').slice(-1)[0]}}</span>
-                            </div>
-                            <div>
-                                <svg v-if="profileName.split(':').slice(-1)[0] == 'Work'" width="3em" height="2.5em" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                    <circle fill="#7badad" cx="1.5em" cy="1em" r="0.75em"/>
-                                </svg>
-                                <div v-if="profileName.split(':').slice(-1)[0] == 'Instance'" style="height: 1.75em;width: 2em; margin-left: 1.5em;" class="temp-icon-instance">
 
-                                        
-                                </div>
-                            </div>
+                        <div style="display: flex;">
+                          <div style="flex: 0">
+                            <div v-if="profileName.includes('Instance')" style="height: 1.75em;width: 2em; margin-left: 1.5em;" class="temp-icon-instance"></div>
+                            <svg v-if="profileName.split(':').slice(-1)[0] == 'Work'" width="3em" height="2.5em" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                <circle fill="#7badad" cx="1.5em" cy="1em" r="0.75em"/>
+                            </svg>
+                          </div>
+                          <div style="flex-basis: auto; font-size: 1.25em; font-weight: bold; text-align: left;">{{profileName.split(':').slice(-1)[0]}}</div>
+                          <div style="flex: 1; text-align: right;line-height: 1.25em;">{{activeProfile.rt[profileName].URI}}</div>
+
                         </div>
+                       
 
-                       <div style="padding-left: 2em;" v-if="profileName.split(':').slice(-1)[0] == 'Item'"> {{activeProfile.rt[profileName].URI}}  </div>
+
 
 
                         <div v-for="profileCompoent in activeProfile.rt[profileName].ptOrder" :key="profileCompoent" :id="'container-for-'+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')">
@@ -135,8 +134,8 @@
                         <div v-if="activeProfile.rt[profileName].noData != true" class="container-type-icon" style="color: #2c3e50">
                             <div>   
                                 
-                              <div v-if="profileName.split(':').slice(-1)[0] == 'Work'">
-                                <svg v-if="profileName.split(':').slice(-1)[0] == 'Work'" width="1.5em" height="1.1em" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                              <div v-if="profileName.includes('Work')">
+                                <svg v-if="profileName.includes('Work')" width="1.5em" height="1.1em" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                     <circle fill="#7badad" cx="0.55em" cy="0.6em" r="0.45em"/>
                                 </svg><span>Work</span>
                               </div>
@@ -147,8 +146,8 @@
 
 
 
-                                <div v-if="profileName.split(':').slice(-1)[0] == 'Instance'" style="height: 1em;width: 1em; display: inline-block;" class="temp-icon-instance"></div>
-                                <span v-if="profileName.split(':').slice(-1)[0] == 'Instance'">{{profileName.split(':').slice(-1)[0]}}</span>
+                                <div v-if="profileName.includes('Instance')" style="height: 1em;width: 1em; display: inline-block;" class="temp-icon-instance"></div>
+                                <span v-if="profileName.includes('Instance')">{{profileName.split(':').slice(-1)[0]}}</span>
 
                             </div>
                             
