@@ -208,7 +208,7 @@ li::before {
 
 .grid {
   display: grid;
-  grid-template-columns: 20% 60% 20%;
+  grid-template-columns: 20% 55% 25%;
   grid-gap: 0vw;
 }
 

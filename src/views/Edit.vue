@@ -127,7 +127,7 @@
 
         <aside id="sidebar-right" class="sidebar-right" style="background-color: white" :key="activeEditCounter">
 
-            <div ref="editRightMenuFixed"  style="height: 100vh; overflow-y:scroll; position: fixed; width: 21%;"  v-if="profilesLoaded">
+            <div ref="editRightMenuFixed"  style="height: 100vh; overflow-y:scroll; position: fixed; width: 26%;"  v-if="profilesLoaded">
                 <!-- <div style="color:#bfbfbf; font-size: 1.5em; text-align: center;">{{sartingPoint}}</div> -->
                 <div v-for="profileName in activeProfile.rtOrder" :key="profileName">
 
