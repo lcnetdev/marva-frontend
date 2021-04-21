@@ -466,6 +466,14 @@ const parseBfdb = {
 				}
 
 
+			}else{
+
+				// no role? make a empty bnode just so it doesn't mess up the display
+
+				profile.userValue['http://id.loc.gov/ontologies/bibframe/role'] = []
+
+
+
 			}
 
 

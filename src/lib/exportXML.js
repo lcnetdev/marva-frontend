@@ -210,9 +210,18 @@ const exportXML = {
 
 			if (dataTypeURI == 'http://id.loc.gov/ontologies/bflc/PrimaryContribution'){
 				contribution = document.createElementNS(this.namespace.bf,"bf:contribution")
-				let pContribution = document.createElementNS(this.namespace.bflc,"bflc:PrimaryContribution")
-				contribution.appendChild(pContribution)				
-				pContribution.appendChild(agent)
+
+				// if it is primary contribution then add a rdf type node to it
+				// let pContribution = document.createElementNS(this.namespace.bflc,"bflc:PrimaryContribution")
+				// contribution.appendChild(pContribution)				
+
+				let type = this.createElByBestNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#type')
+				type.setAttributeNS(this.namespace.rdf, 'rdf:resource', "http://id.loc.gov/ontologies/bflc/PrimaryContribution")
+				contribution.appendChild(type)
+				contribution.appendChild(agent)
+
+
+				
 
 			}else{
 				contribution = document.createElementNS(this.namespace.bf,"bf:contribution")
