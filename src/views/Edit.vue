@@ -190,16 +190,19 @@
 
                   </div>
 
-                  <button style="font-size: 1.5em" @click="togglePreview">PREVIEW</button>
+                  <div style="text-align: center; margin-bottom: 1em">
+                    <button style="font-size: 1.5em; width: 100%;" @click="togglePreview">PREVIEW XML</button>
+                  </div>
 
 
 
+                  <div style="text-align: center;">
+                    <button style="font-size: 1.5em; width: 100%;" @click="publish">POST</button>
+                  </div>
 
-                  <button v-if="!activeRecordSaved" style="font-size: 1.5em; margin-left: 0.5em;" @click="triggerSave">SAVE</button>
-                  <button v-if="activeRecordSaved" style="color: lawngreen; font-size: 1.5em; margin-left: 0.5em;" disabled="">SAVED</button>
-                  <button style="font-size: 1.5em; margin-left: 0.5em;" @click="publish">POST</button>
-
-
+                  <button v-if="!activeRecordSaved" style="font-size: 1.5em; margin-left: 0.5em; display: none" @click="triggerSave">SAVE</button>
+                  <button v-if="activeRecordSaved" style="color: lawngreen; font-size: 1.5em; margin-left: 0.5em; display: none" disabled="">SAVED</button>
+                  
 
                 </div>
             </div>
@@ -626,21 +629,29 @@ export default {
     returnOpacFormat: function(userValue){
       let r = ''
       Object.keys(userValue).forEach((k)=>{
+
+
         if (typeof userValue[k] == 'string' && !userValue[k].includes('http') && !r.includes(userValue[k])){
-          r = r + userValue[k]
-        }else{
-
-          if (userValue[k] && userValue[k].literal && !userValue[k].literal.includes('http') && !r.includes(userValue[k].literal)){
+          r = r + userValue[k]+ ' '
+        }else if (userValue[k] && userValue[k].literal && !userValue[k].literal.includes('http') && !r.includes(userValue[k].literal)){
             r = r + userValue[k].literal + ' '
-          }
+          
 
-        }
+        }else if (k == 'http://www.w3.org/2002/07/owl#sameAs'){
 
-        if (k == 'http://www.w3.org/2002/07/owl#sameAs'){
           if (userValue[k]['http://www.w3.org/2000/01/rdf-schema#label']){
             r = r + userValue[k]['http://www.w3.org/2000/01/rdf-schema#label']
           }
 
+        }else if (typeof userValue[k] == 'object'){
+
+          for (let subK in userValue[k]){
+            if (typeof userValue[k][subK] == 'string' && !userValue[k][subK].includes('http') && !r.includes(userValue[k][subK])){
+              r = r + userValue[k][subK] + ' '
+            }
+
+
+          }
         }
 
 

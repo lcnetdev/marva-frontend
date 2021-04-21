@@ -48,6 +48,7 @@
 
   <div v-else>
 
+
         <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['ctrlKey','shiftKey'],preventDefault: true}]" @success="openDiacriticSelect" />
 
         <div v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border', { 'component-container-fake-input-note' : isNoteField(structure.propertyLabel)  }]">
@@ -109,6 +110,7 @@ export default {
   props: {
     structure: Object,
     parentStructure: Array,
+    parentStructureObj: Object,
     profileCompoent: String,
     profileName: String,
     activeTemplate: Object,
@@ -349,7 +351,11 @@ export default {
 
 
     }else if (data.userValue[this.structure.propertyURI]){
-      this.inputValue = data.userValue[this.structure.propertyURI]
+
+      this.inputValue = data.userValue[this.structure.propertyURI] 
+
+
+
 
 
     }else if (this.structure.propertyURI === 'http://www.w3.org/2000/01/rdf-schema#label'){
@@ -357,6 +363,11 @@ export default {
       // check to see if it exists in the bnode
       if (data.userValue[data.propertyURI] && data.userValue[data.propertyURI][this.structure.propertyURI]){
         this.inputValue = data.userValue[data.propertyURI][this.structure.propertyURI]
+      }else if (data.userValue[this.parentStructureObj.propertyURI] && data.userValue[this.parentStructureObj.propertyURI][this.structure.propertyURI]){
+
+        // check to see if it exists in user data under the parent's ID
+        this.inputValue = data.userValue[this.parentStructureObj.propertyURI][this.structure.propertyURI]
+
       }
 
       
