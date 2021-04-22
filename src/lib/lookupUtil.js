@@ -195,6 +195,7 @@ const lookupUtil = {
           }
           
         }
+        
         console.log(urlTemplate)
 
 
@@ -240,6 +241,15 @@ const lookupUtil = {
                 //       })
                 //   }
                 // }
+            }else if (searchPayload.processor == 'wikidataAPI'){
+              console.log(r)
+                for (let hit of r.search){
+                  results.push({
+                    label: hit.label,
+                    uri: hit.concepturi,
+                    extra: ''
+                  })       
+                }     
             }
 
         }
@@ -259,12 +269,16 @@ const lookupUtil = {
 
     fetchContextData: async function(uri){
 
+          console.log(uri)
           if (uri.startsWith('http://id.loc.gov') && uri.match(/(authorities|vocabularies)/)) {
             var jsonuri = uri + '.madsrdf_raw.jsonld';
+          }else if (uri.includes('http://www.wikidata.org/entity/')){ 
+            jsonuri = uri.replace('http://www.wikidata.org/entity/','https://www.wikidata.org/wiki/Special:EntityData/')
+            jsonuri = jsonuri + '.json';            
           } else {
             jsonuri = uri + '.jsonld';
           }
-
+          console.log(jsonuri)
           jsonuri = jsonuri.replace('http://id.loc.gov','https://id.loc.gov')
 
           try{
@@ -284,150 +298,204 @@ const lookupUtil = {
     extractContextData: function(data){
           var results = { contextValue: true, source: [], type: null, typeFull: null, variant : [], uri: data.uri, title: null, contributor:[], date:null, genreForm: null, nodeMap:{}};
           
-          // if it is in jsonld format
-          if (data['@graph']){
-            data = data['@graph'];
-          }
-          
-          var nodeMap = {};
-          
-          data.forEach(function(n){
-            if (n['http://www.loc.gov/mads/rdf/v1#birthDate']){
-              nodeMap['Birth Date'] = n['http://www.loc.gov/mads/rdf/v1#birthDate'].map(function(d){ return d['@id']})
-            }        
-            if (n['http://www.loc.gov/mads/rdf/v1#birthPlace']){
-              nodeMap['Birth Place'] = n['http://www.loc.gov/mads/rdf/v1#birthPlace'].map(function(d){ return d['@id']})
-            }  
 
-            if (n['http://www.loc.gov/mads/rdf/v1#associatedLocale']){
-              nodeMap['Associated Locale'] = n['http://www.loc.gov/mads/rdf/v1#associatedLocale'].map(function(d){ return d['@id']})
-            } 
-            if (n['http://www.loc.gov/mads/rdf/v1#fieldOfActivity']){
-              nodeMap['Field of Activity'] = n['http://www.loc.gov/mads/rdf/v1#fieldOfActivity'].map(function(d){ return d['@id']})
-            } 
-            if (n['http://www.loc.gov/mads/rdf/v1#gender']){
-              nodeMap['Gender'] = n['http://www.loc.gov/mads/rdf/v1#gender'].map(function(d){ return d['@id']})
-            } 
-            if (n['http://www.loc.gov/mads/rdf/v1#occupation']){
-              nodeMap['Occupation'] = n['http://www.loc.gov/mads/rdf/v1#occupation'].map(function(d){ return d['@id']})
-            } 
-            if (n['http://www.loc.gov/mads/rdf/v1#associatedLanguage']){
-              nodeMap['Associated Language'] = n['http://www.loc.gov/mads/rdf/v1#associatedLanguage'].map(function(d){ return d['@id']})
-            } 
-            if (n['http://www.loc.gov/mads/rdf/v1#deathDate']){
-              nodeMap['Death Date'] = n['http://www.loc.gov/mads/rdf/v1#deathDate'].map(function(d){ return d['@id']})
-            } 
-            if (n['http://www.loc.gov/mads/rdf/v1#hasBroaderAuthority']){
-              nodeMap['Has Broader Authority'] = n['http://www.loc.gov/mads/rdf/v1#hasBroaderAuthority'].map(function(d){ return d['@id']})
-            } 
-            if (n['http://www.loc.gov/mads/rdf/v1#hasNarrowerAuthority']){
-              nodeMap['Has Narrower Authority'] = n['http://www.loc.gov/mads/rdf/v1#hasNarrowerAuthority'].map(function(d){ return d['@id']})
-            } 
+          if (data.uri.includes('wikidata.org')){
 
-          })
-          // pull out the labels
-          data.forEach(function(n){
             
-            // loop through all the possible types of row
-            Object.keys(nodeMap).forEach(function(k){
-              if (!results.nodeMap[k]) { results.nodeMap[k] = [] }
-              // loop through each uri we have for this type
-              nodeMap[k].forEach(function(uri){
-                if (n['@id'] && n['@id'] == uri){
-                 
-                  if (n['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
-                    n['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'].forEach(function(val){ 
-                      if (val['@value']){
-                        results.nodeMap[k].push(val['@value']);
-                      }
-                    })
-                  }
-                  if (n['http://www.w3.org/2000/01/rdf-schema#label']){
-                    n['http://www.w3.org/2000/01/rdf-schema#label'].forEach(function(val){ 
-                      if (val['@value']){
-                        results.nodeMap[k].push(val['@value']);
-                      }
-                    })
-                  }
-                }
-              })        
-            })
-          })
-
-          data.forEach((n)=>{
-            
-            var citation = '';
-            var variant = '';
-            var title = '';
-
-            if (n['http://www.loc.gov/mads/rdf/v1#citation-source']) {
-              citation = citation + n['http://www.loc.gov/mads/rdf/v1#citation-source'].map(function (v) { return v['@value'] + ' '; })
-            }
-            if (n['http://www.loc.gov/mads/rdf/v1#citation-note']) {
-              citation = citation + n['http://www.loc.gov/mads/rdf/v1#citation-note'].map(function (v) { return v['@value'] + ' '; })
-            }
-            if (n['http://www.loc.gov/mads/rdf/v1#citation-status']) {
-              citation = citation + n['http://www.loc.gov/mads/rdf/v1#citation-status'].map(function (v) { return v['@value'] + ' '; })
-            }
-            if (n['http://www.loc.gov/mads/rdf/v1#citationSource']) {
-              citation = citation + n['http://www.loc.gov/mads/rdf/v1#citationSource'].map(function (v) { return v['@value'] + ' '; })
-            }
-            if (n['http://www.loc.gov/mads/rdf/v1#citationNote']) {
-              citation = citation + n['http://www.loc.gov/mads/rdf/v1#citationNote'].map(function (v) { return v['@value'] + ' '; })
-            }
-            if (n['http://www.loc.gov/mads/rdf/v1#citationStatus']) {
-              citation = citation + n['http://www.loc.gov/mads/rdf/v1#citationStatus'].map(function (v) { return v['@value'] + ' '; })
-            }
+            if (data.entities){
+              let qid = Object.keys(data.entities)[0]
 
 
 
-            if (n['http://www.loc.gov/mads/rdf/v1#variantLabel']) {
-              variant = variant + n['http://www.loc.gov/mads/rdf/v1#variantLabel'].map(function (v) { return v['@value'] + ' '; })
-            }
+              if (data.entities[qid].labels.en){
+                results.title = data.entities[qid].labels.en.value
+              }
+              if (data.entities[qid].descriptions.en){
+                results.nodeMap['Description'] = [data.entities[qid].descriptions.en.value]
+              }
 
-            if (n['@id'] && n['@id'] == data.uri && n['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){            
-              title = title + n['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'].map(function (v) { return v['@value'] + ' '; })
-            }
+              if (data.entities[qid].aliases.en){
 
-            if (n['@id'] && n['@id'] == data.uri && n['@type']){       
-
-                n['@type'].forEach((t)=>{
-                    if (results.type===null){
-                        results.type = this.rdfType(t)
-                        results.typeFull = t
-                    }
+                data.entities[qid].aliases.en.forEach((v)=>{
+                  results.variant.push(v.value)
                 })
+
+              }
+
+              // get the P31 instanceOf
+              if (data.entities[qid].claims.P31){
+
+
+                if (data.entities[qid].claims.P31[0].mainsnak){
+                  if (data.entities[qid].claims.P31[0].mainsnak.datavalue){
+                    if (data.entities[qid].claims.P31[0].mainsnak.datavalue.value){                      
+                      console.log(data.entities[qid].claims.P31[0].mainsnak.datavalue.value.id)
+                      results.type = this.rdfType(data.entities[qid].claims.P31[0].mainsnak.datavalue.value.id)
+                    } 
+                  }                  
+                }
+              }
+
+
+
+
+
+              
               
             }
-            
 
-            citation = citation.trim()
-            variant = variant.trim()
-            title = title.trim()
+
+          }else{
+
+            // if it is in jsonld format
+            if (data['@graph']){
+              data = data['@graph'];
+            }
             
-            if (variant != ''){ results.variant.push(variant)}
-            if (citation != ''){ results.source.push(citation)}
-            if (title != ''){ results.title = title }
+            var nodeMap = {};
             
-            if (n['@type'] && n['@type'] == 'http://id.loc.gov/ontologies/bibframe/Title'){
-              if (n['bibframe:mainTitle']){
-                results.title = n['bibframe:mainTitle']
+            data.forEach(function(n){
+              if (n['http://www.loc.gov/mads/rdf/v1#birthDate']){
+                nodeMap['Birth Date'] = n['http://www.loc.gov/mads/rdf/v1#birthDate'].map(function(d){ return d['@id']})
+              }        
+              if (n['http://www.loc.gov/mads/rdf/v1#birthPlace']){
+                nodeMap['Birth Place'] = n['http://www.loc.gov/mads/rdf/v1#birthPlace'].map(function(d){ return d['@id']})
+              }  
+
+              if (n['http://www.loc.gov/mads/rdf/v1#associatedLocale']){
+                nodeMap['Associated Locale'] = n['http://www.loc.gov/mads/rdf/v1#associatedLocale'].map(function(d){ return d['@id']})
+              } 
+              if (n['http://www.loc.gov/mads/rdf/v1#fieldOfActivity']){
+                nodeMap['Field of Activity'] = n['http://www.loc.gov/mads/rdf/v1#fieldOfActivity'].map(function(d){ return d['@id']})
+              } 
+              if (n['http://www.loc.gov/mads/rdf/v1#gender']){
+                nodeMap['Gender'] = n['http://www.loc.gov/mads/rdf/v1#gender'].map(function(d){ return d['@id']})
+              } 
+              if (n['http://www.loc.gov/mads/rdf/v1#occupation']){
+                nodeMap['Occupation'] = n['http://www.loc.gov/mads/rdf/v1#occupation'].map(function(d){ return d['@id']})
+              } 
+              if (n['http://www.loc.gov/mads/rdf/v1#associatedLanguage']){
+                nodeMap['Associated Language'] = n['http://www.loc.gov/mads/rdf/v1#associatedLanguage'].map(function(d){ return d['@id']})
+              } 
+              if (n['http://www.loc.gov/mads/rdf/v1#deathDate']){
+                nodeMap['Death Date'] = n['http://www.loc.gov/mads/rdf/v1#deathDate'].map(function(d){ return d['@id']})
+              } 
+              if (n['http://www.loc.gov/mads/rdf/v1#hasBroaderAuthority']){
+                nodeMap['Has Broader Authority'] = n['http://www.loc.gov/mads/rdf/v1#hasBroaderAuthority'].map(function(d){ return d['@id']})
+              } 
+              if (n['http://www.loc.gov/mads/rdf/v1#hasNarrowerAuthority']){
+                nodeMap['Has Narrower Authority'] = n['http://www.loc.gov/mads/rdf/v1#hasNarrowerAuthority'].map(function(d){ return d['@id']})
+              } 
+
+            })
+            // pull out the labels
+            data.forEach(function(n){
+              
+              // loop through all the possible types of row
+              Object.keys(nodeMap).forEach(function(k){
+                if (!results.nodeMap[k]) { results.nodeMap[k] = [] }
+                // loop through each uri we have for this type
+                nodeMap[k].forEach(function(uri){
+                  if (n['@id'] && n['@id'] == uri){
+                   
+                    if (n['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
+                      n['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'].forEach(function(val){ 
+                        if (val['@value']){
+                          results.nodeMap[k].push(val['@value']);
+                        }
+                      })
+                    }
+                    if (n['http://www.w3.org/2000/01/rdf-schema#label']){
+                      n['http://www.w3.org/2000/01/rdf-schema#label'].forEach(function(val){ 
+                        if (val['@value']){
+                          results.nodeMap[k].push(val['@value']);
+                        }
+                      })
+                    }
+                  }
+                })        
+              })
+            })
+
+            data.forEach((n)=>{
+              
+              var citation = '';
+              var variant = '';
+              var title = '';
+
+              if (n['http://www.loc.gov/mads/rdf/v1#citation-source']) {
+                citation = citation + n['http://www.loc.gov/mads/rdf/v1#citation-source'].map(function (v) { return v['@value'] + ' '; })
               }
-            }
-            if (n['@type'] && (n['@type'] == 'http://id.loc.gov/ontologies/bibframe/Agent' || n['@type'].indexOf('http://id.loc.gov/ontologies/bibframe/Agent') > -1 )){
-              if (n['bflc:name00MatchKey']){
-                results.contributor.push(n['bflc:name00MatchKey']);
+              if (n['http://www.loc.gov/mads/rdf/v1#citation-note']) {
+                citation = citation + n['http://www.loc.gov/mads/rdf/v1#citation-note'].map(function (v) { return v['@value'] + ' '; })
               }
-            }
-            if (n['bibframe:creationDate'] && n['bibframe:creationDate']['@value']){
-              results.date = n['bibframe:creationDate']['@value'];
-            }       
-            if (n['@type'] && n['@type'] == 'http://id.loc.gov/ontologies/bibframe/GenreForm'){
-              if (n['bibframe:mainTitle']){
-                results.genreForm = n['rdf-schema:label'];
+              if (n['http://www.loc.gov/mads/rdf/v1#citation-status']) {
+                citation = citation + n['http://www.loc.gov/mads/rdf/v1#citation-status'].map(function (v) { return v['@value'] + ' '; })
               }
-            }
-          });    
+              if (n['http://www.loc.gov/mads/rdf/v1#citationSource']) {
+                citation = citation + n['http://www.loc.gov/mads/rdf/v1#citationSource'].map(function (v) { return v['@value'] + ' '; })
+              }
+              if (n['http://www.loc.gov/mads/rdf/v1#citationNote']) {
+                citation = citation + n['http://www.loc.gov/mads/rdf/v1#citationNote'].map(function (v) { return v['@value'] + ' '; })
+              }
+              if (n['http://www.loc.gov/mads/rdf/v1#citationStatus']) {
+                citation = citation + n['http://www.loc.gov/mads/rdf/v1#citationStatus'].map(function (v) { return v['@value'] + ' '; })
+              }
+
+
+
+              if (n['http://www.loc.gov/mads/rdf/v1#variantLabel']) {
+                variant = variant + n['http://www.loc.gov/mads/rdf/v1#variantLabel'].map(function (v) { return v['@value'] + ' '; })
+              }
+
+              if (n['@id'] && n['@id'] == data.uri && n['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){            
+                title = title + n['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'].map(function (v) { return v['@value'] + ' '; })
+              }
+
+              if (n['@id'] && n['@id'] == data.uri && n['@type']){       
+
+                  n['@type'].forEach((t)=>{
+                      if (results.type===null){
+                          results.type = this.rdfType(t)
+                          results.typeFull = t
+                      }
+                  })
+                
+              }
+              
+
+              citation = citation.trim()
+              variant = variant.trim()
+              title = title.trim()
+              
+              if (variant != ''){ results.variant.push(variant)}
+              if (citation != ''){ results.source.push(citation)}
+              if (title != ''){ results.title = title }
+              
+              if (n['@type'] && n['@type'] == 'http://id.loc.gov/ontologies/bibframe/Title'){
+                if (n['bibframe:mainTitle']){
+                  results.title = n['bibframe:mainTitle']
+                }
+              }
+              if (n['@type'] && (n['@type'] == 'http://id.loc.gov/ontologies/bibframe/Agent' || n['@type'].indexOf('http://id.loc.gov/ontologies/bibframe/Agent') > -1 )){
+                if (n['bflc:name00MatchKey']){
+                  results.contributor.push(n['bflc:name00MatchKey']);
+                }
+              }
+              if (n['bibframe:creationDate'] && n['bibframe:creationDate']['@value']){
+                results.date = n['bibframe:creationDate']['@value'];
+              }       
+              if (n['@type'] && n['@type'] == 'http://id.loc.gov/ontologies/bibframe/GenreForm'){
+                if (n['bibframe:mainTitle']){
+                  results.genreForm = n['rdf-schema:label'];
+                }
+              }
+            });    
+
+
+          }
+          
+          console.log(results)
           return results;
         },
 
@@ -462,6 +530,8 @@ const lookupUtil = {
         rdftype = 'Title';
       }else if (type == 'http://www.loc.gov/mads/rdf/v1#ComplexSubject') {
         rdftype = 'ComplexSubject';
+      }else if (type == 'Q5') {
+        rdftype = 'PersonalName';
       }
 
       

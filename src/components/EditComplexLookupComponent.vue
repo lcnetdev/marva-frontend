@@ -265,7 +265,7 @@ export default {
       displayModal: false,
       lookups: this.structure.valueConstraint.useValuesFrom,
       lookupConfig: config.lookupConfig,
-      modeSelect: "All",
+      modeSelect: null,
       searchValue: "",
       searchTimeout: null,
       selectLastIndex: null,
@@ -301,14 +301,18 @@ export default {
       let options = []
 
       // add in the the defaul search ALL of everything possible
-      options.push({label: 'All', urls:null, processor:null})
-
+      //options.push({label: 'All', urls:null, processor:null})
       this.structure.valueConstraint.useValuesFrom.forEach((l)=>{
         if (this.lookupConfig[l]){
           this.lookupConfig[l].modes.forEach((mode)=>{
             
             Object.keys(mode).forEach((k)=>{
               options.push({label: k, urls:mode[k].url, processor:this.lookupConfig[l].processor, all:mode[k].all })
+              // mark the first All one we find as the first one
+              if (!this.modeSelect && mode[k].all){
+                this.modeSelect = k
+              }
+
             })
           })
         }
@@ -771,16 +775,16 @@ export default {
         processor: null,
         url: []
       }
-      if (this.modeSelect == 'All'){
-        this.modalSelectOptions.forEach((a)=>{
-          // use the ones in the config marked as "all" 
-          if(a.all===true){
-            searchPayload.processor=a.processor
-            searchPayload.url.push(a.urls.replace('<QUERY>',this.searchValue))
-          }
-        })
+      // if (this.modeSelect == 'All'){
+      //   this.modalSelectOptions.forEach((a)=>{
+      //     // use the ones in the config marked as "all" 
+      //     if(a.all===true){
+      //       searchPayload.processor=a.processor
+      //       searchPayload.url.push(a.urls.replace('<QUERY>',this.searchValue))
+      //     }
+      //   })
         
-      }else{
+      // }else{
         this.modalSelectOptions.forEach((a)=>{
           if (a.label==this.modeSelect){
             searchPayload.processor=a.processor
@@ -790,7 +794,7 @@ export default {
 
 
 
-      }
+      // }
 
 
       this.searchTimeout = window.setTimeout(()=>{    

@@ -2,6 +2,7 @@
 import lookupUtil from "./lookupUtil";
 import uiUtils from "./uiUtils";
 import parseProfile from "./parseProfile";
+import config from "./config";
 
 
 
@@ -392,15 +393,27 @@ const exportXML = {
 	toBFXML: async function(profile){
 
 
+		// if we are doing local dev then just error out, but if not show a message
+		if (config.returnUrls().dev){
+
+			return await this.toBFXMLProcess(profile)
+
+		}else{
+
+			try{
+				return await this.toBFXMLProcess(profile)	
+			}catch{
+
+				alert("There was an error building the XML - Please 'Report Error'")
+				return false
+			}
 
 
-		try{
-			return await this.toBFXMLProcess(profile)	
-		}catch{
-
-			alert("There was an error building the XML - Please 'Report Error'")
-			return false
 		}
+
+
+
+
 		
 
 

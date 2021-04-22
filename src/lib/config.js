@@ -215,6 +215,22 @@ const config = {
 		"https://lookup.ld4l.org/authorities/search/linked_data/getty_aat_ld4l_cache" : {"name":"getty_aat_ld4l_cache", "type":"simple", "modes":[]},
 
 
+		"https://www.wikidata.org/w/api.php" : {
+			"name":"wikidata", 
+			"type":"complex", 
+			"processor" : 'wikidataAPI',			
+
+			"modes":[
+				{
+					'Wikidata':{"url":"https://www.wikidata.org/w/api.php?action=wbsearchentities&search=<QUERY>&format=json&errorformat=plaintext&language=en&uselang=en&type=item&origin=*", "all":true}, 					
+					
+
+				}
+			]
+		},
+
+
+
 
 
 

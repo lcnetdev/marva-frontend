@@ -158,6 +158,17 @@ const parseProfile = {
                    
                 }
 
+                // add wikidata into any NAF lookup pt
+                if (rt.id.includes(':Agent')){
+                    for (let pt of rt.propertyTemplates){
+                        if (pt.valueConstraint.useValuesFrom.indexOf('http://preprod.id.loc.gov/authorities/names')>-1){
+                            if (pt.valueConstraint.useValuesFrom.indexOf('https://www.wikidata.org/w/api.php')==-1){
+                                pt.valueConstraint.useValuesFrom.push('https://www.wikidata.org/w/api.php')
+                            }
+                        }
+                    }                   
+                }          
+
 
 
 
