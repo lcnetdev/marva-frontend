@@ -76,7 +76,7 @@ const config = {
 			"processor" : 'lcAuthorities',
 			"modes":[
 				{
-					'LCGFT All':{"url":"https://id.loc.gov/authorities/genreForms/suggest/?q=<QUERY>&count=25", "all":true}
+					'LCGFT All':{"url":"https://id.loc.gov/authorities/genreForms/suggest2/?q=<QUERY>&count=25", "all":true}
 				}
 			]
 
@@ -88,13 +88,13 @@ const config = {
 			"processor" : 'lcAuthorities',
 			"modes":[
 				{
-					'NAF All':{"url":"https://id.loc.gov/authorities/names/suggest/?q=<QUERY>&count=25", "all":true}, 
-					'NAF Personal Names':{"url":"https://id.loc.gov/authorities/names/suggest/?q=<QUERY>&rdftype=PersonalName&count=25"},
-					'NAF Corporate Name':{"url":"https://id.loc.gov/authorities/names/suggest/?q=<QUERY>&rdftype=CorporateName&count=25"},
-					'NAF Name/Title':{"url":"https://id.loc.gov/authorities/names/suggest/?q=<QUERY>&rdftype=NameTitle&count=25"},
-					'NAF Title':{"url":"https://id.loc.gov/authorities/names/suggest/?q=<QUERY>&rdftype=Title&count=25"},
-					'NAF Geographic':{"url":"https://id.loc.gov/authorities/names/suggest/?q=<QUERY>&rdftype=Geographic&count=25"},
-					'NAF Conference Name':{"url":"https://id.loc.gov/authorities/names/suggest/?q=<QUERY>&rdftype=ConferenceName&count=25"}					
+					'NAF All':{"url":"https://id.loc.gov/authorities/names/suggest2/?q=<QUERY>&count=25", "all":true}, 
+					'NAF Personal Names':{"url":"https://id.loc.gov/authorities/names/suggest2/?q=<QUERY>&rdftype=PersonalName&count=25"},
+					'NAF Corporate Name':{"url":"https://id.loc.gov/authorities/names/suggest2/?q=<QUERY>&rdftype=CorporateName&count=25"},
+					'NAF Name/Title':{"url":"https://id.loc.gov/authorities/names/suggest2/?q=<QUERY>&rdftype=NameTitle&count=25"},
+					'NAF Title':{"url":"https://id.loc.gov/authorities/names/suggest2/?q=<QUERY>&rdftype=Title&count=25"},
+					'NAF Geographic':{"url":"https://id.loc.gov/authorities/names/suggest2/?q=<QUERY>&rdftype=Geographic&count=25"},
+					'NAF Conference Name':{"url":"https://id.loc.gov/authorities/names/suggest2/?q=<QUERY>&rdftype=ConferenceName&count=25"}					
 				}
 			]
 		},
@@ -105,13 +105,13 @@ const config = {
 			"processor" : 'lcAuthorities',
 			"modes":[
 				{
-					'NAF All':{"url":"http://preprod.id.loc.gov/authorities/names/suggest/?q=<QUERY>&count=25", "all":true}, 
-					'NAF Personal Names':{"url":"http://preprod.id.loc.gov/authorities/names/suggest/?q=<QUERY>&rdftype=PersonalName&count=25"},
-					'NAF Corporate Name':{"url":"http://preprod.id.loc.gov/authorities/names/suggest/?q=<QUERY>&rdftype=CorporateName&count=25"},
-					'NAF Name/Title':{"url":"http://preprod.id.loc.gov/authorities/names/suggest/?q=<QUERY>&rdftype=NameTitle&count=25"},
-					'NAF Title':{"url":"http://preprod.id.loc.gov/authorities/names/suggest/?q=<QUERY>&rdftype=Title&count=25"},
-					'NAF Geographic':{"url":"http://preprod.id.loc.gov/authorities/names/suggest/?q=<QUERY>&rdftype=Geographic&count=25"},
-					'NAF Conference Name':{"url":"http://preprod.id.loc.gov/authorities/names/suggest/?q=<QUERY>&rdftype=ConferenceName&count=25"}					
+					'NAF All':{"url":"http://preprod.id.loc.gov/authorities/names/suggest2/?q=<QUERY>&count=25", "all":true}, 
+					'NAF Personal Names':{"url":"http://preprod.id.loc.gov/authorities/names/suggest2/?q=<QUERY>&rdftype=PersonalName&count=25"},
+					'NAF Corporate Name':{"url":"http://preprod.id.loc.gov/authorities/names/suggest2/?q=<QUERY>&rdftype=CorporateName&count=25"},
+					'NAF Name/Title':{"url":"http://preprod.id.loc.gov/authorities/names/suggest2/?q=<QUERY>&rdftype=NameTitle&count=25"},
+					'NAF Title':{"url":"http://preprod.id.loc.gov/authorities/names/suggest2/?q=<QUERY>&rdftype=Title&count=25"},
+					'NAF Geographic':{"url":"http://preprod.id.loc.gov/authorities/names/suggest2/?q=<QUERY>&rdftype=Geographic&count=25"},
+					'NAF Conference Name':{"url":"http://preprod.id.loc.gov/authorities/names/suggest2/?q=<QUERY>&rdftype=ConferenceName&count=25"}					
 				}
 			]
 
@@ -126,16 +126,16 @@ const config = {
 
 			"modes":[
 				{
-					'LCSH All':{"url":"https://id.loc.gov/authorities/subjects/suggest/?q=<QUERY>&count=25", "all":true}, 					
-					'LCSH Topics':{"url":"https://id.loc.gov/authorities/subjects/suggest/?q=<QUERY>&rdftype=Topic&count=25"},
-					'LCSH Geographic':{"url":"https://id.loc.gov/authorities/subjects/suggest/?q=<QUERY>&rdftype=Geographic&count=25"},
-					'LCSH Name':{"url":"https://id.loc.gov/authorities/subjects/suggest/?q=<QUERY>&rdftype=Name&count=25"},
-					'LCSH FamilyName':{"url":"https://id.loc.gov/authorities/subjects/suggest/?q=<QUERY>&rdftype=FamilyName&count=25"},
-					'LCSH CorporateName':{"url":"https://id.loc.gov/authorities/subjects/suggest/?q=<QUERY>&rdftype=CorporateName&count=25"},					
-					'LCSH GenreForm':{"url":"https://id.loc.gov/authorities/subjects/suggest/?q=<QUERY>&rdftype=GenreForm&count=25"},
-					'LCSH Simple Type':{"url":"https://id.loc.gov/authorities/subjects/suggest/?q=<QUERY>&rdftype=SimpleType&count=25"},
-					'LCSH Complex Subject':{"url":"https://id.loc.gov/authorities/subjects/suggest/?q=<QUERY>&rdftype=ComplexSubject&count=25"},
-					'LCSH Temporal':{"url":"https://id.loc.gov/authorities/subjects/suggest/?q=<QUERY>&rdftype=Temporal&count=25"}
+					'LCSH All':{"url":"https://id.loc.gov/authorities/subjects/suggest2/?q=<QUERY>&count=25", "all":true}, 					
+					'LCSH Topics':{"url":"https://id.loc.gov/authorities/subjects/suggest2/?q=<QUERY>&rdftype=Topic&count=25"},
+					'LCSH Geographic':{"url":"https://id.loc.gov/authorities/subjects/suggest2/?q=<QUERY>&rdftype=Geographic&count=25"},
+					'LCSH Name':{"url":"https://id.loc.gov/authorities/subjects/suggest2/?q=<QUERY>&rdftype=Name&count=25"},
+					'LCSH FamilyName':{"url":"https://id.loc.gov/authorities/subjects/suggest2/?q=<QUERY>&rdftype=FamilyName&count=25"},
+					'LCSH CorporateName':{"url":"https://id.loc.gov/authorities/subjects/suggest2/?q=<QUERY>&rdftype=CorporateName&count=25"},					
+					'LCSH GenreForm':{"url":"https://id.loc.gov/authorities/subjects/suggest2/?q=<QUERY>&rdftype=GenreForm&count=25"},
+					'LCSH Simple Type':{"url":"https://id.loc.gov/authorities/subjects/suggest2/?q=<QUERY>&rdftype=SimpleType&count=25"},
+					'LCSH Complex Subject':{"url":"https://id.loc.gov/authorities/subjects/suggest2/?q=<QUERY>&rdftype=ComplexSubject&count=25"},
+					'LCSH Temporal':{"url":"https://id.loc.gov/authorities/subjects/suggest2/?q=<QUERY>&rdftype=Temporal&count=25"}
 					
 					
 
@@ -145,12 +145,12 @@ const config = {
 		"http://id.loc.gov/entities/providers" : {"name":"providers", "type":"complex", "modes":[]},
 		"http://id.loc.gov/entities/relationships" : {"name":"relationships", "processor" : 'lcAuthorities', "type":"complex", "modes":[
 			{
-			"All":{"url":"https://id.loc.gov/entities/relationships/suggest/?q=<QUERY>&count=25", "all":true}, 					
+			"All":{"url":"https://id.loc.gov/entities/relationships/suggest2/?q=<QUERY>&count=25", "all":true}, 					
 			}
 		]},
 		"http://id.loc.gov/vocabulary/geographicAreas" : {"name":"geographicAreas", "processor" : 'lcAuthorities', "type":"complex", "modes":[
 			{
-			"All":{"url":"https://id.loc.gov/vocabulary/geographicAreas/suggest/?q=<QUERY>&count=25", "all":true}, 					
+			"All":{"url":"https://id.loc.gov/vocabulary/geographicAreas/suggest2/?q=<QUERY>&count=25", "all":true}, 					
 			}
 		]},
 		"http://id.loc.gov/entities/roles" : {"name":"roles", "type":"complex", "modes":[]},

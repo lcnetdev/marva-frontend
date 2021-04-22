@@ -175,11 +175,29 @@ const lookupUtil = {
 
 
     searchComplex: async function(searchPayload){
-
+        console.log(searchPayload)
         let urlTemplate = searchPayload.url
         if (!Array.isArray(urlTemplate)){
             urlTemplate=[urlTemplate]
         }
+
+        
+        // if we're in lc authortities mode then check if we are doing a keyword search
+        // searchtype=keyword 
+
+        if (searchPayload.processor == 'lcAuthorities'){
+          for (let idx in urlTemplate){
+
+            if (urlTemplate[idx].includes('q=?')){
+              urlTemplate[idx] = urlTemplate[idx].replace('q=?','q=')+'&searchtype=keyword'
+              console.log('hererrerereerrere',urlTemplate[idx])
+            }
+          }
+          
+        }
+        console.log(urlTemplate)
+
+
         let results = []
         for (let url of urlTemplate) {
 
@@ -189,21 +207,39 @@ const lookupUtil = {
               url = url.replace('http://preprod.id.','https://id.')
             }
 
+
+
+
             let r = await this.fetchSimpleLookup(url)
             if (searchPayload.processor == 'lcAuthorities'){
                 // process the results as a LC suggest service
-                let labels = r[1]
-                let uris = r[3]
-                for (let i = 0; i <= labels.length; i++) {
-                  if (uris[i]!= undefined){
-                      results.push({
-                        label: labels[i],
-                        uri: uris[i],
-                        extra: ''
+                
+                for (let hit of r.hits){
+                  results.push({
+                    label: hit.suggestLabel,
+                    uri: hit.uri,
+                    extra: ''
 
-                      })
-                  }
+                  })
+
+
                 }
+
+
+                // Old suggest service below
+
+                // let labels = r[1]
+                // let uris = r[3]
+                // for (let i = 0; i <= labels.length; i++) {
+                //   if (uris[i]!= undefined){
+                //       results.push({
+                //         label: labels[i],
+                //         uri: uris[i],
+                //         extra: ''
+
+                //       })
+                //   }
+                // }
             }
 
         }
