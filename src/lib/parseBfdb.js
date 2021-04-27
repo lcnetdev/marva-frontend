@@ -187,13 +187,26 @@ const parseBfdb = {
 					}
 
 				}
+			}else if (typeNode.getElementsByTagName('bf:source').length>0){
+
+				
+				let s = xml.getElementsByTagName('bf:source')[0]
+				if (s.attributes && s.attributes['rdf:resource']){
+					profile.userValue[this.UriNamespace('bf:source')] ={'URI':s.attributes['rdf:resource'].value, 'http://www.w3.org/2000/01/rdf-schema#label': null}
+					
+				}
+
+
 			}
+
+
 
 			let componentList = []
 
 			
 			userValue['http://www.w3.org/2000/01/rdf-schema#label'] = label
 
+			let allCLabels = []
 
 
 			if (typeNode.getElementsByTagName('madsrdf:componentList').length>0){
@@ -205,6 +218,10 @@ const parseBfdb = {
 					if (child.getElementsByTagName('madsrdf:authoritativeLabel').length>0){
 						clabel = child.getElementsByTagName('madsrdf:authoritativeLabel')[0].innerHTML
 					}
+					if (child.getElementsByTagName('rdfs:label').length>0){
+						clabel = child.getElementsByTagName('rdfs:label')[0].innerHTML
+					}
+
 					let URI = null
 
 					
@@ -212,12 +229,24 @@ const parseBfdb = {
 						URI = child.attributes['rdf:about'].value
 					}
 
+					if (clabel){
+						allCLabels.push(clabel)
+					}
 					componentList.push({'http://www.w3.org/2000/01/rdf-schema#label':clabel, URI:URI, '@type':ctype})
 
 
 				}
 
 			}
+
+			// if there was no label for the whole thing use the components to build one
+			if (!userValue['http://www.w3.org/2000/01/rdf-schema#label']){
+				if (allCLabels.length>0){
+					userValue['http://www.w3.org/2000/01/rdf-schema#label'] = allCLabels.join('--')
+				}
+			}
+			
+
 			userValue['http://www.loc.gov/mads/rdf/v1#componentList'] = componentList
 
 
