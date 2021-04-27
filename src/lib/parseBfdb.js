@@ -221,8 +221,20 @@ const parseBfdb = {
 			userValue['http://www.loc.gov/mads/rdf/v1#componentList'] = componentList
 
 
-			if (userValue['http://id.loc.gov/ontologies/bibframe/source']['http://id.loc.gov/ontologies/bibframe/code']=='lcsh' && !userValue['http://id.loc.gov/ontologies/bibframe/source'].URI){
-				userValue['http://id.loc.gov/ontologies/bibframe/source'].URI = 'http://id.loc.gov/vocabulary/subjectSchemes/lcsh'
+			if (userValue['http://id.loc.gov/ontologies/bibframe/source']){
+				if (userValue['http://id.loc.gov/ontologies/bibframe/source']['http://id.loc.gov/ontologies/bibframe/code']){
+					if (userValue['http://id.loc.gov/ontologies/bibframe/source']['http://id.loc.gov/ontologies/bibframe/code']=='lcsh' && !userValue['http://id.loc.gov/ontologies/bibframe/source'].URI){
+						userValue['http://id.loc.gov/ontologies/bibframe/source'].URI = 'http://id.loc.gov/vocabulary/subjectSchemes/lcsh'
+					}
+				}
+			}
+
+			if (userValue['http://id.loc.gov/ontologies/bibframe/source']){
+				if (userValue['http://id.loc.gov/ontologies/bibframe/source']['http://www.w3.org/2000/01/rdf-schema#label']){
+					if (userValue['http://id.loc.gov/ontologies/bibframe/source']['http://www.w3.org/2000/01/rdf-schema#label']=='lcsh' && !userValue['http://id.loc.gov/ontologies/bibframe/source'].URI){
+						userValue['http://id.loc.gov/ontologies/bibframe/source'].URI = 'http://id.loc.gov/vocabulary/subjectSchemes/lcsh'
+					}
+				}
 			}
 
 			
@@ -465,7 +477,17 @@ const parseBfdb = {
 
 				}
 
+			}else if (xml.getElementsByTagName('bf:role').length>0){
 
+				profile.userValue['http://id.loc.gov/ontologies/bibframe/role'] = []
+
+				for (let role of xml.getElementsByTagName('bf:role')){
+					if (role.attributes && role.attributes['rdf:resource']){						
+						profile.userValue['http://id.loc.gov/ontologies/bibframe/role'].push({'URI':role.attributes['rdf:resource'].value, 'http://www.w3.org/2000/01/rdf-schema#label': null})
+					}
+				}
+
+				
 			}else{
 
 				// no role? make a empty bnode just so it doesn't mess up the display
@@ -481,6 +503,9 @@ const parseBfdb = {
 			if (profile.userValue['http://www.w3.org/2002/07/owl#sameAs'] && profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type']){
 				if (madsToBf[profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type']]){
 					profile.userValue["@type"] = madsToBf[profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type']]
+				}else if (profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type'].includes('/bibframe/')){
+					// if it is arleady a bibframe type set it
+					profile.userValue["@type"] = profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type']
 				}
 			}
 			
