@@ -50,6 +50,7 @@
 
                         <ul style="padding-left: 0;" :key="'leftmenu' + activeEditCounter">
                             <li v-bind:class="['left-menu-list-item', { 'left-menu-list-item-has-data' :  liHasData(activeProfile.rt[profileName].pt[profileCompoent]) && returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue) != '', 'left-menu-list-item-active':(activeComponent==profileCompoent &&activeProfileName==profileName)}]" :id="'menu'+profileCompoent"  v-for="profileCompoent in activeProfile.rt[profileName].ptOrder" :key="profileCompoent">
+                              {{liHasData(activeProfile.rt[profileName].pt[profileCompoent])}}
                                 <a v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" @click="scrollFieldContainerIntoView($event,profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_'))" href="#">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}}</a>
                                 <a v-else href="#" style="color: rgba(255,255,255,0.75) !important;" @click="restoreDelete($event, profileName, profileCompoent)" class="simptip-position-right" data-tooltip="Click to restore">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}} [Deleted]</a>
 
@@ -649,9 +650,13 @@ export default {
             if (typeof userValue[k][subK] == 'string' && !userValue[k][subK].includes('http') && !r.includes(userValue[k][subK])){
               r = r + userValue[k][subK] + ' '
             }
-
-
           }
+
+          // has a URI but no label
+          if (r.trim() == '' && userValue[k].URI){
+            r = r + userValue[k].URI.split('/')[userValue[k].URI.split('/').length-1] + ' '
+          }
+
         }
 
 

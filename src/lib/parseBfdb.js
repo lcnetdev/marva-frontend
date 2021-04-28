@@ -781,15 +781,19 @@ const parseBfdb = {
 
 						}else if (e.children.length == 0){
 
+
+
+
+
 							
 							if (e.attributes && e.attributes['rdf:about'] && e.innerHTML.length == 0){
-								populateData.userValue[prefixURI] ={
+								populateData.userValue[this.UriNamespace(prefixURI)] ={
 									URI: e.attributes['rdf:about'].value,
 									label: null
 								} 
 							}
 							if (e.attributes && e.attributes['rdf:resource']){
-								populateData.userValue[prefixURI] ={
+								populateData.userValue[this.UriNamespace(prefixURI)] ={
 									URI: e.attributes['rdf:resource'].value,
 									label: null
 								} 								
@@ -800,6 +804,12 @@ const parseBfdb = {
 								populateData.userValue[this.UriNamespace(prefixURI)] =e.innerHTML								
 
 							}
+
+
+							console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+							console.log(populateData.propertyURI)
+							console.log(populateData)
+							console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
 
 										
@@ -987,9 +997,9 @@ const parseBfdb = {
 									
 									
 
-									console.log("childUri:",childUri)
-									console.log("childLabel:",childLabel)
-									console.log("TYPE?",populateData.userValue['@type'])
+									// console.log("childUri:",childUri)
+									// console.log("childLabel:",childLabel)
+									// console.log("TYPE?",populateData.userValue['@type'])
 
 
 
@@ -1025,6 +1035,7 @@ const parseBfdb = {
 										populateData.userValue.BFE2METAnotControled=true
 
 										
+										
 
 										// if we set the type undo it because we have mor specific bnode here
 										// if (populateData.userValue['@type']){
@@ -1059,6 +1070,7 @@ const parseBfdb = {
 										// }else{
 										// 	childLabel = childUri
 										// }
+
 
 
 										if (!populateData.userValue['http://www.w3.org/2002/07/owl#sameAs']){

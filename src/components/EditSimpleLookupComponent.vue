@@ -177,9 +177,22 @@ export default {
 
     }
 
+    // din't find it, just use the whole thing
+    if (!dataField){
+      if (Object.keys(data.userValue).length>0){
+        dataField = data.userValue
+      }
+    }
+
+
+
     // Kind of a HACK here, need to sort out what URI the data is being stored under here
     
-    
+    console.log("########################")
+    console.log(this.structure.propertyURI)
+    console.log(dataField)
+
+    console.log("########################")
 
     if (!Array.isArray(dataField)){
       dataField = [dataField]
