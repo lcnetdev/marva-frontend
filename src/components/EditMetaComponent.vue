@@ -220,9 +220,9 @@ export default {
 
       }
 
-        console.log("structure",this.structure)
-        console.log("parentStructure",this.parentStructure)
-        console.log("profileName",this.profileName)
+        
+        
+        
 
 
     }
@@ -252,7 +252,7 @@ export default {
   },
   created: function(){
 
-    console.log(this.activeProfile, "<<<activeProfile")
+    
     this.buildData()
 
   },

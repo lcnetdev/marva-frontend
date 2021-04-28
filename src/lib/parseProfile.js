@@ -275,9 +275,9 @@ const parseProfile = {
         })
 
 
-        console.log(this.rtLookup)
-        console.log("profiles:")
-        console.log(this.profiles)
+        
+        
+        
 
         return { profiles: this.profiles, lookup: this.rtLookup, startingPoints: this.startingPoints}
     },
@@ -338,8 +338,8 @@ const parseProfile = {
         }
 
 
-        // console.log('----profile----')
-        // console.log(profile)
+        // 
+        // 
 
 
         return profile
@@ -434,20 +434,20 @@ const parseProfile = {
 
     refTemplateChange: function(currentState, component, key, activeProfileName, template, parentId, nextRef){
 
-        console.log('yeet')
-        console.log('currentState:',currentState)
-        console.log('component:',component)
-        console.log('key:',key)
-        console.log('activeProfileName:',activeProfileName)
-        console.log('template:',template)
-        console.log('nextRef:',nextRef)
+        
+        
+        
+        
+        
+        
+        
 
-        console.log('parentId',parentId)
-        console.log('parentId',this.rtLookup[parentId])
+        
+        
 
         if (currentState.rt[activeProfileName].pt[component]){
 
-            console.log('component',currentState.rt[activeProfileName].pt[component])
+            
 
             // we want to change the @type for sure at least
             // if there is a sameAs then we change it inside the sameAs otherwise just at the top level
@@ -465,13 +465,13 @@ const parseProfile = {
             if (!currentState.rt[activeProfileName].pt[component].refTemplateUserValue){
                 currentState.rt[activeProfileName].pt[component].refTemplateUserValue = {}
             }
-            console.log("possibleProperties->",possibleProperties)
+            
 
 
             for (let key in currentState.rt[activeProfileName].pt[component].userValue){
                 if (key != '@type' && !key.includes('sameAs')){
                     if (possibleProperties.indexOf(key)==-1){
-                        // console.log(key,'not in possible list')
+                        // 
                         // this property has no place in the ref template we are about to switch to
                         // so store them over in the refTemplateUserValue for later if needed
                         currentState.rt[activeProfileName].pt[component].refTemplateUserValue[key] =JSON.parse(JSON.stringify(currentState.rt[activeProfileName].pt[component].userValue[key]))
@@ -507,12 +507,12 @@ const parseProfile = {
         // loop through the profiles
         // Object.keys(currentState.rt).forEach((rt)=>{
             
-            // console.log('currentState:',currentState)
-            // console.log('component:',component)
-            // console.log('key:',key)
-            // console.log('activeProfileName:',activeProfileName)
-            // console.log('template:',template)
-            // console.log('value:',value)
+            // 
+            // 
+            // 
+            // 
+            // 
+            // 
 
 
             // check if this profile has the pt we are looking for
@@ -521,8 +521,8 @@ const parseProfile = {
                 // is this a lookup entitiy or a literal / simple value
                 if (value.contextValue){
 
-                    console.log("Doing entitiy")
-                    console.log(currentState, component, key, activeProfileName, template, value)
+                    
+                    
 
 
                     
@@ -569,7 +569,7 @@ const parseProfile = {
 
                         if (currentState.rt[activeProfileName].pt[component].userValue['http://www.w3.org/2002/07/owl#sameAs']) delete currentState.rt[activeProfileName].pt[component].userValue['http://www.w3.org/2002/07/owl#sameAs']
                     }else{
-                        console.log('here', activeProfileName, component, key, value)
+                        
 
                         // when we a storing a literal we want to store it under the URI of its componet, not just a label, since all properties are co-mingling
                         // bad idea
@@ -656,6 +656,9 @@ const parseProfile = {
 
     returnUserValues: function(currentState, component, propertyURI){
         let results = false
+
+        // eslint-disable-next-line
+        let temp = propertyURI 
         
         Object.keys(currentState.rt).forEach((rt)=>{
 
@@ -665,28 +668,28 @@ const parseProfile = {
 
 
                 results = currentState.rt[rt].pt[component].userValue
-                console.log('resultsresultsresultsresultsresultsresultsresultsresultsresults')
-                console.log(results)
-                console.log(propertyURI)
-                // console.log("!!!!!!!!!!!!!!!!!!!")
-                // console.log(rt)
-                // console.log(currentState.rt[rt])
-                // console.log(component)
-                // console.log(propertyURI)
-                // console.log(results)
+                
+                
+                
+                // 
+                // 
+                // 
+                // 
+                // 
+                // 
 
 
 
                 // // do some modifications to fit the user data in to the format a complex lookup components will expect
-                // console.log("~~~~",currentState.rt[rt].pt[component].userValue,'!!!!!')
+                // 
                 // if (currentState.rt[rt].pt[component].userValue['http://www.w3.org/2002/07/owl#sameAs']){
-                //     console.log('http://www.w3.org/2002/07/owl#sameAs')
-                //     console.log('http://www.w3.org/2002/07/owl#sameAs')
-                //     console.log('http://www.w3.org/2002/07/owl#sameAs')
-                //     console.log('http://www.w3.org/2002/07/owl#sameAs')
-                //     console.log('http://www.w3.org/2002/07/owl#sameAs')
-                //     console.log('http://www.w3.org/2002/07/owl#sameAs')
-                //     console.log('http://www.w3.org/2002/07/owl#sameAs')
+                //     
+                //     
+                //     
+                //     
+                //     
+                //     
+                //     
                 //     results = currentState.rt[rt].pt[component].userValue['http://www.w3.org/2002/07/owl#sameAs']
 
                 // }else if (results.literal){
@@ -695,7 +698,7 @@ const parseProfile = {
 
             }
         })
-        console.log(results)
+        
         return results
 
     },
@@ -724,12 +727,12 @@ const parseProfile = {
 
         uri = profile.rt[uri].URI
 
-        console.log(uri)
-        console.log(profile)
+        
+        
 
 
-        console.log(profile)
-        console.log(this.profiles)
+        
+        
         // find the RT for the instance of this profile orginally
         // get the work rt
 
@@ -743,15 +746,15 @@ const parseProfile = {
                 // now find the corosponding instance id
                 for (let allRt in this.profiles){
                     if (this.profiles[allRt].rtOrder.indexOf(rtId)>-1){
-                        console.log(this.profiles[allRt])
+                        
                         itemName = this.profiles[allRt].rtOrder.filter(i => i.includes(":Item"))[0]
 
                         // jsut in case the profile doesnt have an item.... 
                         if (!itemName){
                             continue
                         }
-                        console.log(itemName)
-                        console.log(this.profiles[allRt].rt[itemName])
+                        
+                        
                         itemRt = JSON.parse(JSON.stringify(this.profiles[allRt].rt[itemName]))
 
                         break
@@ -761,8 +764,8 @@ const parseProfile = {
             }
         }
 
-        console.log(itemName)
-        console.log(itemRt)
+        
+        
 
         let itemCount = 0;
 
@@ -826,7 +829,7 @@ const parseProfile = {
 
 
 
-        console.log(profile)
+        
 
 
 
@@ -843,8 +846,8 @@ const parseProfile = {
 
     deleteItem: function(profile, uri){
 
-        console.log(uri)
-        console.log(profile)
+        
+        
 
         // find the items also and remove everything
         for (let rtId in profile.rt){
@@ -878,8 +881,8 @@ const parseProfile = {
 
     duplicateItem: function(profile, uri){
 
-        console.log(uri)
-        console.log(profile)
+        
+        
 
 
         // find the instance first
@@ -925,8 +928,8 @@ const parseProfile = {
 
     deleteInstance: function(profile, uri){
 
-        console.log(uri)
-        console.log(profile)
+        
+        
 
         // find the items also and remove everything
         for (let rtId in profile.rt){
@@ -978,8 +981,8 @@ const parseProfile = {
 
     addInstance: function(profile){
 
-        console.log(profile)
-        console.log(this.profiles)
+        
+        
         // find the RT for the instance of this profile orginally
         // get the work rt
 
@@ -1004,8 +1007,8 @@ const parseProfile = {
             }
         }
 
-        console.log(instanceName)
-        console.log(instanceRt)
+        
+        
 
         let instanceCount = 0;
 
@@ -1042,8 +1045,8 @@ const parseProfile = {
 
     cloneInstance: function(profile, uri){
 
-        console.log(uri)
-        console.log(profile)
+        
+        
 
 
         // find the instance first
@@ -1115,7 +1118,7 @@ const parseProfile = {
 
         }
 
-        console.log(profile)
+        
 
 
         return profile

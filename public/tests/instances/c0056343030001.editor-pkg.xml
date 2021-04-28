@@ -1,0 +1,937 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:bf="http://id.loc.gov/ontologies/bibframe/" xmlns:bflc="http://id.loc.gov/ontologies/bflc/" xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pmo="http://performedmusicontology.org/ontology/"><bf:Instance rdf:about="http://id.loc.gov/resources/instances/c0056343030001"><bf:issuance>
+      <bf:Issuance rdf:about="http://id.loc.gov/vocabulary/issuance/mono"/>
+    </bf:issuance><bf:soundCharacteristic>
+      <bf:PlayingSpeed rdf:about="http://id.loc.gov/vocabulary/mplayspeed/f">
+        <rdfs:label>1.4 m. per sec.</rdfs:label>
+      </bf:PlayingSpeed>
+    </bf:soundCharacteristic><bf:soundCharacteristic>
+      <bf:PlaybackChannels rdf:about="http://id.loc.gov/vocabulary/mplayback/ste">
+        <rdfs:label>stereo</rdfs:label>
+      </bf:PlaybackChannels>
+    </bf:soundCharacteristic><bf:baseMaterial>
+      <bf:BaseMaterial rdf:about="http://id.loc.gov/vocabulary/mmaterial/pla">
+        <rdfs:label>plastic</rdfs:label>
+      </bf:BaseMaterial>
+    </bf:baseMaterial><bf:baseMaterial>
+      <bf:BaseMaterial rdf:about="http://id.loc.gov/vocabulary/mmaterial/mtl">
+        <rdfs:label>metal</rdfs:label>
+      </bf:BaseMaterial>
+    </bf:baseMaterial><bf:soundCharacteristic>
+      <bf:RecordingMethod rdf:about="http://id.loc.gov/vocabulary/mrectype/digital">
+        <rdfs:label>digital</rdfs:label>
+      </bf:RecordingMethod>
+    </bf:soundCharacteristic><bf:soundCharacteristic>
+      <bflc:CaptureStorage rdf:about="http://id.loc.gov/vocabulary/mcapturestorage/dist">
+        <rdfs:label>Electrical capture, digital storage</rdfs:label>
+      </bflc:CaptureStorage>
+    </bf:soundCharacteristic><bf:provisionActivity>
+      <bf:ProvisionActivity>
+        <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Distribution"/>
+        <bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">1990</bf:date>
+        <bf:place>
+          <bf:Place rdf:about="http://id.loc.gov/vocabulary/countries/gw"/>
+        </bf:place>
+      </bf:ProvisionActivity>
+    </bf:provisionActivity><bf:provisionActivity>
+      <bf:ProvisionActivity>
+        <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Production"/>
+        <bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">1989</bf:date>
+      </bf:ProvisionActivity>
+    </bf:provisionActivity><bf:identifiedBy>
+      <bf:Lccn>
+        <rdf:value>   91754962 </rdf:value>
+      </bf:Lccn>
+    </bf:identifiedBy><bf:identifiedBy>
+      <bf:Identifier>
+        <rdf:value>011790209128</rdf:value>
+      </bf:Identifier>
+    </bf:identifiedBy><bf:identifiedBy>
+      <bf:Upc>
+        <rdf:value>1179020912</rdf:value>
+      </bf:Upc>
+    </bf:identifiedBy><bf:identifiedBy>
+      <bf:Upc>
+        <rdf:value>4011790209128</rdf:value>
+      </bf:Upc>
+    </bf:identifiedBy><bf:identifiedBy>
+      <bf:AudioIssueNumber>
+        <rdf:value>C 209 901A</rdf:value>
+        <bf:assigner>
+          <bf:Agent>
+            <rdfs:label>Orfeo</rdfs:label>
+          </bf:Agent>
+        </bf:assigner>
+      </bf:AudioIssueNumber>
+    </bf:identifiedBy><bf:identifiedBy>
+      <bf:Local>
+        <rdf:value>ocm23722496</rdf:value>
+        <bf:assigner>
+          <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/ocolc"/>
+        </bf:assigner>
+      </bf:Local>
+    </bf:identifiedBy><rdfs:label>Orchesterlieder</rdfs:label><bf:responsibilityStatement>Max Reger</bf:responsibilityStatement><bf:title>
+      <bf:Title>
+        <rdfs:label>Orchesterlieder</rdfs:label>
+        <bflc:titleSortKey>Orchesterlieder</bflc:titleSortKey>
+        <bf:mainTitle>Orchesterlieder</bf:mainTitle>
+      </bf:Title>
+    </bf:title><bf:provisionActivity>
+      <bf:ProvisionActivity>
+        <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Publication"/>
+        <bf:place>
+          <bf:Place>
+            <rdfs:label>München</rdfs:label>
+          </bf:Place>
+        </bf:place>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/entities/providers/adf466d570b7884201b25c7a8d331aa4">
+            <rdfs:label>Orfeo</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:date>1990</bf:date>
+      </bf:ProvisionActivity>
+    </bf:provisionActivity><bf:provisionActivityStatement>München : Orfeo, [1990]</bf:provisionActivityStatement><bf:copyrightDate>℗1990</bf:copyrightDate><bf:extent>
+      <bf:Extent>
+        <rdfs:label>1 audio disc</rdfs:label>
+      </bf:Extent>
+    </bf:extent><bf:note>
+      <bf:Note>
+        <bf:noteType>Physical details</bf:noteType>
+        <rdfs:label>digital, stereo</rdfs:label>
+      </bf:Note>
+    </bf:note><bf:dimensions>4 3/4 in.</bf:dimensions><bf:duration rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">001330</bf:duration><bf:duration rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">001338</bf:duration><bf:duration rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">001604</bf:duration><bf:duration rdf:datatype="http://www.w3.org/2001/XMLSchema#duration">001229</bf:duration><bf:media>
+      <bf:Media rdf:about="http://id.loc.gov/vocabulary/mediaTypes/s">
+        <rdfs:label>audio</rdfs:label>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdamedia"/>
+        </bf:source>
+      </bf:Media>
+    </bf:media><bf:carrier>
+      <bf:Carrier rdf:about="http://id.loc.gov/vocabulary/carriers/sd">
+        <rdfs:label>audio disc</rdfs:label>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacarrier"/>
+        </bf:source>
+      </bf:Carrier>
+    </bf:carrier><bf:soundCharacteristic>
+      <bf:RecordingMethod rdf:about="http://id.loc.gov/vocabulary/mrectype/digital">
+        <rdfs:label>digital</rdfs:label>
+        <bf:source>
+          <bf:Source>
+            <bf:code>rdatr</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:RecordingMethod>
+    </bf:soundCharacteristic><bf:soundCharacteristic>
+      <bf:RecordingMedium rdf:about="http://id.loc.gov/vocabulary/mrecmedium/opt">
+        <rdfs:label>optical</rdfs:label>
+        <bf:source>
+          <bf:Source>
+            <bf:code>rdarm</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:RecordingMedium>
+    </bf:soundCharacteristic><bf:soundCharacteristic>
+      <bf:PlaybackChannels rdf:about="http://id.loc.gov/vocabulary/mplayback/ste">
+        <rdfs:label>stereo</rdfs:label>
+        <bf:source>
+          <bf:Source>
+            <bf:code>rdacpc</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:PlaybackChannels>
+    </bf:soundCharacteristic><bf:digitalCharacteristic>
+      <bf:FileType rdf:about="http://id.loc.gov/vocabulary/mfiletype/audio">
+        <rdfs:label>audio file</rdfs:label>
+        <bf:source>
+          <bf:Source>
+            <bf:code>rdaft</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:FileType>
+    </bf:digitalCharacteristic><bf:digitalCharacteristic>
+      <bf:EncodingFormat>
+        <rdfs:label>CD audio</rdfs:label>
+      </bf:EncodingFormat>
+    </bf:digitalCharacteristic><bf:note>
+      <bf:Note>
+        <rdfs:label>Title from disc label.</rdfs:label>
+      </bf:Note>
+    </bf:note><bf:credits>Dietrich Fischer-Dieskau, baritone ; St. Michaels-Chor ; Monteverdi-Chor, Hamburg ; Philharmonisches Staatsorchester Hamburg ; Gerd Albrecht, conductor.</bf:credits><bf:note>
+      <bf:Note>
+        <rdfs:label>Texts set: Joseph von Eichendorff (op. 144a), Ludwig Jacobowski (op. 136), Friedrich Hennel (op. 144b), after Friedrich Hölderlin (op. 124).</rdfs:label>
+      </bf:Note>
+    </bf:note><bf:credits>G. Götze, recording supervision; K. O. Bremer, recording engineer; S. Woellner, S. Kaufmann, T. v. Geest, editing.</bf:credits><bf:note>
+      <bf:Note>
+        <rdfs:label>"Eine Coproduktion mit der Philharmonie Hamburg und dem NDR"--Insert.</rdfs:label>
+      </bf:Note>
+    </bf:note><bf:note>
+      <bf:Note>
+        <rdfs:label>Booklet includes program notes in German, English and French and German texts with English and French translations (14 unnumbered pages) inserted in container.</rdfs:label>
+      </bf:Note>
+    </bf:note><bf:instanceOf rdf:resource="http://id.loc.gov/resources/works/c005634303"/><bf:hasItem rdf:resource="http://id.loc.gov/resources/items/c0056343030001-1"/><bf:adminMetadata>
+      <bf:AdminMetadata>
+        <bf:generationProcess>
+          <bf:GenerationProcess>
+            <rdfs:label>DLC marc2bibframe2 v1.7.0-SNAPSHOT</rdfs:label>
+            <bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-04-21T01:32:00-04:00</bf:generationDate>
+          </bf:GenerationProcess>
+        </bf:generationProcess>
+        <bf:status>
+          <bf:Status>
+            <rdfs:label>corrected or revised</rdfs:label>
+            <bf:code>c</bf:code>
+          </bf:Status>
+        </bf:status>
+        <bflc:encodingLevel>
+          <bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/f">
+            <rdfs:label>full</rdfs:label>
+          </bflc:EncodingLevel>
+        </bflc:encodingLevel>
+        <bf:descriptionConventions>
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd">
+            <rdfs:label>isbd</rdfs:label>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+        <bf:identifiedBy>
+          <bf:Local>
+            <rdf:value>5634303</rdf:value>
+            <bf:assigner>
+              <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+                <bf:code>DLC</bf:code>
+              </bf:Agent>
+            </bf:assigner>
+          </bf:Local>
+        </bf:identifiedBy>
+        <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-04-20T17:20:50</bf:changeDate>
+        <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1991-07-12</bf:creationDate>
+        <bf:assigner>
+          <bf:Agent>
+            <bf:code>DMM</bf:code>
+          </bf:Agent>
+        </bf:assigner>
+        <bf:descriptionLanguage>
+          <bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/>
+        </bf:descriptionLanguage>
+        <bf:descriptionModifier>
+          <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+            <bf:code>DLC</bf:code>
+          </bf:Agent>
+        </bf:descriptionModifier>
+        <bf:descriptionConventions>
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda">
+            <rdf:value>rda</rdf:value>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+        <bf:descriptionAuthentication>
+          <bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/lccopycat">
+            <bf:code>lccopycat</bf:code>
+          </bf:DescriptionAuthentication>
+        </bf:descriptionAuthentication>
+      </bf:AdminMetadata>
+    </bf:adminMetadata></bf:Instance><bf:Work rdf:about="http://id.loc.gov/resources/works/c005634303"><bf:adminMetadata>
+      <bf:AdminMetadata>
+        <bf:generationProcess>
+          <bf:GenerationProcess>
+            <rdfs:label>DLC marc2bibframe2 v1.7.0-SNAPSHOT</rdfs:label>
+            <bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-04-21T01:32:00-04:00</bf:generationDate>
+          </bf:GenerationProcess>
+        </bf:generationProcess>
+        <bf:status>
+          <bf:Status>
+            <rdfs:label>corrected or revised</rdfs:label>
+            <bf:code>c</bf:code>
+          </bf:Status>
+        </bf:status>
+        <bflc:encodingLevel>
+          <bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/f">
+            <rdfs:label>full</rdfs:label>
+          </bflc:EncodingLevel>
+        </bflc:encodingLevel>
+        <bf:descriptionConventions>
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd">
+            <rdfs:label>isbd</rdfs:label>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+        <bf:identifiedBy>
+          <bf:Local>
+            <rdf:value>5634303</rdf:value>
+            <bf:assigner>
+              <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+                <bf:code>DLC</bf:code>
+              </bf:Agent>
+            </bf:assigner>
+          </bf:Local>
+        </bf:identifiedBy>
+        <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-04-20T17:20:50</bf:changeDate>
+        <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1991-07-12</bf:creationDate>
+        <bf:assigner>
+          <bf:Agent>
+            <bf:code>DMM</bf:code>
+          </bf:Agent>
+        </bf:assigner>
+        <bf:descriptionLanguage>
+          <bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/>
+        </bf:descriptionLanguage>
+        <bf:descriptionModifier>
+          <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+            <bf:code>DLC</bf:code>
+          </bf:Agent>
+        </bf:descriptionModifier>
+        <bf:descriptionConventions>
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda">
+            <rdf:value>rda</rdf:value>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+        <bf:descriptionAuthentication>
+          <bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/lccopycat">
+            <bf:code>lccopycat</bf:code>
+          </bf:DescriptionAuthentication>
+        </bf:descriptionAuthentication>
+      </bf:AdminMetadata>
+    </bf:adminMetadata><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Audio"/><bf:language>
+      <bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/ger"/>
+    </bf:language><bf:supplementaryContent>
+      <bf:SupplementaryContent rdf:about="http://id.loc.gov/vocabulary/msupplcont/libretto">
+        <rdfs:label>libretto or text</rdfs:label>
+      </bf:SupplementaryContent>
+    </bf:supplementaryContent><bf:supplementaryContent>
+      <bf:SupplementaryContent rdf:about="http://id.loc.gov/vocabulary/msupplcont/creatorbio">
+        <rdfs:label>biography of composer or author</rdfs:label>
+      </bf:SupplementaryContent>
+    </bf:supplementaryContent><bf:supplementaryContent>
+      <bf:SupplementaryContent rdf:about="http://id.loc.gov/vocabulary/msupplcont/techmusic">
+        <rdfs:label>technical information on music</rdfs:label>
+      </bf:SupplementaryContent>
+    </bf:supplementaryContent><bf:capture>
+      <bf:Capture>
+        <bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">1989-07-10/1989-07-14</bf:date>
+      </bf:Capture>
+    </bf:capture><bf:capture>
+      <bf:Capture>
+        <bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">1989-07-10/1989-07-14</bf:date>
+      </bf:Capture>
+    </bf:capture><bf:language>
+      <bf:Language>
+        <bf:part>sung or spoken text</bf:part>
+        <rdf:value rdf:resource="http://id.loc.gov/vocabulary/languages/ger"/>
+      </bf:Language>
+    </bf:language><bf:language>
+      <bf:Language>
+        <bf:part>libretto</bf:part>
+        <rdf:value rdf:resource="http://id.loc.gov/vocabulary/languages/ger"/>
+      </bf:Language>
+    </bf:language><bf:language>
+      <bf:Language>
+        <bf:part>libretto</bf:part>
+        <rdf:value rdf:resource="http://id.loc.gov/vocabulary/languages/eng"/>
+      </bf:Language>
+    </bf:language><bf:language>
+      <bf:Language>
+        <bf:part>accompanying material</bf:part>
+        <rdf:value rdf:resource="http://id.loc.gov/vocabulary/languages/ger"/>
+      </bf:Language>
+    </bf:language><bf:language>
+      <bf:Language>
+        <bf:part>accompanying material</bf:part>
+        <rdf:value rdf:resource="http://id.loc.gov/vocabulary/languages/eng"/>
+      </bf:Language>
+    </bf:language><bf:voice>
+      <bf:MusicVoice>
+        <bf:voiceType>voice</bf:voiceType>
+        <rdfs:label>bass</rdfs:label>
+        <bf:count>1</bf:count>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/musiccodeschemes/marcmusperf"/>
+        </bf:source>
+      </bf:MusicVoice>
+    </bf:voice><bf:voice>
+      <bf:MusicVoice>
+        <bf:voiceType>chorus</bf:voiceType>
+        <rdfs:label>mixed chorus</rdfs:label>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/musiccodeschemes/marcmusperf"/>
+        </bf:source>
+      </bf:MusicVoice>
+    </bf:voice><bf:ensemble>
+      <bf:MusicEnsemble>
+        <bf:ensembleType>instrumental</bf:ensembleType>
+        <rdfs:label>orchestra</rdfs:label>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/musiccodeschemes/marcmusperf"/>
+        </bf:source>
+      </bf:MusicEnsemble>
+    </bf:ensemble><bf:contribution>
+      <bf:Contribution>
+        <rdf:type rdf:resource="http://id.loc.gov/ontologies/bflc/PrimaryContribution"/>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n79108398">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+            <bflc:name00MatchKey>Reger, Max, 1873-1916,</bflc:name00MatchKey>
+            <bflc:primaryContributorName00MatchKey>Reger, Max, 1873-1916,</bflc:primaryContributorName00MatchKey>
+            <bflc:name00MarcKey>1001 $aReger, Max,$d1873-1916,$ecomposer.</bflc:name00MarcKey>
+            <rdfs:label>Reger, Max, 1873-1916,</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label>composer.</rdfs:label>
+          </bf:Role>
+        </bf:role>
+      </bf:Contribution>
+    </bf:contribution><rdfs:label>Vocal music. Selections</rdfs:label><bf:title>
+      <bf:Title>
+        <bflc:title40MatchKey>Vocal music. Selections</bflc:title40MatchKey>
+        <bflc:title40MarcKey>24010$aVocal music.$kSelections</bflc:title40MarcKey>
+        <rdfs:label>Vocal music. Selections</rdfs:label>
+        <bflc:titleSortKey>Vocal music. Selections</bflc:titleSortKey>
+        <bf:mainTitle>Vocal music. Selections</bf:mainTitle>
+      </bf:Title>
+    </bf:title><bf:content>
+      <bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/prm">
+        <rdfs:label>performed music</rdfs:label>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacontent"/>
+        </bf:source>
+      </bf:Content>
+    </bf:content><bf:musicMedium>
+      <bf:MusicMedium>
+        <rdfs:label>baritone voice soloist</rdfs:label>
+        <bf:count>1</bf:count>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/musiccodeschemes/lcmpt">
+            <bf:code>lcmpt</bf:code>
+          </bf:Source>
+        </bf:source>
+        <bflc:appliesTo>
+          <bflc:AppliesTo>
+            <rdfs:label>Hymnus der Liebe, An die Hoffnung</rdfs:label>
+          </bflc:AppliesTo>
+        </bflc:appliesTo>
+      </bf:MusicMedium>
+    </bf:musicMedium><bf:musicMedium>
+      <bf:MusicMedium rdf:about="https://id.loc.gov/authorities/performanceMediums/mp2013015516">
+        <rdfs:label>orchestra</rdfs:label>
+        <bf:count>1</bf:count>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/musiccodeschemes/lcmpt">
+            <bf:code>lcmpt</bf:code>
+          </bf:Source>
+        </bf:source>
+        <bflc:appliesTo>
+          <bflc:AppliesTo>
+            <rdfs:label>Hymnus der Liebe, An die Hoffnung</rdfs:label>
+          </bflc:AppliesTo>
+        </bflc:appliesTo>
+      </bf:MusicMedium>
+    </bf:musicMedium><bf:musicMedium>
+      <bf:MusicMedium>
+        <bf:note>
+          <bf:Note>
+            <rdfs:label>Total performers alongside ensembles: 1</rdfs:label>
+          </bf:Note>
+        </bf:note>
+        <bflc:appliesTo>
+          <bflc:AppliesTo>
+            <rdfs:label>Hymnus der Liebe, An die Hoffnung</rdfs:label>
+          </bflc:AppliesTo>
+        </bflc:appliesTo>
+      </bf:MusicMedium>
+    </bf:musicMedium><bf:musicMedium>
+      <bf:MusicMedium>
+        <bf:note>
+          <bf:Note>
+            <rdfs:label>Total ensembles: 1</rdfs:label>
+          </bf:Note>
+        </bf:note>
+        <bflc:appliesTo>
+          <bflc:AppliesTo>
+            <rdfs:label>Hymnus der Liebe, An die Hoffnung</rdfs:label>
+          </bflc:AppliesTo>
+        </bflc:appliesTo>
+      </bf:MusicMedium>
+    </bf:musicMedium><bf:musicMedium>
+      <bf:MusicMedium>
+        <rdfs:label>baritone voice soloist</rdfs:label>
+        <bf:count>1</bf:count>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/musiccodeschemes/lcmpt">
+            <bf:code>lcmpt</bf:code>
+          </bf:Source>
+        </bf:source>
+        <bflc:appliesTo>
+          <bflc:AppliesTo>
+            <rdfs:label>Einsiedler, Requiem</rdfs:label>
+          </bflc:AppliesTo>
+        </bflc:appliesTo>
+      </bf:MusicMedium>
+    </bf:musicMedium><bf:musicMedium>
+      <bf:MusicMedium rdf:about="https://id.loc.gov/authorities/performanceMediums/mp2013015146">
+        <rdfs:label>mixed chorus</rdfs:label>
+        <bf:count>1</bf:count>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/musiccodeschemes/lcmpt">
+            <bf:code>lcmpt</bf:code>
+          </bf:Source>
+        </bf:source>
+        <bflc:appliesTo>
+          <bflc:AppliesTo>
+            <rdfs:label>Einsiedler, Requiem</rdfs:label>
+          </bflc:AppliesTo>
+        </bflc:appliesTo>
+      </bf:MusicMedium>
+    </bf:musicMedium><bf:musicMedium>
+      <bf:MusicMedium rdf:about="https://id.loc.gov/authorities/performanceMediums/mp2013015516">
+        <rdfs:label>orchestra</rdfs:label>
+        <bf:count>1</bf:count>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/musiccodeschemes/lcmpt">
+            <bf:code>lcmpt</bf:code>
+          </bf:Source>
+        </bf:source>
+        <bflc:appliesTo>
+          <bflc:AppliesTo>
+            <rdfs:label>Einsiedler, Requiem</rdfs:label>
+          </bflc:AppliesTo>
+        </bflc:appliesTo>
+      </bf:MusicMedium>
+    </bf:musicMedium><bf:musicMedium>
+      <bf:MusicMedium>
+        <bf:note>
+          <bf:Note>
+            <rdfs:label>Total performers alongside ensembles: 1</rdfs:label>
+          </bf:Note>
+        </bf:note>
+        <bflc:appliesTo>
+          <bflc:AppliesTo>
+            <rdfs:label>Einsiedler, Requiem</rdfs:label>
+          </bflc:AppliesTo>
+        </bflc:appliesTo>
+      </bf:MusicMedium>
+    </bf:musicMedium><bf:musicMedium>
+      <bf:MusicMedium>
+        <bf:note>
+          <bf:Note>
+            <rdfs:label>Total ensembles: 2</rdfs:label>
+          </bf:Note>
+        </bf:note>
+        <bflc:appliesTo>
+          <bflc:AppliesTo>
+            <rdfs:label>Einsiedler, Requiem</rdfs:label>
+          </bflc:AppliesTo>
+        </bflc:appliesTo>
+      </bf:MusicMedium>
+    </bf:musicMedium><bf:language>
+      <bf:Language>
+        <bf:note>
+          <bf:Note>
+            <rdfs:label>Sung in German</rdfs:label>
+          </bf:Note>
+        </bf:note>
+      </bf:Language>
+    </bf:language><bf:capture>
+      <bf:Capture>
+        <bf:date>1989 July 10-14</bf:date>
+        <bf:note>
+          <bf:Note>
+            <rdfs:label>Recorded</rdfs:label>
+          </bf:Note>
+        </bf:note>
+        <bf:place>
+          <bf:Place>
+            <rdfs:label>at the Norddeutscher Rundfunk Studio 10.</rdfs:label>
+          </bf:Place>
+        </bf:place>
+      </bf:Capture>
+    </bf:capture><bf:tableOfContents>
+      <bf:TableOfContents>
+        <rdfs:label>Der Einsiedler : op. 144a : für gemischten Chor, Bariton und Orchester (13:30) -- Hymnus der Liebe : op. 136 : für Bariton und Orchester (13:38) -- Requiem : op. 144b : für gemischten Chor, Bariton und Orchester (16:04) -- An die Hoffnung : op. 124 : für Bariton und Orchester (12:29).</rdfs:label>
+      </bf:TableOfContents>
+    </bf:tableOfContents><bf:subject>
+      <bf:Topic rdf:about="https://id.loc.gov/authorities/subjects/sh85024915">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <rdfs:label>Choruses, Secular (Mixed voices) with orchestra.</rdfs:label>
+        <madsrdf:authoritativeLabel>Choruses, Secular (Mixed voices) with orchestra.</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/authorities/subjects">
+            <bf:code>lcsh</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:Topic>
+    </bf:subject><bf:subject>
+      <bf:Topic rdf:about="https://id.loc.gov/authorities/subjects/sh85125186">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <rdfs:label>Songs (Medium voice) with orchestra.</rdfs:label>
+        <madsrdf:authoritativeLabel>Songs (Medium voice) with orchestra.</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/authorities/subjects">
+            <bf:code>lcsh</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:Topic>
+    </bf:subject><bf:subject>
+      <bf:Topic rdf:about="http://bibframe.example.org/5634303#Topic600-50">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
+        <madsrdf:authoritativeLabel>Eichendorff, Joseph, Freiherr von, 1788-1857--Musical settings.</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/authorities/subjects">
+            <bf:code>lcsh</bf:code>
+          </bf:Source>
+        </bf:source>
+        <madsrdf:componentList rdf:parseType="Collection">
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n81047567">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+            <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#PersonalName"/>
+            <madsrdf:authoritativeLabel>Eichendorff, Joseph, Freiherr von, 1788-1857</madsrdf:authoritativeLabel>
+            <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+            <bflc:name00MatchKey>Eichendorff, Joseph, Freiherr von, 1788-1857</bflc:name00MatchKey>
+            <bflc:name00MarcKey>60010$aEichendorff, Joseph,$cFreiherr von,$d1788-1857$vMusical settings.</bflc:name00MarcKey>
+            <rdfs:label>Eichendorff, Joseph, Freiherr von, 1788-1857</rdfs:label>
+            <bf:source>
+              <bf:Source rdf:about="http://id.loc.gov/authorities/subjects">
+                <bf:code>lcsh</bf:code>
+              </bf:Source>
+            </bf:source>
+          </bf:Agent>
+          <madsrdf:GenreForm rdf:about="https://id.loc.gov/authorities/subjects/sh2002006133">
+            <madsrdf:authoritativeLabel>Musical settings</madsrdf:authoritativeLabel>
+          </madsrdf:GenreForm>
+        </madsrdf:componentList>
+      </bf:Topic>
+    </bf:subject><bf:subject>
+      <bf:Topic rdf:about="http://bibframe.example.org/5634303#Topic600-51">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
+        <madsrdf:authoritativeLabel>Jacobowski, Ludwig, 1868-1900--Musical settings.</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/authorities/subjects">
+            <bf:code>lcsh</bf:code>
+          </bf:Source>
+        </bf:source>
+        <madsrdf:componentList rdf:parseType="Collection">
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n93098601">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+            <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#PersonalName"/>
+            <madsrdf:authoritativeLabel>Jacobowski, Ludwig, 1868-1900</madsrdf:authoritativeLabel>
+            <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+            <bflc:name00MatchKey>Jacobowski, Ludwig, 1868-1900</bflc:name00MatchKey>
+            <bflc:name00MarcKey>60010$aJacobowski, Ludwig,$d1868-1900$vMusical settings.</bflc:name00MarcKey>
+            <rdfs:label>Jacobowski, Ludwig, 1868-1900</rdfs:label>
+            <bf:source>
+              <bf:Source rdf:about="http://id.loc.gov/authorities/subjects">
+                <bf:code>lcsh</bf:code>
+              </bf:Source>
+            </bf:source>
+          </bf:Agent>
+          <madsrdf:GenreForm rdf:about="https://id.loc.gov/authorities/subjects/sh2002006133">
+            <madsrdf:authoritativeLabel>Musical settings</madsrdf:authoritativeLabel>
+          </madsrdf:GenreForm>
+        </madsrdf:componentList>
+      </bf:Topic>
+    </bf:subject><bf:subject>
+      <bf:Topic rdf:about="http://bibframe.example.org/5634303#Topic600-52">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
+        <madsrdf:authoritativeLabel>Hebbel, Friedrich, 1813-1863--Musical settings.</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/authorities/subjects">
+            <bf:code>lcsh</bf:code>
+          </bf:Source>
+        </bf:source>
+        <madsrdf:componentList rdf:parseType="Collection">
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n50025657">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+            <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#PersonalName"/>
+            <madsrdf:authoritativeLabel>Hebbel, Friedrich, 1813-1863</madsrdf:authoritativeLabel>
+            <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+            <bflc:name00MatchKey>Hebbel, Friedrich, 1813-1863</bflc:name00MatchKey>
+            <bflc:name00MarcKey>60010$aHebbel, Friedrich,$d1813-1863$vMusical settings.</bflc:name00MarcKey>
+            <rdfs:label>Hebbel, Friedrich, 1813-1863</rdfs:label>
+            <bf:source>
+              <bf:Source rdf:about="http://id.loc.gov/authorities/subjects">
+                <bf:code>lcsh</bf:code>
+              </bf:Source>
+            </bf:source>
+          </bf:Agent>
+          <madsrdf:GenreForm rdf:about="https://id.loc.gov/authorities/subjects/sh2002006133">
+            <madsrdf:authoritativeLabel>Musical settings</madsrdf:authoritativeLabel>
+          </madsrdf:GenreForm>
+        </madsrdf:componentList>
+      </bf:Topic>
+    </bf:subject><bf:subject>
+      <bf:Topic rdf:about="http://bibframe.example.org/5634303#Topic600-53">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
+        <madsrdf:authoritativeLabel>Hölderlin, Friedrich, 1770-1843--Musical settings.</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/authorities/subjects">
+            <bf:code>lcsh</bf:code>
+          </bf:Source>
+        </bf:source>
+        <madsrdf:componentList rdf:parseType="Collection">
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n79115224">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+            <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#PersonalName"/>
+            <madsrdf:authoritativeLabel>Hölderlin, Friedrich, 1770-1843</madsrdf:authoritativeLabel>
+            <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+            <bflc:name00MatchKey>Hölderlin, Friedrich, 1770-1843</bflc:name00MatchKey>
+            <bflc:name00MarcKey>60010$aHölderlin, Friedrich,$d1770-1843$vMusical settings.</bflc:name00MarcKey>
+            <rdfs:label>Hölderlin, Friedrich, 1770-1843</rdfs:label>
+            <bf:source>
+              <bf:Source rdf:about="http://id.loc.gov/authorities/subjects">
+                <bf:code>lcsh</bf:code>
+              </bf:Source>
+            </bf:source>
+          </bf:Agent>
+          <madsrdf:GenreForm rdf:about="https://id.loc.gov/authorities/subjects/sh2002006133">
+            <madsrdf:authoritativeLabel>Musical settings</madsrdf:authoritativeLabel>
+          </madsrdf:GenreForm>
+        </madsrdf:componentList>
+      </bf:Topic>
+    </bf:subject><bf:subject>
+      <bf:Topic rdf:about="http://bibframe.example.org/5634303#Topic650-54">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <rdfs:label>Choruses, Secular (Mixed voices) with orchestra.</rdfs:label>
+        <madsrdf:authoritativeLabel>Choruses, Secular (Mixed voices) with orchestra.</madsrdf:authoritativeLabel>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/fast">
+            <bf:code>fast</bf:code>
+          </bf:Source>
+        </bf:source>
+        <bf:identifiedBy>
+          <bf:Identifier>
+            <rdf:value>fst00858811</rdf:value>
+            <bf:source>
+              <bf:Source>
+                <bf:code>OCoLC</bf:code>
+              </bf:Source>
+            </bf:source>
+          </bf:Identifier>
+        </bf:identifiedBy>
+      </bf:Topic>
+    </bf:subject><bf:subject>
+      <bf:Topic rdf:about="http://bibframe.example.org/5634303#Topic650-55">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <rdfs:label>Songs (Medium voice) with orchestra.</rdfs:label>
+        <madsrdf:authoritativeLabel>Songs (Medium voice) with orchestra.</madsrdf:authoritativeLabel>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/fast">
+            <bf:code>fast</bf:code>
+          </bf:Source>
+        </bf:source>
+        <bf:identifiedBy>
+          <bf:Identifier>
+            <rdf:value>fst01126191</rdf:value>
+            <bf:source>
+              <bf:Source>
+                <bf:code>OCoLC</bf:code>
+              </bf:Source>
+            </bf:source>
+          </bf:Identifier>
+        </bf:identifiedBy>
+      </bf:Topic>
+    </bf:subject><bf:genreForm>
+      <bf:GenreForm rdf:about="https://id.loc.gov/authorities/genreForms/gf2014026639">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <rdfs:label>Art music.</rdfs:label>
+        <madsrdf:authoritativeLabel>Art music.</madsrdf:authoritativeLabel>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/fast">
+            <bf:code>fast</bf:code>
+          </bf:Source>
+        </bf:source>
+        <bf:identifiedBy>
+          <bf:Identifier>
+            <rdf:value>fst01920007</rdf:value>
+            <bf:source>
+              <bf:Source>
+                <bf:code>OCoLC</bf:code>
+              </bf:Source>
+            </bf:source>
+          </bf:Identifier>
+        </bf:identifiedBy>
+      </bf:GenreForm>
+    </bf:genreForm><bf:genreForm>
+      <bf:GenreForm rdf:about="https://id.loc.gov/authorities/genreForms/gf2014027103">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <rdfs:label>Songs.</rdfs:label>
+        <madsrdf:authoritativeLabel>Songs.</madsrdf:authoritativeLabel>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/fast">
+            <bf:code>fast</bf:code>
+          </bf:Source>
+        </bf:source>
+        <bf:identifiedBy>
+          <bf:Identifier>
+            <rdf:value>fst01726744</rdf:value>
+            <bf:source>
+              <bf:Source>
+                <bf:code>OCoLC</bf:code>
+              </bf:Source>
+            </bf:source>
+          </bf:Identifier>
+        </bf:identifiedBy>
+      </bf:GenreForm>
+    </bf:genreForm><bf:genreForm>
+      <bf:GenreForm rdf:about="https://id.loc.gov/authorities/genreForms/gf2014027103">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <rdfs:label>Songs.</rdfs:label>
+        <madsrdf:authoritativeLabel>Songs.</madsrdf:authoritativeLabel>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/lcgft">
+            <bf:code>lcgft</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:GenreForm>
+    </bf:genreForm><bf:genreForm>
+      <bf:GenreForm rdf:about="https://id.loc.gov/authorities/genreForms/gf2014026639">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <rdfs:label>Art music.</rdfs:label>
+        <madsrdf:authoritativeLabel>Art music.</madsrdf:authoritativeLabel>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/lcgft">
+            <bf:code>lcgft</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:GenreForm>
+    </bf:genreForm><bf:genreForm>
+      <bf:GenreForm rdf:about="https://id.loc.gov/authorities/genreForms/gf2017026061">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <rdfs:label>Musical settings.</rdfs:label>
+        <madsrdf:authoritativeLabel>Musical settings.</madsrdf:authoritativeLabel>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/lcgft">
+            <bf:code>lcgft</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:GenreForm>
+    </bf:genreForm><bf:contribution>
+      <bf:Contribution>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n50003091">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+            <bflc:name00MatchKey>Fischer-Dieskau, Dietrich, 1925-2012,</bflc:name00MatchKey>
+            <bflc:name00MarcKey>7001 $aFischer-Dieskau, Dietrich,$d1925-2012,$esinger.</bflc:name00MarcKey>
+            <rdfs:label>Fischer-Dieskau, Dietrich, 1925-2012,</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label>singer.</rdfs:label>
+          </bf:Role>
+        </bf:role>
+      </bf:Contribution>
+    </bf:contribution><bf:contribution>
+      <bf:Contribution>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n79146137">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+            <bflc:name00MatchKey>Albrecht, Gerd, 1935-2014,</bflc:name00MatchKey>
+            <bflc:name00MarcKey>7001 $aAlbrecht, Gerd,$d1935-2014,$econductor.</bflc:name00MarcKey>
+            <rdfs:label>Albrecht, Gerd, 1935-2014,</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label>conductor.</rdfs:label>
+          </bf:Role>
+        </bf:role>
+      </bf:Contribution>
+    </bf:contribution><bflc:relationship>
+      <bflc:Relationship>
+        <bflc:relation>
+          <bflc:Relation rdf:about="https://id.loc.gov/entities/relationships/containerof">
+            <rdfs:label>Container of (work)</rdfs:label>
+          </bflc:Relation>
+        </bflc:relation>
+        <bf:relatedTo rdf:resource="http://bibframe.example.org/5634303#Work700-63"/>
+      </bflc:Relationship>
+    </bflc:relationship><bflc:relationship>
+      <bflc:Relationship>
+        <bflc:relation>
+          <bflc:Relation rdf:about="https://id.loc.gov/entities/relationships/containerof">
+            <rdfs:label>Container of (work)</rdfs:label>
+          </bflc:Relation>
+        </bflc:relation>
+        <bf:relatedTo rdf:resource="http://bibframe.example.org/5634303#Work700-64"/>
+      </bflc:Relationship>
+    </bflc:relationship><bflc:relationship>
+      <bflc:Relationship>
+        <bflc:relation>
+          <bflc:Relation rdf:about="https://id.loc.gov/entities/relationships/containerof">
+            <rdfs:label>Container of (work)</rdfs:label>
+          </bflc:Relation>
+        </bflc:relation>
+        <bf:relatedTo rdf:resource="http://bibframe.example.org/5634303#Work700-65"/>
+      </bflc:Relationship>
+    </bflc:relationship><bflc:relationship>
+      <bflc:Relationship>
+        <bflc:relation>
+          <bflc:Relation rdf:about="https://id.loc.gov/entities/relationships/containerof">
+            <rdfs:label>Container of (work)</rdfs:label>
+          </bflc:Relation>
+        </bflc:relation>
+        <bf:relatedTo rdf:resource="http://bibframe.example.org/5634303#Work700-66"/>
+      </bflc:Relationship>
+    </bflc:relationship><bf:contribution>
+      <bf:Contribution>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n86133933">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Organization"/>
+            <bflc:name10MatchKey>Philharmonisches Staatsorchester Hamburg,</bflc:name10MatchKey>
+            <bflc:name10MarcKey>7102 $aPhilharmonisches Staatsorchester Hamburg,$einstrumentalist.</bflc:name10MarcKey>
+            <rdfs:label>Philharmonisches Staatsorchester Hamburg,</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label>instrumentalist.</rdfs:label>
+          </bf:Role>
+        </bf:role>
+      </bf:Contribution>
+    </bf:contribution><bf:contribution>
+      <bf:Contribution>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n2021021421">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Organization"/>
+            <bflc:name10MatchKey>Hauptkirche St. Michaelis (Hamburg, Germany). Chor.</bflc:name10MatchKey>
+            <bflc:name10MarcKey>7102 $aHauptkirche St. Michaelis (Hamburg, Germany).$bChor.$4prf</bflc:name10MarcKey>
+            <rdfs:label>Hauptkirche St. Michaelis (Hamburg, Germany). Chor.</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:role>
+          <bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/prf"/>
+        </bf:role>
+      </bf:Contribution>
+    </bf:contribution><bf:contribution>
+      <bf:Contribution>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n85031418">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Organization"/>
+            <bflc:name10MatchKey>Monteverdi-Chor Hamburg,</bflc:name10MatchKey>
+            <bflc:name10MarcKey>7102 $aMonteverdi-Chor Hamburg,$esinger.</bflc:name10MarcKey>
+            <rdfs:label>Monteverdi-Chor Hamburg,</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label>singer.</rdfs:label>
+          </bf:Role>
+        </bf:role>
+      </bf:Contribution>
+    </bf:contribution><bf:relatedTo rdf:resource="http://id.loc.gov/resources/works/n2021021408"/><bf:relatedTo rdf:resource="http://id.loc.gov/resources/works/c012289535"/><bf:relatedTo rdf:resource="http://id.loc.gov/resources/works/no98013521"/><bf:relatedTo rdf:resource="http://id.loc.gov/resources/works/c012289535"/><bf:relatedTo rdf:resource="http://id.loc.gov/resources/works/n82001901"/><bf:relatedTo rdf:resource="http://id.loc.gov/resources/works/c012289535"/><bf:relatedTo rdf:resource="http://id.loc.gov/resources/works/no97073651"/><bf:relatedTo rdf:resource="http://id.loc.gov/resources/works/c012289535"/><bf:relatedTo rdf:resource="http://id.loc.gov/resources/works/c012289535"/></bf:Work><bf:Item rdf:about="http://id.loc.gov/resources/items/c0056343030001-1"><bf:heldBy>
+          <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+            <bf:code>DLC</bf:code>
+          </bf:Agent>
+        </bf:heldBy><bf:shelfMark>
+          <bf:ShelfMark>
+            <rdfs:label>SDD 43569</rdfs:label>
+            <bf:assigner>
+              <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"/>
+            </bf:assigner>
+          </bf:ShelfMark>
+        </bf:shelfMark><bflc:derivedFrom rdf:resource="http://id.loc.gov/resources/bibs/5634303"/><bf:itemOf rdf:resource="http://id.loc.gov/resources/instances/c0056343030001"/></bf:Item></rdf:RDF>

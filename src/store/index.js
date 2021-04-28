@@ -104,10 +104,10 @@ export default new Vuex.Store({
     saveRecord : debounce((state,commit) => {
 
 
-      console.log(state)
+      
       exportXML.toBFXML(state.activeProfile)
       .then((xml)=>{
-        console.log(xml)
+        
         lookupUtil.saveRecord(xml.xlmStringBasic, state.activeProfile.eId)
         commit('ACTIVERECORDSAVED',true)  
       })
@@ -123,13 +123,13 @@ export default new Vuex.Store({
     PROFILES(state, profiles) {
       state.profiles = profiles
       state.profilesLoaded = true
-      // console.log('profiles')
-      // console.log(profiles)
+      // 
+      // 
     },
     RTLOOKUP(state, lookup) {
       state.rtLookup = lookup
 
-      // console.log(lookup)
+      // 
     },
     STARTINGPOINTS(state, lookup) {
       state.startingPoints = lookup
@@ -220,14 +220,14 @@ export default new Vuex.Store({
       let p = await parseProfile.buildProfiles()
       commit('PROFILES', p.profiles)
       commit('RTLOOKUP', p.lookup)
-      // console.log('startingPoints',p.startingPoints)
+      // 
       commit('STARTINGPOINTS', p.startingPoints)
 
 
 
       // set the default profile
       var copy = Object.assign({}, p.profiles[this.state.sartingPoint]);
-      // console.log(copy,'copy')
+      // 
       commit('ACTIVEPROFILE', copy)
     },
 
@@ -252,8 +252,8 @@ export default new Vuex.Store({
     async fetchContext ({ commit },data) {   
       commit('CONTEXT', {})    
       let results = await lookupUtil.returnContext(data.searchPayload)
-      console.log(results,'results context')
-      console.log(JSON.stringify(results))
+      
+      
       commit('CONTEXT', results)  
     },
 
@@ -279,7 +279,7 @@ export default new Vuex.Store({
     async fetchOntology ({ commit },data) {   
 
       let results = await lookupUtil.fetchOntology(data.uri)
-      console.log(results)
+      
 
       commit('ONYOLOGYLOOKUP', results)  
 
@@ -303,8 +303,8 @@ export default new Vuex.Store({
     
     setContextManually({ commit}, data){
       commit('CONTEXT', data.context)
-      // console.log(data)
-      // console.log("^^^^^^^^data")
+      // 
+      // 
     },
     setActiveProfile({ commit}, data){
 
@@ -313,19 +313,20 @@ export default new Vuex.Store({
       }
 
       commit('ACTIVEPROFILE', data.profile)
-      console.log(data)
-      console.log("^^^^^^^^data")
+      
+      
     },
 
 
-    addNewItem({ commit},data){
-      // commit('ACTIVEPROFILE', data.profile)
-      console.log(data.profileName,commit)
-      // console.log("^^^^^^^^data")
-      // let nap = parseProfile.addNewItem(state.activeProfile)
+    
+    // addNewItem({ commit},data){
+    //   // commit('ACTIVEPROFILE', data.profile)
+      
+    //   // 
+    //   // let nap = parseProfile.addNewItem(state.activeProfile)
 
 
-    },
+    // },
 
     
 
@@ -334,9 +335,9 @@ export default new Vuex.Store({
     },
     async  addValue ({ commit, state }, data) {   
       // we know the value bc it is the active context value in this case
-      // console.log('-----------state.contextData-state.contextData-state.contextData------------')
-      // console.log(state.contextData)
-      console.log(data)
+      // 
+      // 
+      
       let nap = parseProfile.setValue(state.activeProfile, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, state.contextData)
       commit('ACTIVEPROFILE', nap)
       commit('ACTIVEEDITCOUNTER') 
@@ -347,8 +348,8 @@ export default new Vuex.Store({
 
     },
     async addValueLiteral ({ commit, state }, data) {   
-      console.log(data)
-      console.log('addValueLiteral:',data)
+      
+      
 
       let profileName = (data.profileName) ? data.profileName : state.activeProfileName;
 
@@ -417,7 +418,7 @@ export default new Vuex.Store({
       commit('ACTIVEINPUT', data.id)
       commit('ACTIVECOMPONET', data.profileCompoent)
       commit('ACTIVEPROFILENAME', data.profileName)
-      console.log("data.profileName",data.profileName)
+      
     },
 
     setActiveProfileCounter: ({commit}, newValue) => {

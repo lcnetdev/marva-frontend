@@ -141,7 +141,7 @@ const uiUtils = {
 
     returnAuthLabel(userData){
 
-      console.log('returnAuthLabelreturnAuthLabelreturnAuthLabel',userData)
+      
 
       if (userData['http://www.w3.org/2000/01/rdf-schema#label']){
         return userData['http://www.w3.org/2000/01/rdf-schema#label']

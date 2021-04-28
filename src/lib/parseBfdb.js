@@ -755,8 +755,8 @@ const parseBfdb = {
 					// we have that element
 					sucessfulProperties.push(prefixURI)
 
-					console.log("---------------")
-					console.log(prefixURI)
+					
+					
 
 					// loop through all of them
 					let counter = 0
@@ -806,12 +806,6 @@ const parseBfdb = {
 							}
 
 
-							console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-							console.log(populateData.propertyURI)
-							console.log(populateData)
-							console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-
-
 										
 						}else{
 
@@ -853,6 +847,20 @@ const parseBfdb = {
 												
 												childProperty = this.UriNamespace(grandchild.tagName)//this.UriNamespace(grandchild.tagName)
 												childLabel = grandchild.innerHTML
+
+
+											}else if (grandchild.tagName == 'rdf:value'){
+												
+												if (grandchild.attributes['rdf:resource']){													
+													populateData.userValue.URI = grandchild.attributes['rdf:resource'].value
+												}
+
+												if (grandchild.innerHTML.trim() != ''){
+													childLabel = grandchild.innerHTML
+												}
+
+
+
 											}else if (grandchild.tagName == 'rdf:type'){
 
 												if (grandchild.attributes['rdf:resource']){													
@@ -997,9 +1005,9 @@ const parseBfdb = {
 									
 									
 
-									// console.log("childUri:",childUri)
-									// console.log("childLabel:",childLabel)
-									// console.log("TYPE?",populateData.userValue['@type'])
+									
+									
+									
 
 
 

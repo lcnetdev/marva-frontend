@@ -114,8 +114,8 @@ export default {
     // if (!this.activeProfile.procInfo || (this.activeProfile.procInfo && !this.activeProfile.procInfo.includes("update"))){
     //   if (this.structure.valueConstraint.defaults.length>0){
 
-    //     console.log("SIMPLE DEFUALTS")
-    //     console.log(this.structure.valueConstraint.defaults)
+    //     
+    //     
         
 
     //     this.activeLookupValue.push({})
@@ -127,7 +127,7 @@ export default {
          
     //     // })  
 
-    //     console.log('createdddd')
+    //     
     //     // dispatch and add to the acutal data
 
 
@@ -188,11 +188,11 @@ export default {
 
     // Kind of a HACK here, need to sort out what URI the data is being stored under here
     
-    console.log("########################")
-    console.log(this.structure.propertyURI)
-    console.log(dataField)
+    
+    
+    
 
-    console.log("########################")
+    
 
     if (!Array.isArray(dataField)){
       dataField = [dataField]
@@ -275,7 +275,7 @@ export default {
 
     fakeContainerFocus: function(event){
 
-        // console.log(event.target.querySelectorAll('input'))
+        // 
 
         return event
     },
@@ -318,7 +318,7 @@ export default {
 
           // loop through each one, each is a array, so each element of array
           this.lookupLibrary[this.uri][v].forEach((x)=>{
-            console.log(x)
+            
             // simple includes value check
             if (x.toLowerCase().startsWith(this.activeFilter.toLowerCase())){
                 if (this.displayList.indexOf(x)==-1){

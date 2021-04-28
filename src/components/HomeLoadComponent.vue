@@ -120,11 +120,11 @@ export default {
         this.instanceEditorLink = this.instanceTests[Math.floor(Math.random() * this.instanceTests.length)];
 
       }
-      console.log(this.instanceEditorLink)
+      
 
 
       this.$store.dispatch("fetchBfdbXML", { self: this, url: this.instanceEditorLink }).then(() => {
-      // console.log(this.instanceSelected)
+      // 
 
 
         parseBfdb.parse(this.bfdbXML)
@@ -136,7 +136,7 @@ export default {
         for (let key in this.profiles){
           if (this.profiles[key].rtOrder.indexOf(this.instanceSelected)>-1){
             useProfile = JSON.parse(JSON.stringify(this.profiles[key]))
-            console.log("useProfileuseProfileuseProfileuseProfileuseProfile->",useProfile)            
+            
           }
         }
 
@@ -188,7 +188,7 @@ export default {
 
         
 
-        console.log(useProfile,'console.log(useProfile)')
+        
         this.transformResults  = parseBfdb.transform(useProfile)
 
         // let workkey = this.transformResults.rtOrder.filter((k)=> k.endsWith(":Instance"))[0]
@@ -217,7 +217,7 @@ export default {
 
       this.$store.dispatch("fetchIdXML", { self: this, url: useId }).then(() => {
         // the xml is loaded
-        //console.log(this.idXML)
+        //
         parseId.parse(this.idXML)
 
         let useProfile = null
@@ -228,7 +228,7 @@ export default {
           }
         }
 
-        // console.log(useProfile,'console.log(useProfile)')
+        // 
         this.transformResults  = parseId.transform(useProfile)
 
         let workkey = this.transformResults.rtOrder.filter((k)=> k.includes(":Work"))[0]
@@ -248,8 +248,8 @@ export default {
 
         // this.$router.push({ path: 'edit' })
 
-        // console.log(this.transformResults)
-        // console.log(useProfile.id,workkey)
+        // 
+        // 
 
       })
 
@@ -314,9 +314,10 @@ export default {
         // '/bfe2/editor/tests/instances/c0214680420001.editor-pkg.xml',
         // '/bfe2/editor/tests/instances/c0210643040001.editor-pkg.xml',   // serial 
         // '/bfe2/editor/tests/instances/c0122950980001.editor-pkg.xml', // sound recording
-        '/bfe2/editor/tests/instances/e2324557043013562145333356239676927794980001.editor-pkg.xml', // sound recording
+        // '/bfe2/editor/tests/instances/e2324557043013562145333356239676927794980001.editor-pkg.xml', // sound recording
+        '/bfe2/editor/tests/instances/c0056343030001.editor-pkg.xml', // ???
 
-      ]
+      ] 
 
     }
   },
