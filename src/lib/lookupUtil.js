@@ -206,6 +206,8 @@ const lookupUtil = {
             if (config.returnUrls().dev){
               console.log(url)
               url = url.replace('http://preprod.id.','https://id.')
+              url = url.replace('https://preprod-8230.id.loc.gov','https://id.loc.gov')
+              
             }
 
 
@@ -779,12 +781,12 @@ const lookupUtil = {
 
       if (content && content.publish && content.publish.status && content.publish.status == 'published'){
 
-        return true
+        return {status:true}
 
       }else{
 
-        alert("Did not post, please report this error--" + JSON.stringify(content.publish,null,2))
-        return false
+        // alert("Did not post, please report this error--" + JSON.stringify(content.publish,null,2))
+        return {status:false, msg: JSON.stringify(content.publish,null,2)}
       }
 
       

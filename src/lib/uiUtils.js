@@ -105,8 +105,12 @@ const uiUtils = {
         const iconSubjectTopic = '&#xe808;'
         
 
+
         
-        if (rdfType){
+        if (rdfType && typeof rdfType === 'string'){
+
+          rdfType = rdfType.replace('http://www.loc.gov/mads/rdf/v1#','')
+
           if (rdfType == 'PersonalName') return iconPersonal
           if (rdfType == 'CorporateName') return iconCoporate
           if (rdfType == 'NameTitle') return iconNameTitle
@@ -121,6 +125,7 @@ const uiUtils = {
           if (rdfType == 'http://id.loc.gov/ontologies/bibframe/Person') return iconPersonal
           if (rdfType == 'http://id.loc.gov/ontologies/bibframe/Place') return iconGeographic
           if (rdfType == 'http://id.loc.gov/ontologies/bibframe/Topic') return iconSubjectTopic
+          if (rdfType == 'http://id.loc.gov/ontologies/bibframe/Organization') return iconCoporate
 
 
 
@@ -139,20 +144,7 @@ const uiUtils = {
 
 
 
-    returnAuthLabel(userData){
 
-      
-
-      if (userData['http://www.w3.org/2000/01/rdf-schema#label']){
-        return userData['http://www.w3.org/2000/01/rdf-schema#label']
-      }else if (!userData['http://www.w3.org/2000/01/rdf-schema#label'] && userData.URI){
-        return userData.URI.split('/')[userData.URI.split('/').length-1] + ' (no label)'
-      }
-
-
-      return ''
-
-    },
 
 
     dupeProperty(){

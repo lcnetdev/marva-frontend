@@ -37,6 +37,8 @@ const exportXML = {
 
 	],
 
+	debugHistory: [],
+
 	// from URI to prefixed
 	namespaceUri: function(uri){	
 		for (let ns in this.namespace){
@@ -67,6 +69,8 @@ const exportXML = {
 
 	createElByBestNS: function(elStr){
 
+
+
 		// if the elString is not a expanded URI
 		if (!elStr.startsWith('http')){
 			elStr = this.UriNamespace(elStr)
@@ -94,259 +98,259 @@ const exportXML = {
 		// },
 
 
-		'bf:subject' : function(ptObj){
+		// 'bf:subject' : function(ptObj){
 
 
 
-			if (ptObj.userValue['http://www.w3.org/2002/07/owl#sameAs']){
+		// 	if (ptObj.userValue['http://www.w3.org/2002/07/owl#sameAs']){
 
-				let sameAs = ptObj.userValue['http://www.w3.org/2002/07/owl#sameAs']
+		// 		let sameAs = ptObj.userValue['http://www.w3.org/2002/07/owl#sameAs']
 
-				let subject = document.createElementNS(this.namespace.bf,"bf:subject")
+		// 		let subject = document.createElementNS(this.namespace.bf,"bf:subject")
 
-				let subjectNode = this.createElByBestNS(sameAs['@type'])
-				subject.appendChild(subjectNode)
+		// 		let subjectNode = this.createElByBestNS(sameAs['@type'])
+		// 		subject.appendChild(subjectNode)
 
-				if (sameAs.URI){
-					subjectNode.setAttributeNS(this.namespace.rdf, 'rdf:about', sameAs.URI)
-				}				
+		// 		if (sameAs.URI){
+		// 			subjectNode.setAttributeNS(this.namespace.rdf, 'rdf:about', sameAs.URI)
+		// 		}				
 
-				if (sameAs['http://www.w3.org/2000/01/rdf-schema#label']){
+		// 		if (sameAs['http://www.w3.org/2000/01/rdf-schema#label']){
 
-					let label = document.createElementNS(this.namespace.rdfs,"rdfs:label")
-					label.innerHTML = sameAs['http://www.w3.org/2000/01/rdf-schema#label']
-					subjectNode.appendChild(label)
+		// 			let label = document.createElementNS(this.namespace.rdfs,"rdfs:label")
+		// 			label.innerHTML = sameAs['http://www.w3.org/2000/01/rdf-schema#label']
+		// 			subjectNode.appendChild(label)
 
-					let label2 = document.createElementNS(this.namespace.madsrdf,"madsrdf:authoritativeLabel")
-					label2.innerHTML = sameAs['http://www.w3.org/2000/01/rdf-schema#label']
-					subjectNode.appendChild(label2)
+		// 			let label2 = document.createElementNS(this.namespace.madsrdf,"madsrdf:authoritativeLabel")
+		// 			label2.innerHTML = sameAs['http://www.w3.org/2000/01/rdf-schema#label']
+		// 			subjectNode.appendChild(label2)
 
-				}
-
-
-				if (sameAs['http://id.loc.gov/ontologies/bibframe/source']){
-
-					let sourceNode = document.createElementNS(this.namespace.bf,"bf:Source")
-					subjectNode.appendChild(sourceNode)
-
-					if (sameAs['http://id.loc.gov/ontologies/bibframe/source'].URI){
-						sourceNode.setAttributeNS(this.namespace.rdf, 'rdf:about', sameAs['http://id.loc.gov/ontologies/bibframe/source'].URI)
-					}
-					if (sameAs['http://id.loc.gov/ontologies/bibframe/source']['http://id.loc.gov/ontologies/bibframe/code']){
-
-						let label = document.createElementNS(this.namespace.bf,"bf:code")
-						label.innerHTML = sameAs['http://id.loc.gov/ontologies/bibframe/source']['http://id.loc.gov/ontologies/bibframe/code']
-						sourceNode.appendChild(label)
-					}
-
-				}
+		// 		}
 
 
-				if (sameAs['http://www.loc.gov/mads/rdf/v1#componentList']){
+		// 		if (sameAs['http://id.loc.gov/ontologies/bibframe/source']){
 
-					let componentListPredicate = document.createElementNS(this.namespace.madsrdf,"madsrdf:componentList")
+		// 			let sourceNode = document.createElementNS(this.namespace.bf,"bf:Source")
+		// 			subjectNode.appendChild(sourceNode)
+
+		// 			if (sameAs['http://id.loc.gov/ontologies/bibframe/source'].URI){
+		// 				sourceNode.setAttributeNS(this.namespace.rdf, 'rdf:about', sameAs['http://id.loc.gov/ontologies/bibframe/source'].URI)
+		// 			}
+		// 			if (sameAs['http://id.loc.gov/ontologies/bibframe/source']['http://id.loc.gov/ontologies/bibframe/code']){
+
+		// 				let label = document.createElementNS(this.namespace.bf,"bf:code")
+		// 				label.innerHTML = sameAs['http://id.loc.gov/ontologies/bibframe/source']['http://id.loc.gov/ontologies/bibframe/code']
+		// 				sourceNode.appendChild(label)
+		// 			}
+
+		// 		}
+
+
+		// 		if (sameAs['http://www.loc.gov/mads/rdf/v1#componentList']){
+
+		// 			let componentListPredicate = document.createElementNS(this.namespace.madsrdf,"madsrdf:componentList")
 					
-					subjectNode.appendChild(componentListPredicate)
+		// 			subjectNode.appendChild(componentListPredicate)
 
-					for (let c of sameAs['http://www.loc.gov/mads/rdf/v1#componentList']){
-
-
-						let n = this.createElByBestNS(c['@type'])
-						if (c.URI){
-							n.setAttributeNS(this.namespace.rdf, 'rdf:about', c.URI)
-						}	
-
-						if (c['http://www.w3.org/2000/01/rdf-schema#label']){
-
-							let label = document.createElementNS(this.namespace.rdfs,"rdfs:label")
-							label.innerHTML = c['http://www.w3.org/2000/01/rdf-schema#label']
-							n.appendChild(label)
-
-							let label2 = document.createElementNS(this.namespace.madsrdf,"madsrdf:authoritativeLabel")
-							label2.innerHTML = c['http://www.w3.org/2000/01/rdf-schema#label']
-							n.appendChild(label2)
-
-						}
-
-						componentListPredicate.appendChild(n)
+		// 			for (let c of sameAs['http://www.loc.gov/mads/rdf/v1#componentList']){
 
 
+		// 				let n = this.createElByBestNS(c['@type'])
+		// 				if (c.URI){
+		// 					n.setAttributeNS(this.namespace.rdf, 'rdf:about', c.URI)
+		// 				}	
 
-					}
+		// 				if (c['http://www.w3.org/2000/01/rdf-schema#label']){
 
-				}
+		// 					let label = document.createElementNS(this.namespace.rdfs,"rdfs:label")
+		// 					label.innerHTML = c['http://www.w3.org/2000/01/rdf-schema#label']
+		// 					n.appendChild(label)
+
+		// 					let label2 = document.createElementNS(this.namespace.madsrdf,"madsrdf:authoritativeLabel")
+		// 					label2.innerHTML = c['http://www.w3.org/2000/01/rdf-schema#label']
+		// 					n.appendChild(label2)
+
+		// 				}
+
+		// 				componentListPredicate.appendChild(n)
 
 
 
+		// 			}
 
-				return subject
-
-			}else{
-
-
-				console.error('No same as for the this subject',ptObj)
-			}
+		// 		}
 
 
-		},
 
 
-		'bf:contribution' : function(ptObj){
+		// 		return subject
 
-			let userValue = ptObj.userValue
-			let dataTypeURI = null
-			if (ptObj.valueConstraint && ptObj.valueConstraint.valueDataType && ptObj.valueConstraint.valueDataType.dataTypeURI){
-				dataTypeURI = ptObj.valueConstraint.valueDataType.dataTypeURI
-			}
+		// 	}else{
 
-			// if primary it goes
-			// <contribution> 
-			//   <bflc:PrimaryContribution>
-			//     <agent>
-			//       <bf:$TYPE>
+
+		// 		console.error('No same as for the this subject',ptObj)
+		// 	}
+
+
+		// },
+
+
+		// 'bf:contribution' : function(ptObj){
+
+		// 	let userValue = ptObj.userValue
+		// 	let dataTypeURI = null
+		// 	if (ptObj.valueConstraint && ptObj.valueConstraint.valueDataType && ptObj.valueConstraint.valueDataType.dataTypeURI){
+		// 		dataTypeURI = ptObj.valueConstraint.valueDataType.dataTypeURI
+		// 	}
+
+		// 	// if primary it goes
+		// 	// <contribution> 
+		// 	//   <bflc:PrimaryContribution>
+		// 	//     <agent>
+		// 	//       <bf:$TYPE>
 			
-			let contribution
-			let agent = document.createElementNS(this.namespace.bf,"bf:agent")
+		// 	let contribution
+		// 	let agent = document.createElementNS(this.namespace.bf,"bf:agent")
 
 
-			if (dataTypeURI == 'http://id.loc.gov/ontologies/bflc/PrimaryContribution'){
-				contribution = document.createElementNS(this.namespace.bf,"bf:contribution")
+		// 	if (dataTypeURI == 'http://id.loc.gov/ontologies/bflc/PrimaryContribution'){
+		// 		contribution = document.createElementNS(this.namespace.bf,"bf:contribution")
 
-				// if it is primary contribution then add a rdf type node to it
-				// let pContribution = document.createElementNS(this.namespace.bflc,"bflc:PrimaryContribution")
-				// contribution.appendChild(pContribution)				
+		// 		// if it is primary contribution then add a rdf type node to it
+		// 		// let pContribution = document.createElementNS(this.namespace.bflc,"bflc:PrimaryContribution")
+		// 		// contribution.appendChild(pContribution)				
 
-				let type = this.createElByBestNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#type')
-				type.setAttributeNS(this.namespace.rdf, 'rdf:resource', "http://id.loc.gov/ontologies/bflc/PrimaryContribution")
-				contribution.appendChild(type)
-				contribution.appendChild(agent)
+		// 		let type = this.createElByBestNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#type')
+		// 		type.setAttributeNS(this.namespace.rdf, 'rdf:resource', "http://id.loc.gov/ontologies/bflc/PrimaryContribution")
+		// 		contribution.appendChild(type)
+		// 		contribution.appendChild(agent)
 
 
 				
 
-			}else{
-				contribution = document.createElementNS(this.namespace.bf,"bf:contribution")
-				contribution.appendChild(agent)
+		// 	}else{
+		// 		contribution = document.createElementNS(this.namespace.bf,"bf:contribution")
+		// 		contribution.appendChild(agent)
 
-			}
+		// 	}
 			
 
-			// is there a role?
-			if (userValue['http://id.loc.gov/ontologies/bibframe/role']){
+		// 	// is there a role?
+		// 	if (userValue['http://id.loc.gov/ontologies/bibframe/role']){
 
-				let rolePredicate = document.createElementNS(this.namespace.bf,"bf:role")
+		// 		let rolePredicate = document.createElementNS(this.namespace.bf,"bf:role")
 
-				if (!Array.isArray(userValue['http://id.loc.gov/ontologies/bibframe/role'])){
-					userValue['http://id.loc.gov/ontologies/bibframe/role'] = [userValue['http://id.loc.gov/ontologies/bibframe/role']]
-				}
+		// 		if (!Array.isArray(userValue['http://id.loc.gov/ontologies/bibframe/role'])){
+		// 			userValue['http://id.loc.gov/ontologies/bibframe/role'] = [userValue['http://id.loc.gov/ontologies/bibframe/role']]
+		// 		}
 
-				for (let role of userValue['http://id.loc.gov/ontologies/bibframe/role']){
+		// 		for (let role of userValue['http://id.loc.gov/ontologies/bibframe/role']){
 
 					
-					contribution.appendChild(rolePredicate)
+		// 			contribution.appendChild(rolePredicate)
 
-					let roleBnode = document.createElementNS(this.namespace.bf,"bf:Role")
-					rolePredicate.appendChild(roleBnode)
+		// 			let roleBnode = document.createElementNS(this.namespace.bf,"bf:Role")
+		// 			rolePredicate.appendChild(roleBnode)
 
-					if (role.URI){
-						roleBnode.setAttributeNS(this.namespace.rdf, 'rdf:about', role.URI)
-					}
-					if (role['http://www.w3.org/2000/01/rdf-schema#label']){
+		// 			if (role.URI){
+		// 				roleBnode.setAttributeNS(this.namespace.rdf, 'rdf:about', role.URI)
+		// 			}
+		// 			if (role['http://www.w3.org/2000/01/rdf-schema#label']){
 
-						let label = document.createElementNS(this.namespace.rdfs,"rdfs:label")
-						label.innerHTML = role['http://www.w3.org/2000/01/rdf-schema#label']
-						roleBnode.appendChild(label)
-					}
-
-
-
-				}
+		// 				let label = document.createElementNS(this.namespace.rdfs,"rdfs:label")
+		// 				label.innerHTML = role['http://www.w3.org/2000/01/rdf-schema#label']
+		// 				roleBnode.appendChild(label)
+		// 			}
 
 
-			}
+
+		// 		}
 
 
-			// build the agent based on the type of agent it is
-			// if we have a @type we can make that bnode otherwise make a Agent
-			if (userValue['http://www.w3.org/2002/07/owl#sameAs']){
-
-				let sameAs = userValue['http://www.w3.org/2002/07/owl#sameAs']
-
-				let agentBnode
-
-				// see if outside the sameAs we have the BF type that it is
-
-				if (userValue['@type']){
-					let bftype = this.namespaceUri(userValue['@type'])
-					agentBnode = document.createElementNS(this.namespace.bf,bftype)
-				}else{
-					agentBnode = document.createElementNS(this.namespace.bf,'bf:Agent')
-				}
+		// 	}
 
 
-				// but add a rdf type to it if we have the MADs too
-				if (sameAs['@type']){
-					let type = this.createElByBestNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#type')
-					type.setAttributeNS(this.namespace.rdf, 'rdf:resource', sameAs['@type'])
-					agentBnode.appendChild(type)
-				}
+		// 	// build the agent based on the type of agent it is
+		// 	// if we have a @type we can make that bnode otherwise make a Agent
+		// 	if (userValue['http://www.w3.org/2002/07/owl#sameAs']){
 
-				if (sameAs.URI){
-					agentBnode.setAttributeNS(this.namespace.rdf, 'rdf:about', sameAs.URI)
-				}
+		// 		let sameAs = userValue['http://www.w3.org/2002/07/owl#sameAs']
 
-				if (sameAs["http://www.w3.org/2000/01/rdf-schema#label"]){
+		// 		let agentBnode
 
-					let label = document.createElementNS(this.namespace.rdfs,"rdfs:label")
-					label.innerHTML = sameAs['http://www.w3.org/2000/01/rdf-schema#label']
-					agentBnode.appendChild(label)
-				}
+		// 		// see if outside the sameAs we have the BF type that it is
+
+		// 		if (userValue['@type']){
+		// 			let bftype = this.namespaceUri(userValue['@type'])
+		// 			agentBnode = document.createElementNS(this.namespace.bf,bftype)
+		// 		}else{
+		// 			agentBnode = document.createElementNS(this.namespace.bf,'bf:Agent')
+		// 		}
+
+
+		// 		// but add a rdf type to it if we have the MADs too
+		// 		if (sameAs['@type']){
+		// 			let type = this.createElByBestNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#type')
+		// 			type.setAttributeNS(this.namespace.rdf, 'rdf:resource', sameAs['@type'])
+		// 			agentBnode.appendChild(type)
+		// 		}
+
+		// 		if (sameAs.URI){
+		// 			agentBnode.setAttributeNS(this.namespace.rdf, 'rdf:about', sameAs.URI)
+		// 		}
+
+		// 		if (sameAs["http://www.w3.org/2000/01/rdf-schema#label"]){
+
+		// 			let label = document.createElementNS(this.namespace.rdfs,"rdfs:label")
+		// 			label.innerHTML = sameAs['http://www.w3.org/2000/01/rdf-schema#label']
+		// 			agentBnode.appendChild(label)
+		// 		}
 				
 
-				for (let key of Object.keys(sameAs)){
+		// 		for (let key of Object.keys(sameAs)){
 
-					// there are some special keys we want to not try to serailize 
-					if (key == '@type' || key == 'rdfs:label' || key == 'http://www.w3.org/2000/01/rdf-schema#label' || key == 'URI' || key == 'context' || key.startsWith('BFE2META')){continue}
-
-
-					// should only be literals, if not we need to handle that differently
-					if (typeof sameAs[key] === 'string' || sameAs[key] instanceof String){
-
-						let pp = this.createElByBestNS(key)
-						pp.innerHTML = sameAs[key]
-						agentBnode.appendChild(pp)
-
-					}else if (sameAs[key] === null){
-
-						console.warn('null value for ',key, 'in', ptObj)
-
-					}else{
-
-						console.error("In a sameAs entitiy with a non-literal value, don't know what to do!", ptObj)
-
-					}
-
-				}
+		// 			// there are some special keys we want to not try to serailize 
+		// 			if (key == '@type' || key == 'rdfs:label' || key == 'http://www.w3.org/2000/01/rdf-schema#label' || key == 'URI' || key == 'context' || key.startsWith('BFE2META')){continue}
 
 
-				agent.appendChild(agentBnode)
+		// 			// should only be literals, if not we need to handle that differently
+		// 			if (typeof sameAs[key] === 'string' || sameAs[key] instanceof String){
+
+		// 				let pp = this.createElByBestNS(key)
+		// 				pp.innerHTML = sameAs[key]
+		// 				agentBnode.appendChild(pp)
+
+		// 			}else if (sameAs[key] === null){
+
+		// 				console.warn('null value for ',key, 'in', ptObj)
+
+		// 			}else{
+
+		// 				console.error("In a sameAs entitiy with a non-literal value, don't know what to do!", ptObj)
+
+		// 			}
+
+		// 		}
+
+
+		// 		agent.appendChild(agentBnode)
 
 
 
-			}else{
+		// 	}else{
 
-				console.error("There is no sameAS for this contributor:", ptObj)
-			}
-
-
+		// 		console.error("There is no sameAS for this contributor:", ptObj)
+		// 	}
 
 
 
 
-			return contribution
 
 
-		},
+		// 	return contribution
+
+
+		// },
 
 
 	},
@@ -354,7 +358,7 @@ const exportXML = {
 
 	suggestType: async function(propertyURI){
 
-		console.log('propertyURI:',propertyURI)
+		
 
 		// at this point we have a well cached lookup of the whole onotlogy in localstorage
 		// ask for this one, if it idoesnt have it, it will relookup (or if it is expired)
@@ -420,8 +424,167 @@ const exportXML = {
 	},
 
 
+	hasUserValue: function(userValue){
+	
+
+		for (let key in userValue){
+
+			if (key == '@id' || key.includes('http://') || key.includes('https://')){
+				return true
+			}
+		}
+
+		return false
+	},
+
+	isBnode: function(userValue){
+	
+
+		// if it has any nested data it is a bnode
+		// for (let key in userValue){
+		// 	if (Array.isArray(userValue[key])){
+		// 		return true
+		// 	}
+		// }
+		if (userValue['@type']){
+			return true
+		}
+
+
+		return false
+	},
+
+	debug: function(uri, msg, userValue, other1, other2, other3){
+
+		let print = false
+
+		if (print) console.log('-----------------START-------------------')
+
+		let info = []
+		if (uri){
+			info.push(uri)
+			if (print) console.log(uri)
+		}
+
+		if (msg){
+			info.push(msg)
+			if (print) console.log(msg)
+		}
+		if (userValue){
+			info.push(userValue)
+			if (print) console.log(JSON.stringify(userValue,null,2))
+		}
+		if (other1){
+			info.push(other1)
+			if (print) console.log(other1)
+		}
+		if (other2){
+			info.push(other2)
+			if (print) console.log(other2)
+		}
+		if (other3){
+			info.push(other3)
+			if (print) console.log(other3)
+		}
+
+		if (print) console.log('------------------END-------------------')
+
+		this.debugHistory.push(info)
+
+	},
+
+
+	createBnode: function(userValue,property){
+
+		// some special cases here
+		if (property == 'http://id.loc.gov/ontologies/bibframe/agent'){
+
+			// if it is an agent create the Agent bnode and just add the type to it as rdd:type
+			let bnode = this.createElByBestNS('bf:Agent')
+			if (userValue['@id']){
+				bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', userValue['@id'])						
+			}
+
+			let rdftype = this.createElByBestNS('rdf:type')
+
+			rdftype.setAttributeNS(this.namespace.rdf, 'rdf:resource', userValue['@type'])						
+
+			bnode.appendChild(rdftype)
+
+			if (userValue['@parseType']){
+				bnode.setAttribute('rdf:parseType', userValue['@parseType'])
+			}
+
+			return bnode
+
+
+		}else{
+
+
+			// just normally make it
+
+			let bnode = this.createElByBestNS(userValue['@type'])
+			if (userValue['@id']){
+				bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', userValue['@id'])						
+			}
+			if (userValue['@parseType']){
+				bnode.setAttribute('rdf:parseType', userValue['@parseType'])
+
+			}
+
+			return bnode
+
+		}
+
+
+
+
+		
+	},
+
+	createLiteral: function(property,userValue){
+
+
+		let p = this.createElByBestNS(property)
+
+		// it should be stored under the same key
+		if (userValue[property]){
+			p.innerHTML = userValue[property]
+		}
+
+		// does it also have a URI?
+		if (userValue['@id']){
+
+
+			p.setAttributeNS(this.namespace.rdf, 'rdf:resource', userValue['@id'])
+
+		}
+		if (userValue['@datatype']){
+			p.setAttributeNS(this.namespace.rdf, 'rdf:datatype', userValue['@datatype'])
+
+		}
+
+		if (userValue['@language']){
+			p.setAttribute('xml:lang', userValue['@language'])
+
+		}
+		if (userValue['@parseType']){
+			p.setAttribute('rdf:parseType', userValue['@parseType'])
+
+		}
+
+
+
+		// doesnt work :(
+		// p.removeAttributeNS("http://www.w3.org/2000/xmlns/", 'xmlns:rdfs')
+
+
+		return p
+	},
 
 	toBFXMLProcess: async function(profile){
+
+		this.debugHistory = []
 
 		let orginalProfile = profile
 		// cut the ref to the orginal
@@ -462,13 +625,13 @@ const exportXML = {
 
 		for (let rt of profile.rtOrder){
 
-			console.log(profile)
+			// console.log(profile)
 
 			if (profile.rt[rt].noData) continue
 
 				
 
-			let tleArray
+			let tleArray // eslint-disable-line
 			let rootEl
 			let rootElName
 
@@ -486,15 +649,15 @@ const exportXML = {
 				rootElName = "Item"
 			}
 
+
 			// rdf.appendChild(rootEl,tleArray)
-			console.log(tleArray)
+			// console.log(tleArray)
 			
 			if (profile.rt[rt].URI){
 				rootEl.setAttributeNS(this.namespace.rdf, 'rdf:about', profile.rt[rt].URI)
 				xmlVoidExternalID.push(profile.rt[rt].URI)
 			}
 			if (profile.rt[rt]['@type']){
-
 				let type = this.createElByBestNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#type')
 				type.setAttributeNS(this.namespace.rdf, 'rdf:resource', profile.rt[rt]['@type'])
 				rootEl.appendChild(type)				
@@ -505,13 +668,14 @@ const exportXML = {
 
 				let ptObj = profile.rt[rt].pt[pt]
 
+				let userValue = ptObj.userValue
+
 				if (this.ignoreProperties.indexOf(ptObj.propertyURI) > -1){
-					
 					continue
 				}
 
 				// does it even have any userValues?
-				if (Object.keys(ptObj.userValue).length>0){
+				if (this.hasUserValue(userValue)){
 
 
 					// keep track of what resource teplates we used in this record
@@ -522,467 +686,286 @@ const exportXML = {
 						xmlVoidDataType.push(rootElName)
 					}
 
+					// is it a BNODEEEEE
+					if (this.isBnode(userValue)){
 
 
-					// is this one of the special transforms
-					if (this.specialTransforms[this.namespaceUri(ptObj.propertyURI)]){
+						this.debug(ptObj.propertyURI,'root level element, is bnode', userValue)
 
+						let pLvl1 = this.createElByBestNS(ptObj.propertyURI)
+						let bnodeLvl1 = this.createBnode(userValue, ptObj.propertyURI)
 
-						let resultEl = this.specialTransforms[this.namespaceUri(ptObj.propertyURI)].call(this,ptObj)	
+						// loop though the properties
+						for (let key1 of Object.keys(userValue).filter(k => (!k.includes('@') ? true : false ) )){
 
-						if (resultEl){
-							rootEl.appendChild(resultEl)
-						}else{
-							console.error('Need to special transform', ptObj.propertyURI,resultEl)			
-						}
 
-						
+							let pLvl2 = this.createElByBestNS(key1)
 
-
-					// does it only have a sameAs property, a entitiy lookup complex + simple?
-					}else if (ptObj.userValue['http://www.w3.org/2002/07/owl#sameAs'] && Object.keys(ptObj.userValue).length == 1){
-
-						// if its not an array then make it
-						if (!Array.isArray(ptObj.userValue['http://www.w3.org/2002/07/owl#sameAs'])){
-							ptObj.userValue['http://www.w3.org/2002/07/owl#sameAs'] = [ptObj.userValue['http://www.w3.org/2002/07/owl#sameAs']]
-
-						}
-
-
-						for (let sameAs of ptObj.userValue['http://www.w3.org/2002/07/owl#sameAs']){
-
-							if (!sameAs['URI'] || !sameAs['@type']){
-								console.error("Missing URI or @type for this bnode, cannot export:",ptObj)
-								continue
-							}
-
-
-							// construct the predicate
-							let p = this.createElByBestNS(ptObj.propertyURI)
-							rootEl.appendChild(p)
-
-							// the bnode
-							let bnode = this.createElByBestNS(sameAs['@type'])
-							p.appendChild(bnode)
-
-							//set the URI
-							bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', sameAs['URI'])
-
-							// loop through the rest of the properties and create them
-							for (let key of Object.keys(sameAs)){
-
-								// there are some special keys we want to not try to serailize 
-								if (key == '@type' || key == 'URI' || key == 'context' || key.startsWith('BFE2META')){continue}
-
-								// should only be literals, if not we need to handle that differently
-								if (typeof sameAs[key] === 'string' || sameAs[key] instanceof String){
-
-									let pp = this.createElByBestNS(key)
-									pp.innerHTML = sameAs[key]
-									bnode.appendChild(pp)
-								}else if (sameAs[key] === null){
-
-									console.warn('null value for ',key, 'in', ptObj)
-
-								}else{
-
-									console.error("In a sameAs entitiy with a non-literal value, don't know what to do!", ptObj)
-
-								}
-
-							}
-
-
-						}
-
-					// there is a lookup and other things to handel as well
-					}else if (ptObj.userValue['http://www.w3.org/2002/07/owl#sameAs'] && Object.keys(ptObj.userValue).length > 1){
-
-						// we are going to make the bnode from the sameAs then add in the other properties into that bnode
-						let sameAs = ptObj.userValue['http://www.w3.org/2002/07/owl#sameAs']
-
-						// construct the predicate
-						let p = this.createElByBestNS(ptObj.propertyURI)
-						rootEl.appendChild(p)
-
-						// the bnode
-						let bnode = this.createElByBestNS(sameAs['@type'])
-						p.appendChild(bnode)
-
-						//set the URI
-						bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', sameAs['URI'])
-
-						// loop through the rest of the properties and create them
-						for (let key of Object.keys(sameAs)){
-
-							// there are some special keys we want to not try to serailize 
-							if (key == '@type' || key == 'URI' || key == 'context' || key.startsWith('BFE2META')){continue}
-
-							// should only be literals, if not we need to handle that differently
-							if (typeof sameAs[key] === 'string' || sameAs[key] instanceof String){
-
-								let pp = this.createElByBestNS(key)
-								pp.innerHTML = sameAs[key]
-								bnode.appendChild(pp)
-							}else if (sameAs[key] === null){
-								console.warn('null value for ',key, 'in', ptObj)
-							}else{
-								console.error("In a sameAs entitiy with a non-literal value, don't know what to do!", ptObj)
-							}
-						}
-
-						for (let key of Object.keys(ptObj.userValue)){
-
-							let value = ptObj.userValue[key]
-
-							// we just did this one above
-							if (key == 'http://www.w3.org/2002/07/owl#sameAs'){ continue}
-
-								
-							if (key.startsWith('BFE2META')){continue}
-
-							// no nulls plz
-							if (value===null){ continue}
-
-							// if it is an object we need to create another bnode, but make it inside the one
-							// created for the sameAs entitiy lookup
-							
-							if (typeof value === 'object' && value !== null){
-
-								// make sure we know what to make
-								if (!value['@type']){
-									// figure out the type it should be from the ontology
-									value['@type'] = await this.suggestType(key);	
-								}
-
-								if (value['@type']){
-
-
-									// construct the predicate
-									let pp = this.createElByBestNS(key)
-									bnode.appendChild(pp)
-
-									// the bnode
-									let bnodeChild = this.createElByBestNS(value['@type'])
-									pp.appendChild(bnodeChild)
-
-									if (value['URI']){
-										bnodeChild.setAttributeNS(this.namespace.rdf, 'rdf:about', value['URI'])
-									}
-
-
-
-									// populate the rest of the properties in the subbnode
-									for (let subkey of Object.keys(value)){
-
-										// there are some special keys we want to not try to serailize 
-										if (subkey == '@type' || subkey == 'URI' || subkey == 'context' || subkey.startsWith('BFE2META')){continue}
-
-										// should only be literals, if not we need to handle that differently
-										if (typeof value[subkey] === 'string' || value[subkey] instanceof String){
-
-											let ppp = this.createElByBestNS(subkey)
-											ppp.innerHTML = value[subkey]
-											bnodeChild.appendChild(ppp)
-
-										}else if (sameAs[key] === null){
-											console.warn('null value for ',subkey, 'in', ptObj)
-										}else{
-											console.error("In a sameAs entitiy with a non-literal value, don't know what to do!", ptObj)
-										}
-									}
-
-								}else{
-
-
-									console.error('could not make bnode from ', value, 'in',ptObj)
-								}
-
-
-
-							}else{
-
-								let pp = this.createElByBestNS(key)
-								pp.innerHTML = value
-								bnode.appendChild(pp)
-
-								
-
-
-
+							if (key1 == 'http://www.loc.gov/mads/rdf/v1#componentList'){
+								pLvl2.setAttribute('rdf:parseType', 'Collection')
 							}
 
 
 
+							// loop through the value array of each of them
+							for (let value1 of userValue[key1]){
 
-						}
+								// console.log('key1',key1)
+								// console.log('value1',value1)
+
+								// is it a bnode?
+								if (this.isBnode(value1)){
+
+									// yes
+									
+									let bnodeLvl2 = this.createBnode(value1,key1)
+									pLvl2.appendChild(bnodeLvl2)
+									bnodeLvl1.appendChild(pLvl2)
+
+									// console.log('bnodeLvl2',bnodeLvl2)
+
+									// now loop through its properties and see whats nested
+									for (let key2 of Object.keys(value1).filter(k => (!k.includes('@') ? true : false ) )){
+
+										let pLvl3 = this.createElByBestNS(key2)
+
+										for (let value2 of value1[key2]){
+
+											// console.log('key2',key2)
+
+											// console.log('value2',value2)
 
 
+											if (this.isBnode(value2)){
 
-					// it does not have entitiy lookup, but it is a resource and needs a bnode 
-					}else if (ptObj.type == "resource"){
+												// more nested bnode
+												// one more level
+												
+												let bnodeLvl3 = this.createBnode(value2,key2)
+												pLvl3.appendChild(bnodeLvl3)
+												bnodeLvl2.appendChild(pLvl3)
 
-						let userValue = ptObj.userValue;
+												for (let key3 of Object.keys(value2).filter(k => (!k.includes('@') ? true : false ) )){
+
+													for (let value3 of value2[key3]){
+
+														if (this.isBnode(value3)){
+
+															console.error("Max hierarchy depth reached, but there are more levels left:", key3, 'in', userValue )
+
+														}else{
 
 
-						// // is there only one key, and is it the same as the propertyuri?
-						// let allKeys = Object.keys(userValue).filter((k)=>{ return (k != '@type') })						
-						// // over write the uservalue with just that key 
-						// if (allKeys.length==1){		
-						// 	// and it is a property
-						// 	if (typeof userValue[allKeys[0]] == 'object'){
-						// 		userValue = userValue[allKeys[0]]
-						// 	}
-						// }
+															for (let key4 of Object.keys(value3).filter(k => (!k.includes('@') ? true : false ) )){
 
+																if (typeof value3[key4] == 'string' || typeof value3[key4] == 'number'){
+																	// its a label or some other literal
+																	let p4 = this.createLiteral(key4, value3)
+																	bnodeLvl3.appendChild(p4)
+																	// console.log('key4',key4, bnodeLvl3)
+																}else{
+																	console.error('key4', key4, value3[key4], 'not a literal, should not happen')
+																}
 
-
-
-						if (!userValue['@type']){
-							// figure out the type it should be from the ontology
-							userValue['@type'] = await this.suggestType(ptObj.propertyURI);	
-						}
-
-						
-
-						// if that worked
-						if (userValue['@type']){
-
-							// construct the predicate
-							let p = this.createElByBestNS(ptObj.propertyURI)
-							rootEl.appendChild(p)
-
-							// the bnode
-							let bnode = this.createElByBestNS(userValue['@type'])
-							p.appendChild(bnode)
-
-							// if it has a URI
-							if (userValue['URI']){
-								bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', userValue['URI'])
-							}
-
-							console.log('userValue:',userValue)
-
-							// // now loop through all the other properties here and build the bnode out
-							for (let subkey of Object.keys(userValue)){
-
-								console.log('typeof userValue[subkey]:',typeof userValue[subkey])
-
-								// there are some special keys we want to not try to serailize 
-								if (subkey == '@type' || subkey == 'URI' || subkey == 'context' || subkey.startsWith('BFE2META')){continue}
-
-								// should only be literals, if not we need to handle that differently
-								if (typeof userValue[subkey] === 'string' || userValue[subkey] instanceof String){
-
-									let pp = this.createElByBestNS(subkey)
-									pp.innerHTML = userValue[subkey]
-									bnode.appendChild(pp)
-
-								}else if (userValue[subkey] === null){
-
-									console.warn('null value for ',subkey, 'in', ptObj)
-
-								}else if (typeof userValue[subkey] === 'object' && userValue[subkey] !== null){
+															}
 
 
 
+														}
 
-									// do the same thing...
-									let userChildValues = userValue[subkey];
-
-									if (!Array.isArray(userChildValues)){
-										userChildValues = [userChildValues]
-									}
-
-
-									if (Array.isArray(userChildValues)){
-										console.log("userChildValueuserChildValueuserChildValue is array")
-									}
-
-									if (subkey == 'http://id.loc.gov/ontologies/bibframe/frequency'){
-										console.log('----herez')
-										console.log("userChildValueuserChildValueuserChildValue:",userChildValues)
-										console.log("subkey:",subkey)
-										console.log(Array.isArray(userValue[subkey]))
-
-									}
-
-									let iterCount = 0
-
-									for (let userChildValue of userChildValues){
-
-
-										if (!userChildValue['@type']){
-											// figure out the type it should be from the ontology
-											userChildValue['@type'] = await this.suggestType(subkey);	
-										}
-
-
-
-										// if that worked
-										if (userChildValue['@type']){
-
-											let ppp
-											let childBnode
-
-											// if it is the same type as the parent, attach to parent
-											if (userChildValue['@type'] == userValue['@type']){
-
-												// only on the first occurance though, if we have repeated fields
-												// then make a new bnode for it to live in
-												if (iterCount==0){
-													ppp = p
-													childBnode = bnode
-												}else{
-
-													ppp = p
-													childBnode = this.createElByBestNS(userChildValue['@type'])
-													ppp.appendChild(childBnode)
+													}
 												}
-
 
 											}else{
 
-												// construct the predicate
-												ppp = this.createElByBestNS(subkey)
-												bnode.appendChild(ppp)
 
-												// the bnode
-												childBnode = this.createElByBestNS(userChildValue['@type'])
-												ppp.appendChild(childBnode)
+												for (let key3 of Object.keys(value2).filter(k => (!k.includes('@') ? true : false ) )){
 
-											}
-
-	
-											// if it has a URI
-											if (userChildValue['URI']){
-												childBnode.setAttributeNS(this.namespace.rdf, 'rdf:about', userChildValue['URI'])
-											}
-
-											// add in all the other properties, special usecase for rdf:type
-
-											for (let subChildkey of Object.keys(userChildValue)){
-
-												// there are some special keys we want to not try to serailize 
-												if (subChildkey == '@type' || subChildkey == 'URI' || subChildkey == 'context' || subChildkey.startsWith('BFE2META')){continue}
-												let subChildkeyFull = subChildkey
-												if (!subChildkey.startsWith('http')){
-													subChildkeyFull = this.UriNamespace(subChildkey)
-												}
-
-												// should only be literals, if not we need to handle that differently
-												if (typeof userChildValue[subChildkey] === 'string' || userChildValue[subChildkey] instanceof String){
-
-
-													if (subChildkeyFull == 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'){
-
-														let pppp = this.createElByBestNS(subChildkey)
-														pppp.setAttributeNS(this.namespace.rdf, 'rdf:resource', userChildValue[subChildkey])
-														childBnode.appendChild(pppp)
-
-
+													if (typeof value2[key3] == 'string' || typeof value2[key3] == 'number'){
+														// its a label or some other literal
+														let p3 = this.createLiteral(key3, value2)
+														bnodeLvl2.appendChild(p3)
+														// console.log('key3',key3, bnodeLvl2)
 													}else{
-
-														let pppp = this.createElByBestNS(subChildkey)
-														pppp.innerHTML = userChildValue[subChildkey]
-														childBnode.appendChild(pppp)
-
+														console.error('key3', key3, value2[key3], 'not a literal, should not happen')
 													}
 
-
-
-												}else if (userChildValue[subChildkey] === null){
-													console.warn('null value for ',subChildkey, 'in', ptObj)
-
-												}else{
-
-													console.error('could not make bnode from ', subChildkey, 'in',ptObj)
-
 												}
+
 
 
 											}
 
-
-
-										}else{
-											console.error("In a sameAs entitiy with a non-literal value, don't know what to do!", ptObj)
 										}
-
-										iterCount++
 
 									}
 
-								}
-							}
 
 
 
-
-
-						}else{
-
-							console.error('Could not figure out the @type for this uservalue', userValue, ' in ', ptObj)
-
-
-						}
-						
-
-
-
-					// a literal value, loop through the keys and make itself
-					}else if (ptObj.type == "literal"){
-
-						let testtype = await this.suggestType(ptObj.propertyURI);	
-
-
-						if (testtype === 'http://www.w3.org/2000/01/rdf-schema#Literal'){
-
-							for (let key of Object.keys(ptObj.userValue)){
-
-								// there are some special keys we want to not try to serailize 
-								if (key == '@type' || key == 'URI' || key == 'context' || key.startsWith('BFE2META')){continue}
-
-								let p = this.createElByBestNS(key)
-
-
-								if (typeof ptObj.userValue[key] === 'string' || ptObj.userValue[key] instanceof String){
-
-									p.innerHTML = ptObj.userValue[key]
 								}else{
-									console.warn("This node is marked to be literal, but the userValue is not a string:", ptObj)
+
+									// no it is a literal or something else
+									// loop through its keys and make the values
+									let keys = Object.keys(value1).filter(k => (!k.includes('@') ? true : false ) )
+
+									if (keys.length>0){
+										for (let key2 of keys){
+
+											if (typeof value1[key2] == 'string' || typeof value1[key2] == 'number'){
+												// its a label or some other literal
+												let p2 = this.createLiteral(key2, value1)
+												bnodeLvl1.appendChild(p2)
+											}else{
+												console.error('key2', key2, value1[key2], 'not a literal, should not happen')
+											}
+
+										}
+									}else if (keys.length==0 && value1['@id']){
+
+										let p2 = this.createLiteral(key1, value1)
+										bnodeLvl1.appendChild(p2)
+
+									}else{
+
+										console.error('Unhadled literal situtation')
+									}
+
+									
+
+
 								}
 
-
-
-
-								rootEl.appendChild(p)
-
-
 							}
+						}	
 
 
 
-
-						}else{
-
-							console.warn("This node is marked to be literal, but it supposed to be a bnode:", ptObj)
-
-						}
-
-
+						pLvl1.appendChild(bnodeLvl1)
+						rootEl.appendChild(pLvl1)
 
 
 					}else{
 
-						console.warn("usecase not handled:",ptObj )
+						this.debug(ptObj.propertyURI, 'root level element does not look like a bnode', userValue)
+
+						// but it might be a bnode, but with only a URI
+
+
+						if (userValue['@flags'] && userValue['@flags'].indexOf('simpleLookupTopLevelMulti') > -1){
+
+							// an edge case here where we wanted to allow multiple simple lookups in root level fields
+							// like carrierType, loop through the labels, build the properties, if it doesnt have a @id its because its at te root lvl
+							
+							if (userValue['http://www.w3.org/2000/01/rdf-schema#label']){
+
+								for (let label of userValue['http://www.w3.org/2000/01/rdf-schema#label']){
+
+									let p = this.createElByBestNS(ptObj.propertyURI)
+									let bnode = this.createElByBestNS(await this.suggestType(ptObj.propertyURI))
+									p.appendChild(bnode)
+									rootEl.appendChild(p)
+
+									if (label['http://www.w3.org/2000/01/rdf-schema#label']){
+										let lp = this.createElByBestNS('http://www.w3.org/2000/01/rdf-schema#label')
+										lp.innerHTML = label['http://www.w3.org/2000/01/rdf-schema#label']
+										bnode.appendChild(lp)
+									}
+
+									if (label['@id']){
+										bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', label['@id'])
+
+									}else if (userValue['@id']){
+										bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', userValue['@id'])
+									}
+
+
+
+
+								}
+
+							}
+
+
+
+						}else if (userValue['@type'] && userValue['@id']){
+
+							this.debug(ptObj.propertyURI, 'But has @type, making bnode')
+
+							let p = this.createElByBestNS(ptObj.propertyURI)
+							let bnode = this.createElByBestNS(userValue['@type'])						
+							bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', userValue['@id'])
+
+							p.appendChild(bnode)
+							rootEl.appendChild(p)
+						}else if (userValue['@type'] && !userValue['@id']){
+
+							this.debug(ptObj.propertyURI, 'Does not have URI, error', userValue)
+
+							console.error("Does not have URI, ERROR")
+						}else if (await this.suggestType(ptObj.propertyURI) == 'http://www.w3.org/2000/01/rdf-schema#Literal'){
+
+
+							// its just a top level literal property
+							// loop through its keys and make the values
+							for (let key1 of Object.keys(userValue).filter(k => (!k.includes('@') ? true : false ) )){
+
+								for (let value1 of userValue[key1]){
+
+									for (let key2 of Object.keys(value1).filter(k => (!k.includes('@') ? true : false ) )){
+
+										if (typeof value1[key2] == 'string' || typeof value1[key2] == 'number'){
+											// its a label or some other literal
+											let p1 = this.createLiteral(key2, value1)
+											rootEl.appendChild(p1)
+										}else{
+											console.error('key2', key2, value1[key2], 'not a literal, should not happen')
+										}
+
+									}
+								}
+
+							}
+						
+						}else if (userValue['@id']){
+							// it has a URI at least, so make that
+							let p = this.createElByBestNS(ptObj.propertyURI)
+							p.setAttributeNS(this.namespace.rdf, 'rdf:resource', userValue['@id'])
+							rootEl.appendChild(p)
+						}else if (ptObj.propertyURI == 'http://www.w3.org/2000/01/rdf-schema#label'){
+
+							// does it just have a label?
+							let p = this.createElByBestNS(ptObj.propertyURI)
+							p.innerHTML = userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
+							rootEl.appendChild(p)
+
+
+						}else{
+							this.debug(ptObj.propertyURI, 'Does not have @type, something is wrong here', userValue)
+							console.warn("Should not be here")
+							console.log(ptObj)
+							console.log(userValue)
+						}
+
+
 
 
 					}
 
-				}
-			}
 
+					// build the predicate
+					//
+
+
+
+				}
+
+
+
+
+
+			}
+				
 
 			// add in the admindata
 			if (orginalProfile.rt[rt].adminMetadataData){
@@ -1000,6 +983,37 @@ const exportXML = {
 				p.innerHTML = profile.rt[rt].procInfo
 
 
+				for (let el of adm.getElementsByTagName('bflc:generationProcess')){
+					for (let el2 of el.getElementsByTagName('rdfs:label')){
+
+						// remove it
+						if (el2.innerHTML.startsWith('BFE2')){
+							el.remove()
+						}
+
+					}
+				}
+
+				// add in new one
+				let gP = this.createElByBestNS('bf:generationProcess')
+				adm.appendChild(gP)
+				let GP = this.createElByBestNS('bf:GenerationProcess')
+				gP.appendChild(GP)
+
+				let GPD = this.createElByBestNS('bf:generationDate')
+				GPD.innerHTML = new Date().toISOString()							
+				GPD.setAttributeNS(this.namespace.rdf, 'rdf:datatype', 'http://www.w3.org/2001/XMLSchema#dateTime')
+				GP.appendChild(GPD)
+
+
+				let GPL = this.createElByBestNS('rdfs:label')
+
+				GPL.innerHTML = `BFE2 v${config.versionMajor}.${config.versionMinor}.${config.versionPatch}`
+				GP.appendChild(GPL)
+
+
+
+
 				adm.getElementsByTagName('bf:AdminMetadata')[0].appendChild(p)
 				
 				
@@ -1010,14 +1024,14 @@ const exportXML = {
 
 
 			if (orginalProfile.rt[rt].unusedXml){
-				console.log(orginalProfile.rt[rt].unusedXml)
+				
 				let parser = new DOMParser();
 
 				let unusedXmlNode = parser.parseFromString(orginalProfile.rt[rt].unusedXml, "text/xml")
 				unusedXmlNode = unusedXmlNode.children[0]
 
 				for (let el of unusedXmlNode.children){
-					console.log("UNUSED XML DOING:",el)
+					
 					if (el.tagName != 'rdfs:label'){
 						rootEl.appendChild(el)
 					}
@@ -1026,10 +1040,10 @@ const exportXML = {
 
 			}
 
-			// console.log(rootEl,orginalProfile.rt[rt].unusedXmlNodes,orginalProfile.rt[rt].unusedXml)
+			
 
 
-			console.log(rootEl)
+			
 
 			// build the lookup
 
@@ -1039,9 +1053,9 @@ const exportXML = {
 		}
 
 
-		// console.log(tleLookup)
-		// console.log(tleLookup)
-		// console.log(orginalProfile)
+		
+		
+		
 
 		// also just build a basic version tosave
 
@@ -1052,6 +1066,7 @@ const exportXML = {
 		for (let URI in tleLookup['Work']){
 			
 			let theWork = (new XMLSerializer()).serializeToString(tleLookup['Work'][URI])
+			// theWork = theWork.replace(/\sxmlns:[a-z]+="http.*?"/g,'')
 			theWork = parser.parseFromString(theWork, "text/xml").children[0];
 
 			rdfBasic.appendChild(theWork)
@@ -1062,6 +1077,7 @@ const exportXML = {
 			// let instance = tleLookup['Instance'][URI].cloneNode( true )
 
 			let instance = (new XMLSerializer()).serializeToString(tleLookup['Instance'][URI])
+			// instance = instance.replace(/\sxmlns:[a-z]+="http.*?"/g,'')
 			instance = parser.parseFromString(instance, "text/xml").children[0];
 
 
@@ -1099,6 +1115,7 @@ const exportXML = {
 			// rdfBasic.appendChild(tleLookup['Item'][URI].cloneNode( true ))
 
 			let item = (new XMLSerializer()).serializeToString(tleLookup['Item'][URI])
+			// item = item.replace(/\sxmlns:[a-z]+="http.*?"/g,'')
 			item = parser.parseFromString(item, "text/xml").children[0];
 
 			rdfBasic.appendChild(item)
@@ -1147,16 +1164,16 @@ const exportXML = {
 
 				}
 
-				// console.log(instance)
-				// console.log(orginalProfile)
+				
+				
 
-				// console.log(work)
+				
 
 				rdf.appendChild(instance)
 
 			}
 
-			// console.log(rdf)
+			
 
 
 
@@ -1169,46 +1186,46 @@ const exportXML = {
 
 
 
-			let instance = (new XMLSerializer()).serializeToString(tleLookup['Instance'][URI])
-			instance = parser.parseFromString(instance, "text/xml").children[0];
+				let instance = (new XMLSerializer()).serializeToString(tleLookup['Instance'][URI])
+				instance = parser.parseFromString(instance, "text/xml").children[0];
 
 
-			let items = this.returnHasItem(URI,orginalProfile,tleLookup)
+				let items = this.returnHasItem(URI,orginalProfile,tleLookup)
 
-			if (items.length > 0){
+				if (items.length > 0){
 
-				let p = this.createElByBestNS('bf:hasItem')
+					let p = this.createElByBestNS('bf:hasItem')
 
-				for (let item of items){
-					p.appendChild(item)
-					
+					for (let item of items){
+						p.appendChild(item)
+						
+					}
+
+					instance.appendChild(p)
+
+
 				}
 
-				instance.appendChild(p)
 
 
-			}
+				let work = this.returnWorkFromInstance(URI,orginalProfile,tleLookup)
+				
+				
+				if (work){
+					let p = this.createElByBestNS('bf:instanceOf')
 
+					p.appendChild(work)
+					instance.appendChild(p)
+					// console.log(instance,'instance')
 
+				}
 
-			let work = this.returnWorkFromInstance(URI,orginalProfile,tleLookup)
-			console.log('da work:',work)
-			console.log(URI,orginalProfile,tleLookup)
-			if (work){
-				let p = this.createElByBestNS('bf:instanceOf')
+				
+				
 
-				p.appendChild(work)
-				instance.appendChild(p)
-				console.log(instance,'instance')
+				
 
-			}
-
-			// console.log(instance)
-			// console.log(orginalProfile)
-
-			// console.log(work)
-
-			rdf.appendChild(instance)
+				rdf.appendChild(instance)
 
 			}
 
@@ -1217,7 +1234,7 @@ const exportXML = {
 
 
 
-			console.log('NOT AN UPDATE XML GEN')
+			
 
 		}
 
@@ -1227,10 +1244,10 @@ const exportXML = {
 
 
 
-		console.log("$$$$$$$$$$$$$$")
-		console.log(rdfBasic)
-		console.log(rdf)
-		console.log(tleLookup)
+		
+		
+		
+		
 	
 		if (rdfBasic.getElementsByTagName("bf:mainTitle").length>0){
 			xmlVoidDataTitle = rdfBasic.getElementsByTagName("bf:mainTitle")[0].innerHTML
@@ -1246,7 +1263,24 @@ const exportXML = {
 			}
 			
 		}else{
-			console.warn('no PrimaryContribution found for db')
+
+			if (rdfBasic.getElementsByTagName("bf:Contribution").length>0){
+
+				if (rdfBasic.getElementsByTagName("bf:Contribution")[0].getElementsByTagName("rdfs:label").length>0){
+					xmlVoidDataContributor = rdfBasic.getElementsByTagName("bf:Contribution")[0].getElementsByTagName("rdfs:label")[0].innerHTML
+				}else{
+					console.warn('no PrimaryContribution or Contribution found for db')
+
+				}
+
+
+			}else{
+
+				console.warn('no PrimaryContribution or Contribution found for db')
+
+
+			}
+
 		}
 
 
@@ -1325,22 +1359,19 @@ const exportXML = {
 
 
 
-
-
 		rdfBasic.appendChild(datasetDescriptionEl)
 
 
-
-
 		let strXmlBasic = (new XMLSerializer()).serializeToString(rdfBasic)
-
 		let strXml = (new XMLSerializer()).serializeToString(rdf)
+
+
 		// console.log(strXml)
 		
 
 
-		// console.log(profile)
-		// console.log(datasetDescriptionEl)
+		
+		
 
 
 		return {

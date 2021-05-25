@@ -1,6 +1,11 @@
 <template>
     <div class="grid">
 
+
+
+
+
+
       <header>
                     <!-- <div style="display: ">loaded profile -- {{profilesLoaded}} </div> -->
                     <div>
@@ -21,10 +26,13 @@
           <Keypress key-event="keydown" :key-code="34" @success="movePageDown" />          
           <Keypress key-event="keydown" :key-code="33" @success="movePageUp" />
 
-          <Keypress key-event="keydown" :multiple-keys="[{keyCode: 187, modifiers: ['ctrlKey'],preventDefault: true}]" @success="dupeProperty" />
+          <Keypress key-event="keydown" :multiple-keys="[{keyCode: 187, modifiers: ['ctrlKey','shiftKey'],preventDefault: true}]" @success="dupeProperty" />
 
 
-        
+          <Keypress key-event="keydown" :multiple-keys="[{keyCode: 88, modifiers: ['ctrlKey','shiftKey'],preventDefault: true}]" @success="togglePreview" />
+          <Keypress key-event="keydown" :multiple-keys="[{keyCode: 80, modifiers: ['ctrlKey','shiftKey'],preventDefault: true}]" @success="publish" />
+
+          <Keypress key-event="keydown" :key-code="27" @success="escapeKey" />
 
 
 
@@ -49,7 +57,7 @@
                         </div>
 
                         <ul style="padding-left: 0;" :key="'leftmenu' + activeEditCounter">
-                            <li v-bind:class="['left-menu-list-item', { 'left-menu-list-item-has-data' :  liHasData(activeProfile.rt[profileName].pt[profileCompoent]) && returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue) != '', 'left-menu-list-item-active':(activeComponent==profileCompoent &&activeProfileName==profileName)}]" :id="'menu'+profileCompoent"  v-for="profileCompoent in activeProfile.rt[profileName].ptOrder" :key="profileCompoent">
+                            <li v-bind:class="['left-menu-list-item', { 'left-menu-list-item-has-data' :  liHasData(activeProfile.rt[profileName].pt[profileCompoent]) && returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue).length != 0, 'left-menu-list-item-active':(activeComponent==profileCompoent &&activeProfileName==profileName)}]" :id="'menu'+profileCompoent"  v-for="profileCompoent in activeProfile.rt[profileName].ptOrder" :key="profileCompoent">
                               
                                 <a v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" @click="scrollFieldContainerIntoView($event,profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_'))" href="#">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}}</a>
                                 <a v-else href="#" style="color: rgba(255,255,255,0.75) !important;" @click="restoreDelete($event, profileName, profileCompoent)" class="simptip-position-right" data-tooltip="Click to restore">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}} [Deleted]</a>
@@ -66,7 +74,7 @@
 
         </aside>
 
-        <article v-if="displayPreview===false">
+        <article >
             
             <div v-if="profilesLoaded">
 
@@ -93,7 +101,7 @@
 
 
                         <div v-for="profileCompoent in activeProfile.rt[profileName].ptOrder" :key="profileCompoent" :id="'container-for-'+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')">
-                              <EditMainComponent v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" class="component" :parentURI="activeProfile.rt[profileName].URI" :activeTemplate="activeProfile.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :parentStructure="activeProfile.rtOrder" :structure="activeProfile.rt[profileName].pt[profileCompoent]"/>
+                              <EditMainComponent v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" class="component" :parentURI="activeProfile.rt[profileName].URI" :activeTemplate="activeProfile.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :ptGuid="activeProfile.rt[profileName].pt[profileCompoent]['@guid']" :parentStructure="activeProfile.rtOrder" :structure="activeProfile.rt[profileName].pt[profileCompoent]"/>
                         </div>
 
                         <div v-if="activeProfile.rt[profileName].unusedXml" style="background-color: #fde4b7; overflow-x: hidden;">
@@ -113,18 +121,23 @@
 
         </article>
 
-        <article v-else>
-          <div style="height: 100vh; background-color: #fffff1">
-            <h1 style="margin-top: 0;">RDF XML Preview</h1>
-            <button style="font-size: 1.5em" @click="togglePreview">CLOSE</button>
-            <textarea spellcheck="false" v-model="xmlPreview" style="width: 99%;font-size: 2em;height: 83vh;">
 
-            </textarea>
-            <button style="font-size: 1.5em" @click="togglePreview">CLOSE</button>
+        <div v-if="displayPreview===true" style="height: 100vh; background-color: #fffff1; position: fixed;left: 0;width: 100%;z-index: 1000;">
+          <div style="display: flex;">
+            <div style="flex: 1">
+              <h1 style="margin-top: 0;">RDF XML Preview</h1>    
+
+            </div>
+            <div style="flex: 1">
+              <button style="font-size: 1.5em; float:right; margin: 0.25em;" @click="togglePreview">CLOSE (ESC Key)</button>
 
 
+            </div>            
           </div>
-        </article>
+
+          <textarea spellcheck="false" v-model="xmlPreview" style="width: 99%;font-size: 1.25em;height: 90vh;">
+          </textarea>
+        </div>
 
         <aside id="sidebar-right" class="sidebar-right" style="background-color: white" :key="activeEditCounter">
 
@@ -162,10 +175,11 @@
 
 
 
-                              <div style="margin-bottom: 1em;" v-bind:class="[ {'opac-field-active':(activeComponent==profileCompoent &&activeProfileName==profileName)}]" v-if="Object.keys(activeProfile.rt[profileName].pt[profileCompoent].userValue).length>0 && returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue) != '' && activeProfile.rt[profileName].pt[profileCompoent].deleted != true">
+                              <div style="margin-bottom: 1em;" v-bind:class="[ {'opac-field-active':(activeComponent==profileCompoent &&activeProfileName==profileName)}]" v-if="Object.keys(activeProfile.rt[profileName].pt[profileCompoent].userValue).length>0 && returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue).length != 0 && activeProfile.rt[profileName].pt[profileCompoent].deleted != true">
                                 <span class="opac-field-title">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}}</span>
-                                <div class="opac-field-value">{{returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue)}}</div>
-
+                                <div class="opac-field-value">
+                                  <div v-bind:key="index" v-for="(val, index) in returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue)">{{val}}</div>
+                                </div>
                               </div>
 
 
@@ -186,19 +200,16 @@
                 </div>
                 <div style="margin-bottom: 2em; background-color: whitesmoke; padding: 1.5em">
 
-                  <div v-for="rl in resourceLinks" v-bind:key="rl.url">
-                    <a :href="rl.url" target="_blank">View {{rl.type}} on {{rl.env}}</a>
-
-                  </div>
+  
 
                   <div style="text-align: center; margin-bottom: 1em">
-                    <button style="font-size: 1.5em; width: 100%;" @click="togglePreview">PREVIEW XML</button>
+                    <button style="font-size: 1.5em; width: 100%;" @click="togglePreview">PREVIEW XML<br><span style="font-size: 0.75em;">[CTRL+SHIFT+X]</span></button>
                   </div>
 
 
 
                   <div style="text-align: center;">
-                    <button style="font-size: 1.5em; width: 100%;" @click="publish">POST</button>
+                    <button style="font-size: 1.5em; width: 100%;" @click="publish">POST<br><span style="font-size: 0.75em;">[CTRL+SHIFT+P]</span></button>
                   </div>
 
                   <button v-if="!activeRecordSaved" style="font-size: 1.5em; margin-left: 0.5em; display: none" @click="triggerSave">SAVE</button>
@@ -218,6 +229,40 @@
             Footer
         </footer>
 
+
+
+
+        <div v-if="showPostModal" style="position: fixed; width: 100vw; height: 100vh; top: 0; left: 0; background-color: rgba(0,0,0,0.6); z-index: 1000">
+          
+          <div style="border: solid 1px #a6acb7; border-radius:0.5em; margin: auto; width: 50%; background-color: white; margin-top: 10%; min-height: 35%; padding: 1em;">
+              <div style="font-weight: bold;">Posting Record...</div>
+
+
+              <div v-if="showPostModalErrorMsg">
+                <div style="font-weight: bold; color: red">We were unable to post the record. Please report this error.</div>
+                <pre>
+                  <code>
+                    {{showPostModalErrorMsg}}
+                  </code>
+                </pre>
+              </div>
+
+              <div v-if="resourceLinks.length>0" style="margin: 0.5em 0 0.5em 0;background-color: #90ee9052;padding: 0.5em;border-radius: 0.25em;">
+                The record was accepted by the system. To view the record follow these links:
+                <div v-for="rl in resourceLinks" v-bind:key="rl.url">
+                  <a :href="rl.url" target="_blank">View {{rl.type}} on {{rl.env}}</a>
+                </div>
+                
+              </div>
+
+
+              <button style="font-size: 1em;" @click="togglePreview">Close (ESC Key)</button>
+
+
+          </div>
+
+
+        </div>
 
 
     </div>
@@ -303,6 +348,16 @@ export default {
 
   },
 
+  beforeRouteLeave (to, from , next) {
+    const answer = window.confirm('Do you really want to leave the edit screen?')
+    if (answer) {
+      next()
+    } else {
+      next(false)
+    }
+  },
+
+
 
   updated: function () {
     this.$nextTick(function () {
@@ -316,6 +371,8 @@ export default {
       ontologyLookupTodo: [],
       displayPreview: false,
       xmlPreview: 'Loading...',
+      showPostModal: false,
+      showPostModalErrorMsg: false,
       resourceLinks: []
     }
   },
@@ -354,12 +411,29 @@ export default {
 
     },
 
+    escapeKey: function(){
+
+      if (this.displayPreview){
+        this.displayPreview = false
+      }
+
+
+      if (this.showPostModal){
+        this.showPostModal = false
+      }
+
+    },
+
     publish: async function(){
+
+      this.showPostModal = true
 
       let xml = await exportXML.toBFXML(this.activeProfile)
       let pubResuts = await lookupUtil.publish(xml.xlmString)
 
-      if (pubResuts){
+      this.showPostModalErrorMsg = false
+
+      if (pubResuts.status){
         // if it posted we want to also save the record and mark it as posted
 
         this.activeProfile.status = 'published'
@@ -391,6 +465,10 @@ export default {
         })
 
 
+      }else{
+
+        this.showPostModalErrorMsg = pubResuts.msg
+
       }
 
     },
@@ -413,7 +491,7 @@ export default {
           return false
         }
 
-        let contact = prompt("Contact Info (Optional) ");
+        let contact = prompt("Your Email Address (Optional) ");
 
 
 
@@ -439,12 +517,8 @@ export default {
 
     },
 
-    triggerXMLExport: function(){
+    
 
-      console.log(exportXML.toBFXML(this.activeProfile))
-
-
-    },
     triggerSave: async function(){
 
       let xml = await exportXML.toBFXML(this.activeProfile)
@@ -628,53 +702,54 @@ export default {
 
 
     returnOpacFormat: function(userValue){
-      let r = ''
-      Object.keys(userValue).forEach((k)=>{
+      let r = []
+      try{
 
 
-        if (typeof userValue[k] == 'string' && !userValue[k].includes('http') && !r.includes(userValue[k])){
-          r = r + userValue[k]+ ' '
-        }else if (userValue[k] && userValue[k].literal && !userValue[k].literal.includes('http') && !r.includes(userValue[k].literal)){
-            r = r + userValue[k].literal + ' '
-          
+        // console.log(userValue)
+        // console.log(Object.keys(userValue))
+        Object.keys(userValue).forEach((k)=>{  
+          // console.log(k)    
+          // console.log(userValue[k])    
+          if (!k.startsWith('@')){
+            // console.log(userValue[k],"<----")
+            for (let objVal of userValue[k]){
+              // console.log(objVal)
+              Object.keys(objVal).forEach((kk)=>{
+                if (!kk.startsWith('@')){
+                  if (typeof objVal[kk] == 'string'){
+                    r.push(objVal[kk])                  
+                  }else if (Array.isArray(objVal[kk])){
 
-        }else if (k == 'http://www.w3.org/2002/07/owl#sameAs'){
-
-          if (userValue[k]['http://www.w3.org/2000/01/rdf-schema#label']){
-            r = r + userValue[k]['http://www.w3.org/2000/01/rdf-schema#label']
-          }
-
-        }else if (typeof userValue[k] == 'object'){
-
-          for (let subK in userValue[k]){
-            if (typeof userValue[k][subK] == 'string' && !userValue[k][subK].includes('http') && !r.includes(userValue[k][subK])){
-              r = r + userValue[k][subK] + ' '
+                    for (let objVal2 of objVal[kk]){
+                      Object.keys(objVal2).forEach((kkk)=>{
+                        if (!kkk.includes('@')){
+                          if (typeof objVal2[kkk] == 'string'){
+                            r.push(objVal2[kkk])
+                          }                      
+                        }
+                      })
+                    }
+                  }
+                }
+              })
             }
           }
 
-          // has a URI but no label
-          if (r.trim() == '' && userValue[k].URI){
-            r = r + userValue[k].URI.split('/')[userValue[k].URI.split('/').length-1] + ' '
-          }
 
+
+        })
+        
+        if (r.length == 0 && userValue['@id']){
+          r.push(userValue['@id'])
         }
 
 
-        if (Array.isArray(userValue[k])){
-          for (let userValueAryItem of userValue[k]){
+        r = [...new Set(r)];
 
-            Object.keys(userValueAryItem).forEach((kk)=>{
-              if (typeof userValueAryItem[kk] == 'string' && !userValueAryItem[kk].includes('http') && !r.includes(userValueAryItem[kk])){
-                r = r + userValueAryItem[kk] + ' '   
-              }      
-            })
-
-          }
-        }
-
-
-      })
-      r=r.trim()
+      }catch{
+        return "error"
+      }
       return r
     },
 

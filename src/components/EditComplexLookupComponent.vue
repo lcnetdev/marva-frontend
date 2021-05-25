@@ -3,11 +3,15 @@
 
 
   <div >
+
+
+
     <Keypress key-event="keydown" :key-code="27" @success="closeModal" />
-    <Keypress key-event="keydown" :multiple-keys="[{keyCode: 66, modifiers: ['ctrlKey'],preventDefault: true}]" @success="togglePreCoordinated" />
+    <Keypress key-event="keydown" :multiple-keys="[{keyCode: 66, modifiers: ['ctrlKey', 'shiftKey'],preventDefault: true}]" @success="togglePreCoordinated" />
 
     <div v-if="nested == false" class="component-container">
-      <div class="component-container-title">{{structure.propertyLabel}}</div>
+
+<!--       <div class="component-container-title">{{structure.propertyLabel}}</div>
       <div class="component-container-input-container">
           <div class="component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search"> 
             <div v-if="userData[structure.propertyURI]">
@@ -16,20 +20,21 @@
             <input v-else bfeType="EditComplexLookupComponent" :id="assignedId"  v-on:focus="focused" type="text"  class="selectable-input input-single" @keydown="activate($event)"   />
           </div>
       </div>
-    </div>
+
+ -->
+
+  <div class="component-container-title">{{structure.propertyLabel}}</div>
+    <div class="component-container-input-container">
 
 
-    <div v-else>
-  <!--     <div class="component-container-title">{{structure.propertyLabel}}</div>
-   -->    
-      <div style="position: relative;" v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search']">       
+      <div style="position: relative;" v-bind:class="['component-container-fake-input temp-icon-search']">       
           <div class="component-nested-container-title" style="top: 0; width: 100%">{{structure.propertyLabel}}</div>
 
           <!-- if there is userdata for this type of componet then it is a lookedup entity, make the entity, dont display the inputfield -->
-          <div v-if="userData['http://www.w3.org/2000/01/rdf-schema#label'] || userData.URI" style="position: absolute; width: 100%">
+          <div v-if="displayLabel" style="position: absolute; width: 100%">
               <div style="display: flex;">
                 <div class="selected-value-container-nested" style="display: inline-block; position: relative; bottom: 2px;">
-                    <span  @click="toggleSelectedDetails" style="padding-right: 0.3em; font-weight: bold"><span class="selected-value-icon" v-html="returnAuthIcon(userData['@type'])"></span>{{returnAuthLabel(userData)}}</span>
+                    <span  @click="toggleSelectedDetails" style="padding-right: 0.3em; font-weight: bold"><span class="selected-value-icon" v-html="returnAuthIcon(this.displayType)"></span>{{displayLabel}}</span>
                     <span  @click="removeValue" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">x</span>
                 </div>
 
@@ -40,34 +45,109 @@
               </div>
 
               <!-- This is the detail drop down that can be click to show context of the entitiy -->
+              
               <div v-if="displaySelectedDetails==true" class="selected-value-details">
                 
                 <button class="selected-value-details-close" @click="toggleSelectedDetails">Close</button>
-                <a style="color:white; text-decoration: none;" target="_blank" :href="userData.URI">View Entity</a>
+                <a style="color:white; text-decoration: none;" target="_blank" :href="displayContext.uri">View Entity</a>
                 <div class="modal-context-data-title">{{userData['@type']}}</div>
 
-                <div v-if="userData.context">
-                  <div v-if="userData.context.variant.length>0">
-                    <div class="modal-context-data-title">Varients:</div>
+                <div v-if="displayContext">
+                  <div v-if="displayContext.variant && displayContext.variant.length>0">
+                    <div class="modal-context-data-title">Variants:</div>
                     <ul>
-                      <li class="modal-context-data-li" v-for="(v,idx) in userData.context.variant" v-bind:key="'var' + idx">{{v}}</li>
+                      <li class="modal-context-data-li" v-for="(v,idx) in displayContext.variant" v-bind:key="'var' + idx">{{v}}</li>
                     </ul>
 
 
                   </div>
 
-                  <div v-for="key in Object.keys(userData.context.nodeMap)" :key="key">
+                  <div v-for="key in Object.keys(displayContext.nodeMap)" :key="key">
                     <div class="modal-context-data-title">{{key}}:</div>
                       <ul>
-                        <li class="modal-context-data-li" v-for="v in userData.context.nodeMap[key]" v-bind:key="v">{{v}}</li>
+                        <li class="modal-context-data-li" v-for="v in displayContext.nodeMap[key]" v-bind:key="v">{{v}}</li>
                       </ul>
                   </div>
 
 
-                  <div v-if="userData.context.source.length>0">
+                  <div v-if="displayContext.source && displayContext.source.length>0">
                     <div class="modal-context-data-title">Sources:</div>
                     <ul>
-                      <li class="modal-context-data-li" v-for="v in userData.context.source" v-bind:key="v">{{v}}</li>
+                      <li class="modal-context-data-li" v-for="v in displayContext.source" v-bind:key="v">{{v}}</li>
+                    </ul>
+
+
+                  </div>    
+                </div>            
+
+                
+              </div>
+          </div>
+
+          <!-- Just display the input, no data populated -->
+          <form v-else autocomplete="off" v-on:submit.prevent>
+            <input  bfeType="EditComplexLookupComponent" type="text" class="selectable-input input-nested" :id="assignedId"  v-on:focus="focused" @keydown="activate($event)"   />
+          </form>
+      </div>
+
+
+
+    </div>
+  </div>
+
+    <div v-else>
+
+      
+      <div style="position: relative;" v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search']">       
+          <div class="component-nested-container-title" style="top: 0; width: 100%">
+            <span v-if="parentStructureObj && structure.propertyLabel == 'Lookup'">{{parentStructureObj.propertyLabel}} -- </span>
+            <span>{{structure.propertyLabel}}</span>
+          </div>
+
+          <!-- if there is userdata for this type of componet then it is a lookedup entity, make the entity, dont display the inputfield -->
+          <div v-if="displayLabel" style="position: absolute; width: 100%">
+              <div style="display: flex;">
+                <div class="selected-value-container-nested" style="display: inline-block; position: relative; bottom: 2px;">
+                    <span  @click="toggleSelectedDetails" style="padding-right: 0.3em; font-weight: bold"><span class="selected-value-icon" v-html="returnAuthIcon(this.displayType)"></span>{{displayLabel}}</span>
+                    <span  @click="removeValue" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">x</span>
+                </div>
+
+                <!-- We are displaying the input here to act as a landing pad for when moving through and also to double detel remove lookups -->
+                <form style="display: inline-block; width: 90%" autocomplete="off" v-on:submit.prevent>
+                  <input style="display: inline-block;"  bfeType="EditComplexLookupComponent" type="text" class="selectable-input input-nested" :id="assignedId" @keydown="doubleDeleteCheck"  v-on:focus="focused"   />
+                </form>
+              </div>
+
+              <!-- This is the detail drop down that can be click to show context of the entitiy -->
+              
+              <div v-if="displaySelectedDetails==true" class="selected-value-details">
+                
+                <button class="selected-value-details-close" @click="toggleSelectedDetails">Close</button>
+                <a style="color:white; text-decoration: none;" target="_blank" :href="displayContext.uri">View Entity</a>
+                <div class="modal-context-data-title">{{userData['@type']}}</div>
+
+                <div v-if="displayContext">
+                  <div v-if="displayContext.variant && displayContext.variant.length>0">
+                    <div class="modal-context-data-title">Variants:</div>
+                    <ul>
+                      <li class="modal-context-data-li" v-for="(v,idx) in displayContext.variant" v-bind:key="'var' + idx">{{v}}</li>
+                    </ul>
+
+
+                  </div>
+
+                  <div v-for="key in Object.keys(displayContext.nodeMap)" :key="key">
+                    <div class="modal-context-data-title">{{key}}:</div>
+                      <ul>
+                        <li class="modal-context-data-li" v-for="v in displayContext.nodeMap[key]" v-bind:key="v">{{v}}</li>
+                      </ul>
+                  </div>
+
+
+                  <div v-if="displayContext.source && displayContext.source.length>0">
+                    <div class="modal-context-data-title">Sources:</div>
+                    <ul>
+                      <li class="modal-context-data-li" v-for="v in displayContext.source" v-bind:key="v">{{v}}</li>
                     </ul>
 
 
@@ -94,7 +174,11 @@
 
         <div>
           <div class="close temp-icon-close" @click="closeModal"></div>
-          <div class="modal-title">Lookup</div>
+          <div class="modal-title">
+            <span v-if="parentStructureObj && structure.propertyLabel == 'Lookup'">{{parentStructureObj.propertyLabel}} -- </span>
+            <span>{{structure.propertyLabel}}</span>
+            
+          </div>
           <div class="modal-content">
             <div v-bind:class="['modal-content-flex-container',{'modal-content-flex-container-complex':(canBuildComplex()==true && displayPreCoordinated == true), 'modal-content-flex-container-complex-prompt': displayPreCoordinated==false, 'modal-content-flex-container-complex-hide' : (canBuildComplex()==false) }]">
 
@@ -152,8 +236,8 @@
 
                   <div class="modal-context-data-title">{{contextData.type}}</div>
 
-                  <div v-if="contextData.variant.length>0">
-                    <div class="modal-context-data-title">Varients:</div>
+                  <div v-if="contextData.variant && contextData.variant.length>0">
+                    <div class="modal-context-data-title">Variants:</div>
                     <ul>
                       <li class="modal-context-data-li" v-for="(v,idx) in contextData.variant" v-bind:key="'var' + idx">{{v}}</li>
                     </ul>
@@ -169,7 +253,7 @@
                   </div>
 
 
-                  <div v-if="contextData.source.length>0">
+                  <div v-if="contextData.source && contextData.source.length>0">
                     <div class="modal-context-data-title">Sources:</div>
                     <ul>
                       <li class="modal-context-data-li" v-for="v in contextData.source" v-bind:key="v">{{v}}</li>
@@ -196,21 +280,21 @@
 
               <div class="modal-context-build-manual-buttons"> 
                 <div>Build manual pre-coordinated: Add selected as a subdivision: </div>
-                <button style="width: 11em;" @click="precoordinatedAddSubdivision('Topic')">Heading or Topical
-                  [CRTL+1]
+                <button style="width: 12em;" @click="precoordinatedAddSubdivision('Topic')">Heading or Topical
+                  [CRTL+SHIFT+1]
                 </button>
 
-                <button style="width: 9em;" @click="precoordinatedAddSubdivision('Geographic')">Geographic
-                  [CRTL+2]
+                <button style="width: 10em;" @click="precoordinatedAddSubdivision('Geographic')">Geographic
+                  [CRTL+SHIFT+2]
                 </button>
-                <button style="width: 9em;" @click="precoordinatedAddSubdivision('Temporal')">Chronological
-                  [CRTL+3]
+                <button style="width: 10em;" @click="precoordinatedAddSubdivision('Temporal')">Chronological
+                  [CRTL+SHIFT+3]
                 </button>
-                <button style="width: 6em;" @click="precoordinatedAddSubdivision('GenreForm')">Form
-                  [CRTL+4]
+                <button style="width: 10em;" @click="precoordinatedAddSubdivision('GenreForm')">Form
+                  [CRTL+SHIFT+4]
                 </button>                
-                <button style="width: 7em;" @click="precoordinatedRemoveLast()">Remove Last
-                  [CRTL+5]
+                <button style="width: 10em;" @click="precoordinatedRemoveLast()">Remove Last
+                  [CRTL+SHIFT+5]
                 </button>  
               </div>
 
@@ -222,7 +306,7 @@
               </div>
             </div>
             <div v-else class="modal-context-build-manual" style="text-align: center; cursor: pointer;" @click="togglePreCoordinated">
-              Build [CTRL+B] a pre-coordinated heading.
+              Build [CTRL+SHIFT+B] a pre-coordinated heading.
             </div>
           </div> <!--- end modal-content --->
           
@@ -276,6 +360,11 @@ export default {
       doubleDelete: false,
       precoordinated: [],
       displayPreCoordinated: false,
+
+      displayLabel: null,
+      displayType: null,
+      displayGuid: null,
+      displayContext: {},
 
       userData: {}
     }
@@ -356,7 +445,7 @@ export default {
 
     returnAuthIcon: uiUtils.returnAuthIcon,
 
-    returnAuthLabel: uiUtils.returnAuthLabel,
+
 
 
     camelize: function (str) {
@@ -435,7 +524,7 @@ export default {
           this.userData = {}
           this.$store.dispatch("clearContext", { self: this}).then(() => {
 
-            this.$store.dispatch("addValue", { self: this, profileComponet: this.profileCompoent, template:this.activeTemplate, structure: this.structure })
+            this.$store.dispatch("setValueComplex", { self: this, profileComponet: this.profileCompoent, template:this.activeTemplate, structure: this.structure, parentStructure: this.parentStructureObj })
             .then(() => {
 
               this.checkForUserData()
@@ -487,20 +576,204 @@ export default {
 
     checkForUserData: function(){
 
-      let uv = parseProfile.returnUserValues(this.activeProfile, this.profileCompoent,this.structure.propertyURI)
-      
-      
+      this.displayLabel = null
+      this.displayType = null
+      this.displayGuid = null
 
-      if (uv[this.structure.propertyURI]){
+      let userValue = parseProfile.returnUserValues(this.activeProfile, this.profileCompoent,this.structure.propertyURI)
+      let rootPropertyURI = parseProfile.returnRootPropertyURI(this.activeProfile, this.profileCompoent,this.structure.propertyURI)
+
+      if (userValue['http://www.w3.org/2000/01/rdf-schema#label'] || userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'] || userValue['http://id.loc.gov/ontologies/bibframe/code']){
+
+        if (userValue['http://www.w3.org/2000/01/rdf-schema#label']){
+          this.displayLabel = userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
+
+
+        }else if (userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
+          this.displayLabel = userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
+
+        }else if (userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']){
+          this.displayLabel = userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']
+
+        }else if (userValue['http://id.loc.gov/ontologies/bibframe/code']){
+          this.displayLabel = userValue['http://id.loc.gov/ontologies/bibframe/code'][0]['http://id.loc.gov/ontologies/bibframe/code']
+
+        }
+
+        if (userValue['@type']){
+          this.displayType = userValue['@type']
+        }    
+
+        if (userValue['@context']){
+          this.displayContext = userValue['@context']
+        }else{
+
+          this.displayContext = {
+            contextValue: true,
+            uri: (userValue['@id']) ? userValue['@id'] : null,
+            title: this.displayLabel,
+            nodeMap: {}
+          }
+
+        }
+
+
+
+      }else if (this.parentStructureObj && this.parentStructureObj.propertyURI && userValue[this.parentStructureObj.propertyURI]){
         
-        this.userData = uv[this.structure.propertyURI]
-      }else  if (uv[this.parentStructureObj.propertyURI]){
-        this.userData = uv[this.parentStructureObj.propertyURI]
 
-      // we store subject headings in sameAs property
-      }else if (uv['http://www.w3.org/2002/07/owl#sameAs']){
-        this.userData =uv['http://www.w3.org/2002/07/owl#sameAs']
+        // the data is stored in the sub graph named under the parent
+        if (Array.isArray(userValue[this.parentStructureObj.propertyURI])){
+
+          if (userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/2000/01/rdf-schema#label']){
+            this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
+            this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
+            if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
+              this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
+            }else{
+
+              this.displayContext = {
+                contextValue: true,
+                uri: (userValue[this.parentStructureObj.propertyURI][0]['@id']) ? userValue[this.parentStructureObj.propertyURI][0]['@id'] : null,
+                title: this.displayLabel,
+                nodeMap: {}
+              }
+
+            }
+
+          }else if (userValue[this.parentStructureObj.propertyURI][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
+            this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
+            this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
+            if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
+              this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
+            }else{
+
+              this.displayContext = {
+                contextValue: true,
+                uri: (userValue[this.parentStructureObj.propertyURI][0]['@id']) ? userValue[this.parentStructureObj.propertyURI][0]['@id'] : null,
+                title: this.displayLabel,
+                nodeMap: {}
+              }
+
+            }
+
+          }else if (userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']){
+            this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']
+            this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
+            if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
+              this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
+            }else{
+
+              this.displayContext = {
+                contextValue: true,
+                uri: (userValue[this.parentStructureObj.propertyURI][0]['@id']) ? userValue[this.parentStructureObj.propertyURI][0]['@id'] : null,
+                title: this.displayLabel,
+                nodeMap: {}
+              }
+
+            }
+
+          }else if (userValue[this.parentStructureObj.propertyURI][0]['http://id.loc.gov/ontologies/bibframe/code']){
+            this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://id.loc.gov/ontologies/bibframe/code'][0]['http://id.loc.gov/ontologies/bibframe/code']
+            this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
+            if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
+              this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
+            }else{
+
+              this.displayContext = {
+                contextValue: true,
+                uri: (userValue[this.parentStructureObj.propertyURI][0]['@id']) ? userValue[this.parentStructureObj.propertyURI][0]['@id'] : null,
+                title: this.displayLabel,
+                nodeMap: {}
+              }
+
+            }
+
+          }
+          
+        }
+
+        if (userValue[this.parentStructureObj.propertyURI] && userValue[this.parentStructureObj.propertyURI].length>0){
+          this.displayType = userValue[this.parentStructureObj.propertyURI][0]['@type']
+        }
+
+        if (!this.displayLabel){
+
+          if (userValue[this.parentStructureObj.propertyURI][0] && userValue[this.parentStructureObj.propertyURI][0]['@id']){
+            this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['@id']
+
+            this.displayContext = {
+              contextValue: true,
+              uri: userValue[this.parentStructureObj.propertyURI][0]['@id'],
+              title: this.displayLabel,
+              nodeMap: {}
+            }
+
+          }
+          
+
+        }
+
+
+      }else if (userValue['@root'] && userValue['@root'] == rootPropertyURI){
+
+        
+        if (userValue['http://www.w3.org/2000/01/rdf-schema#label']){
+          this.displayLabel = userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']      
+        }else if (userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
+          this.displayLabel = userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
+
+        }else if (userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']){
+          this.displayLabel = userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']
+
+        }else if (userValue['http://id.loc.gov/ontologies/bibframe/code']){
+          this.displayLabel = userValue['http://id.loc.gov/ontologies/bibframe/code'][0]['http://id.loc.gov/ontologies/bibframe/code']
+        }
+        
+        if (userValue['@type']){
+          this.displayType = userValue['@type']
+        }
+        
+        
+        if (!this.displayLabel){
+          if (userValue['@id']){
+            this.displayLabel = userValue['@id']
+
+          }
+        }
+        
+
+
+        if (userValue['@context']){
+          this.displayContext = userValue['@context']
+        }else{
+          this.displayContext = {
+            contextValue: true,
+            uri: (userValue['@id']) ? userValue['@id'] : null,
+            title: this.displayLabel,
+            nodeMap: {}
+          }
+        }
+
+
+
+
+
+      }else{
+
+          console.warn('---------------------------------------------')
+          console.warn('Dont know how to extract the userValue for this complexLookup')
+          console.warn(userValue)
+          console.warn(this.structure)
+          console.warn('---------------------------------------------')
+
+
       }
+
+      // // if it is a root level resource
+      // if (this.structure.propertyURI == this.structure.userValue['@root']){
+      //   this.displayLabel = "yeet"
+      // }
 
       
 
@@ -513,6 +786,12 @@ export default {
         // the = key is for adding new 
         return false
       }
+
+      if (event.ctrlKey){
+        // if they have the control key pressed dont do anything
+        return false
+      }
+
 
       // turn on the modal
       this.displayModal = true
@@ -625,8 +904,9 @@ export default {
         }        
       }
 
+      console.log(event.key)
 
-      if (event.key === '1' && event.ctrlKey === true){
+      if ((event.key === '1' || event.key === '!') && this.displayPreCoordinated == true && event.ctrlKey === true && event.shiftKey == true){
         
         this.precoordinatedAddSubdivision('Topic')
 
@@ -634,7 +914,7 @@ export default {
         return false 
 
       }
-      if (event.key === '2' && event.ctrlKey === true){
+      if ((event.key === '2' || event.key === '@') && this.displayPreCoordinated == true && event.ctrlKey === true && event.shiftKey == true){
         
         this.precoordinatedAddSubdivision('Geographic')
 
@@ -642,7 +922,7 @@ export default {
         return false 
 
       }
-      if (event.key === '3' && event.ctrlKey === true){
+      if ((event.key === '3' || event.key === '#') && this.displayPreCoordinated == true && event.ctrlKey === true && event.shiftKey == true){
         
         this.precoordinatedAddSubdivision('Temporal')
 
@@ -650,12 +930,12 @@ export default {
         return false 
 
       }
-      if (event.key === '4' && event.ctrlKey === true){        
+      if ((event.key === '4' || event.key === '$') && this.displayPreCoordinated == true && event.ctrlKey === true && event.shiftKey == true){        
         this.precoordinatedAddSubdivision('GenreForm')
         event.preventDefault();
         return false 
       }
-      if (event.key === '5' && event.ctrlKey === true){        
+      if ((event.key === '5' || event.key === '%') && this.displayPreCoordinated == true && event.ctrlKey === true && event.shiftKey == true){        
         this.precoordinatedRemoveLast()
         event.preventDefault();
         return false 
@@ -667,7 +947,7 @@ export default {
       }       
 
 
-      // if (event.key === 'b' && event.ctrlKey === true && this.displayPreCoordinated == false){        
+      // if (event.key === 'b' && event.ctrlKey === true && event.shiftKey == true && this.displayPreCoordinated == false){        
       //   this.togglePreCoordinated()
       //   event.preventDefault();
       //   return false 
@@ -845,7 +1125,7 @@ export default {
         // set it and then set the vlue when done
         this.$store.dispatch("setContextManually", { self: this, context: tempContext, }).then(() => {
         
-          this.$store.dispatch("addValue", { self: this, profileComponet: this.profileCompoent, template:this.activeTemplate, structure: this.structure }).then(() => {
+          this.$store.dispatch("setValueComplex", { self: this, profileComponet: this.profileCompoent, template:this.activeTemplate, structure: this.structure, parentStructure: this.parentStructureObj }).then(() => {
             this.componentKey++
             this.displayModal = false
             this.checkForUserData()
@@ -867,7 +1147,7 @@ export default {
           return false
           // there is no context to add, so dont try
         }
-        this.$store.dispatch("addValue", { self: this, profileComponet: this.profileCompoent, template:this.activeTemplate, structure: this.structure }).then(() => {
+        this.$store.dispatch("setValueComplex", { self: this, profileComponet: this.profileCompoent, template:this.activeTemplate, structure: this.structure, parentStructure: this.parentStructureObj }).then(() => {
           this.componentKey++
           this.displayModal = false
           this.checkForUserData()

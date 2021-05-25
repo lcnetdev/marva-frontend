@@ -1,160 +1,205 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:bf="http://id.loc.gov/ontologies/bibframe/" xmlns:bflc="http://id.loc.gov/ontologies/bflc/" xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pmo="http://performedmusicontology.org/ontology/"><bf:Instance rdf:about="http://id.loc.gov/resources/instances/e2324557043013562145333356239676927794980001"><bf:soundCharacteristic>
-          <bf:PlaybackChannels rdf:about="http://id.loc.gov/vocabulary/mplayback/mul">
-            <rdfs:label>surround</rdfs:label>
-          </bf:PlaybackChannels>
-        </bf:soundCharacteristic><bf:issuance>
-          <bf:Issuance rdf:about="http://id.loc.gov/vocabulary/issuance/mono">
-            <rdfs:label>single unit</rdfs:label>
-          </bf:Issuance>
-        </bf:issuance><bf:extent>
-          <bf:Extent>
-            <rdfs:label>1 videodisc</rdfs:label>
-          </bf:Extent>
-        </bf:extent><bf:title>
-          <bf:Title>
-            <bf:note>
-              <bf:Note>
-                <rdfs:label>Title from container</rdfs:label>
-              </bf:Note>
-            </bf:note>
-            <bf:mainTitle>Monumental--in search of America's national treasure</bf:mainTitle>
-          </bf:Title>
-        </bf:title><bf:supplementaryContent>
-          <bf:SupplementaryContent>
-            <rdfs:label>Special features: interviews with executive producer and Kirk Cameron; music video; Fathom open live; extended interviews</rdfs:label>
-          </bf:SupplementaryContent>
-        </bf:supplementaryContent><bf:note>
+<rdf:RDF xmlns:bf="http://id.loc.gov/ontologies/bibframe/" xmlns:bflc="http://id.loc.gov/ontologies/bflc/" xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" xmlns:pmo="http://performedmusicontology.org/ontology/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <bf:Instance rdf:about="http://id.loc.gov/resources/instances/e2324557043013562145333356239676927794980001">
+    <bf:soundCharacteristic>
+      <bf:PlaybackChannels rdf:about="http://id.loc.gov/vocabulary/mplayback/mul">
+        <rdfs:label>surround</rdfs:label>
+      </bf:PlaybackChannels>
+    </bf:soundCharacteristic>
+    <bf:issuance>
+      <bf:Issuance rdf:about="http://id.loc.gov/vocabulary/issuance/mono">
+        <rdfs:label>single unit</rdfs:label>
+      </bf:Issuance>
+    </bf:issuance>
+    <bf:extent>
+      <bf:Extent>
+        <rdfs:label>1 videodisc</rdfs:label>
+      </bf:Extent>
+    </bf:extent>
+    <bf:title>
+      <bf:Title>
+        <bf:note>
           <bf:Note>
-            <rdfs:label>Optional English and Spanish subtitles</rdfs:label>
+            <rdfs:label>Title from container</rdfs:label>
           </bf:Note>
-        </bf:note><bf:duration>84 min.</bf:duration><bf:aspectRatio rdf:resource="http://id.loc.gov/vocabulary/maspect/wide"/><bf:genreForm>
-          <bf:GenreForm rdf:about="http://id.loc.gov/authorities/genreForms/gf2011026725">
-            <rdfs:label>Video recordings for the hearing impaired</rdfs:label>
-          </bf:GenreForm>
-        </bf:genreForm><bf:identifiedBy>
-          <bf:CopyrightNumber>
-            <rdf:value>PA0001827224</rdf:value>
-            <bf:source>
-              <bf:Source>
-                <rdfs:label>U.S. Copyright Office</rdfs:label>
-              </bf:Source>
-            </bf:source>
-          </bf:CopyrightNumber>
-        </bf:identifiedBy><bf:provisionActivity>
-          <bf:Distribution>
-            <bf:place>
-              <bf:Place>
-                <rdfs:label>[United States]</rdfs:label>
-              </bf:Place>
-            </bf:place>
-            <bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">2012</bf:date>
-            <bf:agent>
-              <bf:Agent>
-                <rdfs:label>Monumental Multimedia, LLC</rdfs:label>
-              </bf:Agent>
-            </bf:agent>
-          </bf:Distribution>
-        </bf:provisionActivity><bf:copyrightDate rdf:datatype="http://id.loc.gov/datatypes/edtf">2012</bf:copyrightDate><bf:soundCharacteristic>
-          <bf:PlaybackCharacteristic rdf:about="http://id.loc.gov/vocabulary/mspecplayback/dolbydig51">
-            <rdfs:label>Dolby Digital 5.1</rdfs:label>
-          </bf:PlaybackCharacteristic>
-        </bf:soundCharacteristic><bf:digitalCharacteristic>
-          <bf:RegionalEncoding rdf:about="http://id.loc.gov/vocabulary/mregencoding/region1">
-            <rdfs:label>region 1</rdfs:label>
-          </bf:RegionalEncoding>
-        </bf:digitalCharacteristic><bf:carrier>
-          <bf:Carrier rdf:about="http://id.loc.gov/vocabulary/carriers/vd">
-            <rdfs:label>videodisc</rdfs:label>
-          </bf:Carrier>
-        </bf:carrier><bf:videoCharacteristic>
-          <bf:BroadcastStandard rdf:about="http://id.loc.gov/vocabulary/mbroadstd/ntsc">
-            <rdfs:label>NTSC</rdfs:label>
-          </bf:BroadcastStandard>
-        </bf:videoCharacteristic><bf:digitalCharacteristic>
-          <bf:FileType rdf:about="http://id.loc.gov/vocabulary/mfiletype/video">
-            <rdfs:label>video file</rdfs:label>
-          </bf:FileType>
-        </bf:digitalCharacteristic><bf:identifiedBy>
-          <bf:Identifier>
-            <rdf:value>0851833004006</rdf:value>
-          </bf:Identifier>
-        </bf:identifiedBy><bf:digitalCharacteristic>
-          <bf:EncodingFormat rdf:about="http://id.loc.gov/vocabulary/mencformat/dvdv">
-            <rdfs:label>DVD video</rdfs:label>
-          </bf:EncodingFormat>
-        </bf:digitalCharacteristic><bf:identifiedBy>
-          <bf:Upc>
-            <rdf:value>851833004006</rdf:value>
-          </bf:Upc>
-        </bf:identifiedBy><bf:responsibilityStatement>Kirk Cameron presents ; in association with CamFam Studios ; a Pyro Pictures production ; produced by Duane Barnhart, Kirk Cameron &amp; Angela Alvarez ; written by Kevin Miller ; directed by Duane Barnhart</bf:responsibilityStatement><bf:provisionActivityStatement>[United States] : Monumental Multimedia, LLC, [2012]</bf:provisionActivityStatement><bf:soundCharacteristic>
-          <bf:RecordingMethod rdf:about="http://id.loc.gov/vocabulary/mrectype/digital">
-            <rdfs:label>digital</rdfs:label>
-          </bf:RecordingMethod>
-        </bf:soundCharacteristic><bf:identifiedBy>
-          <bf:Lccn>
-            <rdf:value>2021600253</rdf:value>
-          </bf:Lccn>
-        </bf:identifiedBy><bf:credits>Interviewees: Sue Allen, Dr. Marshall Foster, Dr. Paul Jehle, David Barton, Dr. Herb Titus, Dr. Os Guinness, Congressman Todd Akin, Dr. Alveda King, Senate Chaplain Barry Black, Stephen McDowell</bf:credits><bf:soundCharacteristic>
-          <bf:RecordingMedium rdf:about="http://id.loc.gov/vocabulary/mrecmedium/opt">
-            <rdfs:label>optical</rdfs:label>
-          </bf:RecordingMedium>
-        </bf:soundCharacteristic><bf:title>
-          <bf:VariantTitle>
-            <bf:mainTitle>In search of America's national treasure</bf:mainTitle>
-          </bf:VariantTitle>
-        </bf:title><bf:contentAccessibility>
-          <bf:Note>
-            <rdfs:label>Closed-captioned</rdfs:label>
-          </bf:Note>
-        </bf:contentAccessibility><bf:dimensions>4 3/4 in.</bf:dimensions><bf:credits>Director of photography, Mike Robinson, Tim Rygh</bf:credits><bf:source>
+        </bf:note>
+        <bf:mainTitle>Monumental--in search of America's national treasure</bf:mainTitle>
+      </bf:Title>
+    </bf:title>
+    <bf:supplementaryContent>
+      <bf:SupplementaryContent>
+        <rdfs:label>Special features: interviews with executive producer and Kirk Cameron; music video; Fathom open live; extended interviews</rdfs:label>
+      </bf:SupplementaryContent>
+    </bf:supplementaryContent>
+    <bf:note>
+      <bf:Note>
+        <rdfs:label>Optional English and Spanish subtitles</rdfs:label>
+      </bf:Note>
+    </bf:note>
+    <bf:duration>84 min.</bf:duration>
+    <bf:aspectRatio rdf:resource="http://id.loc.gov/vocabulary/maspect/wide"/>
+    <bf:genreForm>
+      <bf:GenreForm rdf:about="http://id.loc.gov/authorities/genreForms/gf2011026725">
+        <rdfs:label>Video recordings for the hearing impaired</rdfs:label>
+      </bf:GenreForm>
+    </bf:genreForm>
+    <bf:identifiedBy>
+      <bf:CopyrightNumber>
+        <rdf:value>PA0001827224</rdf:value>
+        <bf:source>
           <bf:Source>
-            <rdfs:label>Videodisc container; Copyright catalog online; Copyright description; Amazon WWW site, viewed April 20, 2021.   Internet movie database WWW site, viewed April 20, 2021.   Wikipedia WWW site, viewed April 20, 2021</rdfs:label>
+            <rdfs:label>U.S. Copyright Office</rdfs:label>
           </bf:Source>
-        </bf:source><bf:media>
-          <bf:Media rdf:about="http://id.loc.gov/vocabulary/mediaTypes/v">
-            <rdfs:label>video</rdfs:label>
-          </bf:Media>
-        </bf:media><bf:identifiedBy>
-          <bf:Local>
-            <rdf:value>(OCoLC)798365110</rdf:value>
-            <bf:source>
-              <bf:Source>
-                <rdfs:label>OCoLC</rdfs:label>
-              </bf:Source>
-            </bf:source>
-          </bf:Local>
-        </bf:identifiedBy><bf:note>
-          <bf:Note>
-            <rdfs:label>Home use only</rdfs:label>
-          </bf:Note>
-        </bf:note><bf:instanceOf rdf:resource="http://id.loc.gov/resources/works/e232455704301356214533335623967692779498"/><bf:hasItem rdf:resource="http://id.loc.gov/resources/items/e2324557043013562145333356239676927794980001-1"/><bf:adminMetadata>
-          <bf:AdminMetadata>
-            <bf:descriptionModifier rdf:resource="http://id.loc.gov/vocabulary/organizations/dlc"/>
-            <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-04-21T20:30:50</bf:changeDate>
-            <bflc:encodingLevel rdf:resource="http://id.loc.gov/vocabulary/menclvl/7"/>
-            <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-04-20</bf:creationDate>
-            <bf:descriptionConventions rdf:resource="http://id.loc.gov/vocabulary/descriptionConventions/rda"/>
-            <bf:descriptionAuthentication rdf:resource="http://id.loc.gov/vocabulary/marcauthen/pcc"/>
-            <bf:descriptionLanguage rdf:resource="http://id.loc.gov/vocabulary/languages/eng"/>
-            <bflc:procInfo>create work</bflc:procInfo>
-            <bflc:catalogerId>jjud</bflc:catalogerId>
-            <bf:identifiedBy rdf:resource="https://editor.id.loc.gov/resources/e150599424019954713014202496291386668236"/>
-            <bflc:profile>lc:RT:bf2:MIBluRayDVD:Instance</bflc:profile>
-          </bf:AdminMetadata>
-        </bf:adminMetadata></bf:Instance><bf:Work rdf:about="http://id.loc.gov/resources/works/e232455704301356214533335623967692779498"><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Work"/><bf:genreForm>
+        </bf:source>
+      </bf:CopyrightNumber>
+    </bf:identifiedBy>
+    <bf:provisionActivity>
+      <bf:Distribution>
+        <bf:place>
+          <bf:Place>
+            <rdfs:label>[United States]</rdfs:label>
+          </bf:Place>
+        </bf:place>
+        <bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">2012</bf:date>
+        <bf:agent>
+          <bf:Agent>
+            <rdfs:label>Monumental Multimedia, LLC</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+      </bf:Distribution>
+    </bf:provisionActivity>
+    <bf:copyrightDate rdf:datatype="http://id.loc.gov/datatypes/edtf">2012</bf:copyrightDate>
+    <bf:soundCharacteristic>
+      <bf:PlaybackCharacteristic rdf:about="http://id.loc.gov/vocabulary/mspecplayback/dolbydig51">
+        <rdfs:label>Dolby Digital 5.1</rdfs:label>
+      </bf:PlaybackCharacteristic>
+    </bf:soundCharacteristic>
+    <bf:digitalCharacteristic>
+      <bf:RegionalEncoding rdf:about="http://id.loc.gov/vocabulary/mregencoding/region1">
+        <rdfs:label>region 1</rdfs:label>
+      </bf:RegionalEncoding>
+    </bf:digitalCharacteristic>
+    <bf:carrier>
+      <bf:Carrier rdf:about="http://id.loc.gov/vocabulary/carriers/vd">
+        <rdfs:label>videodisc</rdfs:label>
+      </bf:Carrier>
+    </bf:carrier>
+    <bf:videoCharacteristic>
+      <bf:BroadcastStandard rdf:about="http://id.loc.gov/vocabulary/mbroadstd/ntsc">
+        <rdfs:label>NTSC</rdfs:label>
+      </bf:BroadcastStandard>
+    </bf:videoCharacteristic>
+    <bf:digitalCharacteristic>
+      <bf:FileType rdf:about="http://id.loc.gov/vocabulary/mfiletype/video">
+        <rdfs:label>video file</rdfs:label>
+      </bf:FileType>
+    </bf:digitalCharacteristic>
+    <bf:identifiedBy>
+      <bf:Identifier>
+        <rdf:value>0851833004006</rdf:value>
+      </bf:Identifier>
+    </bf:identifiedBy>
+    <bf:digitalCharacteristic>
+      <bf:EncodingFormat rdf:about="http://id.loc.gov/vocabulary/mencformat/dvdv">
+        <rdfs:label>DVD video</rdfs:label>
+      </bf:EncodingFormat>
+    </bf:digitalCharacteristic>
+    <bf:identifiedBy>
+      <bf:Upc>
+        <rdf:value>851833004006</rdf:value>
+      </bf:Upc>
+    </bf:identifiedBy>
+    <bf:responsibilityStatement>Kirk Cameron presents ; in association with CamFam Studios ; a Pyro Pictures production ; produced by Duane Barnhart, Kirk Cameron &amp; Angela Alvarez ; written by Kevin Miller ; directed by Duane Barnhart</bf:responsibilityStatement>
+    <bf:provisionActivityStatement>[United States] : Monumental Multimedia, LLC, [2012]</bf:provisionActivityStatement>
+    <bf:soundCharacteristic>
+      <bf:RecordingMethod rdf:about="http://id.loc.gov/vocabulary/mrectype/digital">
+        <rdfs:label>digital</rdfs:label>
+      </bf:RecordingMethod>
+    </bf:soundCharacteristic>
+    <bf:identifiedBy>
+      <bf:Lccn>
+        <rdf:value>2021600253</rdf:value>
+      </bf:Lccn>
+    </bf:identifiedBy>
+    <bf:credits>Interviewees: Sue Allen, Dr. Marshall Foster, Dr. Paul Jehle, David Barton, Dr. Herb Titus, Dr. Os Guinness, Congressman Todd Akin, Dr. Alveda King, Senate Chaplain Barry Black, Stephen McDowell</bf:credits>
+    <bf:soundCharacteristic>
+      <bf:RecordingMedium rdf:about="http://id.loc.gov/vocabulary/mrecmedium/opt">
+        <rdfs:label>optical</rdfs:label>
+      </bf:RecordingMedium>
+    </bf:soundCharacteristic>
+    <bf:title>
+      <bf:VariantTitle>
+        <bf:mainTitle>In search of America's national treasure</bf:mainTitle>
+      </bf:VariantTitle>
+    </bf:title>
+    <bf:contentAccessibility>
+      <bf:Note>
+        <rdfs:label>Closed-captioned</rdfs:label>
+      </bf:Note>
+    </bf:contentAccessibility>
+    <bf:dimensions>4 3/4 in.</bf:dimensions>
+    <bf:credits>Director of photography, Mike Robinson, Tim Rygh</bf:credits>
+    <bf:source>
+      <bf:Source>
+        <rdfs:label>Videodisc container; Copyright catalog online; Copyright description; Amazon WWW site, viewed April 20, 2021.   Internet movie database WWW site, viewed April 20, 2021.   Wikipedia WWW site, viewed April 20, 2021</rdfs:label>
+      </bf:Source>
+    </bf:source>
+    <bf:media>
+      <bf:Media rdf:about="http://id.loc.gov/vocabulary/mediaTypes/v">
+        <rdfs:label>video</rdfs:label>
+      </bf:Media>
+    </bf:media>
+    <bf:identifiedBy>
+      <bf:Local>
+        <rdf:value>(OCoLC)798365110</rdf:value>
+        <bf:source>
+          <bf:Source>
+            <rdfs:label>OCoLC</rdfs:label>
+          </bf:Source>
+        </bf:source>
+      </bf:Local>
+    </bf:identifiedBy>
+    <bf:note>
+      <bf:Note>
+        <rdfs:label>Home use only</rdfs:label>
+      </bf:Note>
+    </bf:note>
+    <bf:instanceOf rdf:resource="http://id.loc.gov/resources/works/e232455704301356214533335623967692779498"/>
+    <bf:hasItem rdf:resource="http://id.loc.gov/resources/items/e2324557043013562145333356239676927794980001-1"/>
+    <bf:adminMetadata>
+      <bf:AdminMetadata>
+        <bf:descriptionModifier rdf:resource="http://id.loc.gov/vocabulary/organizations/dlc"/>
+        <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-04-21T20:30:50</bf:changeDate>
+        <bflc:encodingLevel rdf:resource="http://id.loc.gov/vocabulary/menclvl/7"/>
+        <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-04-20</bf:creationDate>
+        <bf:descriptionConventions rdf:resource="http://id.loc.gov/vocabulary/descriptionConventions/rda"/>
+        <bf:descriptionAuthentication rdf:resource="http://id.loc.gov/vocabulary/marcauthen/pcc"/>
+        <bf:descriptionLanguage rdf:resource="http://id.loc.gov/vocabulary/languages/eng"/>
+        <bflc:procInfo>create work</bflc:procInfo>
+        <bflc:catalogerId>jjud</bflc:catalogerId>
+        <bf:identifiedBy rdf:resource="https://editor.id.loc.gov/resources/e150599424019954713014202496291386668236"/>
+        <bflc:profile>lc:RT:bf2:MIBluRayDVD:Instance</bflc:profile>
+      </bf:AdminMetadata>
+    </bf:adminMetadata>
+  </bf:Instance>
+  <bf:Work rdf:about="http://id.loc.gov/resources/works/e232455704301356214533335623967692779498">
+    <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Work"/>
+    <bf:genreForm>
       <bf:GenreForm rdf:about="http://id.loc.gov/authorities/genreForms/gf2011026205">
         <rdfs:label>Documentary films</rdfs:label>
       </bf:GenreForm>
-    </bf:genreForm><bf:aspectRatio>
+    </bf:genreForm>
+    <bf:aspectRatio>
       <bf:AspectRatio rdf:about="http://id.loc.gov/vocabulary/maspect/wide">
         <rdfs:label>wide screen</rdfs:label>
       </bf:AspectRatio>
-    </bf:aspectRatio><bf:genreForm>
+    </bf:aspectRatio>
+    <bf:genreForm>
       <bf:GenreForm rdf:about="http://id.loc.gov/authorities/genreForms/gf2011026423">
         <rdfs:label>Nonfiction films</rdfs:label>
       </bf:GenreForm>
-    </bf:genreForm><bf:subject>
+    </bf:genreForm>
+    <bf:subject>
       <bf:Topic>
         <madsrdf:componentList rdf:parseType="Collection">
           <madsrdf:Topic rdf:about="http://id.loc.gov/authorities/subjects/sh85139934">
@@ -172,15 +217,18 @@
         <rdfs:label>United States--Civilization--21st century</rdfs:label>
         <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
       </bf:Topic>
-    </bf:subject><bf:soundContent>
+    </bf:subject>
+    <bf:soundContent>
       <bf:SoundContent rdf:about="http://id.loc.gov/vocabulary/msoundcontent/sound">
         <rdfs:label>sound</rdfs:label>
       </bf:SoundContent>
-    </bf:soundContent><bf:geographicCoverage>
+    </bf:soundContent>
+    <bf:geographicCoverage>
       <bf:GeographicCoverage rdf:about="http://id.loc.gov/vocabulary/geographicAreas/n-us">
         <rdfs:label>United States</rdfs:label>
       </bf:GeographicCoverage>
-    </bf:geographicCoverage><bf:subject>
+    </bf:geographicCoverage>
+    <bf:subject>
       <bf:Topic>
         <madsrdf:componentList rdf:parseType="Collection">
           <madsrdf:Topic rdf:about="http://id.loc.gov/authorities/subjects/sh2009100039">
@@ -190,7 +238,8 @@
         <bf:source rdf:resource="http://id.loc.gov/vocabulary/subjectSchemes/lcsh"/>
         <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
       </bf:Topic>
-    </bf:subject><bf:contribution>
+    </bf:subject>
+    <bf:contribution>
       <bf:Contribution>
         <bf:role>
           <bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/prn">
@@ -203,7 +252,8 @@
           </bf:Organization>
         </bf:agent>
       </bf:Contribution>
-    </bf:contribution><bf:contribution>
+    </bf:contribution>
+    <bf:contribution>
       <bf:Contribution>
         <bf:role>
           <bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/dpc">
@@ -226,20 +276,25 @@
           </bf:Person>
         </bf:agent>
       </bf:Contribution>
-    </bf:contribution><bf:historyOfWork>Originally released as a motion picture (limited) in 2012</bf:historyOfWork><bf:title>
+    </bf:contribution>
+    <bf:historyOfWork>Originally released as a motion picture (limited) in 2012</bf:historyOfWork>
+    <bf:title>
       <bf:Title>
         <bf:mainTitle>Monumental--in search of America's national treasure</bf:mainTitle>
         <rdfs:label>Monumental--in search of America's national treasure</rdfs:label>
       </bf:Title>
-    </bf:title><bf:title>
+    </bf:title>
+    <bf:title>
       <bf:VariantTitle>
         <bf:mainTitle>In search of America's national treasure</bf:mainTitle>
       </bf:VariantTitle>
-    </bf:title><bf:originPlace>
+    </bf:title>
+    <bf:originPlace>
       <bf:Place rdf:about="http://id.loc.gov/authorities/names/n78095330">
         <rdfs:label>United States</rdfs:label>
       </bf:Place>
-    </bf:originPlace><bf:adminMetadata>
+    </bf:originPlace>
+    <bf:adminMetadata>
       <bf:AdminMetadata>
         <bf:descriptionAuthentication>
           <bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/pcc">
@@ -281,7 +336,8 @@
           </bf:DescriptionConventions>
         </bf:descriptionConventions>
       </bf:AdminMetadata>
-    </bf:adminMetadata><bf:contribution>
+    </bf:adminMetadata>
+    <bf:contribution>
       <bf:Contribution>
         <bf:role rdf:resource="http://id.loc.gov/vocabulary/relators/pre"/>
         <bf:agent>
@@ -290,7 +346,8 @@
           </bf:Organization>
         </bf:agent>
       </bf:Contribution>
-    </bf:contribution><bf:subject>
+    </bf:contribution>
+    <bf:subject>
       <bf:Topic>
         <madsrdf:componentList rdf:parseType="Collection">
           <madsrdf:Topic rdf:about="http://id.loc.gov/authorities/subjects/sh2009100016">
@@ -300,7 +357,8 @@
         <bf:source rdf:resource="http://id.loc.gov/vocabulary/subjectSchemes/lcsh"/>
         <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
       </bf:Topic>
-    </bf:subject><bf:subject>
+    </bf:subject>
+    <bf:subject>
       <bf:Topic>
         <madsrdf:componentList rdf:parseType="Collection">
           <madsrdf:Topic rdf:about="http://id.loc.gov/authorities/subjects/sh85089950">
@@ -310,15 +368,20 @@
         <bf:source rdf:resource="http://id.loc.gov/vocabulary/subjectSchemes/lcsh"/>
         <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
       </bf:Topic>
-    </bf:subject><bf:language rdf:resource="http://id.loc.gov/vocabulary/languages/eng"/><bf:genreForm>
+    </bf:subject>
+    <bf:language rdf:resource="http://id.loc.gov/vocabulary/languages/eng"/>
+    <bf:genreForm>
       <bf:GenreForm rdf:about="http://id.loc.gov/authorities/genreForms/gf2011026406">
         <rdfs:label>Motion pictures</rdfs:label>
       </bf:GenreForm>
-    </bf:genreForm><bf:source>
+    </bf:genreForm>
+    <bf:source>
       <bf:Source>
         <rdfs:label>Videodisc container; Copyright catalog online; Copyright description; Amazon WWW site, viewed April 20, 2021.   Internet movie database WWW site, viewed April 20, 2021.   Wikipedia WWW site, viewed April 20, 2021</rdfs:label>
       </bf:Source>
-    </bf:source><bf:originDate>2012</bf:originDate><bf:subject>
+    </bf:source>
+    <bf:originDate>2012</bf:originDate>
+    <bf:subject>
       <bf:Topic>
         <madsrdf:componentList rdf:parseType="Collection">
           <madsrdf:Topic rdf:about="http://id.loc.gov/authorities/subjects/sh85140410">
@@ -330,15 +393,18 @@
         <rdfs:label>United States--Politics and government--21st century</rdfs:label>
         <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
       </bf:Topic>
-    </bf:subject><bflc:movingImageTechnique>
+    </bf:subject>
+    <bflc:movingImageTechnique>
       <bflc:MovingImageTechnique rdf:about="http://id.loc.gov/vocabulary/mtechnique/live">
         <rdfs:label>live action</rdfs:label>
       </bflc:MovingImageTechnique>
-    </bflc:movingImageTechnique><bf:intendedAudience>
+    </bflc:movingImageTechnique>
+    <bf:intendedAudience>
       <bf:IntendedAudience>
         <rdfs:label>Rating: PG; for some mild thematic elements</rdfs:label>
       </bf:IntendedAudience>
-    </bf:intendedAudience><bf:identifiedBy>
+    </bf:intendedAudience>
+    <bf:identifiedBy>
       <bf:CopyrightNumber>
         <rdf:value>PA0001827224</rdf:value>
         <bf:source>
@@ -347,11 +413,13 @@
           </bf:Source>
         </bf:source>
       </bf:CopyrightNumber>
-    </bf:identifiedBy><bf:summary>
+    </bf:identifiedBy>
+    <bf:summary>
       <bf:Summary>
         <rdfs:label>In Monumental, producer/narrator Kirk Cameron retraces the footsteps of America's founders to see if they left us some kind of a map that would guide us back to the foundation of America's success</rdfs:label>
       </bf:Summary>
-    </bf:summary><bf:subject>
+    </bf:summary>
+    <bf:subject>
       <bf:Topic>
         <madsrdf:componentList rdf:parseType="Collection">
           <madsrdf:Topic rdf:about="http://id.loc.gov/authorities/subjects/sh2006003198">
@@ -361,62 +429,84 @@
         <bf:source rdf:resource="http://id.loc.gov/vocabulary/subjectSchemes/lcsh"/>
         <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
       </bf:Topic>
-    </bf:subject><bf:genreForm>
+    </bf:subject>
+    <bf:genreForm>
       <bf:GenreForm rdf:about="http://id.loc.gov/authorities/genreForms/gf2011026247">
         <rdfs:label>Feature films</rdfs:label>
       </bf:GenreForm>
-    </bf:genreForm><bf:colorContent>
+    </bf:genreForm>
+    <bf:colorContent>
       <bf:ColorContent rdf:about="http://id.loc.gov/vocabulary/mcolor/mul">
         <rdfs:label>color</rdfs:label>
       </bf:ColorContent>
-    </bf:colorContent><bf:content>
+    </bf:colorContent>
+    <bf:content>
       <bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/tdi">
         <rdfs:label>two-dimensional moving image</rdfs:label>
       </bf:Content>
-    </bf:content><bf:duration>84 min.</bf:duration></bf:Work><bf:Item rdf:about="http://id.loc.gov/resources/items/e2324557043013562145333356239676927794980001-1"><bf:sublocation>c-Motion Pic &amp; TV/MBRS</bf:sublocation><bf:usageAndAccessPolicy>
-              <bf:AccessPolicy>
-                <rdfs:label>Viewing copy</rdfs:label>
-              </bf:AccessPolicy>
-            </bf:usageAndAccessPolicy><bf:immediateAcquisition>
-              <bf:ImmediateAcquisition>
-                <rdfs:label>Copyright Collection</rdfs:label>
-              </bf:ImmediateAcquisition>
-            </bf:immediateAcquisition><bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">Received: 2013-04-11</bf:date><bf:adminMetadata>
-              <bf:AdminMetadata>
-                <bflc:encodingLevel rdf:resource="http://id.loc.gov/vocabulary/menclvl/7"/>
-                <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-04-20</bf:creationDate>
-                <bf:descriptionLanguage rdf:resource="http://id.loc.gov/vocabulary/languages/eng"/>
-                <bf:descriptionConventions rdf:resource="http://id.loc.gov/vocabulary/descriptionConventions/rda"/>
-                <bflc:procInfo>create work</bflc:procInfo>
-                <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-04-21T20:30:50</bf:changeDate>
-                <bf:identifiedBy rdf:resource="https://editor.id.loc.gov/resources/e150599424019954713014202496291386668236"/>
-                <bflc:profile>lc:RT:bf2:MIBluRayDVD:Item</bflc:profile>
-                <bf:descriptionAuthentication rdf:resource="http://id.loc.gov/vocabulary/marcauthen/pcc"/>
-                <bf:descriptionModifier rdf:resource="http://id.loc.gov/vocabulary/organizations/dlc"/>
-                <bflc:catalogerId>jjud</bflc:catalogerId>
-              </bf:AdminMetadata>
-            </bf:adminMetadata><bf:identifiedBy>
-              <bf:Barcode>
-                <rdf:value>00428558121</rdf:value>
-              </bf:Barcode>
-            </bf:identifiedBy><bf:heldBy rdf:resource="http://id.loc.gov/vocabulary/organizations/dlc"/><bf:contribution>
-              <bf:Organization rdf:about="http://id.loc.gov/authorities/names/n85376539">
-                <rdfs:label>Copyright Collection (Library of Congress)</rdfs:label>
-              </bf:Organization>
-            </bf:contribution><bf:shelfMark>
-              <bf:ShelfMarkLcc>
-                <rdfs:label>DVE 5424</rdfs:label>
-              </bf:ShelfMarkLcc>
-            </bf:shelfMark><bf:usageAndAccessPolicy>
-              <bf:UsePolicy>
-                <rdfs:label>Home use only</rdfs:label>
-              </bf:UsePolicy>
-            </bf:usageAndAccessPolicy><bf:shelfMark>
-              <bf:ShelfMark>
-                <rdfs:label>1</rdfs:label>
-              </bf:ShelfMark>
-            </bf:shelfMark><bf:immediateAcquisition>
-              <bf:ImmediateAcquisition>
-                <rdfs:label>copyright deposit--RNR</rdfs:label>
-              </bf:ImmediateAcquisition>
-            </bf:immediateAcquisition><bflc:derivedFrom rdf:resource="http://id.loc.gov/resources/bibs/e232455704301356214533335623967692779498"/><bf:itemOf rdf:resource="http://id.loc.gov/resources/instances/e2324557043013562145333356239676927794980001"/></bf:Item></rdf:RDF>
+    </bf:content>
+    <bf:duration>84 min.</bf:duration>
+  </bf:Work>
+  <bf:Item rdf:about="http://id.loc.gov/resources/items/e2324557043013562145333356239676927794980001-1">
+    <bf:sublocation>c-Motion Pic &amp; TV/MBRS</bf:sublocation>
+    <bf:usageAndAccessPolicy>
+      <bf:AccessPolicy>
+        <rdfs:label>Viewing copy</rdfs:label>
+      </bf:AccessPolicy>
+    </bf:usageAndAccessPolicy>
+    <bf:immediateAcquisition>
+      <bf:ImmediateAcquisition>
+        <rdfs:label>Copyright Collection</rdfs:label>
+      </bf:ImmediateAcquisition>
+    </bf:immediateAcquisition>
+    <bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">Received: 2013-04-11</bf:date>
+    <bf:adminMetadata>
+      <bf:AdminMetadata>
+        <bflc:encodingLevel rdf:resource="http://id.loc.gov/vocabulary/menclvl/7"/>
+        <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-04-20</bf:creationDate>
+        <bf:descriptionLanguage rdf:resource="http://id.loc.gov/vocabulary/languages/eng"/>
+        <bf:descriptionConventions rdf:resource="http://id.loc.gov/vocabulary/descriptionConventions/rda"/>
+        <bflc:procInfo>create work</bflc:procInfo>
+        <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-04-21T20:30:50</bf:changeDate>
+        <bf:identifiedBy rdf:resource="https://editor.id.loc.gov/resources/e150599424019954713014202496291386668236"/>
+        <bflc:profile>lc:RT:bf2:MIBluRayDVD:Item</bflc:profile>
+        <bf:descriptionAuthentication rdf:resource="http://id.loc.gov/vocabulary/marcauthen/pcc"/>
+        <bf:descriptionModifier rdf:resource="http://id.loc.gov/vocabulary/organizations/dlc"/>
+        <bflc:catalogerId>jjud</bflc:catalogerId>
+      </bf:AdminMetadata>
+    </bf:adminMetadata>
+    <bf:identifiedBy>
+      <bf:Barcode>
+        <rdf:value>00428558121</rdf:value>
+      </bf:Barcode>
+    </bf:identifiedBy>
+    <bf:heldBy rdf:resource="http://id.loc.gov/vocabulary/organizations/dlc"/>
+    <bf:contribution>
+      <bf:Organization rdf:about="http://id.loc.gov/authorities/names/n85376539">
+        <rdfs:label>Copyright Collection (Library of Congress)</rdfs:label>
+      </bf:Organization>
+    </bf:contribution>
+    <bf:shelfMark>
+      <bf:ShelfMarkLcc>
+        <rdfs:label>DVE 5424</rdfs:label>
+      </bf:ShelfMarkLcc>
+    </bf:shelfMark>
+    <bf:usageAndAccessPolicy>
+      <bf:UsePolicy>
+        <rdfs:label>Home use only</rdfs:label>
+      </bf:UsePolicy>
+    </bf:usageAndAccessPolicy>
+    <bf:shelfMark>
+      <bf:ShelfMark>
+        <rdfs:label>1</rdfs:label>
+      </bf:ShelfMark>
+    </bf:shelfMark>
+    <bf:immediateAcquisition>
+      <bf:ImmediateAcquisition>
+        <rdfs:label>copyright deposit--RNR</rdfs:label>
+      </bf:ImmediateAcquisition>
+    </bf:immediateAcquisition>
+    <bflc:derivedFrom rdf:resource="http://id.loc.gov/resources/bibs/e232455704301356214533335623967692779498"/>
+    <bf:itemOf rdf:resource="http://id.loc.gov/resources/instances/e2324557043013562145333356239676927794980001"/>
+  </bf:Item>
+</rdf:RDF>

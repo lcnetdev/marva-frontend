@@ -1,5 +1,18 @@
 <template>
-  <div v-if="nested != true" class="component-container">
+
+
+
+  
+
+  <div v-if="dynamic == 'singleTemplate'">
+
+    <EditMainComponent v-for="(pt,idx) in activeTemplate.propertyTemplates" :ptGuid="ptGuid"  :key="idx" :position="idx" :activeTemplate="Object.assign({nested:true},activeTemplate)" :structure="activeTemplate.propertyTemplates[idx]" :profileCompoent="profileCompoent" :profileName="profileName" :grandParentStructureObj="parentStructureObj" :parentStructureObj="structure" :parentStructure="['nothing']"  :nested="true"></EditMainComponent>
+
+
+  </div>
+
+
+  <div v-else-if="nested == false" class="component-container">
     <div class="component-container-title">{{structure.propertyLabel}}</div>
     <div class="component-container-input-container">
 
@@ -20,7 +33,7 @@
         <!-- <EditMainComponent name="pt." v-for="pt in this.activeTemplate.propertyTemplates" v-bind:key="pt" v-bind:structure="pt"></EditMainComponent> -->
         <!-- <EditMainComponent name="yeet"></EditMainComponent> -->
 
-        <EditMainComponent v-for="(pt,idx) in activeTemplate.propertyTemplates" :key="idx" :activeTemplate="activeTemplate" :structure="activeTemplate.propertyTemplates[idx]" :parentStructureObj="structure" :parentStructure="['nothing']" :profileCompoent="profileCompoent" :profileName="profileName" :nested="true"></EditMainComponent>
+        <EditMainComponent v-for="(pt,idx) in activeTemplate.propertyTemplates" :ptGuid="ptGuid" :key="idx" :activeTemplate="activeTemplate" :structure="activeTemplate.propertyTemplates[idx]" :parentStructureObj="structure" :parentStructure="['nothing']" :profileCompoent="profileCompoent" :profileName="profileName" :nested="true"></EditMainComponent>
       </div>
       <div v-else>
         <span>Missing resource template {{structure.valueConstraint.valueTemplateRefs}}</span>
@@ -31,9 +44,7 @@
 
   </div>
 
-  <div class="yehh" v-else>
-
-
+  <div v-else-if="nested == true">
       <template v-if="structure.valueConstraint.valueTemplateRefs.length > 1">
         <div class="component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border" style="flex:4;">          
           <div style="display: flex">
@@ -51,10 +62,15 @@
         <!-- <EditMainComponent name="pt." v-for="pt in this.activeTemplate.propertyTemplates" v-bind:key="pt" v-bind:structure="pt"></EditMainComponent> -->
         <!-- <EditMainComponent name="yeet"></EditMainComponent> -->
 
-        <EditMainComponent v-for="(pt,idx) in activeTemplate.propertyTemplates" :key="idx" :position="idx" :activeTemplate="Object.assign({nested:true},activeTemplate)" :structure="activeTemplate.propertyTemplates[idx]" :profileCompoent="profileCompoent" :profileName="profileName" :parentStructureObj="structure" :parentStructure="['nothing']"  :nested="true"></EditMainComponent>
+        <EditMainComponent v-for="(pt,idx) in activeTemplate.propertyTemplates" :ptGuid="ptGuid"  :key="idx" :position="idx" :activeTemplate="Object.assign({nested:true},activeTemplate)" :structure="activeTemplate.propertyTemplates[idx]" :profileCompoent="profileCompoent" :profileName="profileName" :grandParentStructureObj="parentStructureObj" :parentStructureObj="structure" :parentStructure="['nothing']"  :nested="true"></EditMainComponent>
       </template>
 
   </div>
+
+
+
+
+
 
 
 </template>
@@ -86,6 +102,8 @@ export default {
     parentURI: String,
     profileName: String,
     nested: Boolean,
+    dynamic: String,
+    ptGuid: String
   },  
   data: function() {
     return {
@@ -131,25 +149,10 @@ export default {
   created: function () {
     
 
-    // if (this.structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/classification'){
-
-    //   let data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]
-    
-
-    //   if (data.userValue[this.structure.propertyURI]){
-    //     this.inputValue = data.userValue[this.structure.propertyURI]
-    //   }
-
-    
-    
-
-    // }
-
     // grab the first component from the struecture, but there might be mutluple ones
     let useId = this.structure.valueConstraint.valueTemplateRefs[0]
     let foundBetter = false
 
-    
     
     // do we have user data and a possible @type to use
     if (this.structure.userValue['@type'] || (this.parentStructureObj && this.parentStructureObj.userValue['@type'])){
@@ -158,7 +161,7 @@ export default {
       // loop thrugh all the refs and see if there is a URI that matches it better
       this.structure.valueConstraint.valueTemplateRefs.forEach((tmpid)=>{
 
-        
+                
         if (foundBetter) return false
 
         if (this.rtLookup[tmpid].resourceURI === this.structure.userValue['@type']){
@@ -166,26 +169,41 @@ export default {
           foundBetter = true
         }
 
-        // also check here
-        if (this.rtLookup[tmpid].resourceURI === this.structure.userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#type']){
-          useId = tmpid
-          foundBetter = true
-        }
+        for (let key in this.structure.userValue){
 
+          if (Array.isArray(this.structure.userValue[key])){
+            for (let val of this.structure.userValue[key]){
+              if (val['@type'] && this.rtLookup[tmpid].resourceURI === val['@type']){
+                useId = tmpid
+                foundBetter = true
 
-        // and here, check the parent, since it might be a nested  ref component
-        if (this.parentStructureObj && this.parentStructureObj.userValue['@type']){
-          if (this.rtLookup[tmpid].resourceURI === this.parentStructureObj.userValue['@type']){
-            useId = tmpid
-            foundBetter = true
+              }
+
+            }
           }
 
-
         }
+
+        // also look into the parent that might have the data
+        if (this.parentStructureObj){
+          for (let key in this.parentStructureObj.userValue){
+            if (Array.isArray(this.parentStructureObj.userValue[key])){
+              for (let val of this.parentStructureObj.userValue[key]){
+                if (val['@type'] && this.rtLookup[tmpid].resourceURI === val['@type']){
+                  useId = tmpid
+                  foundBetter = true
+                }
+              }
+            }
+
+          }
+        }
+
 
 
 
       })
+
     } 
 
        
@@ -274,17 +292,23 @@ export default {
       if (event.key==='ArrowRight' || event.key==='ArrowLeft'){
         // get the current pos, and if we are at the end loop back to the beginning
         let nextRefID
+        let currentRefID
 
         if (event.key==='ArrowRight'){
           let currPos = this.structure.valueConstraint.valueTemplateRefs.indexOf(this.multiTemplateSelectURI)
+          currentRefID = this.structure.valueConstraint.valueTemplateRefs[currPos]          
           if (currPos+1 > this.structure.valueConstraint.valueTemplateRefs.length-1){
             currPos=-1
           }
           nextRefID = this.structure.valueConstraint.valueTemplateRefs[currPos+1]
 
+
         }else{
 
           let currPos = this.structure.valueConstraint.valueTemplateRefs.indexOf(this.multiTemplateSelectURI)
+          currentRefID = this.structure.valueConstraint.valueTemplateRefs[currPos]
+          
+
           if (currPos == 0){
             currPos=this.structure.valueConstraint.valueTemplateRefs.length
           }
@@ -293,9 +317,9 @@ export default {
 
         }
 
-        
+
         // get the profile ready before we change the UI
-        this.$store.dispatch("refTemplateChange", { self: this, profileName:this.profileName, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, parentId: this.structure.parentId, nextRef:this.rtLookup[nextRefID] }).then(() => {
+        this.$store.dispatch("refTemplateChange", { self: this, profileName:this.profileName, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, parentId: this.structure.parentId, nextRef:this.rtLookup[nextRefID], thisRef: this.rtLookup[currentRefID] }).then(() => {
          
           this.multiTemplateSelect = this.rtLookup[nextRefID].resourceLabel
           this.multiTemplateSelectURI = nextRefID

@@ -23446,6 +23446,8 @@
                 "resourceTemplates": [
                     {
                         "id": "lc:RT:bflc:Agents:PrimaryContribution",
+
+                        
                         "propertyTemplates": [
                             {
                                 "mandatory": "false",
@@ -23560,7 +23562,7 @@
                 "id": "lc:profile:bf2:AgentsContribution",
                 "resourceTemplates": [
                     {
-                        "id": "lc:RT:bf2:Agents:Contribution",
+                        "id": "lc:RT:bf2:Agents:contribution",
                         "propertyTemplates": [
                             {
                                 "mandatory": "false",

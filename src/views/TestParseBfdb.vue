@@ -32,7 +32,7 @@
           <li id="profile-li">
             Use Instance Resource Template: 
             <select @change="rtChange">
-              <option v-for="key in rtLookupInstances" :key="key"  :selected="(key === 'lc:RT:bf2:Monograph:Instance') ? true : false"  >{{key}}</option>
+              <option v-for="key in rtLookupInstances" :key="key"  :selected="(key === 'lc:RT:bf2:SoundRecording:Instance') ? true : false"  >{{key}}</option>
             </select>
           </li>
           <li v-for="(val,index) in idWorkSearchResults" :key="index">
@@ -52,44 +52,48 @@
 
       <h1>Load Results:</h1>
 
-      <div style="font-weight: bold">{{transformResultsDisplay.propertyLoadRatio}}% properties assigned from data</div>
-      <div style="font-weight: bold">Unused XML:</div>
-      <code style="background-color: whitesmoke"><pre style="background-color: whitesmoke">{{prettifyXml(transformResultsDisplay.unusedXml)}}</pre></code>
+      <div v-for="rtKey in Object.keys(this.transformResults.rt)" v-bind:key="rtKey">
 
-      <hr/>
-      <div v-for="(val,key) in transformResultsDisplay.propertyLoadReport" v-bind:key="key">
+        {{rtKey}}
 
-        <h3 v-if="val.status===false" style="color:red">{{key}}</h3>
-        <h3 v-if="val.status===true" style="color:green">{{key}}</h3>
-        <h3 v-if="val.status==='mixed'" style="color:orange">{{key}}</h3>
-
-        <div v-if="val.status!==false">
-          <div v-if="val.unAssingedProperties.length>0">
-            <div>Unassinged Properties:</div>
-            <div v-for="(unval,unvalindex) in val.unAssingedProperties" v-bind:key="unvalindex">{{unval}}</div>
-          </div>
-          <div v-for="(dataval,index) in val.data" v-bind:key="index">
-            <div>{{dataval.propertyLabel}}</div>
-            <code style="background-color: whitesmoke"><pre style="background-color: whitesmoke">{{prettifyXml(dataval.xml)}}</pre></code>
-            <vue-json-pretty 
-              :path="'res'"
-              :highlightMouseoverNode="true"
-              :collapsedOnClickBrackets="true"
-              :data="dataval.json"      
-              >
-            </vue-json-pretty>
-            
-
-
-          </div>
-
-
-        </div>
-          
+        <div style="font-weight: bold">{{transformResultsDisplay.rt[rtKey].propertyLoadRatio}}% properties assigned from data</div>
+        <div style="font-weight: bold">Unused XML:</div>
+        <code style="background-color: whitesmoke"><pre style="background-color: whitesmoke">{{prettifyXml(transformResultsDisplay.rt[rtKey].unusedXml)}}</pre></code>
 
         <hr/>
-      </div>
+        <div v-for="(val,key) in transformResultsDisplay.rt[rtKey].propertyLoadReport" v-bind:key="key">
 
+          <h3 v-if="val.status===false" style="color:red">{{key}}</h3>
+          <h3 v-if="val.status===true" style="color:green">{{key}}</h3>
+          <h3 v-if="val.status==='mixed'" style="color:orange">{{key}}</h3>
+
+          <div v-if="val.status!==false">
+            <div v-if="val.unAssingedProperties.length>0">
+              <div>Unassinged Properties:</div>
+              <div v-for="(unval,unvalindex) in val.unAssingedProperties" v-bind:key="unvalindex">{{unval}}</div>
+            </div>
+            <div v-for="(dataval,index) in val.data" v-bind:key="index">
+              <div>{{dataval.propertyLabel}}</div>
+              <code style="background-color: whitesmoke"><pre style="background-color: whitesmoke">{{prettifyXml(dataval.xml)}}</pre></code>
+              <vue-json-pretty 
+                :path="'res'"
+                :highlightMouseoverNode="true"
+                :collapsedOnClickBrackets="true"
+                :data="dataval.json"      
+                >
+              </vue-json-pretty>
+              
+
+
+            </div>
+
+
+          </div>
+            
+
+          <hr/>
+        </div>
+      </div>
 
 
 
@@ -139,7 +143,9 @@ export default {
   data: function() {
     return {
       useRtSelected: 'lc:RT:bf2:Monograph:Work',
-      useRtInstanceSelected: 'lc:RT:bf2:Monograph:Instance',
+      // useRtInstanceSelected: 'lc:RT:bf2:Monograph:Instance',
+      useRtInstanceSelected: 'lc:RT:bf2:SoundRecording:Instance',
+      
       searchTimeout: null,
       transformResults: null,
       transformResultsDisplay: null,
@@ -216,6 +222,7 @@ export default {
 
         parseBfdb.parse(parseBfdb.testXmlInstance)
         console.log(parseBfdb)
+        console.log(this.useRtInstanceSelected)
 
         let useProfile = null
         // find the right profile to feed it
@@ -225,12 +232,14 @@ export default {
           }
         }
 
+        console.log(useProfile)
+
         this.transformResults  = parseBfdb.transform(useProfile)
 
-        let workkey = this.transformResults.rtOrder.filter((k)=> k.includes(":Instance"))[0]
+        // let workkey = this.transformResults.rtOrder.filter((k)=> k.includes(":Instance"))[0]
 
 
-        this.transformResultsDisplay = this.transformResults.rt[workkey]
+        this.transformResultsDisplay = this.transformResults
 
 
     },

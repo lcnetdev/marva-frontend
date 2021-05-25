@@ -1,13 +1,10 @@
 <template>
-  <div v-if="nested != true" class="component-container">
-
-
-
+  <div v-if="nested == false && hideField == false" class="component-container">
     <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['ctrlKey','shiftKey'],preventDefault: false}]" @success="openDiacriticSelect" />
 
     <div class="component-container-title">{{structure.propertyLabel}}</div>
     <div class="component-container-input-container">
-        <div v-bind:class="'component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border'" >
+        <div v-bind:class="'component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border'">
           <div style="display: flex;">
             <div style="flex:1">
               <form autocomplete="off">            
@@ -23,9 +20,9 @@
     <div v-if="showDiacritics==true" class="diacritic-modal">
       <ul class="diacritic-modal-script-list">
         <li style="font-weight: bold">Custom</li>
-        <li style="color:lightgrey">Other</li>
+<!--         <li style="color:lightgrey">Other</li>
         <li style="color:lightgrey">Langs</li>
-        <li style="color:lightgrey">Here</li>
+        <li style="color:lightgrey">Here</li> -->
       </ul>
       <hr style="margin:2px;">
 
@@ -46,12 +43,11 @@
 
 
 
-  <div v-else>
-
-
+  <div v-else-if="hideField == false">
+        
         <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['ctrlKey','shiftKey'],preventDefault: true}]" @success="openDiacriticSelect" />
 
-        <div v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border', { 'component-container-fake-input-note' : isNoteField(structure.propertyLabel)  }]">
+        <div v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border', { 'component-container-fake-input-note' : isNoteField(structure.propertyLabel)  }]" >
           <div style="display: flex;">
             <div style="flex:1">
 
@@ -69,9 +65,9 @@
         <div v-if="showDiacritics==true" class="diacritic-modal">
           <ul class="diacritic-modal-script-list">
             <li style="font-weight: bold">Custom</li>
-            <li style="color:lightgrey">Other</li>
+<!--             <li style="color:lightgrey">Other</li>
             <li style="color:lightgrey">Langs</li>
-            <li style="color:lightgrey">Here</li>
+            <li style="color:lightgrey">Here</li> -->
           </ul>
           <hr style="margin:2px;">
 
@@ -99,6 +95,7 @@
 
 import { mapState } from 'vuex'
 import uiUtils from "@/lib/uiUtils"
+import config from "@/lib/config"
 
 
 export default {
@@ -115,7 +112,9 @@ export default {
     profileName: String,
     activeTemplate: Object,
     parentURI: String,
-    nested: Boolean
+    nested: Boolean,
+    ptGuid: String
+
   },
 
   methods: {
@@ -223,6 +222,7 @@ export default {
               el.style.backgroundColor = 'transparent'
             })
             this.$refs.diacriticTable[this.diacriticDataNav].style.backgroundColor="#dfe5f1"
+            console.log(this.$refs.diacriticTable[this.diacriticDataNav].style)
             this.$refs.diacriticTable[this.diacriticDataNav].scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"})
         }else if (event.key == 'Enter'){
 
@@ -273,23 +273,24 @@ export default {
         event.target.style.height = event.target.scrollHeight + "px"
       }
 
-      //event.target.style.height='auto'
-      // console.log('----')
-      // console.log('----')
-      // console.log('----')
-      // console.log('----')
-      // console.log(this.profileCompoent)
-      // console.log(this.structure)
-      // console.log(this.inputValue)
-      // console.log(this.activeTemplate,"Object")
-      // console.log('----')
-      // console.log('----')
-      // console.log('----')
-      // console.log('----')
+
       if (this.inputValue === null) return false
       if (this.inputValue.trim() === '') return false
-      this.$store.dispatch("addValueLiteral", { self: this, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, value:this.inputValue }).then(() => {
+
+      let parentURI = null
+      if (this.parentStructureObj){
+        parentURI = this.parentStructureObj.propertyURI
+      }
+
+      this.$store.dispatch("setValueLiteral", { self: this, ptGuid: this.ptGuid, guid: this.guid, parentURI:parentURI, URI: this.structure.propertyURI, value: this.inputValue }).then((newGuid) => {
        
+        // if this is here then we created a new value, store it for future edits
+        if(newGuid){
+          this.guid = newGuid
+        }
+
+
+
       })   
 
 
@@ -315,7 +316,9 @@ export default {
       inputValue: null,
       showDiacritics: false,
       diacriticData: [],
-      diacriticDataNav: 0
+      diacriticDataNav: 0,
+      hideField: false,
+      guid: null
 
 
     }
@@ -324,71 +327,86 @@ export default {
 
 
     let data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]
-    // console.log(this.structure.propertyURI, "HERE",data.propertyURI)
 
-    // testing something with notes
-    if (this.structure.parent.includes('lc:RT:bf2:Noted')){
+    this.inputValue = ""
+    let bnodeHasURI = false
 
-      
-      if (data.userValue['http://id.loc.gov/ontologies/bibframe/note'] && data.userValue['http://id.loc.gov/ontologies/bibframe/note'][this.structure.propertyURI]){
-        this.inputValue = data.userValue['http://id.loc.gov/ontologies/bibframe/note'][this.structure.propertyURI]
-      }else if (data.userValue['http://id.loc.gov/ontologies/bibframe/note'] && data.userValue['http://id.loc.gov/ontologies/bibframe/note'][data.propertyURI]){
-        this.inputValue = data.userValue['http://id.loc.gov/ontologies/bibframe/note'][data.propertyURI]
-      }else{
+    // first test to see if this property exists in the user value at the parent structure / properturi lvl
+    if (this.parentStructureObj && data.userValue[this.parentStructureObj.propertyURI]){
+      for (let parentValueArray of data.userValue[this.parentStructureObj.propertyURI]){
+        if (parentValueArray[this.structure.propertyURI]){          
+          for (let childValue of parentValueArray[this.structure.propertyURI]){
+            if (childValue[this.structure.propertyURI]){
+              // if there are multiple literals of the same property, like multuple rdf:label (why?) then just merge them
+              // together into the imput so we dont lose it and can be edited
+              this.inputValue = this.inputValue + childValue[this.structure.propertyURI]
 
-        // it is not a bnode
-        if (data.userValue['@type']=='http://id.loc.gov/ontologies/bibframe/Note'){
-          this.inputValue = data.userValue[this.structure.propertyURI]
+              // for use later, does this bnode have a URI?              
+              if (parentValueArray['@id']){
+                bnodeHasURI = true
+              }
+
+              // also set the guid
+              this.guid = childValue['@guid']
+            }
+          }
         }
+      }
+    }else if (!this.parentStructureObj && data.userValue[this.structure.propertyURI]){
+      // if it is not a nested template literal then it should be a first lvl one
+      for (let value of data.userValue[this.structure.propertyURI]){
+        if (value[this.structure.propertyURI]){
+          // if there are multiple literals of the same property, like multuple rdf:label (why?) then just merge them
+          // together into the imput so we dont lose it and can be edited
+          this.inputValue = this.inputValue + value[this.structure.propertyURI]
 
+          this.guid = value['@guid']
+        }
+      }
+    }else if (this.parentStructureObj && this.parentStructureObj.propertyURI == data.userValue['@root'] && data.userValue[this.structure.propertyURI]){
+      // there is aparent element, but it is the root element also
 
+      for (let value of data.userValue[this.structure.propertyURI]){
+        if (value[this.structure.propertyURI]){
+          // if there are multiple literals of the same property, like multuple rdf:label (why?) then just merge them
+          // together into the imput so we dont lose it and can be edited
+          this.inputValue = this.inputValue + value[this.structure.propertyURI]
 
+          this.guid = value['@guid']
+        }
       }
 
-      // unless it is a note on the thing itself
+
+    }
 
 
-
-
-    }else if (data.userValue[this.structure.propertyURI]){
-
-      this.inputValue = data.userValue[this.structure.propertyURI] 
-
-
-
-
-
-    }else if (this.structure.propertyURI === 'http://www.w3.org/2000/01/rdf-schema#label'){
-
-      // check to see if it exists in the bnode
-      if (data.userValue[data.propertyURI] && data.userValue[data.propertyURI][this.structure.propertyURI]){
-        this.inputValue = data.userValue[data.propertyURI][this.structure.propertyURI]
-      }else if (data.userValue[this.parentStructureObj.propertyURI] && data.userValue[this.parentStructureObj.propertyURI][this.structure.propertyURI]){
-
-        // check to see if it exists in user data under the parent's ID
-        this.inputValue = data.userValue[this.parentStructureObj.propertyURI][this.structure.propertyURI]
-
+    // look at the config file to understand this flag
+    if (config.profileHacks.agentsHideManualRDFLabelIfURIProvided.enabled){
+      if (this.parentStructureObj && this.parentStructureObj.propertyURI == 'http://id.loc.gov/ontologies/bibframe/agent'){
+        if (this.structure.propertyURI=='http://www.w3.org/2000/01/rdf-schema#label'){
+          if (bnodeHasURI){
+            this.hideField = true
+          }
+        }
       }
-
-      
-      // console.log('no',data,data.propertyURI)
-      
     }
 
 
 
 
-    // }else if (data.userValue[data.propertyURI] && data.userValue[data.propertyURI][this.structure.propertyURI]){
-    //   this.inputValue = data.userValue[data.propertyURI][this.structure.propertyURI]
-    // }    
+    if (this.inputValue == ""){
+      this.inputValue = null
+    }
 
-    // }else if (data.userValue['http://id.loc.gov/ontologies/bibframe/note'] && data.userValue['http://id.loc.gov/ontologies/bibframe/note'][this.structure.propertyURI]){
-    //   this.inputValue = data.userValue['http://id.loc.gov/ontologies/bibframe/note'][this.structure.propertyURI]
+
+    // if it is a dynamic property and no data was populated, hide it
+    // if (data.dynamic && this.inputValue == null){
+    //   this.hideField = true
     // }
-    // bad idea
-    // }else if (this.structure.propertyURI === 'http://www.w3.org/2000/01/rdf-schema#label' && data.userValue[data.propertyURI]){
-    //   this.inputValue = data.userValue[data.propertyURI]
+    // if (this.parentStructureObj && this.parentStructureObj.dynamic && this.inputValue == null){
+    //   this.hideField = true
     // }
+
 
 
     let d = localStorage.getItem('bfeDiacritics')
@@ -485,6 +503,13 @@ export default {
   text-align: right;
   padding-right: 0.5em;
 }
+
+.diacritic-modal tr:nth-child(even) td{
+  background-color: transparent;
+}
+
+
+
 
 .diacritic-modal-list-diacritic{
 font-weight: bold;

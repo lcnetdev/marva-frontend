@@ -16,7 +16,7 @@
     <hr>
 
     
-    <h3>Load ICB record from BFDB</h3>
+    <h3>Load data from BFDB</h3>
 
     <ol>
       <li>1. Go to the <a href="https://preprod-8230.id.loc.gov" target="_blank">BFDB</a> and find and instance to load.</li>
@@ -28,12 +28,40 @@
       <input style="margin-left:2em; width: 75%;" class="editor-link-input" v-model="instanceEditorLink" type="text" id="instance-editor-link" placeholder="Paste Editor Link URL">
     </div>
     <div>
+
+    <div>
+
+    <button style="font-size: 1.25em; margin-left: 2em; margin-top: 0.5em;" @click="testInstance()">Suggest Profile</button> 
+
+    <div v-if="suggestHardCoded.length>0" style="margin-left: 5em;margin-top: 2em;background-color: aliceblue;padding: 1em;">
+      <div>This record was saved using this profile:</div>
+      <button style="font-size: 1.25em" v-bind:key="pname" @click="loadSuggestd(pname)" v-for="pname  in suggestHardCoded">Load using: {{pname}}</button>
+    </div>
+    <div v-else-if="suggestScore.length>0">
+
+
+      <div style="margin-left: 5em;margin-top: 2em;background-color: aliceblue;padding: 1em;">
+        <div style="margin-bottom: 1em;font-weight: bold;">These profiles best fit this data (best to worst):</div>
+        <div v-bind:key="idx" v-for="(pname,idx) in suggestScore" style="margin-bottom: 1em">
+          <button style="font-size: 1.25em" @click="loadSuggestd(pname.id)">Load using: {{pname.profile}}</button>
+        </div>
+      </div>
+
+      
+      
+
+
+    </div>
+
+
+    </div>
+  <hr style="width: 25%;margin-left: 2.5em;margin-top: 2em;">
+
     <select style="margin-left:2em; width: 76%;" class="editor-link-input" v-model="instanceSelected">
       <option v-for="key in rtLookupInstances" :key="key"  :selected="(key === 'lc:RT:bf2:Monograph:Instance') ? true : false"  >{{key}}</option>
     </select>
-
     <div>
-    <button style="font-size: 1.25em; margin-left: 2em; margin-top: 0.5em;" @click="loadInstance()">Load</button> 
+    <button style="font-size: 1.25em; margin-left: 2em; margin-top: 0.5em;" @click="loadInstance()">Manually Select Profile</button> 
     </div>
 
   </div>
@@ -81,6 +109,7 @@ import { mapState } from 'vuex'
 // import uiUtils from "@/lib/uiUtils"
 import parseId from '@/lib/parseId'
 import parseBfdb from '@/lib/parseBfdb'
+// import exportXML from "@/lib/exportXML"
 
 const short = require('short-uuid');
 const decimalTranslator = short("0123456789");
@@ -113,8 +142,58 @@ export default {
       this.useRtSelected = event.target.value
     },
 
+    testInstance: async function(){
 
-    loadInstance: function(){
+      this.suggestHardCoded= []
+
+      if (this.instanceEditorLink==''||this.instanceEditorLink==null){
+        this.instanceEditorLink = this.instanceTests[Math.floor(Math.random() * this.instanceTests.length)];
+
+      }
+
+      this.$store.dispatch("fetchBfdbXML", { self: this, url: this.instanceEditorLink }).then(async () => {
+      // 
+
+
+        parseBfdb.parse(this.bfdbXML)
+
+        let results = parseBfdb.testProfiles(this.profiles)
+
+        if (results.hardCoded){
+            // if it found the work and the instance just sow the instace
+            if (results.hardCoded.filter((v)=>{ return (v.includes(":Work"))}).length>0 && results.hardCoded.filter((v)=>{ return (v.includes(":Instance"))}).length>0 ){
+              results.hardCoded = results.hardCoded.filter((v)=>{ return (v.includes(":Instance"))})
+            }
+
+            this.suggestHardCoded = results.hardCoded
+
+        }
+        console.log(results.scoreResults)
+
+        results.scoreResults = results.scoreResults.filter((v)=>{return (v.id)})
+
+        results.scoreResults = results.scoreResults.filter((v)=>{return (!v.id.includes("test"))})
+        results.scoreResults = results.scoreResults.filter((v)=>{return (!v.profile.includes("test"))})
+        results.scoreResults = results.scoreResults.filter((v)=>{return (!v.profile.includes("lc:profile"))})
+
+
+
+
+        this.suggestScore = results.scoreResults.slice(0, 5)
+
+
+      })
+
+
+    },
+
+    loadSuggestd: async function(pname){
+      this.instanceSelected = pname
+      this.loadInstance()
+
+    },
+
+    loadInstance: async function(){
 
       if (this.instanceEditorLink==''||this.instanceEditorLink==null){
         this.instanceEditorLink = this.instanceTests[Math.floor(Math.random() * this.instanceTests.length)];
@@ -123,7 +202,7 @@ export default {
       
 
 
-      this.$store.dispatch("fetchBfdbXML", { self: this, url: this.instanceEditorLink }).then(() => {
+      this.$store.dispatch("fetchBfdbXML", { self: this, url: this.instanceEditorLink }).then(async () => {
       // 
 
 
@@ -189,17 +268,25 @@ export default {
         
 
         
-        this.transformResults  = parseBfdb.transform(useProfile)
+        this.transformResults  = await parseBfdb.transform(useProfile)
 
         // let workkey = this.transformResults.rtOrder.filter((k)=> k.endsWith(":Instance"))[0]
         // this.transformResultsDisplay = this.transformResults.rt[workkey]
-        this.$store.dispatch("setActiveRecordSaved", { self: this}, false).then(() => {
 
-        })
+        await this.$store.dispatch("setActiveRecordSaved", { self: this}, false)
 
+        // this.$store.dispatch("setActiveRecordSaved", { self: this}, false).then(() => {
+
+        // })
+
+
+        // let xml = await exportXML.toBFXML(this.transformResults)
+        // console.log(xml)
+        // console.log('here')
         this.$store.dispatch("setActiveProfile", { self: this, profile: this.transformResults }).then(() => {
 
           this.$router.push({ path: 'edit' })
+
         })
 
 
@@ -307,15 +394,24 @@ export default {
       searchActive: true,
       instanceSelected: 'lc:RT:bf2:Monograph:Instance',
       instanceEditorLink: null,
+      suggestHardCoded: [],
+      suggestScore: [],
 
 
       instanceTests:[
         //'/bfe2/editor/tests/instances/c0010058400001.editor-pkg.xml', //book
         // '/bfe2/editor/tests/instances/c0214680420001.editor-pkg.xml',
+        
         // '/bfe2/editor/tests/instances/c0210643040001.editor-pkg.xml',   // serial 
         // '/bfe2/editor/tests/instances/c0122950980001.editor-pkg.xml', // sound recording
+        
+
+
         // '/bfe2/editor/tests/instances/e2324557043013562145333356239676927794980001.editor-pkg.xml', // sound recording
-        '/bfe2/editor/tests/instances/c0056343030001.editor-pkg.xml', // ???
+        '/bfe2/editor/tests/instances/c0056343030001.editor-pkg.xml', // ??? - is wild
+
+
+        // '/bfe2/editor/tests/instances/c0202249350001.editor-pkg.xml', // ???
 
       ] 
 
@@ -323,9 +419,47 @@ export default {
   },
   created: function(){
 
-   this.$store.dispatch("fetchIdWorkSearch", { self: this, searchValue: 'Woolf, Virginia, 1882-1941. To the lighthouse' }).then(() => {
-      this.searchActive=false
-    })
+   // this.$store.dispatch("fetchIdWorkSearch", { self: this, searchValue: 'Woolf, Virginia, 1882-1941. To the lighthouse' }).then(() => {
+   //    this.searchActive=false
+   //  })
+
+
+
+   let inerval = window.setInterval(()=>{
+
+      if (this.profilesLoaded){
+
+
+       if (this.$router.currentRoute && this.$router.currentRoute.query && this.$router.currentRoute.query.url){
+
+
+        let url = this.$router.currentRoute.query.url
+        if (this.$router.currentRoute && this.$router.currentRoute.query && this.$router.currentRoute.query.action && this.$router.currentRoute.query.action == 'loadwork'){
+          url = url.replace('.jsonld','.rdf')
+        }
+        if (this.$router.currentRoute && this.$router.currentRoute.query && this.$router.currentRoute.query.action && this.$router.currentRoute.query.action == 'loadibc'){
+          url = url.replace('.jsonld','.xml')
+        }
+
+        this.instanceEditorLink = url
+
+        this.testInstance()
+        console.log('ccickckckck')
+
+        window.clearInterval(inerval)
+
+       }
+
+
+
+      }
+
+
+   },500)
+
+
+
+
 
   },
 };

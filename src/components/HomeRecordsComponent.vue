@@ -78,12 +78,12 @@ export default {
   methods: {
 
     returnSpByTemplateId(templateId){
-      console.log(this.records)
+      
       let sp = null
       let c = 1
       Object.keys(this.records).forEach((k)=>{
         if (`template-id-${c++}` === templateId){
-          console.log(k)
+          
           sp = k
         }
       })
@@ -126,7 +126,7 @@ export default {
       })
 
       // DO THE SAME THING FOR USER TEMPLATES WHEN ADDED TO THE SYSTEM
-      console.log(map)
+      
 
       if (justLength){
         return Object.keys(map).length
@@ -145,7 +145,7 @@ export default {
       let meta = parseProfile.returnMetaFromSavedXML(xml)
 
 
-      console.log(meta)
+      
 
       parseBfdb.parse(meta.xml)
 
@@ -183,7 +183,7 @@ export default {
          
 
         for (let pkey in this.profiles){
-          console.log(pkey)
+          
           for (let rtkey in this.profiles[pkey].rt){
             if (rtkey == useItemRtLabel){
               let useItem = JSON.parse(JSON.stringify(this.profiles[pkey].rt[rtkey]))
@@ -214,8 +214,8 @@ export default {
       useProfile.status = meta.status
 
 
-      console.log(useProfile,'console.log(useProfile)')
-      this.transformResults  = parseBfdb.transform(useProfile)
+      
+      this.transformResults  = await parseBfdb.transform(useProfile)
 
       // let workkey = this.transformResults.rtOrder.filter((k)=> k.includes(":Instance"))[0]
       // this.transformResultsDisplay = this.transformResults.rt[workkey]
@@ -224,6 +224,7 @@ export default {
       })
 
       this.$store.dispatch("setActiveProfile", { self: this, profile: this.transformResults }).then(() => {
+
 
         this.$router.push({ path: 'edit' })
       })
@@ -330,7 +331,7 @@ export default {
 
 
     if (this.allrecords){
-      console.log('allrecords')
+      
       this.$store.dispatch("fetchAllRecords", { self: this, user: this.catInitials  }).then(() => {
         this.records = this.allRecords
       })  

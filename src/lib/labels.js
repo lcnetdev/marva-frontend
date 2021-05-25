@@ -8,7 +8,7 @@ const labels = {
   refComponentSwitchButton: 'Use [Left Arrow] and [Right Arrow] keys or click to switch',
   propertyDuplicateSymbol: '+',
   propertyRemoveSymbol: '-',
-  propertyDuplicateTip: 'Click to duplicate this property or press [Crtl and +]',
+  propertyDuplicateTip: 'Click to duplicate this property or press [Crtl and SHIFT +]',
 
 }
 

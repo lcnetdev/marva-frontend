@@ -103,7 +103,7 @@ export default new Vuex.Store({
 
     saveRecord : debounce((state,commit) => {
 
-
+      console.log(state, commit,exportXML)
       
       exportXML.toBFXML(state.activeProfile)
       .then((xml)=>{
@@ -318,7 +318,7 @@ export default new Vuex.Store({
     },
 
 
-    
+
     // addNewItem({ commit},data){
     //   // commit('ACTIVEPROFILE', data.profile)
       
@@ -333,12 +333,14 @@ export default new Vuex.Store({
     setCatInitials({ commit}, data){
       commit('CATINITALS', data.catInitials)
     },
-    async  addValue ({ commit, state }, data) {   
+
+
+    async  setValueComplex ({ commit, state }, data) {   
       // we know the value bc it is the active context value in this case
       // 
       // 
       
-      let nap = parseProfile.setValue(state.activeProfile, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, state.contextData)
+      let nap = await parseProfile.setValueComplex(state.activeProfile, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, state.contextData, data.structure, data.parentStructure)
       commit('ACTIVEPROFILE', nap)
       commit('ACTIVEEDITCOUNTER') 
 
@@ -347,26 +349,41 @@ export default new Vuex.Store({
       state.saveRecord(state,commit)
 
     },
-    async addValueLiteral ({ commit, state }, data) {   
-      
-      
 
-      let profileName = (data.profileName) ? data.profileName : state.activeProfileName;
-
-      let nap = parseProfile.setValue(state.activeProfile, data.profileComponet, data.structure.propertyURI, profileName, data.template, data.value)
-      commit('ACTIVEPROFILE', nap)
+    async removeValueSimple ({ commit, state }, data) {   
+      let results = parseProfile.removeValueSimple(state.activeProfile, data.idGuid, data.labelGuid)
+      commit('ACTIVEPROFILE', results)
       commit('ACTIVEEDITCOUNTER')    
-
       commit('ACTIVERECORDSAVED', false)
       state.saveRecord(state,commit)
+      return results
+    },
 
 
+    async setValueSimple ({ commit, state }, data) {   
+      console.log(state.activeProfile, data.ptGuid, data.parentURI, data.URI, data.valueURI, data.valueLabel)
+      let results = await parseProfile.setValueSimple(state.activeProfile, data.ptGuid, data.parentURI, data.URI, data.valueURI, data.valueLabel)
+      console.log(results)
+      commit('ACTIVEPROFILE', results.currentState)
+      commit('ACTIVEEDITCOUNTER')    
+      commit('ACTIVERECORDSAVED', false)
+      state.saveRecord(state,commit)
+      return results.newData
+    },
+
+    async setValueLiteral ({ commit, state }, data) {   
+      let results = await parseProfile.setValueLiteral(state.activeProfile, data.ptGuid, data.guid, data.parentURI, data.URI, data.value)
+      commit('ACTIVEPROFILE', results.currentState)
+      commit('ACTIVEEDITCOUNTER')    
+      commit('ACTIVERECORDSAVED', false)
+      state.saveRecord(state,commit)
+      return results.newGuid
     },
 
 
     async refTemplateChange ({ commit, state }, data) {   
 
-      let nap = parseProfile.refTemplateChange(state.activeProfile, data.profileComponet, data.structure.propertyURI,  state.activeProfileName, data.template, data.parentId, data.nextRef)
+      let nap = parseProfile.refTemplateChange(state.activeProfile, data.profileComponet, data.structure.propertyURI,  state.activeProfileName, data.template, data.parentId, data.thisRef, data.nextRef)
       commit('ACTIVEPROFILE', nap)    
 
 

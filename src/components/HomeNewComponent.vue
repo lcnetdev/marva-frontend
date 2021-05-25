@@ -182,15 +182,19 @@ export default {
       useProfile.status = 'unposted'
       }
 
+      let workUri = null
+
       for (let rt in useProfile.rt){
 
         let uri = null
 
         // make a new uri for each one
         if (rt.includes(':Work')){
-          uri = 'http://id.loc.gov/resources/instances/e' + decimalTranslator.new()
-        }else if (rt.includes(':Instance')){
           uri = 'http://id.loc.gov/resources/works/e' + decimalTranslator.new()
+          workUri = uri
+        }else if (rt.includes(':Instance')){
+          uri = 'http://id.loc.gov/resources/instances/e' + decimalTranslator.new()
+
         }else if (rt.includes(':Item')){  
           uri = 'http://id.loc.gov/resources/items/e' + decimalTranslator.new()
         
@@ -200,12 +204,36 @@ export default {
         for (let pt in useProfile.rt[rt].pt){
 
           if (useProfile.rt[rt].pt[pt].propertyURI == "http://id.loc.gov/ontologies/bibframe/Work"){
-            useProfile.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/Work'] = uri
+            // useProfile.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/Work'] = uri
+
+            useProfile.rt[rt].pt[pt].userValue={
+              '@root': 'http://id.loc.gov/ontologies/bibframe/Work',
+              '@guid': short.generate() ,
+              '@id': uri,
+            }
+
+
+
           }
         }
 
 
       }
+
+
+      // apply the data we gathered / created above
+      for (let rt in useProfile.rt){
+        if (rt.includes(':Work')){
+          // something
+        }else if (rt.includes(':Instance')){
+          //something          
+          useProfile.rt[rt].instanceOf = workUri
+        }else if (rt.includes(':Item')){  
+          //something        
+        }  
+      }
+
+      console.log(useProfile)
 
 
 

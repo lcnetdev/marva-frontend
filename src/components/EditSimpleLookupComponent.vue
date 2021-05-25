@@ -1,5 +1,7 @@
 <template>
-  <div v-if="nested != true" class="component-container">
+  <div v-if="nested == false" class="component-container">
+
+
     <div class="component-container-title">{{structure.propertyLabel}}</div>
     <div class="component-container-input-container">
         <div class="component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search">          
@@ -8,7 +10,7 @@
             <!-- <input autocomplete="off" v-bind:value="activeSelect"  type="text" disabled style="width: 95%; border:none; height: 90%; font-size: 1.5em; padding: 0.1em; position: relative; background: none; color: lightgray"> -->
               
               <div v-for="(avl,idx) in activeLookupValue" :key="idx" class="selected-value-container">
-                  <span style="padding-right: 0.3em; font-weight: bold">{{avl['http://www.w3.org/2000/01/rdf-schema#label']}}<span class="uncontrolled" v-if="avl.BFE2METAnotControled">(uncontrolled)</span></span>
+                  <span style="padding-right: 0.3em; font-weight: bold">{{avl['http://www.w3.org/2000/01/rdf-schema#label']}}<span class="uncontrolled" v-if="!avl.uri">(uncontrolled)</span></span>
                   <span @click="removeValue(idx)" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em; cursor: pointer;">x</span>
               </div>
               <input bfeType="EditSimpleLookupComponent-unnested" ref="lookupInput"  :id="assignedId" autocomplete="off" v-on:blur="blur" v-bind:value="activeValue"  type="text" @focus="autoFocus($event)" @keydown="keyDownEvent($event)" @keyup="keyUpEvent($event)" class="input-single selectable-input">
@@ -31,14 +33,16 @@
 
 
   <div v-else style="position: relative;">
-      <div  v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search']" style="">          
+
+
+      <div  v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search']" :style="{'background-color': (structure.dynamic) ? 'auto' : 'auto' }">          
         <form autocomplete="off" v-on:submit.prevent style="">
           <div style="">
           <!-- <input autocomplete="off" v-bind:value="activeSelect"  type="text" disabled style="width: 95%; border:none; height: 90%; font-size: 1.5em; padding: 0.1em; position: relative; background: none; color: lightgray"> -->
             <div class="component-nested-container-title component-nested-container-title-simple-lookup" >{{structure.propertyLabel}}</div>            
             <div style="display: flex">
               <div v-for="(avl,idx) in activeLookupValue" :key="idx" class="selected-value-container-nested">
-                  <span style="padding-right: 0.3em; font-weight: bold">{{avl['http://www.w3.org/2000/01/rdf-schema#label']}}<span class="uncontrolled" v-if="avl.BFE2METAnotControled">(uncontrolled)</span></span>
+                  <span style="padding-right: 0.3em; font-weight: bold">{{avl['http://www.w3.org/2000/01/rdf-schema#label']}}<span class="uncontrolled" v-if="!avl.uri">(uncontrolled)</span></span>
                   <span @click="removeValue(idx)" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em; cursor: pointer;">x</span>
               </div>
 
@@ -85,7 +89,8 @@ export default {
     nested: Boolean,
     profileName: String,
     activeTemplate: Object,
-
+    ptGuid: String,
+    parentStructureObj: Object,
     profileCompoent: String
 
   },
@@ -106,137 +111,218 @@ export default {
   created: function(){
 
 
+    let currentUserValue = this.activeProfile.rt[this.profileName].pt[this.profileCompoent].userValue
 
 
 
-    // fill in the defaults if it comes with them
-    // only if this was not loaded from a record
-    // if (!this.activeProfile.procInfo || (this.activeProfile.procInfo && !this.activeProfile.procInfo.includes("update"))){
-    //   if (this.structure.valueConstraint.defaults.length>0){
-
-    //     
-    //     
-        
-
-    //     this.activeLookupValue.push({})
-    //     this.activeLookupValue[0]['http://www.w3.org/2000/01/rdf-schema#label'] = this.structure.valueConstraint.defaults[0].defaultLiteral
-    //     this.activeLookupValue[0].URI = this.structure.valueConstraint.defaults[0].defaultURI
-
-
-    //     // this.$store.dispatch("addValueLiteral", { self: this, profileName:this.profileName, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, value:this.activeLookupValue }).then(() => {
-         
-    //     // })  
-
-    //     
-    //     // dispatch and add to the acutal data
-
-
-
-
-    //   }
-    // }
-
-    let data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]
-
-
-      
-      
-      
-      
-      
-      
-      
-
-
-    // what URI was the data stored in
-
-    // HACK - figure out whats going on here
-    let altPropertyURI = this.structure.propertyURI.toLowerCase()
-    let dataField = data.userValue[data.propertyURI]
-
-
-    if (data.userValue[this.structure.propertyURI]){
-      dataField = data.userValue[this.structure.propertyURI]
-
-
-    }else if (data.userValue[altPropertyURI]){
-      dataField = data.userValue[altPropertyURI]    
-      
-    }else if (data.userValue['http://www.w3.org/2002/07/owl#sameAs'] && data.userValue['http://www.w3.org/2002/07/owl#sameAs'][this.structure.propertyURI]){
-      dataField = data.userValue['http://www.w3.org/2002/07/owl#sameAs'][this.structure.propertyURI]
-    
-    }else if (data.userValue['http://www.w3.org/2002/07/owl#sameAs'] && data.userValue['http://www.w3.org/2002/07/owl#sameAs'][altPropertyURI]){
-      dataField = data.userValue['http://www.w3.org/2002/07/owl#sameAs'][altPropertyURI]  
-
-
-
-    }else if (data.userValue['http://www.w3.org/2002/07/owl#sameAs']){
-      dataField = data.userValue['http://www.w3.org/2002/07/owl#sameAs']         
-    }else if (data.userValue['@type'] && data.userValue[data.userValue['@type']]){
-      dataField = data.userValue[this.structure.propertyURI]
-
-    }
-
-    // din't find it, just use the whole thing
-    if (!dataField){
-      if (Object.keys(data.userValue).length>0){
-        dataField = data.userValue
-      }
-    }
-
-
-
-    // Kind of a HACK here, need to sort out what URI the data is being stored under here
-    
-    
-    
+    let possibleLiteralProperties = ['http://www.w3.org/1999/02/22-rdf-syntax-ns#value', 'http://www.w3.org/2000/01/rdf-schema#label', 'http://id.loc.gov/ontologies/bibframe/code','http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
     
 
-    
+    // find the level we are going to work with, it could be the root level or it 
+    // could be like Role and stored as a blank node in the data structure
+    // let useValue = null
 
-    if (!Array.isArray(dataField)){
-      dataField = [dataField]
-    }
 
-    for (let aDataField of dataField){
-      
-      
-      if (data.userValue && aDataField){
-        let alv = {}
-        if (aDataField.literal){
-          alv['http://www.w3.org/2000/01/rdf-schema#label'] = aDataField.literal
-        }
-        if (aDataField['http://www.w3.org/2000/01/rdf-schema#label']){
-          alv['http://www.w3.org/2000/01/rdf-schema#label'] = aDataField['http://www.w3.org/2000/01/rdf-schema#label']
+    if (currentUserValue && currentUserValue['@root'] && currentUserValue['@root'] == this.structure.propertyURI ){
+
+
+      // it is the root user value, we need to find its URI if it has one and what the label is
+      // but the label could be stored all over and the URI might be stored at the label level as well :(
+
+      let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(currentUserValue).indexOf(p) > -1) ? true : false })
+
+      // does it have any data?
+      if (currentUserValue['@id'] || foundLabelProperties.length > 0){
+
+        // so it has at least a URI or a label property
+
+        // try to find the label
+
+        let label = null
+        let labelGuid = null
+        let uri = null
+        let uriGuid = null
+
+        for (let p of foundLabelProperties){
+
+          if (currentUserValue[p]){
+            for (let value of currentUserValue[p]){
+              if (value[p]){
+                label = value[p]
+                labelGuid = value['@guid']
+              }
+              // it could also store the URI in the #value or something
+              if (value['@id']){
+                uri= value['@id']
+                uriGuid = value['@guid']
+              }
+            }
+          }
         }
 
-        if (aDataField['http://id.loc.gov/ontologies/bibframe/code']){
-          alv['http://www.w3.org/2000/01/rdf-schema#label'] = aDataField['http://id.loc.gov/ontologies/bibframe/code']
+        if (currentUserValue['@id'] && uri &&  currentUserValue['@id'] != uri){
+          console.warn('---------------------------------------------')
+          console.warn('There is a URI at the root level and also in the label? Which to use?')
+          console.warn(currentUserValue)
+          console.warn(this.structure)
+          console.warn('---------------------------------------------')
+        }
+
+        if (currentUserValue['@id']){
+          uri = currentUserValue['@id']
+          uriGuid = currentUserValue['@guid']
         }
 
 
-        if (aDataField.URI){
-          alv.URI = aDataField.URI
-        }else{
-          alv.URI = null
-          alv.BFE2METAnotControled = true
+        if (!label){
+
+          // no label was found, try to make one from the URI
+          if (uri){
+            label = uri.split('/').slice(-1)[0]
+          }
+
         }
 
-        if (aDataField.BFE2METAnotControled){
-          alv.BFE2METAnotControled = aDataField.BFE2METAnotControled
-        }
+        // we just use rdf:label internally here, but it could be any of the label properties above
+        // we keep the guid so the predicate doesn't really matter
+        this.activeLookupValue.push({
+          'http://www.w3.org/2000/01/rdf-schema#label' : label,
+          uri : uri,
+          uriGuid: uriGuid,
+          labelGuid: labelGuid
 
-        // no literal
-        if (!alv['http://www.w3.org/2000/01/rdf-schema#label'] && alv.URI){
-          alv['http://www.w3.org/2000/01/rdf-schema#label'] = alv.URI.split('/').slice(-1)[0] + " (no label)"
-        }
-        
-        
-        this.activeLookupValue.push(alv)
+        })
+
+
       }
 
-    }
+      
 
+
+    }else if (this.parentStructureObj && currentUserValue[this.parentStructureObj.propertyURI]){
+
+
+
+
+        for (let childProperty of currentUserValue[this.parentStructureObj.propertyURI]){
+
+          let label = null
+          let labelGuid = null
+          let uri = null
+          let uriGuid = null
+
+
+          let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(childProperty).indexOf(p) > -1) ? true : false })
+
+          // likely just stored at the first level
+          if (childProperty['@id']){
+            uri = childProperty['@id']
+            uriGuid = childProperty['@guid']
+          }
+
+          for (let p of foundLabelProperties){
+
+            if (childProperty[p]){
+              for (let value of childProperty[p]){
+                if (value[p]){
+                  label = value[p]
+                  labelGuid = value['@guid']
+                }
+                // it could also store the URI in the #value or something
+                if (value['@id']){
+                  uri= value['@id']
+                  uriGuid = value['@guid']
+                }
+              }
+            }
+          }
+
+          if (!label){
+
+            // no label was found, try to make one from the URI
+            if (uri){
+              label = uri.split('/').slice(-1)[0]
+            }
+
+          }
+
+          this.activeLookupValue.push({
+            'http://www.w3.org/2000/01/rdf-schema#label' : label,
+            uri : uri,
+            uriGuid: uriGuid,
+            labelGuid: labelGuid
+
+          })
+
+        }
+
+
+    }else if (this.parentStructureObj && currentUserValue['@root'] && currentUserValue['@root'] == this.parentStructureObj.propertyURI && currentUserValue[this.structure.propertyURI]) {
+
+
+      // its at the first level
+
+
+      for (let childProperty of currentUserValue[this.structure.propertyURI]){
+
+        let label = null
+        let labelGuid = null
+        let uri = null
+        let uriGuid = null
+
+
+        let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(childProperty).indexOf(p) > -1) ? true : false })
+
+        // likely just stored at the first level
+        if (childProperty['@id']){
+          uri = childProperty['@id']
+          uriGuid = childProperty['@guid']
+        }
+
+        for (let p of foundLabelProperties){
+
+          if (childProperty[p]){
+            for (let value of childProperty[p]){
+              if (value[p]){
+                label = value[p]
+                labelGuid = value['@guid']
+              }
+              // it could also store the URI in the #value or something
+              if (value['@id']){
+                uri= value['@id']
+                uriGuid = value['@guid']
+              }
+            }
+          }
+        }
+
+        if (!label){
+
+          // no label was found, try to make one from the URI
+          if (uri){
+            label = uri.split('/').slice(-1)[0]
+          }
+
+        }
+
+        this.activeLookupValue.push({
+          'http://www.w3.org/2000/01/rdf-schema#label' : label,
+          uri : uri,
+          uriGuid: uriGuid,
+          labelGuid: labelGuid
+
+        })
+
+      }
+
+
+    }else{
+
+      // this.activeLookupValue.push({
+      //   'http://www.w3.org/2000/01/rdf-schema#label' : 'No DATA'
+      // })
+
+    }
     
     
 
@@ -283,7 +369,15 @@ export default {
     removeValue: function(idx){
 
 
-      this.activeLookupValue.splice(idx,1)
+      let toRemove = this.activeLookupValue.splice(idx,1)
+      toRemove = toRemove[0]
+      console.log(toRemove)
+
+
+      this.$store.dispatch("removeValueSimple", { self: this, idGuid: toRemove.uriGuid, labelGuid: toRemove.labelGuid }).then(() => {
+       
+      })  
+
 
 
       // if (this.activeLookupValue.length>1){
@@ -392,7 +486,8 @@ export default {
     },
     keyUpEvent: function(event){
 
-      if (event && event.key && (event.key!=='ArrowUp' && event.key !=='ArrowDown' && event.key!=='Escape' && event.key!=='Backspace' && event.key!=='Enter' && event.key!=='PageUp' && event.key!=='PageDown')){
+
+      if (event && event.key && (event.key!=='ArrowUp' && event.key !=='ArrowDown' && event.key!=='Escape' && event.key!=='Backspace' && event.key!=='Enter' && event.key!=='PageUp' && event.key!=='PageDown' && event.ctrlKey == false)){
         
 
         // if we already have a value, do not let it add another
@@ -483,15 +578,14 @@ export default {
           this.doubleDelete = true
           return false
         }
+
         if (this.activeValue == '' && this.doubleDelete){
           this.doubleDelete = false
-          // were gonna delete the last one
-          
-          if (this.activeLookupValue.length>1){
-            this.activeLookupValue.splice(-1,1)
-          }else{
-            this.activeLookupValue = []
+          // were gonna delete the last one          
+          if (this.activeLookupValue.length>0){                       
+            this.removeValue(-1)
           }
+          
           this.doubleDelete = false
           this.displayAutocomplete = false
         }else if (this.activeValue == ''){
@@ -508,15 +602,22 @@ export default {
 
           let idx = metadata[key].displayLabel.indexOf(this.activeSelect)
           if (idx >-1){
-            this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':metadata[key].label[idx],URI:metadata[key].uri})
+            // this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':metadata[key].label[idx],URI:metadata[key].uri})
             this.activeFilter = ''
             this.activeValue = ''
             this.activeSelect = ''
             this.displayAutocomplete=false
             event.target.value = ''
-            this.$store.dispatch("addValueLiteral", { self: this, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, value:this.activeLookupValue }).then(() => {
+            // this.$store.dispatch("addValueLiteral", { self: this, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, value:this.activeLookupValue }).then(() => {
              
-            })               
+            // })               
+            let parentURI = (this.parentStructureObj) ? this.parentStructureObj.propertyURI : null 
+
+
+            this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, parentURI: parentURI, URI: this.structure.propertyURI, valueURI: metadata[key].uri, valueLabel:metadata[key].label[idx]}).then((resultData) => {
+              this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':resultData.valueLabel, uri: resultData.valueURI, uriGuid: resultData.guid, labelGuid:resultData.guid})
+            })
+
 
           }
           // let data = this.lookupLibrary[this.uri].metadata[v]
@@ -535,14 +636,17 @@ export default {
         // if there is a value still that means the value did not match a item in the list
         // so add the value as a uncontrolled value
         if (event.target.value !== ''){  
-          this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':event.target.value,URI:null, BFE2METAnotControled:true})
+          
           this.activeFilter = ''
           this.activeValue = ''
           this.activeSelect = ''
           this.displayAutocomplete=false
-          this.$store.dispatch("addValueLiteral", { self: this, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, value:this.activeLookupValue }).then(() => {
 
 
+          let parentURI = (this.parentStructureObj) ? this.parentStructureObj.propertyURI : null 
+
+          this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, parentURI: parentURI, URI: this.structure.propertyURI, valueURI: null, valueLabel:event.target.value}).then((resultData) => {
+            this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':resultData.valueLabel, uriGuid: resultData.guid, labelGuid:resultData.guid})
           })
   
           this.submitField()
@@ -604,14 +708,20 @@ export default {
 
         let idx = metadata[key].displayLabel.indexOf(label)
         if (idx >-1){
-          this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':metadata[key].label[idx],URI:metadata[key].uri})
+          // this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':,URI:})
           this.activeFilter = ''
           this.activeValue = ''
           this.activeSelect = ''
           this.displayAutocomplete=false
-          this.$store.dispatch("addValueLiteral", { self: this, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, value:this.activeLookupValue }).then(() => {
+          // this.$store.dispatch("addValueLiteral", { self: this, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, value:this.activeLookupValue }).then(() => {
            
-          })           
+          // })        
+
+          this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, parentURI: this.parentStructureObj.propertyURI, URI: this.structure.propertyURI, valueURI: metadata[key].uri, valueLabel:metadata[key].label[idx]}).then((resultData) => {
+            this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':resultData.valueLabel, uri: resultData.valueURI, uriGuid: resultData.guid, labelGuid:resultData.guid})
+          })
+
+
           this.$store.dispatch("enableMacroNav")    
 
         }

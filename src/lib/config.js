@@ -65,6 +65,22 @@ const config = {
 
 
 
+	profileHacks: {
+
+		// UI display flags
+		agentsHideManualRDFLabelIfURIProvided: {enabled:true,desc:"If the <agent> has a URI don't populate the manual label field, only if there is no URI in the node populate"},
+
+
+
+		// Parsing the profile flags
+		profileParseFixLowerCaseContribution: {enabled: true, desc:" someplaces lc:RT:bf2:Agents:Contribution is set to lc:RT:bf2:Agents:contribution (lowercase C) change it when lowercase to 'lc:RT:bf2:Agents:Contribution'"},
+
+		profileParseFixPropertyURIWhenUpperCase: {enabled: true, desc:"Sometimes a class is used in the propertyURI field? /Role instead of /role for example, change them to camel case when not lowercase"},
+
+	},
+
+
+
 
 	lookupConfig: {
 
@@ -153,6 +169,22 @@ const config = {
 			"All":{"url":"https://id.loc.gov/vocabulary/geographicAreas/suggest2/?q=<QUERY>&count=25", "all":true}, 					
 			}
 		]},
+
+		"https://preprod-8230.id.loc.gov/resources/works" : {"name":"Works", "processor" : 'lcAuthorities', "type":"complex", "modes":[
+			{
+			"All":{"url":"https://preprod-8230.id.loc.gov/resources/works/suggest2/?q=<QUERY>&count=25", "all":true}, 					
+			}
+		]},
+
+		"https://preprod-8230.id.loc.gov/resources/instances" : {"name":"Instances", "processor" : 'lcAuthorities', "type":"complex", "modes":[
+			{
+			"All":{"url":"https://preprod-8230.id.loc.gov/resources/instances/suggest2/?q=<QUERY>&count=25", "all":true}, 					
+			}
+		]},
+		
+
+
+
 		"http://id.loc.gov/entities/roles" : {"name":"roles", "type":"complex", "modes":[]},
 		"http://id.loc.gov/resources/works" : {"name":"works", "type":"complex", "modes":[]},
 		"http://id.loc.gov/rwo/agents" : {"name":"agents", "type":"complex", "modes":[]},
