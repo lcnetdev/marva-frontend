@@ -400,7 +400,7 @@ export default {
 
       instanceTests:[
         //'/bfe2/editor/tests/instances/c0010058400001.editor-pkg.xml', //book
-        // '/bfe2/editor/tests/instances/c0214680420001.editor-pkg.xml',
+        '/bfe2/editor/tests/instances/c0214680420001.editor-pkg.xml',
         
         // '/bfe2/editor/tests/instances/c0210643040001.editor-pkg.xml',   // serial 
         // '/bfe2/editor/tests/instances/c0122950980001.editor-pkg.xml', // sound recording
@@ -408,7 +408,7 @@ export default {
 
 
         // '/bfe2/editor/tests/instances/e2324557043013562145333356239676927794980001.editor-pkg.xml', // sound recording
-        '/bfe2/editor/tests/instances/c0056343030001.editor-pkg.xml', // ??? - is wild
+        // '/bfe2/editor/tests/instances/c0056343030001.editor-pkg.xml', // ??? - is wild
 
 
         // '/bfe2/editor/tests/instances/c0202249350001.editor-pkg.xml', // ???

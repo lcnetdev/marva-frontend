@@ -32,6 +32,17 @@ const config = {
 			profiles : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
 			starting : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:startingPoints&where=index.label:config',
 			env : 'staging'
+		},
+
+		production:{
+
+			ldpjs : 'https://editor.id.loc.gov/bfe2/api-production/',
+			util  :  'https://editor.id.loc.gov/bfe2/util/',
+			publish: 'https://editor.id.loc.gov/bfe2/util/publish/production',
+			bfdb : 'https://preprod-8230.id.loc.gov/',
+			profiles : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
+			starting : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:startingPoints&where=index.label:config',
+			env : 'production'
 		}
 
 
@@ -47,6 +58,8 @@ const config = {
 			return this.regionUrls.dev
 		}else if (window.location.href.startsWith('https://preprod-3001')){
 			return this.regionUrls.staging
+		}else if (window.location.href.startsWith('https://editor.id')){
+			return this.regionUrls.production
 		}
 	},
 
