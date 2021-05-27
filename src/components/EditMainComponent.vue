@@ -197,9 +197,22 @@ export default {
 
     removeProperty: function(){
 
-      this.$store.dispatch("removeProperty", { self: this, id: this.profileCompoent, profile:this.profileName }).then(() => {
+
+      const answer = window.confirm('Are you sure you want to remove the property?')
+      if (answer) {
+        this.$store.dispatch("removeProperty", { self: this, id: this.profileCompoent, profile:this.profileName }).then(() => {
+          
+        })         
+
+      } else {
         
-      }) 
+        return false
+
+      }
+
+
+
+
 
 
     },
