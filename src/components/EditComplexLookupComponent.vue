@@ -791,10 +791,10 @@ export default {
       }
 
 
-      if (event.ctrlKey){
-        // if they have the control key pressed dont do anything
-        return false
-      }
+      // if (event.ctrlKey){
+      //   // if they have the control key pressed dont do anything
+      //   return false
+      // }
 
 
       // turn on the modal
