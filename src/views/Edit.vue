@@ -57,9 +57,9 @@
                         </div>
 
                         <ul style="padding-left: 0;" :key="'leftmenu' + activeEditCounter">
-                            <li v-bind:class="['left-menu-list-item', { 'left-menu-list-item-has-data' :  liHasData(activeProfile.rt[profileName].pt[profileCompoent]) && returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue).length != 0, 'left-menu-list-item-active':(activeComponent==profileCompoent &&activeProfileName==profileName)}]" :id="'menu'+profileCompoent"  v-for="profileCompoent in activeProfile.rt[profileName].ptOrder" :key="profileCompoent">
+                            <li v-bind:class="['left-menu-list-item', { 'left-menu-list-item-has-data' :  liHasData(activeProfile.rt[profileName].pt[profileCompoent]) && returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue).length != 0, 'left-menu-list-item-active':(activeComponent==profileCompoent &&activeProfileName==profileName)}]" :id="'menu'+profileName+profileCompoent"  v-for="(profileCompoent,idx) in activeProfile.rt[profileName].ptOrder" :key="profileCompoent">
                               
-                                <a v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" @click="scrollFieldContainerIntoView($event,profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_'))" href="#">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}}</a>
+                                <a v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" @click="scrollFieldContainerIntoView($event,profileName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')+idx+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_'))" href="#">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}}</a>
                                 <a v-else href="#" style="color: rgba(255,255,255,0.75) !important;" @click="restoreDelete($event, profileName, profileCompoent)" class="simptip-position-right" data-tooltip="Click to restore">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}} [Deleted]</a>
 
                             </li>
@@ -100,7 +100,7 @@
 
 
 
-                        <div v-for="profileCompoent in activeProfile.rt[profileName].ptOrder" :key="profileCompoent" :id="'container-for-'+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')">
+                        <div v-for="(profileCompoent,idx) in activeProfile.rt[profileName].ptOrder" :key="profileCompoent" :id="'container-for-'+profileName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')+idx+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')">
                               <EditMainComponent v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" class="component" :parentURI="activeProfile.rt[profileName].URI" :activeTemplate="activeProfile.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :ptGuid="activeProfile.rt[profileName].pt[profileCompoent]['@guid']" :parentStructure="activeProfile.rtOrder" :structure="activeProfile.rt[profileName].pt[profileCompoent]"/>
                         </div>
 

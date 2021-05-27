@@ -943,6 +943,7 @@ const exportXML = {
 						}else{
 							this.debug(ptObj.propertyURI, 'Does not have @type, something is wrong here', userValue)
 							console.warn("Should not be here")
+							alert("Not everything entered was serialized into XML, please report this record and check the output.")
 							console.log(ptObj)
 							console.log(userValue)
 						}

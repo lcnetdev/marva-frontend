@@ -12,9 +12,9 @@ const config = {
 
 		dev:{
 
-			ldpjs : 'http://localhost:9400/api-staging/',			
-			util  : 'http://localhost:9400/util/',
-			publish : 'http://localhost:9400/util/publish/staging',
+			ldpjs : 'http://localhost:9401/api-staging/',			
+			util  : 'http://localhost:9401/util/',
+			publish : 'http://localhost:9401/util/publish/staging',
 			bfdb : 'https://preprod-8210.id.loc.gov/',
 			profiles : '/bfe2/editor/profiles.json',
 			starting: '/bfe2/editor/starting.json',

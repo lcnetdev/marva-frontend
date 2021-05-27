@@ -552,8 +552,12 @@ const parseProfile = {
         // activeProfile.rt[profile].pt[newPropertyId] = Object.assign({},activeProfile.rt[profile].pt[id])
         activeProfile.rt[profile].pt[newPropertyId] = JSON.parse(JSON.stringify(activeProfile.rt[profile].pt[id]))
 
-        activeProfile.rt[profile].pt[newPropertyId].userValue = {}
+        activeProfile.rt[profile].pt[newPropertyId].userValue = {
+            '@guid': short.generate(),
+            '@root' : activeProfile.rt[profile].pt[newPropertyId].propertyURI
+        }
         activeProfile.rt[profile].pt[newPropertyId]['@guid'] = short.generate()
+        activeProfile.rt[profile].pt[newPropertyId].xmlSource= ""
 
         // just does a little yellow flash animation
         setTimeout(()=>{
@@ -923,7 +927,10 @@ const parseProfile = {
 
                     }
 
-                
+                    // always make sure there is a type
+                    if (!userValue['@type']){
+                        userValue['@type'] = await exportXML.suggestType(currentState.rt[rt].pt[pt].propertyURI)
+                    }
 
                 }
 
@@ -948,6 +955,8 @@ const parseProfile = {
 
 
         let results = {newGuid:null}
+
+        console.log(value)
         
         
 
@@ -960,8 +969,6 @@ const parseProfile = {
                     
                     let userValue = currentState.rt[rt].pt[pt].userValue
 
-
-
                     if (guid){
                         // it already has a guid, so we are editing an existing value
                         if (parentURI){
@@ -972,6 +979,13 @@ const parseProfile = {
                                       for (let childValue of parentValueArray[URI]){
                                         if (childValue['@guid'] == guid){
                                             childValue[URI] = value
+                                            if (value && value.length==0){
+                                                delete parentValueArray[URI]
+                                            }else if (!value){
+                                                // value is null remove the property
+                                                delete parentValueArray[URI]
+                                            }
+
                                         }
                                       }
                                     }
@@ -984,6 +998,13 @@ const parseProfile = {
                                   for (let childValue of userValue[URI]){
                                     if (childValue['@guid'] == guid){
                                         childValue[URI] = value
+                                        if (value && value.length==0){
+                                            delete userValue[URI]
+                                        }else if (!value){
+                                            // value is null remove the property
+                                            delete userValue[URI]
+                                        }
+
                                     }
                                   }
                                 }
@@ -996,12 +1017,23 @@ const parseProfile = {
                               for (let childValue of userValue[URI]){
                                 if (childValue['@guid'] == guid){
                                     childValue[URI] = value
+                                    if (value && value.length==0){
+                                        delete userValue[URI]
+                                    }else if (!value){
+                                        // value is null remove the property
+                                        delete userValue[URI]
+                                    }
+
                                 }
+
+
                               }
                             }
 
 
                         }
+
+
 
 
 
@@ -1013,6 +1045,26 @@ const parseProfile = {
                         // can we find the uri to use, 
 
                         let data = {'@guid': short.generate()}
+
+                        // if there is no type yet and this is not a literal component PT then
+                        // it needs to have a type assigned
+
+                        if (currentState.rt[rt].pt[pt].type != 'literal' && !currentState.rt[rt].pt[pt].userValue['@type']){
+                            currentState.rt[rt].pt[pt].userValue['@type'] = await exportXML.suggestType(currentState.rt[rt].pt[pt].propertyURI)
+
+                            // it might be that it is a reftemplate though
+                            // so see if the ref templates have any valueDataType we should use (use the first one if so)
+                            if (currentState.rt[rt].pt[pt].valueConstraint.valueTemplateRefs.length>0){
+                                if (this.rtLookup[currentState.rt[rt].pt[pt].valueConstraint.valueTemplateRefs[0]]){
+                                    if (this.rtLookup[currentState.rt[rt].pt[pt].valueConstraint.valueTemplateRefs[0]].resourceURI){
+                                        currentState.rt[rt].pt[pt].userValue['@type'] = this.rtLookup[currentState.rt[rt].pt[pt].valueConstraint.valueTemplateRefs[0]].resourceURI
+                                    }
+                                }
+                                
+                            }
+
+                            // console.log(structure)
+                        }
 
                         results.newGuid = data['@guid']
                         data[URI] = value
@@ -1222,6 +1274,14 @@ const parseProfile = {
                         && currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType 
                         && currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType.dataTypeURI){
                         currentState.rt[activeProfileName].pt[component].userValue['@type'] = currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType.dataTypeURI
+                    }
+
+                    if (!currentState.rt[activeProfileName].pt[component].userValue['@type']){
+
+                        // just make sure it has a type
+                        currentState.rt[activeProfileName].pt[component].userValue['@type'] = await exportXML.suggestType(currentState.rt[activeProfileName].pt[component].propertyURI)
+
+
                     }
 
 

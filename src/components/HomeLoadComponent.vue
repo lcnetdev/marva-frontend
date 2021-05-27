@@ -403,7 +403,11 @@ export default {
         // '/bfe2/editor/tests/instances/c0214680420001.editor-pkg.xml', // russian book
 
 
-        '/bfe2/editor/tests/works/loc.natlib.works.e37922655107918597887531234370352861771.rdf', // work only
+        // '/bfe2/editor/tests/works/loc.natlib.works.e37922655107918597887531234370352861771.rdf', // work only
+
+        '/bfe2/editor/tests/instances/c0218930920001.editor-pkg.xml', // russian book
+        
+
         // '/bfe2/editor/tests/instances/c0210643040001.editor-pkg.xml',   // serial 
         // '/bfe2/editor/tests/instances/c0122950980001.editor-pkg.xml', // sound recording
         

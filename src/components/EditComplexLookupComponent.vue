@@ -469,10 +469,11 @@ export default {
       let uri  = this.contextData.uri
       let contextType = this.contextData.type
 
-      if (contextType != type){
-        alert(`${label} is not a ${type} type heading`)
-        return false
-      }
+      console.log(type)
+      // if (contextType != type){
+      //   alert(`${label} is not a ${type} type heading`)
+      //   return false
+      // }
 
       this.precoordinated.push({uri:uri,label:label,type:contextType,typeFull:this.contextData.typeFull})
 

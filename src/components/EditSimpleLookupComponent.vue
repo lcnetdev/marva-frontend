@@ -698,7 +698,6 @@ export default {
 
       this.displayAutocomplete=false
 
-
       let label = this.displayList[event.target.dataset.idx]
 
       let metadata = this.lookupLibrary[this.uri].metadata.values
@@ -709,20 +708,40 @@ export default {
         let idx = metadata[key].displayLabel.indexOf(label)
         if (idx >-1){
           // this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':,URI:})
+          // this.activeFilter = ''
+          // this.activeValue = ''
+          // this.activeSelect = ''
+          // this.displayAutocomplete=false
+          // // this.$store.dispatch("addValueLiteral", { self: this, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, value:this.activeLookupValue }).then(() => {
+           
+          // // })        
+
+          // this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, parentURI: this.parentStructureObj.propertyURI, URI: this.structure.propertyURI, valueURI: metadata[key].uri, valueLabel:metadata[key].label[idx]}).then((resultData) => {
+          //   this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':resultData.valueLabel, uri: resultData.valueURI, uriGuid: resultData.guid, labelGuid:resultData.guid})
+          // })
+
+
+
           this.activeFilter = ''
           this.activeValue = ''
           this.activeSelect = ''
           this.displayAutocomplete=false
+          event.target.value = ''
           // this.$store.dispatch("addValueLiteral", { self: this, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, value:this.activeLookupValue }).then(() => {
            
-          // })        
+          // })               
+          let parentURI = (this.parentStructureObj) ? this.parentStructureObj.propertyURI : null 
 
-          this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, parentURI: this.parentStructureObj.propertyURI, URI: this.structure.propertyURI, valueURI: metadata[key].uri, valueLabel:metadata[key].label[idx]}).then((resultData) => {
+
+          this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, parentURI: parentURI, URI: this.structure.propertyURI, valueURI: metadata[key].uri, valueLabel:metadata[key].label[idx]}).then((resultData) => {
             this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':resultData.valueLabel, uri: resultData.valueURI, uriGuid: resultData.guid, labelGuid:resultData.guid})
           })
 
 
+
           this.$store.dispatch("enableMacroNav")    
+
+
 
         }
 

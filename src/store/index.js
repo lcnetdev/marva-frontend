@@ -453,7 +453,7 @@ export default new Vuex.Store({
       commit('ACTIVEPROFILE', newProfile)    
 
 
-      state.saveRecord(state)
+      state.saveRecord(state,commit)
     },
 
     restoreProperty: ({commit, state}, data) => {
@@ -471,7 +471,7 @@ export default new Vuex.Store({
       let newProfile = parseProfile.duplicateProperty(data.id,data.profile,state.activeProfile)
       commit('ACTIVEPROFILE', newProfile) 
 
-      state.saveRecord(state)
+      state.saveRecord(state,commit)
 
     },
 
