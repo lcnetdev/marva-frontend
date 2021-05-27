@@ -105,6 +105,7 @@ const parseBfdb = {
 		}
 		
 		for (let el of selection){
+			console.log(el)
 			if (el.parentNode.tagName === requiredParent){
 				return el
 			}
@@ -1034,7 +1035,7 @@ const parseBfdb = {
 			for (const pt in resultsTest.rt[rtKey].pt){
 
 
-				if (resultsTest.rt[rtKey].pt[pt].missingProfile.length>0){
+				if (resultsTest.rt[rtKey].pt[pt].missingProfile && resultsTest.rt[rtKey].pt[pt].missingProfile.length>0){
 					
 					for (let missingProperty of resultsTest.rt[rtKey].pt[pt].missingProfile){
 
@@ -1133,9 +1134,10 @@ const parseBfdb = {
 				xml = this.activeDom.getElementsByTagName(tle)
 			}
 			
+			console.log(this.activeDom)
 			
-			
-
+			console.log(tle)
+			console.log(xml)
 			// only return the top level, no nested related things
 			xml = this.returnOneWhereParentIs(xml, "rdf:RDF")
 			
@@ -2317,6 +2319,8 @@ const parseBfdb = {
 		if (!xml){
 			xml = this.testXml
 		}	
+
+		console.log(xml)
 		// use the browser if we can, should be faster, fall back to the library if not running in the browser
 		if (window.DOMParser){
 			let parser = new DOMParser();

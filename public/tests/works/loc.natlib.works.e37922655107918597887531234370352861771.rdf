@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><bf:Work rdf:about="http://id.loc.gov/resources/works/e37922655107918597887531234370352861771" xmlns:bf="http://id.loc.gov/ontologies/bibframe/"><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Work"/><bf:title>
+      <bf:Title>
+        <bf:partNumber>lessons for education and practice</bf:partNumber>
+      </bf:Title>
+    </bf:title><bf:classification>
+      <bf:ClassificationDdc>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/classSchemes/ddc23">
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">23</rdfs:label>
+          </bf:Source>
+        </bf:source>
+        <bf:classificationPortion>361.3 </bf:classificationPortion>
+      </bf:ClassificationDdc>
+    </bf:classification><bf:content>
+      <bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/txt">
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">text</rdfs:label>
+      </bf:Content>
+    </bf:content><bf:subject>
+      <bf:Topic>
+        <madsrdf:componentList rdf:parseType="Collection" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">
+          <madsrdf:Topic>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Social service--Health aspects</rdfs:label>
+          </madsrdf:Topic>
+        </madsrdf:componentList>
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
+      </bf:Topic>
+    </bf:subject><bf:title>
+      <bf:Title>
+        <bf:mainTitle>Social work and COVID 19 </bf:mainTitle>
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Social work and COVID 19 </rdfs:label>
+      </bf:Title>
+    </bf:title><bf:illustrativeContent>
+      <bf:Illustration rdf:about="http://id.loc.gov/vocabulary/millus/ill">
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Illustrations</rdfs:label>
+      </bf:Illustration>
+    </bf:illustrativeContent><bf:classification>
+      <bf:ClassificationLcc>
+        <bf:classificationPortion>HV40 </bf:classificationPortion>
+      </bf:ClassificationLcc>
+    </bf:classification><bf:supplementaryContent>
+      <bf:SupplementaryContent rdf:about="http://id.loc.gov/vocabulary/msupplcont/bibliography">
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">bibliography</rdfs:label>
+      </bf:SupplementaryContent>
+    </bf:supplementaryContent><bf:contribution>
+      <bf:Contribution>
+        <bf:role>
+          <bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/edt">
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Editor</rdfs:label>
+          </bf:Role>
+        </bf:role>
+        <bf:agent>
+          <bf:Person>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Denise Turner</rdfs:label>
+          </bf:Person>
+        </bf:agent>
+      </bf:Contribution>
+    </bf:contribution><bf:originDate>2021</bf:originDate><bf:contribution>
+      <bf:Contribution>
+        <bf:role>
+          <bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/pbl">
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Publisher</rdfs:label>
+          </bf:Role>
+        </bf:role>
+        <bf:agent>
+          <bf:Organization rdf:about="http://id.loc.gov/authorities/names/no2014057511">
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Critical Publishing</rdfs:label>
+          </bf:Organization>
+        </bf:agent>
+      </bf:Contribution>
+    </bf:contribution><bf:supplementaryContent>
+      <bf:SupplementaryContent rdf:about="http://id.loc.gov/vocabulary/msupplcont/index">
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">index</rdfs:label>
+      </bf:SupplementaryContent>
+    </bf:supplementaryContent><bf:adminMetadata>
+      <bf:AdminMetadata>
+        <bf:descriptionModifier rdf:resource="http://id.loc.gov/vocabulary/organizations/dlc"/>
+        <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-03-23T21:10:45</bf:changeDate>
+        <bflc:profile xmlns:bflc="http://id.loc.gov/ontologies/bflc/">lc:RT:bf2:Monograph:Work</bflc:profile>
+        <bf:identifiedBy rdf:resource="https://editor.id.loc.gov/resources/e64452282830704675487814589052787199438"/>
+        <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-03-23</bf:creationDate>
+        <bf:descriptionConventions rdf:resource="http://id.loc.gov/vocabulary/descriptionConventions/rda"/>
+        <bflc:procInfo xmlns:bflc="http://id.loc.gov/ontologies/bflc/">create work</bflc:procInfo>
+        <bf:descriptionLanguage rdf:resource="http://id.loc.gov/vocabulary/languages/eng"/>
+        <bf:descriptionAuthentication rdf:resource="http://id.loc.gov/vocabulary/marcauthen/pcc"/>
+      </bf:AdminMetadata>
+    </bf:adminMetadata><bf:originPlace>
+      <bf:Place>
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">St Albans</rdfs:label>
+      </bf:Place>
+    </bf:originPlace></bf:Work></rdf:RDF>
