@@ -250,7 +250,7 @@
               <div v-if="resourceLinks.length>0" style="margin: 0.5em 0 0.5em 0;background-color: #90ee9052;padding: 0.5em;border-radius: 0.25em;">
                 The record was accepted by the system. To view the record follow these links:
                 <div v-for="rl in resourceLinks" v-bind:key="rl.url">
-                  <a :href="rl.url" target="_blank">View {{rl.type}} on {{rl.env}}</a>
+                  <a :href="rl.url+'?blastdacache=' + Date.now()" target="_blank">View {{rl.type}} on {{rl.env}}</a>
                 </div>
                 
               </div>

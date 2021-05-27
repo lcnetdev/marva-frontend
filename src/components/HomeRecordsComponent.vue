@@ -29,7 +29,7 @@
           <td :title="record.status" v-else-if="record.status=='published'" style="background-color: lawngreen">
             {{record.lccn}}
             <div v-for="rl in resourceLinks(record)" v-bind:key="rl.url">
-              <a :href="rl.url" target="_blank">View {{rl.type}} on {{rl.env}}</a>
+              <a :href="rl.url+'?blastdacache=' + Date.now()" target="_blank">View {{rl.type}} on {{rl.env}}</a>
 
             </div>
           </td>
