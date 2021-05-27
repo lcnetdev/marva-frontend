@@ -783,11 +783,46 @@ export default {
     activate: function(event){
 
       // this skips activating the modal if they are simply navigating through the main field list
-      if (event.key==='ArrowDown' || event.key==='ArrowUp' || event.key==='PageUp' || event.key==='PageDown' || event.key==='Tab' || event.key==='Control' || event.key==='Meta' || event.key==='Alt' || event.key==='Shift' || event.key==='CapsLock' || event.key==='=' || event.key ==='Backspace' || event.key ==='Home'){
+      if (event.key==='ArrowDown' || event.key==='ArrowUp' || event.key==='ArrowRight' || event.key==='ArrowLeft' || event.key==='PageUp' || event.key==='PageDown' || event.key==='Tab' || event.key==='Control' || event.key==='Meta' || event.key==='Alt' || event.key==='Shift' || event.key==='CapsLock' || event.key==='=' || event.key ==='Backspace' || event.key ==='Home'){
         // the = key is for adding new 
         // if (!this.searchValue || (this.searchValue && this.searchValue.trim() == '')){
           return false
         // }
+      }
+
+
+      if ((event.ctrlKey || event.metaKey) && event.keyCode == 86) {
+         // they are doing a paste value
+
+         
+         window.setTimeout(()=>{
+
+          this.displayModal = true
+          this.initalSearchState = true
+          // for copy paste
+          this.searchValue = event.target.value
+          event.target.value= ''
+
+          this.$store.dispatch("clearContext", { self: this})
+
+          this.$store.dispatch("clearLookupValuesComplex", { self: this}).then(() => {
+            // clear the values from any previous attempt
+            // but if there is a value kick off that same search again
+            if (this.searchValue != ''){
+              this.search()
+            }
+          })    
+
+          event.preventDefault()
+          // set the last input, but do it after the modal has been displaed
+          setTimeout(()=>{
+            document.getElementById(this.assignedId+'search').focus()
+          },0)
+
+         },50)
+         
+         
+         return false
       }
 
 
@@ -800,11 +835,8 @@ export default {
       // turn on the modal
       this.displayModal = true
       this.initalSearchState = true
-
       // for copy paste
-      if (event.key != 'Control'){
-        this.searchValue = event.key
-      }
+      this.searchValue = event.key
 
       this.$store.dispatch("clearContext", { self: this})
 
@@ -818,15 +850,11 @@ export default {
       })    
 
       event.preventDefault()
-
       // set the last input, but do it after the modal has been displaed
       setTimeout(()=>{
-
         document.getElementById(this.assignedId+'search').focus()
       },0)
-
       return false
-
     },
 
     focused: function(event){     
