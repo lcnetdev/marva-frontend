@@ -785,7 +785,9 @@ export default {
       // this skips activating the modal if they are simply navigating through the main field list
       if (event.key==='ArrowDown' || event.key==='ArrowUp' || event.key==='PageUp' || event.key==='PageDown' || event.key==='Tab' || event.key==='Control' || event.key==='Meta' || event.key==='Alt' || event.key==='Shift' || event.key==='CapsLock' || event.key==='=' || event.key ==='Backspace' || event.key ==='Home'){
         // the = key is for adding new 
-        return false
+        if (!this.searchValue || (this.searchValue && this.searchValue.trim() == '')){
+          return false
+        }
       }
 
       if (event.ctrlKey){
