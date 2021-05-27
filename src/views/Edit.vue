@@ -256,7 +256,7 @@
               </div>
 
 
-              <button style="font-size: 1em;" @click="togglePreview">Close (ESC Key)</button>
+              <button style="font-size: 1em;" @click="escapeKey">Close (ESC Key)</button>
 
 
           </div>
