@@ -7,11 +7,11 @@
 
        <Keypress key-event="keydown" :key-code="40" @success="moveDown" />
 
-       <Keypress key-event="keydown" :multiple-keys="[{keyCode: 77, modifiers: ['ctrlKey','shiftKey'],preventDefault: true}]" @success="navRoute" />
-       <Keypress key-event="keydown" :multiple-keys="[{keyCode: 69, modifiers: ['ctrlKey','shiftKey'],preventDefault: true}]" @success="navRoute" />
-       <Keypress key-event="keydown" :multiple-keys="[{keyCode: 78, modifiers: ['ctrlKey','shiftKey'],preventDefault: true}]" @success="navRoute" />
-       <Keypress key-event="keydown" :multiple-keys="[{keyCode: 79, modifiers: ['ctrlKey','shiftKey'],preventDefault: true}]" @success="navRoute" />
-       <Keypress key-event="keydown" :multiple-keys="[{keyCode: 73, modifiers: ['ctrlKey','shiftKey'],preventDefault: true}]" @success="navRoute" />
+       <Keypress key-event="keydown" :multiple-keys="[{keyCode: 77, modifiers: ['ctrlKey','altKey'],preventDefault: true}]" @success="navRoute" />
+       <Keypress key-event="keydown" :multiple-keys="[{keyCode: 69, modifiers: ['ctrlKey','altKey'],preventDefault: true}]" @success="navRoute" />
+       <Keypress key-event="keydown" :multiple-keys="[{keyCode: 78, modifiers: ['ctrlKey','altKey'],preventDefault: true}]" @success="navRoute" />
+       <Keypress key-event="keydown" :multiple-keys="[{keyCode: 79, modifiers: ['ctrlKey','altKey'],preventDefault: true}]" @success="navRoute" />
+       <Keypress key-event="keydown" :multiple-keys="[{keyCode: 73, modifiers: ['ctrlKey','altKey'],preventDefault: true}]" @success="navRoute" />
 
       <div class="grid">  
         <aside class="sidebar-left" style="background-color: #2a2a2a; color: #ffffff; position: relative;" >
@@ -38,11 +38,11 @@
             <div v-if="!isProd()" style="color:red;font-size:1.25em;">THIS IS THE STAGING (TEST) REGION DATA IS NOT SAVED TO PRODUCTION</div>
 
               <ul class="sidebar-menu">
-                <li v-bind:class="{ active: isMyRecords }"><router-link v-bind:class="{ active: isMyRecords }" to="/myrecords">My records</router-link><span v-bind:class="{ active: isMyRecords }">CTRL+SHIFT+M</span></li>
-                <li v-bind:class="{ active: isAllRecords }"><router-link v-bind:class="{ active: isAllRecords }" to="/allrecords">Everyone's records</router-link><span v-bind:class="{ active: isAllRecords }">CTRL+SHIFT+E</span></li>
-                <li v-bind:class="{ active: isNew }"><router-link v-bind:class="{ active: isNew }" to="/new">Create new record</router-link><span v-bind:class="{ active: isNew }">CTRL+SHIFT+N</span></li>
-                <li v-bind:class="{ active: isLoad }"><router-link v-bind:class="{ active: isLoad }" to="/load">Load existing record</router-link><span v-bind:class="{ active: isLoad }">CTRL+SHIFT+O</span></li>
-                <li v-bind:class="{ active: isSettings }"><router-link v-bind:class="{ active: isSettings }" to="/settings">Settings</router-link><span v-bind:class="{ active: isSettings }">CTRL+SHIFT+I</span></li>
+                <li v-bind:class="{ active: isMyRecords }"><router-link v-bind:class="{ active: isMyRecords }" to="/myrecords">My records</router-link><span v-bind:class="{ active: isMyRecords }">CTRL+ALT+M</span></li>
+                <li v-bind:class="{ active: isAllRecords }"><router-link v-bind:class="{ active: isAllRecords }" to="/allrecords">Everyone's records</router-link><span v-bind:class="{ active: isAllRecords }">CTRL+ALT+E</span></li>
+                <li v-bind:class="{ active: isNew }"><router-link v-bind:class="{ active: isNew }" to="/new">Create new record</router-link><span v-bind:class="{ active: isNew }">CTRL+ALT+N</span></li>
+                <li v-bind:class="{ active: isLoad }"><router-link v-bind:class="{ active: isLoad }" to="/load">Load existing record</router-link><span v-bind:class="{ active: isLoad }">CTRL+ALT+O</span></li>
+                <li v-bind:class="{ active: isSettings }"><router-link v-bind:class="{ active: isSettings }" to="/settings">Settings</router-link><span v-bind:class="{ active: isSettings }">CTRL+ALT+I</span></li>
                 <li v-bind:class="{ active: isHelp }"><router-link v-bind:class="{ active: isHelp }" to="/help">Help</router-link><span v-bind:class="{ active: isHelp }"></span></li>
 
               </ul>
@@ -145,7 +145,7 @@ export default {
 
       if (config.returnUrls().env == 'dev') return false
       if (config.returnUrls().env == 'staging') return false
-      if (config.returnUrls().env == 'prod') return true  
+      if (config.returnUrls().env == 'production') return true  
     },
 
 
