@@ -790,6 +790,7 @@ export default {
         // }
       }
 
+
       if (event.ctrlKey){
         // if they have the control key pressed dont do anything
         return false
@@ -800,7 +801,10 @@ export default {
       this.displayModal = true
       this.initalSearchState = true
 
-      this.searchValue = event.key
+      // for copy paste
+      if (event.key != 'Control'){
+        this.searchValue = event.key
+      }
 
       this.$store.dispatch("clearContext", { self: this})
 
