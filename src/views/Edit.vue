@@ -478,7 +478,7 @@ export default {
 
       if (config.returnUrls().env == 'dev') return false
       if (config.returnUrls().env == 'staging') return false
-      if (config.returnUrls().env == 'prod') return true  
+      if (config.returnUrls().env == 'production') return true  
     },
           
 
@@ -739,7 +739,7 @@ export default {
 
 
         })
-        
+
         if (r.length == 0 && userValue['@id']){
           r.push(userValue['@id'])
         }

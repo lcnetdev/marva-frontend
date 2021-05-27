@@ -185,13 +185,13 @@ const config = {
 
 		"https://preprod-8230.id.loc.gov/resources/works" : {"name":"Works", "processor" : 'lcAuthorities', "type":"complex", "modes":[
 			{
-			"All":{"url":"https://preprod-8230.id.loc.gov/resources/works/suggest2/?q=<QUERY>&count=25", "all":true}, 					
+			"All":{"url":"https://id.loc.gov/resources/works/suggest2/?q=<QUERY>&count=25", "all":true}, 					
 			}
 		]},
 
 		"https://preprod-8230.id.loc.gov/resources/instances" : {"name":"Instances", "processor" : 'lcAuthorities', "type":"complex", "modes":[
 			{
-			"All":{"url":"https://preprod-8230.id.loc.gov/resources/instances/suggest2/?q=<QUERY>&count=25", "all":true}, 					
+			"All":{"url":"https://id.loc.gov/resources/instances/suggest2/?q=<QUERY>&count=25", "all":true}, 					
 			}
 		]},
 		

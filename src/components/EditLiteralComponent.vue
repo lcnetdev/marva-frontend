@@ -1,6 +1,6 @@
 <template>
   <div v-if="nested == false && hideField == false" class="component-container">
-    <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['ctrlKey','shiftKey'],preventDefault: false}]" @success="openDiacriticSelect" />
+    <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['ctrlKey','altKey'],preventDefault: false}]" @success="openDiacriticSelect" />
 
     <div class="component-container-title">{{structure.propertyLabel}}</div>
     <div class="component-container-input-container">
@@ -11,7 +11,7 @@
                 <input  bfeType="EditLiteralComponent-unnested" :id="assignedId" v-on:keydown.enter.prevent="submitField" :name="assignedId" v-on:focus="focused" autocomplete="off" type="text" @keydown="nav" @keyup="change" v-model="inputValue"  class="input-single selectable-input">            
               </form>
             </div>
-            <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-tooltip="'Diacritics [CTRL-SHIFT-D]'" @click="openDiacriticSelect"></button>
+            <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-tooltip="'Diacritics [CTRL-ALT-D]'" @click="openDiacriticSelect"></button>
 
           </div>
           
@@ -45,7 +45,7 @@
 
   <div v-else-if="hideField == false">
         
-        <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['ctrlKey','shiftKey'],preventDefault: true}]" @success="openDiacriticSelect" />
+        <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['ctrlKey','altKey'],preventDefault: true}]" @success="openDiacriticSelect" />
 
         <div v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border', { 'component-container-fake-input-note' : isNoteField(structure.propertyLabel)  }]" >
           <div style="display: flex;">
@@ -58,7 +58,7 @@
 
               </form>
             </div>
-            <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-tooltip="'Diacritics [CTRL-SHIFT-D]'" @click="openDiacriticSelect"></button>
+            <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-tooltip="'Diacritics [CTRL-ALT-D]'" @click="openDiacriticSelect"></button>
 
           </div>
         </div>
