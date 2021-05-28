@@ -229,6 +229,7 @@
 
               </div>
               <div class="modal-content-right">
+                <div v-if="contextRequestInProgress" style="font-weight: bold;">Retrieving data...</div>
                 <div class="modal-context" v-if="Object.keys(contextData).length>0">
                   
                   
@@ -365,6 +366,8 @@ export default {
       displayType: null,
       displayGuid: null,
       displayContext: {},
+
+      contextRequestInProgress: false,
 
       userData: {}
     }
@@ -906,8 +909,9 @@ export default {
             // remove the context because we're about to get a new one
             this.$store.dispatch("clearContext", { self: this})            
 
+            this.contextRequestInProgress = true
             this.$store.dispatch("fetchContext", { self: this, searchPayload: o.value }).then(() => {
-              
+              this.contextRequestInProgress = false
             })    
           }
         })            
