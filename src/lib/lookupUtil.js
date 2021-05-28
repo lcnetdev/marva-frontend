@@ -388,6 +388,11 @@ const lookupUtil = {
               if (n['http://www.loc.gov/mads/rdf/v1#hasNarrowerAuthority']){
                 nodeMap['Has Narrower Authority'] = n['http://www.loc.gov/mads/rdf/v1#hasNarrowerAuthority'].map(function(d){ return d['@id']})
               } 
+              if (n['http://www.loc.gov/mads/rdf/v1#isMemberOfMADSCollection']){
+                nodeMap['MADS Collection'] = n['http://www.loc.gov/mads/rdf/v1#isMemberOfMADSCollection'].map(function(d){ return d['@id']})
+              } 
+
+
 
             })
             // pull out the labels
@@ -398,6 +403,14 @@ const lookupUtil = {
                 if (!results.nodeMap[k]) { results.nodeMap[k] = [] }
                 // loop through each uri we have for this type
                 nodeMap[k].forEach(function(uri){
+                  console.log(k, uri)
+
+                  if (k == 'MADS Collection'){
+                    if (results.nodeMap[k].indexOf(uri.split('/').slice(-1)[0].replace('collection_',''))==-1){
+                      results.nodeMap[k].push(uri.split('/').slice(-1)[0].replace('collection_',''))
+                    }
+                  }
+
                   if (n['@id'] && n['@id'] == uri){
                    
                     if (n['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
