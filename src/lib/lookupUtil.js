@@ -280,7 +280,7 @@ const lookupUtil = {
           } else {
             jsonuri = uri + '.jsonld';
           }
-          console.log(jsonuri)
+
           jsonuri = jsonuri.replace('http://id.loc.gov','https://id.loc.gov')
 
           try{
@@ -323,7 +323,10 @@ const lookupUtil = {
                 })
 
               }
-
+              // just hardcode it for now
+              results.type = 'http://www.loc.gov/mads/rdf/v1#PersonalName'
+              results.typeFull = 'http://www.loc.gov/mads/rdf/v1#PersonalName'
+              
               // get the P31 instanceOf
               if (data.entities[qid].claims.P31){
 

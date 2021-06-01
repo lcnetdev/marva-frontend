@@ -11,6 +11,9 @@
 
     <div v-if="nested == false" class="component-container">
 
+
+
+
 <!--       <div class="component-container-title">{{structure.propertyLabel}}</div>
       <div class="component-container-input-container">
           <div class="component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search"> 
@@ -186,7 +189,7 @@
               
               <div class="modal-content-left">
 
-                <div style="height: 20%;">
+                <div style="height: 13%;">
                   <div class="modal-switch-values-container component-container-fake-input no-lower-right-border-radius" style="flex:4; border-top-left-radius: 0.5em; ">          
                     <div style="display: flex">
                       <div style="flex:1">
@@ -230,7 +233,7 @@
               </div>
               <div class="modal-content-right">
                 <div v-if="contextRequestInProgress" style="font-weight: bold;">Retrieving data...</div>
-                <div class="modal-context" v-if="Object.keys(contextData).length>0">
+                <div class="modal-context" :style="{ 'height' : (displayPreCoordinated) ? '50%' : '75%' }" v-if="Object.keys(contextData).length>0">
                   
                   
                   <h3><span class="modal-context-icon simptip-position-top" :data-tooltip="'Type: ' + contextData.type" v-html="returnAuthIcon(contextData.type)"></span>{{contextData.title}}</h3>
@@ -269,46 +272,52 @@
                 <div class="modal-context-add-menu" v-if="Object.keys(contextData).length != 0">
                   
 
-                  <button v-if="precoordinated.length == 0" @click="add" class="">Add Selected [Enter]</button>
-                  <button v-else @click="add" class="simptip-position-left"  :data-tooltip="''">Add Pre-Coordinated [Enter]</button>
+
+
+
+                  <button v-if="displayPreCoordinated==false && structure.valueConstraint.useValuesFrom && structure.valueConstraint.useValuesFrom.indexOf('http://id.loc.gov/authorities/subjects')>-1" @click="togglePreCoordinated" style="width:75%; margin-bottom: 5px;" class="">Build subject string [CTRL+SHIFT+B]</button>
+                  <div v-if="displayPreCoordinated==true" class="modal-context-build-manual"> 
+
+                    <div class="modal-context-build-manual-buttons"> 
+                      <div>Build manual pre-coordinated: Add selected as a subdivision: </div>
+                      <button style="width: 12em;" @click="precoordinatedAddSubdivision('Topic')">Heading or Topical
+                        [CRTL+SHIFT+1]
+                      </button>
+
+                      <button style="width: 10em;" @click="precoordinatedAddSubdivision('Geographic')">Geographic
+                        [CRTL+SHIFT+2]
+                      </button>
+                      <button style="width: 10em;" @click="precoordinatedAddSubdivision('Temporal')">Chronological
+                        [CRTL+SHIFT+3]
+                      </button>
+                      <button style="width: 10em;" @click="precoordinatedAddSubdivision('GenreForm')">Form
+                        [CRTL+SHIFT+4]
+                      </button>                
+                      <button style="width: 10em;" @click="precoordinatedRemoveLast()">Remove Last
+                        [CRTL+SHIFT+5]
+                      </button>  
+                    </div>
+
+                    <div class="modal-context-build-manual-precoordinted-display" > 
+                      <span v-if="precoordinated.length == 0">Your pre-coordinated heading will display here when you add subdivisions</span>
+
+                      <span> {{precoordinated.map((p)=>{return p.label}).join("--") }} </span>
+
+                    </div>
+                  </div>
+
+
+
+                  <button v-if="precoordinated.length == 0" @click="add" style="width: 75%" class="">Add Selected [SHIFT+Enter]</button>
+                  <button v-else @click="add" class="simptip-position-left" style="width: 75%;"  :data-tooltip="''">Add Pre-Coordinated [SHIFT+Enter]</button>
 
              
                 </div>
 
               </div>
             </div>
-            <div v-if="displayPreCoordinated==true" class="modal-context-build-manual"> 
 
-              <div class="modal-context-build-manual-buttons"> 
-                <div>Build manual pre-coordinated: Add selected as a subdivision: </div>
-                <button style="width: 12em;" @click="precoordinatedAddSubdivision('Topic')">Heading or Topical
-                  [CRTL+SHIFT+1]
-                </button>
 
-                <button style="width: 10em;" @click="precoordinatedAddSubdivision('Geographic')">Geographic
-                  [CRTL+SHIFT+2]
-                </button>
-                <button style="width: 10em;" @click="precoordinatedAddSubdivision('Temporal')">Chronological
-                  [CRTL+SHIFT+3]
-                </button>
-                <button style="width: 10em;" @click="precoordinatedAddSubdivision('GenreForm')">Form
-                  [CRTL+SHIFT+4]
-                </button>                
-                <button style="width: 10em;" @click="precoordinatedRemoveLast()">Remove Last
-                  [CRTL+SHIFT+5]
-                </button>  
-              </div>
-
-              <div class="modal-context-build-manual-precoordinted-display" > 
-                <span v-if="precoordinated.length == 0">Your pre-coordinated heading will display here when you add subdivisions</span>
-
-                <span> {{precoordinated.map((p)=>{return p.label}).join("--") }} </span>
-
-              </div>
-            </div>
-            <div v-else class="modal-context-build-manual" style="text-align: center; cursor: pointer;" @click="togglePreCoordinated">
-              Build [CTRL+SHIFT+B] a pre-coordinated heading.
-            </div>
           </div> <!--- end modal-content --->
           
 
@@ -982,7 +991,9 @@ export default {
 
 
       if (event.key==='Enter'){
-        this.add()
+        if (event.shiftKey){
+          this.add()
+        }
       }       
 
 
@@ -1242,7 +1253,7 @@ input{
 
 }
 .modal-context{
-  height: 85%;
+  height: 75%;
   overflow-y: auto;
   padding: 0.5em;
 }
@@ -1260,9 +1271,15 @@ input{
   background-color: #2c3e50;
   font-size: 1.25em;
    padding: 0.3em;  
-
-
 }
+
+.modal-context-build-manual-buttons button{
+  font-size: .85em;
+  background-color: whitesmoke;
+  color: #2c3e50 !important;
+  border: solid 1px #2c3e50;
+}
+
 .modal-context-data-title{
   font-size: 0.9em;
   font-weight: bold;
@@ -1371,7 +1388,7 @@ box-shadow: 10px 10px 15px -5px rgba(0,0,0,0.37);
 
 .complex-lookup-results{
   padding: 0 1em 0 1em;
-  height: 63%; 
+  height: 73%; 
   margin-top: 1em;
 }
 

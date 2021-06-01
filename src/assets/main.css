@@ -401,10 +401,10 @@ box-shadow: 4px 14px 39px -10px rgba(0,0,0,0.75);
 	height: 100%;
 }
 .modal-content-flex-container-complex{
-	height: 70%;	
+	height: 100%;	
 }
 .modal-content-flex-container-complex-prompt{
-	height: 85%;
+	height: 100%;
 }
 .modal-content-flex-container-complex-hide{
 	height: 100%;
