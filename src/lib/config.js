@@ -147,7 +147,14 @@ const config = {
 
 		},
 
-		"http://id.loc.gov/authorities/performanceMediums" : {"name":"performanceMediums", "type":"complex", "modes":[]},
+
+		"http://id.loc.gov/authorities/performanceMediums" : {"name":"Works", "processor" : 'lcAuthorities', "type":"complex", "modes":[
+			{
+			"All":{"url":"http://id.loc.gov/authorities/performanceMediums/suggest2/?q=<QUERY>&count=25", "all":true}, 					
+			}
+		]},
+
+
 		"http://id.loc.gov/authorities/subjects" : {
 			"name":"subjects", 
 			"type":"complex", 
