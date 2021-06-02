@@ -274,6 +274,13 @@ const lookupUtil = {
           console.log(uri)
           if (uri.startsWith('http://id.loc.gov') && uri.match(/(authorities|vocabularies)/)) {
             var jsonuri = uri + '.madsrdf_raw.jsonld';
+
+            //if we are in production use preprod
+            if (config.returnUrls().env == 'production'){
+              url = url.replace('https://id.', 'http://preprod.id.')
+              
+            }
+
           }else if (uri.includes('http://www.wikidata.org/entity/')){ 
             jsonuri = uri.replace('http://www.wikidata.org/entity/','https://www.wikidata.org/wiki/Special:EntityData/')
             jsonuri = jsonuri + '.json';            
