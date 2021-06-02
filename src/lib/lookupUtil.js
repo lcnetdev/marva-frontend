@@ -277,7 +277,7 @@ const lookupUtil = {
 
             //if we are in production use preprod
             if (config.returnUrls().env == 'production'){
-              url = url.replace('https://id.', 'http://preprod.id.')
+              jsonuri = jsonuri.replace('https://id.', 'http://preprod.id.')
               
             }
 
