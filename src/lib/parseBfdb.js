@@ -759,8 +759,7 @@ const parseBfdb = {
 	// this tries its best to build a pt from the hints it has from the XML
 	buildRootLvlProperty: function(mp){
 
-
-		if (mp.isLiteral && !mp.hasResource){
+		if (mp.property !== undefined && mp.isLiteral && !mp.hasResource){
 
 			// this is just a normal top level literal property
 			return {
@@ -998,7 +997,6 @@ const parseBfdb = {
 
 			// first look for just missing properties, not incuded in the profile
 			let missingPT = this.returnUnusedProperties(resultsTest.rt[rtKey].unusedXml)
-
 
 			for (let mp of missingPT){
 
