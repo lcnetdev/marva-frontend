@@ -285,7 +285,7 @@ export default {
         // console.log('here')
         this.$store.dispatch("setActiveProfile", { self: this, profile: this.transformResults }).then(() => {
 
-          this.$router.push({ path: 'edit' })
+          this.$router.push({ name: 'Edit', params: { recordId: useProfile.eId } })
 
         })
 
@@ -405,7 +405,10 @@ export default {
 
         // '/bfe2/editor/tests/works/loc.natlib.works.e37922655107918597887531234370352861771.rdf', // work only
 
-        '/bfe2/editor/tests/instances/c0218930920001.editor-pkg.xml', // russian book
+        '/bfe2/editor/tests/works/c021295478.rdf', // work only
+
+
+        // '/bfe2/editor/tests/instances/c0218930920001.editor-pkg.xml', // serial bad
         
 
         // '/bfe2/editor/tests/instances/c0210643040001.editor-pkg.xml',   // serial 

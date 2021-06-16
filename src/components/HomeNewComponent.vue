@@ -241,7 +241,7 @@ export default {
 
 
       this.$store.dispatch("setActiveProfile", { self: this, profile: useProfile, useDefaultValues: true }).then(() => {
-        this.$router.push({ path: 'edit' })
+        this.$router.push({ name: 'Edit', params: { recordId: useProfile.eId } })
       })
 
 

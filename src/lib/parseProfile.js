@@ -1,5 +1,6 @@
 import config from "./config"
-// import lookupUtil from "./lookupUtil";
+import lookupUtil from "./lookupUtil";
+import parseBfdb from "./parseBfdb";
 import exportXML from "./exportXML"
 
 
@@ -387,7 +388,8 @@ const parseProfile = {
 
         
         
-        
+        console.log("this.profiles")
+        console.log(this.profiles)
 
         return { profiles: this.profiles, lookup: this.rtLookup, startingPoints: this.startingPoints}
     },
@@ -2054,8 +2056,100 @@ const parseProfile = {
     },
 
 
-    returnMetaFromSavedXML: function(xml){
+    loadRecordFromBackend: async function(recordId){
 
+
+
+      let xml = await lookupUtil.loadSavedRecord(recordId)
+
+      let meta = parseProfile.returnMetaFromSavedXML(xml)
+
+
+      
+
+      parseBfdb.parse(meta.xml)
+
+      // alert(parseBfdb.hasItem)
+
+      let useProfile = null
+
+
+      if (this.profiles[meta.profile]){
+        useProfile = JSON.parse(JSON.stringify(this.profiles[meta.profile]))
+      }else{
+        alert('Cannot find that profile:',meta.profile)
+      }
+      
+      // we might need to load in a item
+      if (parseBfdb.hasItem>0){ 
+
+        
+        let useItemRtLabel
+        // look for the RT for this item
+        let instanceId = meta.rts.filter((id)=>{ return id.includes(':Instance')  })
+        if (instanceId.length>0){
+          useItemRtLabel = instanceId[0].replace(':Instance',':Item')          
+        }
+
+        if (!useItemRtLabel){
+          let instanceId = meta.rts.filter((id)=>{ return id.includes(':Work')  })
+          if (instanceId.length>0){
+            useItemRtLabel = instanceId[0].replace(':Work',':Item')          
+          }
+
+        }
+
+
+         
+
+        for (let pkey in this.profiles){
+          
+          for (let rtkey in this.profiles[pkey].rt){
+            if (rtkey == useItemRtLabel){
+              let useItem = JSON.parse(JSON.stringify(this.profiles[pkey].rt[rtkey]))
+              useProfile.rtOrder.push(useItemRtLabel)
+              useProfile.rt[useItemRtLabel] = useItem                
+            }
+          }
+        }
+
+
+      }
+
+      if (!useProfile.log){
+        useProfile.log = []
+      
+      }
+      useProfile.log.push({action:'loadInstanceFromSave',from:meta.eid})
+      // useProfile.procInfo= "update instance"
+
+
+      useProfile.procInfo = meta.procInfo
+      
+      console.log('meta',meta)
+
+      // also give it an ID for storage
+      useProfile.eId= meta.eid
+      useProfile.user = meta.user
+      useProfile.status = meta.status
+
+
+      
+      let transformResults  = await parseBfdb.transform(useProfile)
+
+
+
+
+      return transformResults
+
+
+
+    },
+
+
+
+    returnMetaFromSavedXML: function(xml){
+        console.log('xml------',xml)
 
         let parser = new DOMParser();
         xml = parser.parseFromString(xml, "text/xml");
@@ -2088,6 +2182,14 @@ const parseProfile = {
         }
 
 
+        let user = null
+        for (let el of voidData.getElementsByTagName('lclocal:user')){
+            user = el.innerHTML
+        }
+
+
+
+
         voidData.remove()
 
         xml = (new XMLSerializer()).serializeToString(xml)
@@ -2099,7 +2201,8 @@ const parseProfile = {
             eid: eid,
             status:status,
             profile:profile,
-            procInfo:procInfo
+            procInfo:procInfo,
+            user:user
 
         }
     }

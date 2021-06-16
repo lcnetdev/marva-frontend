@@ -105,7 +105,7 @@ const parseBfdb = {
 		}
 		
 		for (let el of selection){
-			console.log(el)
+			
 			if (el.parentNode.tagName === requiredParent){
 				return el
 			}
@@ -1148,19 +1148,19 @@ const parseBfdb = {
 			}
 
 			// remove some things we will want to work with later but are just too complicated right now
-			let adminMetadata = xml.getElementsByTagName('bf:adminMetadata')
-			if (adminMetadata.length>0){
-				let adminMetadataData = Array.prototype.slice.call( adminMetadata )
-				for (let item of adminMetadata) {
-					item.parentNode.removeChild(item)
-				}
+			// let adminMetadata = xml.getElementsByTagName('bf:adminMetadata')
+			// if (adminMetadata.length>0){
+			// 	let adminMetadataData = Array.prototype.slice.call( adminMetadata )
+			// 	for (let item of adminMetadata) {
+			// 		item.parentNode.removeChild(item)
+			// 	}
 
 				
-				profile.rt[pkey].adminMetadataData= (new XMLSerializer()).serializeToString(adminMetadataData[0])
+			// 	profile.rt[pkey].adminMetadataData= (new XMLSerializer()).serializeToString(adminMetadataData[0])
 
 
 
-			}
+			// }
 
 			// let hasSeries = xml.getElementsByTagName('bf:hasSeries')
 			// let hasSeriesData = Array.prototype.slice.call( hasSeries )
@@ -1250,7 +1250,8 @@ const parseBfdb = {
 
 				let propertyURI = ptk.propertyURI
 				let prefixURI = this.namespaceUri(propertyURI)
-
+				// console.log(propertyURI)
+				// console.log(ptk)
 				// see if we have that specific propertry in the xml
 				// let el = xml.getElementsByTagName(prefixURI)
 
@@ -2320,7 +2321,7 @@ const parseBfdb = {
 			xml = this.testXml
 		}	
 
-		console.log(xml)
+
 		// use the browser if we can, should be faster, fall back to the library if not running in the browser
 		if (window.DOMParser){
 			let parser = new DOMParser();

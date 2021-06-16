@@ -60,9 +60,9 @@
 
 
 import { mapState } from 'vuex'
-import lookupUtil from "@/lib/lookupUtil"
+// import lookupUtil from "@/lib/lookupUtil"
 import parseProfile from "@/lib/parseProfile"
-import parseBfdb from '@/lib/parseBfdb'
+// import parseBfdb from '@/lib/parseBfdb'
 import config from '@/lib/config'
 
 // import HomeAllRecordsComponent from "@/components/HomeAllRecordsComponent.vue";
@@ -140,82 +140,14 @@ export default {
 
     loadRecord: async function(recId){
 
-      let xml = await lookupUtil.loadSavedRecord(this.records[recId].eid)
+      let recordId = this.records[recId].eid
 
-      let meta = parseProfile.returnMetaFromSavedXML(xml)
-
-
-      
-
-      parseBfdb.parse(meta.xml)
-
-      // alert(parseBfdb.hasItem)
-
-      let useProfile = null
+      this.transformResults = await parseProfile.loadRecordFromBackend(recordId)
 
 
-      if (this.profiles[meta.profile]){
-        useProfile = JSON.parse(JSON.stringify(this.profiles[meta.profile]))
-      }else{
-        alert('Cannot find that profile:',meta.profile)
-      }
-      
-      // we might need to load in a item
-      if (parseBfdb.hasItem>0){ 
+      console.log('this.transformResults',this.transformResults)
+      console.log(recordId)
 
-        
-        let useItemRtLabel
-        // look for the RT for this item
-        let instanceId = meta.rts.filter((id)=>{ return id.includes(':Instance')  })
-        if (instanceId.length>0){
-          useItemRtLabel = instanceId[0].replace(':Instance',':Item')          
-        }
-
-        if (!useItemRtLabel){
-          let instanceId = meta.rts.filter((id)=>{ return id.includes(':Work')  })
-          if (instanceId.length>0){
-            useItemRtLabel = instanceId[0].replace(':Work',':Item')          
-          }
-
-        }
-
-
-         
-
-        for (let pkey in this.profiles){
-          
-          for (let rtkey in this.profiles[pkey].rt){
-            if (rtkey == useItemRtLabel){
-              let useItem = JSON.parse(JSON.stringify(this.profiles[pkey].rt[rtkey]))
-              useProfile.rtOrder.push(useItemRtLabel)
-              useProfile.rt[useItemRtLabel] = useItem                
-            }
-          }
-        }
-
-
-      }
-
-      if (!useProfile.log){
-        useProfile.log = []
-      
-      }
-      useProfile.log.push({action:'loadInstanceFromSave',from:meta.eid})
-      // useProfile.procInfo= "update instance"
-
-
-      useProfile.procInfo = meta.procInfo
-      
-
-
-      // also give it an ID for storage
-      useProfile.eId= meta.eid
-      useProfile.user = this.catInitials
-      useProfile.status = meta.status
-
-
-      
-      this.transformResults  = await parseBfdb.transform(useProfile)
 
       // let workkey = this.transformResults.rtOrder.filter((k)=> k.includes(":Instance"))[0]
       // this.transformResultsDisplay = this.transformResults.rt[workkey]
@@ -226,7 +158,7 @@ export default {
       this.$store.dispatch("setActiveProfile", { self: this, profile: this.transformResults }).then(() => {
 
 
-        this.$router.push({ path: 'edit' })
+        this.$router.push({ name: 'Edit', params: { recordId: recordId } })
       })
 
 

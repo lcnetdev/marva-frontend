@@ -226,9 +226,9 @@ export default new Vuex.Store({
 
 
       // set the default profile
-      var copy = Object.assign({}, p.profiles[this.state.sartingPoint]);
-      // 
-      commit('ACTIVEPROFILE', copy)
+      // var copy = Object.assign({}, p.profiles[this.state.sartingPoint]);
+      // // 
+      // commit('ACTIVEPROFILE', copy)
     },
 
     async fetchLookupValues ({ commit },data) {
@@ -339,7 +339,7 @@ export default new Vuex.Store({
       // we know the value bc it is the active context value in this case
       // 
       // 
-      
+
       let nap = await parseProfile.setValueComplex(state.activeProfile, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, state.contextData, data.structure, data.parentStructure)
       commit('ACTIVEPROFILE', nap)
       commit('ACTIVEEDITCOUNTER') 
@@ -361,6 +361,7 @@ export default new Vuex.Store({
 
 
     async setValueSimple ({ commit, state }, data) {   
+
       console.log(state.activeProfile, data.ptGuid, data.parentURI, data.URI, data.valueURI, data.valueLabel)
       let results = await parseProfile.setValueSimple(state.activeProfile, data.ptGuid, data.parentURI, data.URI, data.valueURI, data.valueLabel)
       console.log(results)
@@ -372,6 +373,10 @@ export default new Vuex.Store({
     },
 
     async setValueLiteral ({ commit, state }, data) {   
+      console.log('-----------setValueLiteral-----------')
+      console.log(data)
+      console.log('-----------setValueLiteral-----------')
+      
       let results = await parseProfile.setValueLiteral(state.activeProfile, data.ptGuid, data.guid, data.parentURI, data.URI, data.value)
       commit('ACTIVEPROFILE', results.currentState)
       commit('ACTIVEEDITCOUNTER')    

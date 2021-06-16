@@ -283,6 +283,8 @@ import lookupUtil from "@/lib/lookupUtil"
 import config from "@/lib/config"
 
 import uiUtils from "@/lib/uiUtils"
+import parseProfile from "@/lib/parseProfile"
+
 import labels from "@/lib/labels"
 import exportXML from "@/lib/exportXML"
 
@@ -315,23 +317,94 @@ export default {
     }),
 
 
-  created: function () {
+  created: async function () {
 
     // load them profiles if they aint  
     if (!this.profilesLoaded){
-        this.$store.dispatch("fetchProfiles", { self: this }).then(() => {
-          this.sideBarGrabDragInit()
+        this.$store.dispatch("fetchProfiles", { self: this }).then(async () => {
 
-          // load the ontology lookups if they arnt
-          this.loadProfileOntologyLookupsBuild()
+
+          console.log(this.$route.params.recordId)
+          console.log(this.activeProfile)
+
+
+          // did we already load the record from the load screen or other place?
+          if (!this.activeProfile.eId && this.$route.params.recordId){
+
+            // no
+            let ap = await parseProfile.loadRecordFromBackend(this.$route.params.recordId)
+            // mark the record as not saved
+            this.$store.dispatch("setActiveRecordSaved", { self: this}, false)
+            this.$store.dispatch("setActiveProfile", { self: this, profile: ap }).then(() => {
+
+
+              this.sideBarGrabDragInit()
+
+              // load the ontology lookups if they arnt
+              this.loadProfileOntologyLookupsBuild()
+
+
+
+            })
+
+          }else{
+
+            this.sideBarGrabDragInit()
+
+            // load the ontology lookups if they arnt
+            this.loadProfileOntologyLookupsBuild()
+
+
+          }
+
+
+
+
+
+
+
+
+
 
       })       
     }else{
-      this.$nextTick(()=>{
-        this.sideBarGrabDragInit()
-        this.loadProfileOntologyLookupsBuild()
 
-      })
+
+
+
+        // did we already load the record from the load screen or other place?
+        if (!this.activeProfile.eId && this.$route.params.recordId){
+
+          // no
+          let ap = await parseProfile.loadRecordFromBackend(this.$route.params.recordId)
+          // mark the record as not saved
+          this.$store.dispatch("setActiveRecordSaved", { self: this}, false)
+          this.$store.dispatch("setActiveProfile", { self: this, profile: ap }).then(() => {
+
+
+            this.$nextTick(()=>{
+              this.sideBarGrabDragInit()
+              this.loadProfileOntologyLookupsBuild()
+
+            })
+
+
+
+          })
+
+        }else{
+
+          this.$nextTick(()=>{
+            this.sideBarGrabDragInit()
+            this.loadProfileOntologyLookupsBuild()
+
+          })
+
+          
+        }
+
+
+
 
     }
 
@@ -388,6 +461,8 @@ export default {
     movePageUp: uiUtils.globalMovePageUp,
 
     dupeProperty: uiUtils.dupeProperty,
+
+
 
     togglePreview: async function(){
 

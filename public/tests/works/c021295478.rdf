@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><bf:Work rdf:about="http://id.loc.gov/resources/works/c021295478" xmlns:bf="http://id.loc.gov/ontologies/bibframe/"><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Work"/><bf:content>
+      <bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/txt">
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">text</rdfs:label>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacontent"/>
+        </bf:source>
+      </bf:Content>
+    </bf:content><bf:adminMetadata>
+      <bf:AdminMetadata>
+        <bf:descriptionConventions>
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda">
+            <rdf:value>rda</rdf:value>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">RDA</rdfs:label>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+        <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-06-07T18:58:11</bf:changeDate>
+        <lclocal:d906 xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/">=906     $a 0 $b ibc $c copycat $d 2 $e ncip $f 20 $g y-nonroman</lclocal:d906>
+        <lclocal:d955 xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/">=955     $a ve01 2019-11-08; $b ti40 2020-01-29 added LCCN and holding and item records; $a cd23 2020-12-28 to cd23 for full cat. (volumes 1 and 2) ; $a cd06 2021-03-02 (vol. 3) to cd00 shelves $a cd23 2021-03-08 to cd23 for full cat. (volumes 1, 2, and 3) $b cd23 2021-06-04 z-processor JACKPHY overlaid more complete record $i cd23 2021-06-04 telework to Hebraic shelves (also Bibframe ymey) (volumes 1, 2, and 3)</lclocal:d955>
+        <bf:status>
+          <bf:Status>
+            <bf:code>c</bf:code>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">corrected or revised</rdfs:label>
+          </bf:Status>
+        </bf:status>
+        <bf:descriptionLanguage>
+          <bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng">
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">English</rdfs:label>
+          </bf:Language>
+        </bf:descriptionLanguage>
+        <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-07-11</bf:creationDate>
+        <bflc:profile xmlns:bflc="http://id.loc.gov/ontologies/bflc/">lc:RT:bf2:Monograph:Work</bflc:profile>
+        <bf:assigner>
+          <bf:Agent>
+            <bf:code>WEINB</bf:code>
+          </bf:Agent>
+        </bf:assigner>
+        <bf:source>
+          <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+            <bf:code>DLC</bf:code>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">DLC</rdfs:label>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">United States. Library of Congress</rdfs:label>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">dlc</rdfs:label>
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/DescriptionModifier"/>
+          </bf:Agent>
+        </bf:source>
+        <bflc:catalogerId xmlns:bflc="http://id.loc.gov/ontologies/bflc/">ymey</bflc:catalogerId>
+        <bflc:procInfo xmlns:bflc="http://id.loc.gov/ontologies/bflc/">update work</bflc:procInfo>
+        <bflc:encodingLevel xmlns:bflc="http://id.loc.gov/ontologies/bflc/">
+          <bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/f">
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">full</rdfs:label>
+          </bflc:EncodingLevel>
+        </bflc:encodingLevel>
+        <bf:descriptionConventions>
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd">
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">isbd</rdfs:label>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+        <bf:descriptionModifier rdf:resource="http://id.loc.gov/vocabulary/organizations/dlc"/>
+        <bf:identifiedBy>
+          <bf:Local>
+            <bf:assigner rdf:resource="http://id.loc.gov/vocabulary/organizations/dlc"/>
+            <rdf:value>21295478</rdf:value>
+          </bf:Local>
+        </bf:identifiedBy>
+        <bf:descriptionAuthentication>
+          <bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/lccopycat">
+            <bf:code>lccopycat</bf:code>
+          </bf:DescriptionAuthentication>
+        </bf:descriptionAuthentication>
+        <bf:generationProcess>
+          <bf:GenerationProcess>
+            <bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-06-04T15:04:08.688286-04:00</bf:generationDate>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">DLC marc2bibframe2 v1.7.0-SNAPSHOT</rdfs:label>
+          </bf:GenerationProcess>
+        </bf:generationProcess>
+      </bf:AdminMetadata>
+    </bf:adminMetadata><bf:title>
+      <bf:Title>
+        <bf:mainTitle>Responsa. Selections</bf:mainTitle>
+        <bflc:titleSortKey xmlns:bflc="http://id.loc.gov/ontologies/bflc/">Responsa. Selections</bflc:titleSortKey>
+        <bflc:title40MatchKey xmlns:bflc="http://id.loc.gov/ontologies/bflc/">Responsa. Selections</bflc:title40MatchKey>
+        <bflc:title40MarcKey xmlns:bflc="http://id.loc.gov/ontologies/bflc/">24010$aResponsa.$kSelections</bflc:title40MarcKey>
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Responsa. Selections</rdfs:label>
+      </bf:Title>
+    </bf:title><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Text"/><bf:place>
+      <bf:Place>
+        <madsrdf:componentList rdf:parseType="Collection" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">
+          <madsrdf:Country>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Israel</rdfs:label>
+          </madsrdf:Country>
+          <madsrdf:City>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Jerusalem</rdfs:label>
+          </madsrdf:City>
+        </madsrdf:componentList>
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Israel--Jerusalem.</rdfs:label>
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#HierarchicalGeographic"/>
+      </bf:Place>
+    </bf:place><bf:subject>
+      <bf:Topic rdf:about="http://preprod-8080.id.loc.gov/authorities/subjects/sh85113227">
+        <madsrdf:componentList rdf:parseType="Collection" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">
+          <madsrdf:Topic rdf:about="http://preprod-8080.id.loc.gov/authorities/subjects/sh85113223">
+            <madsrdf:authoritativeLabel>Responsa</madsrdf:authoritativeLabel>
+          </madsrdf:Topic>
+          <madsrdf:Temporal>
+            <madsrdf:authoritativeLabel>1800-1948</madsrdf:authoritativeLabel>
+          </madsrdf:Temporal>
+        </madsrdf:componentList>
+        <madsrdf:isMemberOfMADSScheme xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">
+          <bf:Source rdf:about="http://id.loc.gov/authorities/subjects">
+            <bf:code>lcsh</bf:code>
+          </bf:Source>
+        </madsrdf:isMemberOfMADSScheme>
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Responsa--1800-1948.</rdfs:label>
+        <madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Responsa--1800-1948.</madsrdf:authoritativeLabel>
+        <bf:source rdf:resource="http://id.loc.gov/authorities/subjects"/>
+      </bf:Topic>
+    </bf:subject><bf:genreForm>
+      <bf:GenreForm rdf:about="http://bibframe.example.org/21295478#GenreForm655-41">
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Criticism, interpretation, etc.</rdfs:label>
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Criticism, interpretation, etc.</madsrdf:authoritativeLabel>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/fast">
+            <bf:code>fast</bf:code>
+          </bf:Source>
+        </bf:source>
+        <bf:identifiedBy>
+          <bf:Identifier>
+            <rdf:value>fst01411635</rdf:value>
+            <bf:source>
+              <bf:Source>
+                <bf:code>OCoLC</bf:code>
+              </bf:Source>
+            </bf:source>
+          </bf:Identifier>
+        </bf:identifiedBy>
+      </bf:GenreForm>
+    </bf:genreForm><bf:subject>
+      <bf:Temporal rdf:about="http://bibframe.example.org/21295478#Temporal648-39">
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">1800-1948</rdfs:label>
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Temporal"/>
+        <madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">1800-1948</madsrdf:authoritativeLabel>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/fast">
+            <bf:code>fast</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:Temporal>
+    </bf:subject><bf:contribution>
+      <bf:Contribution>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">issuing body.</rdfs:label>
+          </bf:Role>
+        </bf:role>
+        <bf:agent>
+          <bf:Agent rdf:about="http://preprod-8080.id.loc.gov/authorities/names/n93073670">
+            <bflc:name10MatchKey xmlns:bflc="http://id.loc.gov/ontologies/bflc/">Mekhon Yerushalayim. Mifʻal torat ḥakhme Polin,</bflc:name10MatchKey>
+            <bflc:name10MarcKey xmlns:bflc="http://id.loc.gov/ontologies/bflc/">7102 $6880-07$aMekhon Yerushalayim.$bMifʻal torat ḥakhme Polin,$eissuing body.</bflc:name10MarcKey>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Mekhon Yerushalayim. Mifʻal torat ḥakhme Polin,</rdfs:label>
+            <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#CorporateName"/>
+          </bf:Agent>
+        </bf:agent>
+      </bf:Contribution>
+    </bf:contribution><rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Responsa. Selections</rdfs:label><bf:subject>
+      <bf:Topic rdf:about="http://preprod-8080.id.loc.gov/authorities/subjects/sh85070287">
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"/>
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Jewish law.</rdfs:label>
+        <madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Jewish law.</madsrdf:authoritativeLabel>
+        <bf:source rdf:resource="http://id.loc.gov/authorities/subjects"/>
+      </bf:Topic>
+    </bf:subject><bf:illustrativeContent>
+      <bf:Illustration rdf:about="http://id.loc.gov/vocabulary/millus/fac">
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">facsimiles</rdfs:label>
+      </bf:Illustration>
+    </bf:illustrativeContent><bf:classification>
+      <bf:ClassificationLcc>
+        <bf:classificationPortion>BM522.85</bf:classificationPortion>
+      </bf:ClassificationLcc>
+    </bf:classification><bf:tableOfContents>
+      <bf:TableOfContents>
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">‏א. אורח חיים -- ב. אבן העזר -- ג. חלק שלישי</rdfs:label>
+      </bf:TableOfContents>
+    </bf:tableOfContents><bf:subject>
+      <bf:Topic rdf:about="http://preprod-8080.id.loc.gov/authorities/subjects/sh85070840">
+        <madsrdf:componentList rdf:parseType="Collection" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">
+          <madsrdf:Topic rdf:about="http://preprod-8080.id.loc.gov/authorities/subjects/sh85070835">
+            <madsrdf:authoritativeLabel>Judaism</madsrdf:authoritativeLabel>
+          </madsrdf:Topic>
+          <madsrdf:Topic rdf:about="http://preprod-8080.id.loc.gov/authorities/subjects/sh99005422">
+            <madsrdf:authoritativeLabel>Customs and practices</madsrdf:authoritativeLabel>
+          </madsrdf:Topic>
+        </madsrdf:componentList>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"/>
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Judaism--Customs and practices.</rdfs:label>
+        <madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Judaism--Customs and practices.</madsrdf:authoritativeLabel>
+        <bf:source rdf:resource="http://id.loc.gov/authorities/subjects"/>
+      </bf:Topic>
+    </bf:subject><bf:contribution>
+      <bflc:PrimaryContribution xmlns:bflc="http://id.loc.gov/ontologies/bflc/">
+        <bf:role>
+          <bf:Role>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">author.</rdfs:label>
+          </bf:Role>
+        </bf:role>
+        <bf:agent>
+          <bf:Agent rdf:about="http://preprod-8080.id.loc.gov/authorities/names/no00013905">
+            <bflc:primaryContributorName00MatchKey>Shneʼur Zalman ben Shelomoh, mi-Ladi, 1830-1902,</bflc:primaryContributorName00MatchKey>
+            <bflc:name00MatchKey>Shneʼur Zalman ben Shelomoh, mi-Ladi, 1830-1902,</bflc:name00MatchKey>
+            <bflc:name00MarcKey>1000 $6880-01$aShneʼur Zalman ben Shelomoh,$cmi-Ladi,$d1830-1902,$eauthor.</bflc:name00MarcKey>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Shneʼur Zalman ben Shelomoh, mi-Ladi, 1830-1902,</rdfs:label>
+            <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#PersonalName"/>
+          </bf:Agent>
+        </bf:agent>
+      </bflc:PrimaryContribution>
+    </bf:contribution><bf:supplementaryContent>
+      <bf:SupplementaryContent rdf:about="http://id.loc.gov/vocabulary/msupplcont/bibliography">
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">bibliography</rdfs:label>
+      </bf:SupplementaryContent>
+    </bf:supplementaryContent><bf:language>
+      <bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/heb"/>
+    </bf:language><bf:genreForm>
+      <bf:GenreForm rdf:about="http://preprod-8080.id.loc.gov/authorities/genreForms/gf2011026533">
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Responsa (Jewish law)</rdfs:label>
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Responsa (Jewish law)</madsrdf:authoritativeLabel>
+        <bf:source rdf:resource="http://id.loc.gov/vocabulary/genreFormSchemes/fast"/>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/lcgft">
+            <bf:code>lcgft</bf:code>
+          </bf:Source>
+        </bf:source>
+        <bf:identifiedBy>
+          <bf:Identifier>
+            <rdf:value>fst01774304</rdf:value>
+            <bf:source>
+              <bf:Source>
+                <bf:code>OCoLC</bf:code>
+              </bf:Source>
+            </bf:source>
+          </bf:Identifier>
+        </bf:identifiedBy>
+      </bf:GenreForm>
+    </bf:genreForm><bf:relatedTo rdf:resource="http://id.loc.gov/resources/works/c0212954780001"/></bf:Work></rdf:RDF>
