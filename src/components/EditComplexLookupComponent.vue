@@ -38,6 +38,7 @@
               <div style="display: flex;">
                 <div class="selected-value-container-nested" style="display: inline-block; position: relative; bottom: 2px;">
                     <span  @click="toggleSelectedDetails" style="padding-right: 0.3em; font-weight: bold"><span class="selected-value-icon" v-html="returnAuthIcon(this.displayType)"></span>{{displayLabel}}</span>
+                    <span  class="selected-value-icon" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em" v-html="validateHeading()"></span>
                     <span  @click="removeValue" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">x</span>
                 </div>
 
@@ -112,6 +113,7 @@
               <div style="display: flex;">
                 <div class="selected-value-container-nested" style="display: inline-block; position: relative; bottom: 2px;">
                     <span  @click="toggleSelectedDetails" style="padding-right: 0.3em; font-weight: bold"><span class="selected-value-icon" v-html="returnAuthIcon(this.displayType)"></span>{{displayLabel}}</span>
+                    <span  class="selected-value-icon" v-html="validateHeading()" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em"></span>
                     <span  @click="removeValue" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">x</span>
                 </div>
 
@@ -333,6 +335,7 @@
 
 import { mapState } from 'vuex'
 import uiUtils from "@/lib/uiUtils"
+import validationUtil from "@/lib/validationUtil"
 import config from "@/lib/config"
 import parseProfile from "@/lib/parseProfile"
 
@@ -377,6 +380,7 @@ export default {
       displayContext: {},
 
       contextRequestInProgress: false,
+      validated: false,
 
       userData: {}
     }
@@ -457,7 +461,23 @@ export default {
 
     returnAuthIcon: uiUtils.returnAuthIcon,
 
-
+    validateHeading: function() {
+        if (this.validated === false) {
+            //console.log("the this")
+            //console.log(this)
+            let userData = parseProfile.returnUserValues(this.activeProfile, this.profileCompoent, this.structure.propertyURI)
+            if (userData !== false) {
+                validationUtil.validateHeading(userData)
+                .then((validationStatus) => {
+                    this.validated = validationStatus;
+                    if (userData["@id"] !== this.displayContext.uri) {
+                        this.displayContext.uri = userData["@id"];
+                    }
+                });
+            }
+        }
+        return this.validated;
+    },
 
 
     camelize: function (str) {
@@ -1174,7 +1194,6 @@ export default {
         
         // set it and then set the vlue when done
         this.$store.dispatch("setContextManually", { self: this, context: tempContext, }).then(() => {
-        
           this.$store.dispatch("setValueComplex", { self: this, profileComponet: this.profileCompoent, template:this.activeTemplate, structure: this.structure, parentStructure: this.parentStructureObj }).then(() => {
             this.componentKey++
             this.displayModal = false
@@ -1311,7 +1330,7 @@ input{
 
 }
 .selected-value-icon{
-  font-family: "fontello", Avenir, Helvetica, Arial, sans-serif;
+  font-family: "validation-icons", "fontello", Avenir, Helvetica, Arial, sans-serif;
   padding-right: 0.3em;
 }
 .selected-value-container{
