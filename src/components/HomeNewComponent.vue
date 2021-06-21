@@ -236,34 +236,40 @@ export default {
       console.log(useProfile)
 
 
-      let adminMetadataProperty = {
-          "mandatory": false,
-          "propertyLabel": "Admin Metadata",
-          "propertyURI": "http://id.loc.gov/ontologies/bibframe/adminMetadata",
-          "repeatable": false,
-          "resourceTemplates": [],
-          '@guid': short.generate(),
-          "type": "resource",
-          "userValue": {
-            "@root":"http://id.loc.gov/ontologies/bibframe/adminMetadata",
-            "http://id.loc.gov/ontologies/bflc/catalogerId": [
-              {
-              "@guid": short.generate(),
-              "http://id.loc.gov/ontologies/bflc/catalogerId": this.catInitials
-              }
-            ]
-
-          },
-          "valueConstraint": {
-            "defaults": [],
-            "useValuesFrom": [],
-            "valueDataType": {},
-          "valueTemplateRefs": ['lc:RT:bf2:AdminMetadata:BFDB']
-          }
-        }
-
-      let adminMetadataPropertyLabel = 'http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'
       for (let rt in useProfile.rt){
+
+        let adminMetadataProperty = {
+            "mandatory": false,
+            "propertyLabel": "Admin Metadata",
+            "propertyURI": "http://id.loc.gov/ontologies/bibframe/adminMetadata",
+            "repeatable": false,
+            "resourceTemplates": [],
+            '@guid': short.generate(),
+            "type": "resource",
+            "userValue": {
+              "@root":"http://id.loc.gov/ontologies/bibframe/adminMetadata",
+              "@type": "http://id.loc.gov/ontologies/bibframe/AdminMetadata",
+              '@guid': short.generate(),
+              "http://id.loc.gov/ontologies/bflc/catalogerId": [
+                {
+                "@guid": short.generate(),
+                "http://id.loc.gov/ontologies/bflc/catalogerId": this.catInitials
+                }
+              ]
+
+            },
+            "valueConstraint": {
+              "defaults": [],
+              "useValuesFrom": [],
+              "valueDataType": {},
+              "valueTemplateRefs": ['lc:RT:bf2:AdminMetadata:BFDB']
+            }
+          }
+
+        let adminMetadataPropertyLabel = 'http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'
+
+
+        
         useProfile.rt[rt].pt[adminMetadataPropertyLabel] = JSON.parse(JSON.stringify(adminMetadataProperty))
         useProfile.rt[rt].ptOrder.push(adminMetadataPropertyLabel)
       }
@@ -272,7 +278,7 @@ export default {
 
 
 
-
+      // console.log(JSON.stringify(useProfile,null,2))
 
 
       this.$store.dispatch("setActiveProfile", { self: this, profile: useProfile, useDefaultValues: true }).then(() => {

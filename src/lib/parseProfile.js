@@ -427,6 +427,8 @@ const parseProfile = {
 
                         if (pt.valueConstraint.defaults[0].defaultLiteral){
 
+
+
                             pt.userValue[pt.propertyURI]= [{
                                 '@guid': short.generate(),
                                 'http://www.w3.org/2000/01/rdf-schema#label': [
@@ -441,6 +443,11 @@ const parseProfile = {
 
                         if (pt.valueConstraint.defaults[0].defaultURI){
                             pt.userValue[pt.propertyURI]['@id'] = pt.valueConstraint.defaults[0].defaultURI
+
+                            if (pt.valueConstraint.valueDataType && pt.valueConstraint.valueDataType.dataTypeURI){
+                                pt.userValue[pt.propertyURI]['@type'] = pt.valueConstraint.valueDataType.dataTypeURI
+                            }
+
                         }      
 
 
@@ -494,8 +501,13 @@ const parseProfile = {
                                     }
 
                                     if (subpt.valueConstraint.defaults[0].defaultURI){
+                                        console.log('subpt',subpt)
                                         if (pt.userValue[subpt.propertyURI][0]){
                                             pt.userValue[subpt.propertyURI][0]['@id'] = subpt.valueConstraint.defaults[0].defaultURI    
+                                            if (subpt.valueConstraint.valueDataType && subpt.valueConstraint.valueDataType.dataTypeURI){
+                                                pt.userValue[subpt.propertyURI][0]['@type'] = subpt.valueConstraint.valueDataType.dataTypeURI
+                                            }
+
                                         }
                                         
                                     }      

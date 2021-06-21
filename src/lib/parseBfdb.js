@@ -1005,9 +1005,11 @@ const parseBfdb = {
 
 		// add a admin data to all the rts
 		// TODO replace this later with more advanced/dynamic approch
-		let adminMetadataProperty = this.buildDynamicProperty('http://id.loc.gov/ontologies/bibframe/adminMetadata')
-		let adminMetadataPropertyLabel = 'http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'
 		for (let rt in profile.rt){
+
+			let adminMetadataProperty = this.buildDynamicProperty('http://id.loc.gov/ontologies/bibframe/adminMetadata')
+			let adminMetadataPropertyLabel = 'http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'
+
 			profile.rt[rt].pt[adminMetadataPropertyLabel] = adminMetadataProperty
 			profile.rt[rt].ptOrder.push(adminMetadataPropertyLabel)
 		}
