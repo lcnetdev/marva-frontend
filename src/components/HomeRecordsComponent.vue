@@ -4,6 +4,10 @@
     <Keypress key-event="keydown" :key-code="38" @success="moveUp" />
     <Keypress key-event="keydown" :key-code="13" @success="selectTemplate" />
 
+
+    <h3>Unposted Records - Workspace</h3>
+
+
     <table>
       <thead>
         <th>Title</th>
@@ -14,6 +18,7 @@
         <th>LCCN</th>
         <th>User</th>
         <th>Modified</th>
+        <th v-if="!allrecords"></th>
         <th></th>
       </thead>
 
@@ -40,7 +45,9 @@
 
           <td>{{record.user}}</td>
           <td>{{record.time}}</td>
-          <td style="    cursor: pointer;" @click="selectTemplateClickLoad(record.eid)">Load</td>
+          <td v-if="!allrecords" style="cursor: pointer;" @click="deleteRecord(record.eid)">Delete</td>
+
+          <td style="cursor: pointer;" @click="selectTemplateClickLoad(record.eid)">Load</td>
 
         </tr>
 
@@ -48,6 +55,113 @@
       </tbody>
 
     </table>
+
+
+    <h3>Posted Records</h3>
+
+    <details>
+      <summary>Show posted records</summary>
+      <table>
+        <thead>
+          <th>Title</th>
+          <th>Resource</th>
+          <th>Type</th>
+          <th>ID</th>
+          <th>Primary contribution</th>
+          <th>LCCN</th>
+          <th>User</th>
+          <th>Modified</th>
+          <th></th>
+          <th></th>
+        </thead>
+
+        <tbody>
+          <tr v-for="record in recordsPublished" v-bind:key="record.eid">
+            <td >{{record.title}}</td>
+            <td>{{record.typeid}}</td>
+            <td><div v-for="profile in record.profiletypes" v-bind:key="profile">{{profile}}</div></td>
+            <td>{{record.eid}}</td>
+            <td>{{record.contributor}}</td>
+
+            <td :title="record.status" v-if="record.status=='unposted'">{{record.lccn}}</td>
+            <td :title="record.status" v-else-if="record.status=='published'" style="background-color: lawngreen">
+              {{record.lccn}}
+              <div v-for="rl in resourceLinks(record)" v-bind:key="rl.url">
+                <a :href="rl.url+'?blastdacache=' + Date.now()" target="_blank">View {{rl.type}} on {{rl.env}}</a>
+
+              </div>
+            </td>
+
+            <td :title="record.status" v-else>{{record.lccn}}</td>
+
+
+
+            <td>{{record.user}}</td>
+            <td>{{record.time}}</td>
+            <td style="cursor: pointer;" @click="deleteRecord(record.eid)">Delete</td>
+
+            <td style="cursor: pointer;" @click="loadRecord(false,record.eid)">Load</td>
+
+          </tr>
+
+
+        </tbody>
+
+      </table>
+    </details>
+
+
+    <h3>Deleted Records</h3>
+    <details>
+      <summary>Show deleted records</summary>
+
+      <table>
+        <thead>
+          <th>Title</th>
+          <th>Resource</th>
+          <th>Type</th>
+          <th>ID</th>
+          <th>Primary contribution</th>
+          <th>LCCN</th>
+          <th>User</th>
+          <th>Modified</th>
+          <th></th>
+        </thead>
+
+        <tbody>
+          <tr v-for="record in recordsDeleted" v-bind:key="record.eid">
+            <td >{{record.title}}</td>
+            <td>{{record.typeid}}</td>
+            <td><div v-for="profile in record.profiletypes" v-bind:key="profile">{{profile}}</div></td>
+            <td>{{record.eid}}</td>
+            <td>{{record.contributor}}</td>
+
+            <td :title="record.status" v-if="record.status=='unposted'">{{record.lccn}}</td>
+            <td :title="record.status" v-else-if="record.status=='published'" style="background-color: lawngreen">
+              {{record.lccn}}
+              <div v-for="rl in resourceLinks(record)" v-bind:key="rl.url">
+                <a :href="rl.url+'?blastdacache=' + Date.now()" target="_blank">View {{rl.type}} on {{rl.env}}</a>
+
+              </div>
+            </td>
+
+            <td :title="record.status" v-else>{{record.lccn}}</td>
+
+
+
+            <td>{{record.user}}</td>
+            <td>{{record.time}}</td>
+
+            <td style="cursor: pointer;" @click="loadRecord(false,record.eid)">Load</td>
+
+          </tr>
+
+
+        </tbody>
+
+      </table>
+    </details>
+
 
 
 
@@ -96,22 +210,23 @@ export default {
 
       let results = []
 
-      for (let uri of record.externalid){
-        let type
-        if (uri.includes("/items/"))(type = 'Item')
-        if (uri.includes("/works/"))(type = 'Work')
-        if (uri.includes("/instances/"))(type = 'Instance')
+      if (record && record.externalid){
+        for (let uri of record.externalid){
+          let type
+          if (uri.includes("/items/"))(type = 'Item')
+          if (uri.includes("/works/"))(type = 'Work')
+          if (uri.includes("/instances/"))(type = 'Instance')
 
-        let url = config.convertToRegionUrl(uri)
-        let env = config.returnUrls().env
+          let url = config.convertToRegionUrl(uri)
+          let env = config.returnUrls().env
 
-        results.push({
-          'type':type,
-          'url': url,
-          'env': env
-        })
+          results.push({
+            'type':type,
+            'url': url,
+            'env': env
+          })
+        }
       }
-
       return results
 
     },
@@ -134,13 +249,18 @@ export default {
         return map[uniqueId]  
       }
       
-
-
     },
 
-    loadRecord: async function(recId){
+    loadRecord: async function(recId,eId){
 
-      let recordId = this.records[recId].eid
+
+      let recordId
+
+      if (recId !== false){
+        recordId = this.records[recId].eid
+      }else if (!recId && eId){
+        recordId = eId
+      }
 
       this.transformResults = await parseProfile.loadRecordFromBackend(recordId)
 
@@ -180,6 +300,8 @@ export default {
 
 
     },
+
+
 
     selectTemplateClickLoad: async function(recId){
 
@@ -224,7 +346,74 @@ export default {
       document.getElementById(this.activeTemplateId).scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"})
       event.event.preventDefault()
       return false
-    }    
+    },
+
+
+    async deleteRecord(eId){
+
+
+      let url = config.returnUrls().util
+      let stage = config.returnUrls().env
+
+      url = `${url}delete/${stage}/${this.catInitials}/${eId}`
+
+
+      const rawResponse = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: "{}"
+      });
+
+      const content = await rawResponse.json();
+
+
+
+      if (!content.result){
+        alert("Could not delete record, connection problems?")
+      }
+
+
+
+      this.refreshRecords()
+
+    },
+
+
+    refreshRecords(){
+
+     if (this.allrecords){
+        
+        this.$store.dispatch("fetchAllRecords", { self: this, user: this.catInitials  }).then(() => {
+          
+          this.records = this.allRecords.filter((f) => (f.status=='unposted') ? true : false)
+          this.recordsDeleted = this.allRecords.filter((f) => (f.status=='deleted') ? true : false)
+          this.recordsPublished = this.allRecords.filter((f) => (f.status=='published') ? true : false)
+
+        })  
+
+        
+      }else{
+        
+        this.$store.dispatch("fetchMyRecords", { self: this, user: this.catInitials  }).then(() => {
+
+          this.records = this.myRecords.filter((f) => (f.status=='unposted') ? true : false)
+          this.recordsDeleted = this.myRecords.filter((f) => (f.status=='deleted') ? true : false)
+          this.recordsPublished = this.myRecords.filter((f) => (f.status=='published') ? true : false)
+
+        })  
+
+      }
+
+
+
+
+    }
+
+
+
 
   },
   computed: mapState({
@@ -251,6 +440,8 @@ export default {
     return {
 
       records: [],
+      recordsDeleted: [],
+      recordsPublished: [],
       activeTemplateId: null,
       actibveTemplateIdCount:0      
 
@@ -260,22 +451,9 @@ export default {
 
 
 
+    this.refreshRecords()
 
-
-    if (this.allrecords){
-      
-      this.$store.dispatch("fetchAllRecords", { self: this, user: this.catInitials  }).then(() => {
-        this.records = this.allRecords
-      })  
-
-      
-    }else{
-      
-      this.$store.dispatch("fetchMyRecords", { self: this, user: this.catInitials  }).then(() => {
-        this.records = this.myRecords
-      })  
-
-    }
+ 
 
 
 

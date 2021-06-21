@@ -2,6 +2,7 @@ import config from "./config"
 import lookupUtil from "./lookupUtil";
 import parseBfdb from "./parseBfdb";
 import exportXML from "./exportXML"
+import store from "../store";
 
 
 const short = require('short-uuid');
@@ -1721,7 +1722,7 @@ const parseProfile = {
         profile.rtOrder.push(newRdId)
 
         // setup the new instance's properies
-        profile.rt[newRdId].URI = 'http://id.loc.gov/resources/item/e' + decimalTranslator.new()
+        profile.rt[newRdId].URI = 'http://id.loc.gov/resources/items/e' + decimalTranslator.new()
         profile.rt[newRdId].itemOf = uri
 
 
@@ -1965,6 +1966,36 @@ const parseProfile = {
 
 
 
+        let adminMetadataProperty = {
+          "mandatory": false,
+          "propertyLabel": "Admin Metadata",
+          "propertyURI": "http://id.loc.gov/ontologies/bibframe/adminMetadata",
+          "repeatable": false,
+          "resourceTemplates": [],
+          '@guid': short.generate(),
+          "type": "resource",
+          "userValue": {
+            "@root":"http://id.loc.gov/ontologies/bibframe/adminMetadata",
+            "http://id.loc.gov/ontologies/bflc/catalogerId": [
+              {
+              "@guid": short.generate(),
+              "http://id.loc.gov/ontologies/bflc/catalogerId": store.state.catInitials
+              }
+            ]
+
+          },
+          "valueConstraint": {
+            "defaults": [],
+            "useValuesFrom": [],
+            "valueDataType": {},
+          "valueTemplateRefs": ['lc:RT:bf2:AdminMetadata:BFDB']
+          }
+        }
+
+        let adminMetadataPropertyLabel = 'http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'
+        profile.rt[newRdId].pt[adminMetadataPropertyLabel] = JSON.parse(JSON.stringify(adminMetadataProperty))
+        profile.rt[newRdId].ptOrder.push(adminMetadataPropertyLabel)
+
 
 
         return profile
@@ -2002,6 +2033,24 @@ const parseProfile = {
 
                 // setup the new instance's properies
                 profile.rt[newRdId].URI = 'http://id.loc.gov/resources/instances/e' + decimalTranslator.new()
+
+
+                // admin metadata
+                for (let key in profile.rt[newRdId].pt){
+
+                    if (profile.rt[newRdId].pt[key].propertyURI == 'http://id.loc.gov/ontologies/bibframe/adminMetadata'){
+                        console.log('hooooo',profile.rt[newRdId].pt[key])
+
+                        // replace with our id
+                        profile.rt[newRdId].pt[key].userValue['http://id.loc.gov/ontologies/bflc/catalogerId'] = [
+                            {
+                                "@guid": short.generate(),
+                                "http://id.loc.gov/ontologies/bflc/catalogerId": store.state.catInitials
+                            }
+                        ]
+                    }
+                }
+
 
 
 

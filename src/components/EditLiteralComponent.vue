@@ -280,7 +280,13 @@ export default {
 
     change: function(event){
 
+
+      // don't update if nothing changed or havent entered anythign yet...
       if (this.inputValue == null){
+        return false
+      }
+
+      if (this.inputValue == this.inputValueLast){
         return false
       }
 
@@ -302,6 +308,7 @@ export default {
 
       this.$store.dispatch("setValueLiteral", { self: this, ptGuid: this.ptGuid, guid: this.guid, parentURI:parentURI, URI: this.structure.propertyURI, value: this.inputValue }).then((newGuid) => {
        
+        this.inputValueLast = this.inputValue
         // if this is here then we created a new value, store it for future edits
         if(newGuid){
           this.guid = newGuid
@@ -332,6 +339,7 @@ export default {
     return {
 
       inputValue: null,
+      inputValueLast: null,
       showDiacritics: false,
       diacriticData: [],
       diacriticDataNav: 0,
@@ -416,7 +424,8 @@ export default {
       this.inputValue = null
     }
 
-
+    this.inputValueLast = this.inputValue
+    
     // if it is a dynamic property and no data was populated, hide it
     // if (data.dynamic && this.inputValue == null){
     //   this.hideField = true

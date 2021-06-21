@@ -625,7 +625,7 @@ const exportXML = {
 
 		for (let rt of profile.rtOrder){
 
-			// console.log(profile)
+
 
 			if (profile.rt[rt].noData) continue
 
@@ -706,12 +706,20 @@ const exportXML = {
 							}
 
 
-
+							let value1FirstLoop = true
 							// loop through the value array of each of them
 							for (let value1 of userValue[key1]){
 
-								// console.log('key1',key1)
-								// console.log('value1',value1)
+								if (value1FirstLoop){
+									console.log("THIS IS THE FIRST ONE")
+								}else{
+									console.log("NOW SECOND+ ONE HEREEEEE")
+
+									// we are going to make a new predicate, same type but not the same one as the last one was attached to
+									pLvl2 = this.createElByBestNS(key1)
+								}
+								console.log('key1',key1)
+								console.log('value1',value1)
 
 								// is it a bnode?
 								if (this.isBnode(value1)){
@@ -835,6 +843,8 @@ const exportXML = {
 
 
 								}
+
+								value1FirstLoop = false
 
 							}
 						}	
@@ -969,58 +979,58 @@ const exportXML = {
 				
 
 			// add in the admindata
-			if (orginalProfile.rt[rt].adminMetadataData){
+			// if (orginalProfile.rt[rt].adminMetadataData){
 
 				
-				let parser = new DOMParser();
-				let adm = parser.parseFromString(orginalProfile.rt[rt].adminMetadataData, "text/xml");
+			// 	let parser = new DOMParser();
+			// 	let adm = parser.parseFromString(orginalProfile.rt[rt].adminMetadataData, "text/xml");
 
-				adm = adm.children[0]
+			// 	adm = adm.children[0]
 
-				if (adm.getElementsByTagName('bflc:procInfo').length>0){
-					adm.getElementsByTagName('bflc:procInfo')[0].remove()
-				}
-				let p = this.createElByBestNS('bflc:procInfo')
-				p.innerHTML = profile.rt[rt].procInfo
-
-
-				for (let el of adm.getElementsByTagName('bflc:generationProcess')){
-					for (let el2 of el.getElementsByTagName('rdfs:label')){
-
-						// remove it
-						if (el2.innerHTML.startsWith('BFE2')){
-							el.remove()
-						}
-
-					}
-				}
-
-				// add in new one
-				let gP = this.createElByBestNS('bf:generationProcess')
-				adm.appendChild(gP)
-				let GP = this.createElByBestNS('bf:GenerationProcess')
-				gP.appendChild(GP)
-
-				let GPD = this.createElByBestNS('bf:generationDate')
-				GPD.innerHTML = new Date().toISOString()							
-				GPD.setAttributeNS(this.namespace.rdf, 'rdf:datatype', 'http://www.w3.org/2001/XMLSchema#dateTime')
-				GP.appendChild(GPD)
+			// 	if (adm.getElementsByTagName('bflc:procInfo').length>0){
+			// 		adm.getElementsByTagName('bflc:procInfo')[0].remove()
+			// 	}
+			// 	let p = this.createElByBestNS('bflc:procInfo')
+			// 	p.innerHTML = profile.rt[rt].procInfo
 
 
-				let GPL = this.createElByBestNS('rdfs:label')
+			// 	for (let el of adm.getElementsByTagName('bflc:generationProcess')){
+			// 		for (let el2 of el.getElementsByTagName('rdfs:label')){
 
-				GPL.innerHTML = `BFE2 v${config.versionMajor}.${config.versionMinor}.${config.versionPatch}`
-				GP.appendChild(GPL)
+			// 			// remove it
+			// 			if (el2.innerHTML.startsWith('BFE2')){
+			// 				el.remove()
+			// 			}
+
+			// 		}
+			// 	}
+
+			// 	// add in new one
+			// 	let gP = this.createElByBestNS('bf:generationProcess')
+			// 	adm.appendChild(gP)
+			// 	let GP = this.createElByBestNS('bf:GenerationProcess')
+			// 	gP.appendChild(GP)
+
+			// 	let GPD = this.createElByBestNS('bf:generationDate')
+			// 	GPD.innerHTML = new Date().toISOString()							
+			// 	GPD.setAttributeNS(this.namespace.rdf, 'rdf:datatype', 'http://www.w3.org/2001/XMLSchema#dateTime')
+			// 	GP.appendChild(GPD)
+
+
+			// 	let GPL = this.createElByBestNS('rdfs:label')
+
+			// 	GPL.innerHTML = `BFE2 v${config.versionMajor}.${config.versionMinor}.${config.versionPatch}`
+			// 	GP.appendChild(GPL)
 
 
 
 
-				adm.getElementsByTagName('bf:AdminMetadata')[0].appendChild(p)
+			// 	adm.getElementsByTagName('bf:AdminMetadata')[0].appendChild(p)
 				
 				
 
-				rootEl.appendChild(adm)
-			}
+			// 	rootEl.appendChild(adm)
+			// }
 
 
 
@@ -1062,7 +1072,8 @@ const exportXML = {
 
 		let parser = new DOMParser();
 
-
+		console.log('tleLookup')
+		console.log(tleLookup)
 		
 		for (let URI in tleLookup['Work']){
 			
@@ -1084,6 +1095,8 @@ const exportXML = {
 
 
 			let items = this.returnHasItem(URI,orginalProfile,tleLookup)
+			console.log(URI,orginalProfile,tleLookup)
+			console.log('items',items)
 			// alert(items.length)s
 			for (let item of items){
 				let uri = null

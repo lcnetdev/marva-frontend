@@ -19,7 +19,10 @@
 
 
            <EditMetaComponent v-if="returnLookupType(structure) == 'meta'" :ptGuid="ptGuid" :parentURI="parentURI" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditMetaComponent>
-           <EditLiteralComponent v-else-if="structure.type == 'literal'" :ptGuid="ptGuid" :parentURI="parentURI"  :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditLiteralComponent>
+           
+           <!-- <EditAdminComponent v-else-if="returnLookupType(structure) == 'admin'" :ptGuid="ptGuid" :parentURI="parentURI" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditAdminComponent> -->
+          
+           <EditLiteralComponent v-else-if="structure.type == 'literal' || structure.type == 'literal-lang'" :ptGuid="ptGuid" :parentURI="parentURI"  :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditLiteralComponent>
            <EditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested"  :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate" ></EditSimpleLookupComponent>
            <EditComplexLookupComponent v-else-if="returnLookupType(structure) == 'complex'" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditComplexLookupComponent>          
            <EditTemplateRefComponent v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditTemplateRefComponent>
@@ -99,6 +102,9 @@ import EditSimpleLookupComponent from "@/components/EditSimpleLookupComponent.vu
 import EditTemplateRefComponent from "@/components/EditTemplateRefComponent.vue";
 import EditComplexLookupComponent from "@/components/EditComplexLookupComponent.vue";
 import EditMetaComponent from "@/components/EditMetaComponent.vue";
+// import EditAdminComponent from "@/components/EditAdminComponent.vue";
+
+
 
 
 
@@ -120,6 +126,7 @@ export default {
     EditTemplateRefComponent,
     EditComplexLookupComponent,
     EditMetaComponent,
+    // EditAdminComponent,
     VueJsonPretty
 
 
@@ -237,9 +244,6 @@ export default {
       }
 
     
-
-
-      
       
 
       let type = 'simple'
