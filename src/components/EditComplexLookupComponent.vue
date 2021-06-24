@@ -113,7 +113,7 @@
               <div style="display: flex;">
                 <div class="selected-value-container-nested" style="display: inline-block; position: relative; bottom: 2px;">
                     <span  @click="toggleSelectedDetails" style="padding-right: 0.3em; font-weight: bold"><span class="selected-value-icon" v-html="returnAuthIcon(this.displayType)"></span>{{displayLabel}}</span>
-                    <span  class="selected-value-icon" v-html="validateHeading()" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em"></span>
+                    <span  class="selected-value-icon" v-html="validateHeading()" v-bind:title="validationMessage" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em"></span>
                     <span  @click="removeValue" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">x</span>
                 </div>
 
@@ -381,6 +381,7 @@ export default {
 
       contextRequestInProgress: false,
       validated: false,
+      validationMessage: "",
 
       userData: {}
     }
@@ -469,7 +470,23 @@ export default {
             if (userData !== false) {
                 validationUtil.validateHeading(userData)
                 .then((validationStatus) => {
+                
+                    const headingValid = '&#xe820;';
+                    const headingPartiallyValid = '&#xe821;';
+                    const headingInvalid = '&#xe822;';
+                    const headingNotChecked = '&#xe823;';
+        
                     this.validated = validationStatus;
+                    
+                    if (this.validated == headingValid) {
+                        this.validationMessage = "Heading is valid";
+                    } else if (this.validated == headingPartiallyValid) {
+                        this.validationMessage = "Partial heading validation";
+                    } else if (this.validated == headingInvalid) {
+                        this.validationMessage = "Invalid heading!";
+                    } else if (this.validated == headingNotChecked) {
+                        this.validationMessage = "Heading not checked";
+                    }
                     
                     if (userData["http://id.loc.gov/ontologies/bibframe/agent"] !== undefined) {
                         // We have a contribution resource.
