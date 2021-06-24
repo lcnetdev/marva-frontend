@@ -2,7 +2,7 @@ import config from "./config";
 
 const validationUtil = {
     
-    validateHeading: async function(userData) {
+    validateHeading: async function(userData, suppliedScheme = "") {
         
         const headingValid = '&#xe820;';
         const headingPartiallyValid = '&#xe821;';
@@ -20,19 +20,19 @@ const validationUtil = {
         }
         
         let uri = userData["@id"];
-        if (uri.indexOf('id.loc.gov/') > 0) {
-            // We have an ID URI.  We're done here, let's go home.
-            return headingValid;
-        } else if (uri.indexOf('example.org/') > 0 || uri.indexOf('/REPLACE/') > 0) {
+        if (uri === undefined || uri.indexOf('example.org/') > 0 || uri.indexOf('/REPLACE/') > 0) {
             // We have a dummy URI; Let's see if we can find it.
-            var aLabel = this._getLabel(userData);
+            var aLabel = this.getLabel(userData);
             if (!aLabel) {
                 console.warn("Unable to locate label for validation lookup!");
                 return headingInvalid;
             }
             //console.log("Found label: " + aLabel);
             
-            var scheme = this._getScheme(userData);
+            var scheme = suppliedScheme;
+            if (scheme == "") {
+                scheme = this._getScheme(userData);
+            }
             if (!scheme) {
                 console.warn("Unable to locate scheme for validation lookup!");
                 return headingInvalid;
@@ -53,6 +53,12 @@ const validationUtil = {
                     newuri = newuri.replace('preprod.', '');
                     userData["@id"] = newuri;
                     
+                    
+                    if (response.headers.get("x-preflabel") != aLabel) {
+                        this._setLabel(userData, response.headers.get("x-preflabel"));
+                    }
+                    
+                    
                     return headingValid; 
                 } else if (lookupStatus == 404) {
                     // OK, we got here.  
@@ -68,7 +74,8 @@ const validationUtil = {
                         ) {
                             // We're off to the races...
                             userData = userData["http://www.loc.gov/mads/rdf/v1#componentList"][0]
-                            var componentResult = await this.validateHeading(userData);
+                            console.log(userData);
+                            var componentResult = await this.validateHeading(userData, scheme);
                             if (componentResult == headingValid) {
                                 return headingPartiallyValid;
                             }
@@ -83,6 +90,10 @@ const validationUtil = {
                 return headingNotChecked;
             }
             
+        } else if (uri.indexOf('id.loc.gov/') > 0) {
+            // We have an ID URI.  We're done here, let's go home.
+            return headingValid;
+
         } else {
             // URI was not an ID URI and it wasn't a dummy URI 
             // so let's leave it alone.
@@ -109,12 +120,12 @@ const validationUtil = {
         } catch(err) {
             // There was an error, or just a 404, which is yet another 
             // fix for ID.
-            console.error("Label lookup failed for " + url);
+            console.warn("Label lookup failed for " + url);
             return { status: 404 }
         }
     },
     
-    _getLabel: function(userData) {
+    getLabel: function(userData) {
         const labelProps = [
                 "http://www.loc.gov/mads/rdf/v1#authoritativeLabel",
                 "http://www.w3.org/2000/01/rdf-schema#label"
@@ -125,6 +136,19 @@ const validationUtil = {
             }
         }
         return false;
+    },
+    
+    _setLabel: function(userData, label) {
+        const labelProps = [
+                "http://www.loc.gov/mads/rdf/v1#authoritativeLabel",
+                "http://www.w3.org/2000/01/rdf-schema#label"
+            ];
+        for (var p of labelProps) {
+            if (userData[p] !== undefined) {
+                userData[p][0][p] = label;
+            }
+        }
+        return userData;
     },
     
     _getScheme: function(userData) {
@@ -157,7 +181,7 @@ const validationUtil = {
         if (userData["http://id.loc.gov/ontologies/bibframe/source"] !== undefined) {
             var source = userData["http://id.loc.gov/ontologies/bibframe/source"][0];
             // Does source have an ID from ID?  That would make this much easier.
-            if (source["@id"].indexOf('id.loc.gov/') > 0) {
+            if (source["@id"] !== undefined && source["@id"].indexOf('id.loc.gov/') > 0) {
                 return source["@id"];
             } else {
                 var code = false;

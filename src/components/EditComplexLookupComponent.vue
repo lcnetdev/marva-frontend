@@ -470,9 +470,27 @@ export default {
                 validationUtil.validateHeading(userData)
                 .then((validationStatus) => {
                     this.validated = validationStatus;
+                    
+                    if (userData["http://id.loc.gov/ontologies/bibframe/agent"] !== undefined) {
+                        // We have a contribution resource.
+                        // What we need is the agent.
+                        userData = userData["http://id.loc.gov/ontologies/bibframe/agent"][0];
+                    }
+
+                    // Do we need to set the display URI because the userData ID changed?
                     if (userData["@id"] !== this.displayContext.uri) {
                         this.displayContext.uri = userData["@id"];
                     }
+                    
+                    // Do we need to set the display labels because the userData label changed?
+                    var label = validationUtil.getLabel(userData);
+                    if (this.displayLabel != label) {
+                        this.displayLabel = label;
+                    }
+                    if (this.displayContext.title != label) {
+                        this.displayContext.title = label;
+                    }
+                    
                 });
             }
         }
