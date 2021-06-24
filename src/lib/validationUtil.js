@@ -25,7 +25,7 @@ const validationUtil = {
             var aLabel = this.getLabel(userData);
             if (!aLabel) {
                 console.warn("Unable to locate label for validation lookup!");
-                return headingInvalid;
+                return headingNotChecked;
             }
             //console.log("Found label: " + aLabel);
             
@@ -35,14 +35,14 @@ const validationUtil = {
             }
             if (!scheme) {
                 console.warn("Unable to locate scheme for validation lookup!");
-                return headingInvalid;
+                return headingNotChecked;
             }
             //console.log("Found scheme: " + scheme);
             
             if (scheme.indexOf('id.loc.gov') > 0) {
                 // We have an ID scheme, so we know how 
                 // to validate it.
-                var response = await this._doLabelLookup(aLabel, scheme)
+                var response = await this._doLabelLookup(aLabel, scheme);
                 var lookupStatus = response.status;
                 if (lookupStatus == 200) {
                     var newuri = response.headers.get("x-uri");
