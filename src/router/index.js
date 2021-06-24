@@ -37,7 +37,7 @@ const routes = [
   },
 
   {
-    path: "/edit",
+    path: "/edit/:recordId",
     name: "Edit",
     component: Edit
 
@@ -47,6 +47,19 @@ const routes = [
     //component: () =>
     //  import(/* webpackChunkName: "about" */ "../views/About.vue")
   },
+
+
+  // {
+  //   path: "/edit",
+  //   name: "Edit",
+  //   component: Edit
+
+  //   // route level code-splitting
+  //   // this generates a separate chunk (about.[hash].js) for this route
+  //   // which is lazy-loaded when the route is visited.
+  //   //component: () =>
+  //   //  import(/* webpackChunkName: "about" */ "../views/About.vue")
+  // },
 
 
   {

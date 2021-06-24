@@ -47,6 +47,11 @@
         
         <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['ctrlKey','altKey'],preventDefault: true}]" @success="openDiacriticSelect" />
 
+
+        <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['ctrlKey','altKey'],preventDefault: true}]" @success="openDiacriticSelect" />
+
+        
+
         <div v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border', { 'component-container-fake-input-note' : isNoteField(structure.propertyLabel)  }]" >
           <div style="display: flex;">
             <div style="flex:1">
@@ -135,6 +140,15 @@ export default {
 
     },
     submitField: uiUtils.globalMoveDown,
+
+    insertUnicodeHex: function(hex){
+
+      this.inputValue = String.fromCodePoint(hex);
+
+
+    },
+
+
 
 
     isNoteField: function(label){
@@ -267,6 +281,16 @@ export default {
     change: function(event){
 
 
+      // don't update if nothing changed or havent entered anythign yet...
+      if (this.inputValue == null){
+        return false
+      }
+
+      if (this.inputValue == this.inputValueLast){
+        return false
+      }
+
+
       // this resizes the textarea as there is more content
       if (event.target && event.target.localName && event.target.localName == 'textarea'){
         event.target.style.height = ""
@@ -284,6 +308,7 @@ export default {
 
       this.$store.dispatch("setValueLiteral", { self: this, ptGuid: this.ptGuid, guid: this.guid, parentURI:parentURI, URI: this.structure.propertyURI, value: this.inputValue }).then((newGuid) => {
        
+        this.inputValueLast = this.inputValue
         // if this is here then we created a new value, store it for future edits
         if(newGuid){
           this.guid = newGuid
@@ -314,6 +339,7 @@ export default {
     return {
 
       inputValue: null,
+      inputValueLast: null,
       showDiacritics: false,
       diacriticData: [],
       diacriticDataNav: 0,
@@ -398,7 +424,8 @@ export default {
       this.inputValue = null
     }
 
-
+    this.inputValueLast = this.inputValue
+    
     // if it is a dynamic property and no data was populated, hide it
     // if (data.dynamic && this.inputValue == null){
     //   this.hideField = true

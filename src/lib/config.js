@@ -4,7 +4,7 @@ const config = {
 
 	versionMajor: 0,
 	versionMinor: 6,
-	versionPatch: 1,
+	versionPatch: 5,
 
 
 
@@ -28,7 +28,7 @@ const config = {
 			ldpjs : 'https://preprod-3001.id.loc.gov/bfe2/api-staging/',
 			util  :  'https://preprod-3001.id.loc.gov/bfe2/util/',
 			publish: 'https://preprod-3001.id.loc.gov/bfe2/util/publish/staging',
-			bfdb : 'https://preprod-8210.id.loc.gov/',
+			bfdb : 'https://test-8231.id.lctl.gov/',
 			profiles : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
 			starting : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:startingPoints&where=index.label:config',
 			env : 'staging'
@@ -69,7 +69,7 @@ const config = {
 		let urls = this.returnUrls()
 
 		if ((url.includes('/works/') || url.includes('/instances/') || url.includes('/items/') ) && url.includes('http://id.loc.gov') ){
-			console.log('yes')
+
 			url = url.replace('http://id.loc.gov/',urls.bfdb)
 		}
 	
@@ -192,13 +192,13 @@ const config = {
 
 		"https://preprod-8230.id.loc.gov/resources/works" : {"name":"Works", "processor" : 'lcAuthorities', "type":"complex", "modes":[
 			{
-			"All":{"url":"https://id.loc.gov/resources/works/suggest2/?q=<QUERY>&count=25", "all":true}, 					
+			"All":{"url":"https://test-8080.id.lctl.gov/resources/works/suggest2/?q=<QUERY>&count=25", "all":true}, 					
 			}
 		]},
 
 		"https://preprod-8230.id.loc.gov/resources/instances" : {"name":"Instances", "processor" : 'lcAuthorities', "type":"complex", "modes":[
 			{
-			"All":{"url":"https://id.loc.gov/resources/instances/suggest2/?q=<QUERY>&count=25", "all":true}, 					
+			"All":{"url":"https://test-8080.id.lctl.gov/resources/instances/suggest2/?q=<QUERY>&count=25", "all":true}, 					
 			}
 		]},
 		
@@ -227,6 +227,7 @@ const config = {
 		"http://id.loc.gov/vocabulary/mcolor" : {"name":"mcolor", "type":"simple", "modes":[]},
 		"http://id.loc.gov/vocabulary/mediaTypes" : {"name":"mediaTypes", "type":"simple", "modes":[]},
 		"http://id.loc.gov/vocabulary/menclvl" : {"name":"menclvl", "type":"simple", "modes":[]},
+
 		"http://id.loc.gov/vocabulary/mfiletype" : {"name":"mfiletype", "type":"simple", "modes":[]},
 		"http://id.loc.gov/vocabulary/mgeneration" : {"name":"mgeneration", "type":"simple", "modes":[]},
 		"http://id.loc.gov/vocabulary/mgroove" : {"name":"mgroove", "type":"simple", "modes":[]},

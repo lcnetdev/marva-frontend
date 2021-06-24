@@ -53,7 +53,7 @@
               <div v-if="displaySelectedDetails==true" class="selected-value-details">
                 
                 <button class="selected-value-details-close" @click="toggleSelectedDetails">Close</button>
-                <a style="color:white; text-decoration: none;" target="_blank" :href="displayContext.uri">View Entity</a>
+                <a style="color:white; text-decoration: none;" target="_blank" :href="rewriteURI(displayContext.uri)">View Entity</a>
                 <div class="modal-context-data-title">{{userData['@type']}}</div>
 
                 <div v-if="displayContext">
@@ -128,7 +128,7 @@
               <div v-if="displaySelectedDetails==true" class="selected-value-details">
                 
                 <button class="selected-value-details-close" @click="toggleSelectedDetails">Close</button>
-                <a style="color:white; text-decoration: none;" target="_blank" :href="displayContext.uri">View Entity</a>
+                <a style="color:white; text-decoration: none;" target="_blank" :href="rewriteURI(displayContext.uri)">View Entity</a>
                 <div class="modal-context-data-title">{{userData['@type']}}</div>
 
                 <div v-if="displayContext">
@@ -490,6 +490,18 @@ export default {
 
     submitField: function(){
       return this.add()
+    },
+
+
+    rewriteURI: function(uri){
+
+      if (uri.includes('/resources/works/') || uri.includes('/resources/instances/') || uri.includes('/resources/items/')){
+        uri = uri.replace('https://id.loc.gov/', config.returnUrls().bfdb )
+        uri = uri.replace('http://id.loc.gov/', config.returnUrls().bfdb )
+      }
+
+
+      return uri
     },
 
     precoordinatedAddSubdivision: function(type){

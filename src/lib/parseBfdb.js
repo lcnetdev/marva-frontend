@@ -105,7 +105,7 @@ const parseBfdb = {
 		}
 		
 		for (let el of selection){
-			console.log(el)
+			
 			if (el.parentNode.tagName === requiredParent){
 				return el
 			}
@@ -905,7 +905,24 @@ const parseBfdb = {
 				}
 			}
 
+		}else if (propertyURI == 'http://id.loc.gov/ontologies/bibframe/adminMetadata'){
 
+			return {
+				"mandatory": false,
+				"propertyLabel": "Admin Metadata",
+				"propertyURI": "http://id.loc.gov/ontologies/bibframe/adminMetadata",
+				"repeatable": false,
+				"resourceTemplates": [],
+				'@guid': short.generate(),
+				"type": "resource",
+				"userValue": {"@root":"http://id.loc.gov/ontologies/bibframe/adminMetadata"},
+				"valueConstraint": {
+					"defaults": [],
+					"useValuesFrom": [],
+					"valueDataType": {},
+				"valueTemplateRefs": ['lc:RT:bf2:AdminMetadata:BFDB']
+				}
+			}
 
 
 
@@ -985,15 +1002,36 @@ const parseBfdb = {
 		this.tempTemplates = {}
 
 
+		// add a admin data to all the rts
+		// TODO replace this later with more advanced/dynamic approch
+		for (let rt in profile.rt){
+
+			let adminMetadataProperty = this.buildDynamicProperty('http://id.loc.gov/ontologies/bibframe/adminMetadata')
+			let adminMetadataPropertyLabel = 'http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'
+
+			profile.rt[rt].pt[adminMetadataPropertyLabel] = adminMetadataProperty
+			profile.rt[rt].ptOrder.push(adminMetadataPropertyLabel)
+		}
+
 		let profileOrginal = JSON.parse(JSON.stringify(profile))
 		let resultsTest = await this.transformRts(profileOrginal,true)
 
-		
+		console.log('store.state.rtLookup')
+		console.log(store.state.rtLookup)
+		console.log(profile)
+
+
 
 		// find the unused properties and see if we can add them into the profile ad hoc
 
-
 		for (const rtKey in resultsTest.rt) {
+
+
+			console.log('resultsTest.rt', resultsTest.rt[rtKey])
+
+
+
+
 
 			// first look for just missing properties, not incuded in the profile
 			let missingPT = this.returnUnusedProperties(resultsTest.rt[rtKey].unusedXml)
@@ -1146,19 +1184,19 @@ const parseBfdb = {
 			}
 
 			// remove some things we will want to work with later but are just too complicated right now
-			let adminMetadata = xml.getElementsByTagName('bf:adminMetadata')
-			if (adminMetadata.length>0){
-				let adminMetadataData = Array.prototype.slice.call( adminMetadata )
-				for (let item of adminMetadata) {
-					item.parentNode.removeChild(item)
-				}
+			// let adminMetadata = xml.getElementsByTagName('bf:adminMetadata')
+			// if (adminMetadata.length>0){
+			// 	let adminMetadataData = Array.prototype.slice.call( adminMetadata )
+			// 	for (let item of adminMetadata) {
+			// 		item.parentNode.removeChild(item)
+			// 	}
 
 				
-				profile.rt[pkey].adminMetadataData= (new XMLSerializer()).serializeToString(adminMetadataData[0])
+			// 	profile.rt[pkey].adminMetadataData= (new XMLSerializer()).serializeToString(adminMetadataData[0])
 
 
 
-			}
+			// }
 
 			// let hasSeries = xml.getElementsByTagName('bf:hasSeries')
 			// let hasSeriesData = Array.prototype.slice.call( hasSeries )
@@ -1248,7 +1286,8 @@ const parseBfdb = {
 
 				let propertyURI = ptk.propertyURI
 				let prefixURI = this.namespaceUri(propertyURI)
-
+				// console.log(propertyURI)
+				// console.log(ptk)
 				// see if we have that specific propertry in the xml
 				// let el = xml.getElementsByTagName(prefixURI)
 
@@ -2080,8 +2119,26 @@ const parseBfdb = {
 			// let parser = new DOMParser();
 			// profile.rt[pkey].unusedXmlNodes = parser.parseFromString(xml.outerHTML, "text/xml").children[0];
 
+			for (let key in profile.rt[pkey].pt){
+
+				if (profile.rt[pkey].pt[key].propertyURI == 'http://id.loc.gov/ontologies/bibframe/adminMetadata'){
+					console.log('hooooo',profile.rt[pkey].pt[key])
+
+					// if it doesnt already have a cataloger id use ours
+					if (!profile.rt[pkey].pt[key].userValue['http://id.loc.gov/ontologies/bflc/catalogerId']){
+						profile.rt[pkey].pt[key].userValue['http://id.loc.gov/ontologies/bflc/catalogerId'] = [
+							{
+								"@guid": short.generate(),
+								"http://id.loc.gov/ontologies/bflc/catalogerId": store.state.catInitials
+							}
+						]
+					}
+				}
+			}
 			
-			
+
+
+
 
 			// let totalHasDataLoaded = 0
 			let uniquePropertyURIs  = {}
@@ -2318,7 +2375,7 @@ const parseBfdb = {
 			xml = this.testXml
 		}	
 
-		console.log(xml)
+
 		// use the browser if we can, should be faster, fall back to the library if not running in the browser
 		if (window.DOMParser){
 			let parser = new DOMParser();

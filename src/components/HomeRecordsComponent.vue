@@ -4,6 +4,10 @@
     <Keypress key-event="keydown" :key-code="38" @success="moveUp" />
     <Keypress key-event="keydown" :key-code="13" @success="selectTemplate" />
 
+
+    <h3>Unposted Records - Workspace</h3>
+
+
     <table>
       <thead>
         <th>Title</th>
@@ -14,6 +18,7 @@
         <th>LCCN</th>
         <th>User</th>
         <th>Modified</th>
+        <th v-if="!allrecords"></th>
         <th></th>
       </thead>
 
@@ -40,7 +45,9 @@
 
           <td>{{record.user}}</td>
           <td>{{record.time}}</td>
-          <td style="    cursor: pointer;" @click="selectTemplateClickLoad(record.eid)">Load</td>
+          <td v-if="!allrecords" style="cursor: pointer;" @click="deleteRecord(record.eid)">Delete</td>
+
+          <td style="cursor: pointer;" @click="selectTemplateClickLoad(record.eid)">Load</td>
 
         </tr>
 
@@ -48,6 +55,113 @@
       </tbody>
 
     </table>
+
+
+    <h3>Posted Records</h3>
+
+    <details>
+      <summary>Show posted records</summary>
+      <table>
+        <thead>
+          <th>Title</th>
+          <th>Resource</th>
+          <th>Type</th>
+          <th>ID</th>
+          <th>Primary contribution</th>
+          <th>LCCN</th>
+          <th>User</th>
+          <th>Modified</th>
+          <th></th>
+          <th></th>
+        </thead>
+
+        <tbody>
+          <tr v-for="record in recordsPublished" v-bind:key="record.eid">
+            <td >{{record.title}}</td>
+            <td>{{record.typeid}}</td>
+            <td><div v-for="profile in record.profiletypes" v-bind:key="profile">{{profile}}</div></td>
+            <td>{{record.eid}}</td>
+            <td>{{record.contributor}}</td>
+
+            <td :title="record.status" v-if="record.status=='unposted'">{{record.lccn}}</td>
+            <td :title="record.status" v-else-if="record.status=='published'" style="background-color: lawngreen">
+              {{record.lccn}}
+              <div v-for="rl in resourceLinks(record)" v-bind:key="rl.url">
+                <a :href="rl.url+'?blastdacache=' + Date.now()" target="_blank">View {{rl.type}} on {{rl.env}}</a>
+
+              </div>
+            </td>
+
+            <td :title="record.status" v-else>{{record.lccn}}</td>
+
+
+
+            <td>{{record.user}}</td>
+            <td>{{record.time}}</td>
+            <td style="cursor: pointer;" @click="deleteRecord(record.eid)">Delete</td>
+
+            <td style="cursor: pointer;" @click="loadRecord(false,record.eid)">Load</td>
+
+          </tr>
+
+
+        </tbody>
+
+      </table>
+    </details>
+
+
+    <h3>Deleted Records</h3>
+    <details>
+      <summary>Show deleted records</summary>
+
+      <table>
+        <thead>
+          <th>Title</th>
+          <th>Resource</th>
+          <th>Type</th>
+          <th>ID</th>
+          <th>Primary contribution</th>
+          <th>LCCN</th>
+          <th>User</th>
+          <th>Modified</th>
+          <th></th>
+        </thead>
+
+        <tbody>
+          <tr v-for="record in recordsDeleted" v-bind:key="record.eid">
+            <td >{{record.title}}</td>
+            <td>{{record.typeid}}</td>
+            <td><div v-for="profile in record.profiletypes" v-bind:key="profile">{{profile}}</div></td>
+            <td>{{record.eid}}</td>
+            <td>{{record.contributor}}</td>
+
+            <td :title="record.status" v-if="record.status=='unposted'">{{record.lccn}}</td>
+            <td :title="record.status" v-else-if="record.status=='published'" style="background-color: lawngreen">
+              {{record.lccn}}
+              <div v-for="rl in resourceLinks(record)" v-bind:key="rl.url">
+                <a :href="rl.url+'?blastdacache=' + Date.now()" target="_blank">View {{rl.type}} on {{rl.env}}</a>
+
+              </div>
+            </td>
+
+            <td :title="record.status" v-else>{{record.lccn}}</td>
+
+
+
+            <td>{{record.user}}</td>
+            <td>{{record.time}}</td>
+
+            <td style="cursor: pointer;" @click="loadRecord(false,record.eid)">Load</td>
+
+          </tr>
+
+
+        </tbody>
+
+      </table>
+    </details>
+
 
 
 
@@ -60,9 +174,9 @@
 
 
 import { mapState } from 'vuex'
-import lookupUtil from "@/lib/lookupUtil"
+// import lookupUtil from "@/lib/lookupUtil"
 import parseProfile from "@/lib/parseProfile"
-import parseBfdb from '@/lib/parseBfdb'
+// import parseBfdb from '@/lib/parseBfdb'
 import config from '@/lib/config'
 
 // import HomeAllRecordsComponent from "@/components/HomeAllRecordsComponent.vue";
@@ -96,22 +210,23 @@ export default {
 
       let results = []
 
-      for (let uri of record.externalid){
-        let type
-        if (uri.includes("/items/"))(type = 'Item')
-        if (uri.includes("/works/"))(type = 'Work')
-        if (uri.includes("/instances/"))(type = 'Instance')
+      if (record && record.externalid){
+        for (let uri of record.externalid){
+          let type
+          if (uri.includes("/items/"))(type = 'Item')
+          if (uri.includes("/works/"))(type = 'Work')
+          if (uri.includes("/instances/"))(type = 'Instance')
 
-        let url = config.convertToRegionUrl(uri)
-        let env = config.returnUrls().env
+          let url = config.convertToRegionUrl(uri)
+          let env = config.returnUrls().env
 
-        results.push({
-          'type':type,
-          'url': url,
-          'env': env
-        })
+          results.push({
+            'type':type,
+            'url': url,
+            'env': env
+          })
+        }
       }
-
       return results
 
     },
@@ -134,88 +249,25 @@ export default {
         return map[uniqueId]  
       }
       
-
-
     },
 
-    loadRecord: async function(recId){
-
-      let xml = await lookupUtil.loadSavedRecord(this.records[recId].eid)
-
-      let meta = parseProfile.returnMetaFromSavedXML(xml)
+    loadRecord: async function(recId,eId){
 
 
-      
+      let recordId
 
-      parseBfdb.parse(meta.xml)
-
-      // alert(parseBfdb.hasItem)
-
-      let useProfile = null
-
-
-      if (this.profiles[meta.profile]){
-        useProfile = JSON.parse(JSON.stringify(this.profiles[meta.profile]))
-      }else{
-        alert('Cannot find that profile:',meta.profile)
-      }
-      
-      // we might need to load in a item
-      if (parseBfdb.hasItem>0){ 
-
-        
-        let useItemRtLabel
-        // look for the RT for this item
-        let instanceId = meta.rts.filter((id)=>{ return id.includes(':Instance')  })
-        if (instanceId.length>0){
-          useItemRtLabel = instanceId[0].replace(':Instance',':Item')          
-        }
-
-        if (!useItemRtLabel){
-          let instanceId = meta.rts.filter((id)=>{ return id.includes(':Work')  })
-          if (instanceId.length>0){
-            useItemRtLabel = instanceId[0].replace(':Work',':Item')          
-          }
-
-        }
-
-
-         
-
-        for (let pkey in this.profiles){
-          
-          for (let rtkey in this.profiles[pkey].rt){
-            if (rtkey == useItemRtLabel){
-              let useItem = JSON.parse(JSON.stringify(this.profiles[pkey].rt[rtkey]))
-              useProfile.rtOrder.push(useItemRtLabel)
-              useProfile.rt[useItemRtLabel] = useItem                
-            }
-          }
-        }
-
-
+      if (recId !== false){
+        recordId = this.records[recId].eid
+      }else if (!recId && eId){
+        recordId = eId
       }
 
-      if (!useProfile.log){
-        useProfile.log = []
-      
-      }
-      useProfile.log.push({action:'loadInstanceFromSave',from:meta.eid})
-      // useProfile.procInfo= "update instance"
+      this.transformResults = await parseProfile.loadRecordFromBackend(recordId)
 
 
-      useProfile.procInfo = meta.procInfo
-      
+      console.log('this.transformResults',this.transformResults)
+      console.log(recordId)
 
-
-      // also give it an ID for storage
-      useProfile.eId= meta.eid
-      useProfile.user = this.catInitials
-      useProfile.status = meta.status
-
-
-      
-      this.transformResults  = await parseBfdb.transform(useProfile)
 
       // let workkey = this.transformResults.rtOrder.filter((k)=> k.includes(":Instance"))[0]
       // this.transformResultsDisplay = this.transformResults.rt[workkey]
@@ -226,7 +278,7 @@ export default {
       this.$store.dispatch("setActiveProfile", { self: this, profile: this.transformResults }).then(() => {
 
 
-        this.$router.push({ path: 'edit' })
+        this.$router.push({ name: 'Edit', params: { recordId: recordId } })
       })
 
 
@@ -248,6 +300,8 @@ export default {
 
 
     },
+
+
 
     selectTemplateClickLoad: async function(recId){
 
@@ -292,7 +346,74 @@ export default {
       document.getElementById(this.activeTemplateId).scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"})
       event.event.preventDefault()
       return false
-    }    
+    },
+
+
+    async deleteRecord(eId){
+
+
+      let url = config.returnUrls().util
+      let stage = config.returnUrls().env
+
+      url = `${url}delete/${stage}/${this.catInitials}/${eId}`
+
+
+      const rawResponse = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: "{}"
+      });
+
+      const content = await rawResponse.json();
+
+
+
+      if (!content.result){
+        alert("Could not delete record, connection problems?")
+      }
+
+
+
+      this.refreshRecords()
+
+    },
+
+
+    refreshRecords(){
+
+     if (this.allrecords){
+        
+        this.$store.dispatch("fetchAllRecords", { self: this, user: this.catInitials  }).then(() => {
+          
+          this.records = this.allRecords.filter((f) => (f.status=='unposted') ? true : false)
+          this.recordsDeleted = this.allRecords.filter((f) => (f.status=='deleted') ? true : false)
+          this.recordsPublished = this.allRecords.filter((f) => (f.status=='published') ? true : false)
+
+        })  
+
+        
+      }else{
+        
+        this.$store.dispatch("fetchMyRecords", { self: this, user: this.catInitials  }).then(() => {
+
+          this.records = this.myRecords.filter((f) => (f.status=='unposted') ? true : false)
+          this.recordsDeleted = this.myRecords.filter((f) => (f.status=='deleted') ? true : false)
+          this.recordsPublished = this.myRecords.filter((f) => (f.status=='published') ? true : false)
+
+        })  
+
+      }
+
+
+
+
+    }
+
+
+
 
   },
   computed: mapState({
@@ -319,6 +440,8 @@ export default {
     return {
 
       records: [],
+      recordsDeleted: [],
+      recordsPublished: [],
       activeTemplateId: null,
       actibveTemplateIdCount:0      
 
@@ -328,22 +451,9 @@ export default {
 
 
 
+    this.refreshRecords()
 
-
-    if (this.allrecords){
-      
-      this.$store.dispatch("fetchAllRecords", { self: this, user: this.catInitials  }).then(() => {
-        this.records = this.allRecords
-      })  
-
-      
-    }else{
-      
-      this.$store.dispatch("fetchMyRecords", { self: this, user: this.catInitials  }).then(() => {
-        this.records = this.myRecords
-      })  
-
-    }
+ 
 
 
 

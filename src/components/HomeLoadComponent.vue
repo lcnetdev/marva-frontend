@@ -109,7 +109,8 @@ import { mapState } from 'vuex'
 // import uiUtils from "@/lib/uiUtils"
 import parseId from '@/lib/parseId'
 import parseBfdb from '@/lib/parseBfdb'
-// import exportXML from "@/lib/exportXML"
+import exportXML from "@/lib/exportXML"
+import lookupUtil from "@/lib/lookupUtil"
 
 const short = require('short-uuid');
 const decimalTranslator = short("0123456789");
@@ -283,9 +284,20 @@ export default {
         // let xml = await exportXML.toBFXML(this.transformResults)
         // console.log(xml)
         // console.log('here')
-        this.$store.dispatch("setActiveProfile", { self: this, profile: this.transformResults }).then(() => {
+        this.$store.dispatch("setActiveProfile", { self: this, profile: this.transformResults }).then(async () => {
 
-          this.$router.push({ path: 'edit' })
+          this.$router.push({ name: 'Edit', params: { recordId: useProfile.eId } })
+
+          // also save it since it now has a perm URL
+          let xml = await exportXML.toBFXML(this.transformResults)
+          lookupUtil.saveRecord(xml.xlmStringBasic, useProfile.eId)
+
+          this.$store.dispatch("setActiveRecordSaved", { self: this}, true).then(() => {
+
+          })          
+
+
+
 
         })
 
@@ -400,12 +412,15 @@ export default {
 
       instanceTests:[
         //'/bfe2/editor/tests/instances/c0010058400001.editor-pkg.xml', //book
-        // '/bfe2/editor/tests/instances/c0214680420001.editor-pkg.xml', // russian book
+        '/bfe2/editor/tests/instances/c0214680420001.editor-pkg.xml', // russian book
 
 
         // '/bfe2/editor/tests/works/loc.natlib.works.e37922655107918597887531234370352861771.rdf', // work only
 
-        '/bfe2/editor/tests/instances/c0218930920001.editor-pkg.xml', // russian book
+        // '/bfe2/editor/tests/works/c021295478.rdf', // work only
+
+
+        // '/bfe2/editor/tests/instances/c0218930920001.editor-pkg.xml', // serial bad
         
 
         // '/bfe2/editor/tests/instances/c0210643040001.editor-pkg.xml',   // serial 

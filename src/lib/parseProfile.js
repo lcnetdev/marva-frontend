@@ -1,6 +1,8 @@
 import config from "./config"
-// import lookupUtil from "./lookupUtil";
+import lookupUtil from "./lookupUtil";
+import parseBfdb from "./parseBfdb";
 import exportXML from "./exportXML"
+import store from "../store";
 
 
 const short = require('short-uuid');
@@ -387,7 +389,8 @@ const parseProfile = {
 
         
         
-        
+        console.log("this.profiles")
+        console.log(this.profiles)
 
         return { profiles: this.profiles, lookup: this.rtLookup, startingPoints: this.startingPoints}
     },
@@ -424,6 +427,8 @@ const parseProfile = {
 
                         if (pt.valueConstraint.defaults[0].defaultLiteral){
 
+
+
                             pt.userValue[pt.propertyURI]= [{
                                 '@guid': short.generate(),
                                 'http://www.w3.org/2000/01/rdf-schema#label': [
@@ -438,6 +443,11 @@ const parseProfile = {
 
                         if (pt.valueConstraint.defaults[0].defaultURI){
                             pt.userValue[pt.propertyURI]['@id'] = pt.valueConstraint.defaults[0].defaultURI
+
+                            if (pt.valueConstraint.valueDataType && pt.valueConstraint.valueDataType.dataTypeURI){
+                                pt.userValue[pt.propertyURI]['@type'] = pt.valueConstraint.valueDataType.dataTypeURI
+                            }
+
                         }      
 
 
@@ -491,8 +501,13 @@ const parseProfile = {
                                     }
 
                                     if (subpt.valueConstraint.defaults[0].defaultURI){
+                                        console.log('subpt',subpt)
                                         if (pt.userValue[subpt.propertyURI][0]){
                                             pt.userValue[subpt.propertyURI][0]['@id'] = subpt.valueConstraint.defaults[0].defaultURI    
+                                            if (subpt.valueConstraint.valueDataType && subpt.valueConstraint.valueDataType.dataTypeURI){
+                                                pt.userValue[subpt.propertyURI][0]['@type'] = subpt.valueConstraint.valueDataType.dataTypeURI
+                                            }
+
                                         }
                                         
                                     }      
@@ -1719,7 +1734,7 @@ const parseProfile = {
         profile.rtOrder.push(newRdId)
 
         // setup the new instance's properies
-        profile.rt[newRdId].URI = 'http://id.loc.gov/resources/item/e' + decimalTranslator.new()
+        profile.rt[newRdId].URI = 'http://id.loc.gov/resources/items/e' + decimalTranslator.new()
         profile.rt[newRdId].itemOf = uri
 
 
@@ -1963,6 +1978,36 @@ const parseProfile = {
 
 
 
+        let adminMetadataProperty = {
+          "mandatory": false,
+          "propertyLabel": "Admin Metadata",
+          "propertyURI": "http://id.loc.gov/ontologies/bibframe/adminMetadata",
+          "repeatable": false,
+          "resourceTemplates": [],
+          '@guid': short.generate(),
+          "type": "resource",
+          "userValue": {
+            "@root":"http://id.loc.gov/ontologies/bibframe/adminMetadata",
+            "http://id.loc.gov/ontologies/bflc/catalogerId": [
+              {
+              "@guid": short.generate(),
+              "http://id.loc.gov/ontologies/bflc/catalogerId": store.state.catInitials
+              }
+            ]
+
+          },
+          "valueConstraint": {
+            "defaults": [],
+            "useValuesFrom": [],
+            "valueDataType": {},
+          "valueTemplateRefs": ['lc:RT:bf2:AdminMetadata:BFDB']
+          }
+        }
+
+        let adminMetadataPropertyLabel = 'http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'
+        profile.rt[newRdId].pt[adminMetadataPropertyLabel] = JSON.parse(JSON.stringify(adminMetadataProperty))
+        profile.rt[newRdId].ptOrder.push(adminMetadataPropertyLabel)
+
 
 
         return profile
@@ -2000,6 +2045,24 @@ const parseProfile = {
 
                 // setup the new instance's properies
                 profile.rt[newRdId].URI = 'http://id.loc.gov/resources/instances/e' + decimalTranslator.new()
+
+
+                // admin metadata
+                for (let key in profile.rt[newRdId].pt){
+
+                    if (profile.rt[newRdId].pt[key].propertyURI == 'http://id.loc.gov/ontologies/bibframe/adminMetadata'){
+                        console.log('hooooo',profile.rt[newRdId].pt[key])
+
+                        // replace with our id
+                        profile.rt[newRdId].pt[key].userValue['http://id.loc.gov/ontologies/bflc/catalogerId'] = [
+                            {
+                                "@guid": short.generate(),
+                                "http://id.loc.gov/ontologies/bflc/catalogerId": store.state.catInitials
+                            }
+                        ]
+                    }
+                }
+
 
 
 
@@ -2054,8 +2117,100 @@ const parseProfile = {
     },
 
 
-    returnMetaFromSavedXML: function(xml){
+    loadRecordFromBackend: async function(recordId){
 
+
+
+      let xml = await lookupUtil.loadSavedRecord(recordId)
+
+      let meta = parseProfile.returnMetaFromSavedXML(xml)
+
+
+      
+
+      parseBfdb.parse(meta.xml)
+
+      // alert(parseBfdb.hasItem)
+
+      let useProfile = null
+
+
+      if (this.profiles[meta.profile]){
+        useProfile = JSON.parse(JSON.stringify(this.profiles[meta.profile]))
+      }else{
+        alert('Cannot find that profile:',meta.profile)
+      }
+      
+      // we might need to load in a item
+      if (parseBfdb.hasItem>0){ 
+
+        
+        let useItemRtLabel
+        // look for the RT for this item
+        let instanceId = meta.rts.filter((id)=>{ return id.includes(':Instance')  })
+        if (instanceId.length>0){
+          useItemRtLabel = instanceId[0].replace(':Instance',':Item')          
+        }
+
+        if (!useItemRtLabel){
+          let instanceId = meta.rts.filter((id)=>{ return id.includes(':Work')  })
+          if (instanceId.length>0){
+            useItemRtLabel = instanceId[0].replace(':Work',':Item')          
+          }
+
+        }
+
+
+         
+
+        for (let pkey in this.profiles){
+          
+          for (let rtkey in this.profiles[pkey].rt){
+            if (rtkey == useItemRtLabel){
+              let useItem = JSON.parse(JSON.stringify(this.profiles[pkey].rt[rtkey]))
+              useProfile.rtOrder.push(useItemRtLabel)
+              useProfile.rt[useItemRtLabel] = useItem                
+            }
+          }
+        }
+
+
+      }
+
+      if (!useProfile.log){
+        useProfile.log = []
+      
+      }
+      useProfile.log.push({action:'loadInstanceFromSave',from:meta.eid})
+      // useProfile.procInfo= "update instance"
+
+
+      useProfile.procInfo = meta.procInfo
+      
+      console.log('meta',meta)
+
+      // also give it an ID for storage
+      useProfile.eId= meta.eid
+      useProfile.user = meta.user
+      useProfile.status = meta.status
+
+
+      
+      let transformResults  = await parseBfdb.transform(useProfile)
+
+
+
+
+      return transformResults
+
+
+
+    },
+
+
+
+    returnMetaFromSavedXML: function(xml){
+        console.log('xml------',xml)
 
         let parser = new DOMParser();
         xml = parser.parseFromString(xml, "text/xml");
@@ -2088,6 +2243,14 @@ const parseProfile = {
         }
 
 
+        let user = null
+        for (let el of voidData.getElementsByTagName('lclocal:user')){
+            user = el.innerHTML
+        }
+
+
+
+
         voidData.remove()
 
         xml = (new XMLSerializer()).serializeToString(xml)
@@ -2099,7 +2262,8 @@ const parseProfile = {
             eid: eid,
             status:status,
             profile:profile,
-            procInfo:procInfo
+            procInfo:procInfo,
+            user:user
 
         }
     }
