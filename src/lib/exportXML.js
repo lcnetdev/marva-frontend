@@ -1139,54 +1139,65 @@ const exportXML = {
 		if (orginalProfile.procInfo.includes("update")){
 
 			//build it cenered around the instance
-			for (let URI in tleLookup['Instance']){
+			if (tleLookup['Instance'].length>0){
 
-				// let instance = tleLookup['Instance'][URI].cloneNode( true )
+				for (let URI in tleLookup['Instance']){
+
+					// let instance = tleLookup['Instance'][URI].cloneNode( true )
+					let instance = (new XMLSerializer()).serializeToString(tleLookup['Instance'][URI])
+					instance = parser.parseFromString(instance, "text/xml").children[0];
+
+					let items = this.returnHasItem(URI,orginalProfile,tleLookup)
+
+					if (items.length > 0){
+
+						let p = this.createElByBestNS('bf:hasItem')
+
+						for (let item of items){
+							p.appendChild(item)
+							
+						}
+
+						instance.appendChild(p)
 
 
+					}
+					
+					let work = this.returnWorkFromInstance(URI,orginalProfile,tleLookup)
 
-				let instance = (new XMLSerializer()).serializeToString(tleLookup['Instance'][URI])
-				instance = parser.parseFromString(instance, "text/xml").children[0];
+					if (work){
+						let p = this.createElByBestNS('bf:instanceOf')
+
+						p.appendChild(work)
+						instance.appendChild(p)
 
 
-				let items = this.returnHasItem(URI,orginalProfile,tleLookup)
-
-				if (items.length > 0){
-
-					let p = this.createElByBestNS('bf:hasItem')
-
-					for (let item of items){
-						p.appendChild(item)
-						
 					}
 
-					instance.appendChild(p)
+					
+					
 
+					
 
-				}
-				
-
-
-				let work = this.returnWorkFromInstance(URI,orginalProfile,tleLookup)
-
-				if (work){
-					let p = this.createElByBestNS('bf:instanceOf')
-
-					p.appendChild(work)
-					instance.appendChild(p)
-
+					rdf.appendChild(instance)
 
 				}
+			}else{
 
-				
-				
 
-				
+				// no instances...then dont use instanceOf...
+				// use the first work key TODO: multiple works....?
+				let workKey = Object.keys(tleLookup['Work'])[0]
 
-				rdf.appendChild(instance)
+
+				let work = tleLookup['Work'][workKey]
+
+				rdf.appendChild(work)
+
+
+
 
 			}
-
 			
 
 
@@ -1244,11 +1255,6 @@ const exportXML = {
 			}
 
 
-
-
-
-
-			
 
 		}
 

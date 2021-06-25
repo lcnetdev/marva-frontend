@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><bf:Work rdf:about="http://id.loc.gov/resources/works/c017943071" xmlns:bf="http://id.loc.gov/ontologies/bibframe/"><bf:adminMetadata>
+      <bf:AdminMetadata>
+        <bf:generationProcess>
+          <bf:GenerationProcess>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">DLC marc2bibframe2 v1.6.0-SNAPSHOT</rdfs:label>
+            <bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2020-06-25T07:39:15-04:00</bf:generationDate>
+          </bf:GenerationProcess>
+        </bf:generationProcess>
+        <bf:status>
+          <bf:Status>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">corrected or revised</rdfs:label>
+            <bf:code>c</bf:code>
+          </bf:Status>
+        </bf:status>
+        <bflc:encodingLevel xmlns:bflc="http://id.loc.gov/ontologies/bflc/">
+          <bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/f">
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">full</rdfs:label>
+          </bflc:EncodingLevel>
+        </bflc:encodingLevel>
+        <bf:descriptionConventions>
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd">
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">isbd</rdfs:label>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+        <bf:identifiedBy>
+          <bf:Local>
+            <rdf:value>17943071</rdf:value>
+            <bf:assigner>
+              <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"/>
+            </bf:assigner>
+          </bf:Local>
+        </bf:identifiedBy>
+        <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2014-03-28T14:28:31</bf:changeDate>
+        <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2013-11-15</bf:creationDate>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Agent"/>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">DLC</rdfs:label>
+          </bf:Source>
+        </bf:source>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Agent"/>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">DLC</rdfs:label>
+          </bf:Source>
+        </bf:source>
+        <bf:descriptionLanguage>
+          <bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng">
+            <bf:code>eng</bf:code>
+          </bf:Language>
+        </bf:descriptionLanguage>
+        <bf:descriptionModifier>
+          <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">DLC</rdfs:label>
+          </bf:Agent>
+        </bf:descriptionModifier>
+        <bf:descriptionConventions>
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda">
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">rda</rdfs:label>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+        <bf:descriptionAuthentication>
+          <bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/pcc">
+            <rdf:value>pcc</rdf:value>
+          </bf:DescriptionAuthentication>
+        </bf:descriptionAuthentication>
+      </bf:AdminMetadata>
+    </bf:adminMetadata><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Text"/><bf:language>
+      <bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/>
+    </bf:language><bf:illustrativeContent>
+      <bf:Illustration rdf:about="http://id.loc.gov/vocabulary/millus/ill">
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">illustrations</rdfs:label>
+      </bf:Illustration>
+    </bf:illustrativeContent><bf:supplementaryContent>
+      <bf:SupplementaryContent rdf:about="http://id.loc.gov/authorities/genreForms/gf2014026048">
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">bibliographies</rdfs:label>
+      </bf:SupplementaryContent>
+    </bf:supplementaryContent><bf:supplementaryContent>
+      <bf:SupplementaryContent rdf:about="http://id.loc.gov/vocabulary/msupplcont/index">
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Index present</rdfs:label>
+      </bf:SupplementaryContent>
+    </bf:supplementaryContent><bf:genreForm>
+      <bf:GenreForm rdf:about="http://id.loc.gov/authorities/genreForms/gf2014026049">
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">biographies</rdfs:label>
+      </bf:GenreForm>
+    </bf:genreForm><bf:identifiedBy>
+      <bf:Lccn>
+        <rdf:value>  2013046010</rdf:value>
+      </bf:Lccn>
+    </bf:identifiedBy><bf:geographicCoverage>
+      <bf:GeographicCoverage rdf:about="http://id.loc.gov/vocabulary/geographicAreas/n-us-tx"/>
+    </bf:geographicCoverage><bf:classification>
+      <bf:ClassificationLcc>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"/>
+        </bf:source>
+        <bf:classificationPortion>F391</bf:classificationPortion>
+        <bf:itemPortion>.H145 2014</bf:itemPortion>
+      </bf:ClassificationLcc>
+    </bf:classification><bf:classification>
+      <bf:ClassificationDdc>
+        <bf:classificationPortion>976.4/05</bf:classificationPortion>
+        <bf:edition rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://id.loc.gov/vocabulary/classSchemes/ddc23</bf:edition>
+        <bf:edition>full</bf:edition>
+        <bf:assigner>
+          <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"/>
+        </bf:assigner>
+      </bf:ClassificationDdc>
+    </bf:classification><bf:classification>
+      <bf:Classification>
+        <bf:classificationPortion>TRU000000</bf:classificationPortion>
+        <bf:source>
+          <bf:Source>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">bisacsh</rdfs:label>
+          </bf:Source>
+        </bf:source>
+      </bf:Classification>
+    </bf:classification><bf:contribution>
+      <bf:Contribution>
+        <rdf:type rdf:resource="http://id.loc.gov/ontologies/bflc/PrimaryContribution"/>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n94061667">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+            <bflc:name00MatchKey xmlns:bflc="http://id.loc.gov/ontologies/bflc/">Haile, Bartee, 1945-</bflc:name00MatchKey>
+            <bflc:primaryContributorName00MatchKey xmlns:bflc="http://id.loc.gov/ontologies/bflc/">Haile, Bartee, 1945-</bflc:primaryContributorName00MatchKey>
+            <bflc:name00MarcKey xmlns:bflc="http://id.loc.gov/ontologies/bflc/">1001 $aHaile, Bartee,$d1945-</bflc:name00MarcKey>
+            <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Haile, Bartee, 1945-</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:role>
+          <bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/ctb"/>
+        </bf:role>
+      </bf:Contribution>
+    </bf:contribution><rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Texas depression-era desperadoes</rdfs:label><bf:title>
+      <bf:Title>
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Texas depression-era desperadoes</rdfs:label>
+        <bflc:titleSortKey xmlns:bflc="http://id.loc.gov/ontologies/bflc/">Texas depression-era desperadoes</bflc:titleSortKey>
+        <bf:mainTitle>Texas depression-era desperadoes</bf:mainTitle>
+      </bf:Title>
+    </bf:title><bf:content>
+      <bf:Content rdf:about="https://id.loc.gov/vocabulary/contentTypes/txt">
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">text</rdfs:label>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacontent"/>
+        </bf:source>
+      </bf:Content>
+    </bf:content><bf:supplementaryContent>
+      <bf:SupplementaryContent>
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Includes bibliographical references and index.</rdfs:label>
+      </bf:SupplementaryContent>
+    </bf:supplementaryContent><bf:tableOfContents>
+      <bf:TableOfContents>
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">West Dallas: Where the Wild Weeds Grew -- "From a Schoolboy to a Rattlesnake" -- Off and Running: Birth of the Barrow Gang -- "Don't Get in That Car with Clyde" -- The Teenage Tagalong -- The Raid on Eastham -- The End of the Road -- Big Send-off in Big D -- Rubbing Salt in the Wound -- The Brothers Hamilton -- "Machine Gun" Kelly Misfires in Texas -- Bandit Brothers in the Big Thicket -- Fun and Games in Galveston.</rdfs:label>
+      </bf:TableOfContents>
+    </bf:tableOfContents><bf:summary>
+      <bf:Summary>
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">"Discover the wild and fascinating story of crime in Texas in the 1930s"-- Provided by publisher.</rdfs:label>
+      </bf:Summary>
+    </bf:summary><bf:subject>
+      <bf:Place rdf:about="http://bibframe.example.org/17943071#Place651-27">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Texas--History--1846-1950.</rdfs:label>
+        <madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Texas--History--1846-1950.</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"/>
+        <madsrdf:componentList rdf:parseType="Collection" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">
+          <madsrdf:Geographic rdf:about="https://id.loc.gov/authorities/names/n80129616">
+            <madsrdf:authoritativeLabel>Texas</madsrdf:authoritativeLabel>
+          </madsrdf:Geographic>
+          <madsrdf:Topic>
+            <madsrdf:authoritativeLabel>History</madsrdf:authoritativeLabel>
+          </madsrdf:Topic>
+          <madsrdf:Temporal>
+            <madsrdf:authoritativeLabel>1846-1950</madsrdf:authoritativeLabel>
+          </madsrdf:Temporal>
+        </madsrdf:componentList>
+        <bf:source>
+          <bf:Source>
+            <bf:code>lcsh</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:Place>
+    </bf:subject><bf:subject>
+      <bf:Topic rdf:about="http://bibframe.example.org/17943071#Topic650-28">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Crime--Texas--History--20th century.</rdfs:label>
+        <madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Crime--Texas--History--20th century.</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"/>
+        <madsrdf:componentList rdf:parseType="Collection" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">
+          <madsrdf:Topic>
+            <madsrdf:authoritativeLabel>Crime</madsrdf:authoritativeLabel>
+          </madsrdf:Topic>
+          <madsrdf:Geographic rdf:about="https://id.loc.gov/authorities/names/n80129616">
+            <madsrdf:authoritativeLabel>Texas</madsrdf:authoritativeLabel>
+          </madsrdf:Geographic>
+          <madsrdf:Topic>
+            <madsrdf:authoritativeLabel>History</madsrdf:authoritativeLabel>
+          </madsrdf:Topic>
+          <madsrdf:Temporal>
+            <madsrdf:authoritativeLabel>20th century</madsrdf:authoritativeLabel>
+          </madsrdf:Temporal>
+        </madsrdf:componentList>
+        <bf:source>
+          <bf:Source>
+            <bf:code>lcsh</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:Topic>
+    </bf:subject><bf:subject>
+      <bf:Topic rdf:about="http://bibframe.example.org/17943071#Topic650-29">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Outlaws--Texas--Biography.</rdfs:label>
+        <madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Outlaws--Texas--Biography.</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"/>
+        <madsrdf:componentList rdf:parseType="Collection" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">
+          <madsrdf:Topic>
+            <madsrdf:authoritativeLabel>Outlaws</madsrdf:authoritativeLabel>
+          </madsrdf:Topic>
+          <madsrdf:Geographic rdf:about="https://id.loc.gov/authorities/names/n80129616">
+            <madsrdf:authoritativeLabel>Texas</madsrdf:authoritativeLabel>
+          </madsrdf:Geographic>
+          <madsrdf:GenreForm>
+            <madsrdf:authoritativeLabel>Biography</madsrdf:authoritativeLabel>
+          </madsrdf:GenreForm>
+        </madsrdf:componentList>
+        <bf:source>
+          <bf:Source>
+            <bf:code>lcsh</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:Topic>
+    </bf:subject><bf:subject>
+      <bf:Place rdf:about="http://bibframe.example.org/17943071#Place651-30">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Texas--Biography.</rdfs:label>
+        <madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Texas--Biography.</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"/>
+        <madsrdf:componentList rdf:parseType="Collection" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">
+          <madsrdf:Geographic rdf:about="https://id.loc.gov/authorities/names/n80129616">
+            <madsrdf:authoritativeLabel>Texas</madsrdf:authoritativeLabel>
+          </madsrdf:Geographic>
+          <madsrdf:GenreForm>
+            <madsrdf:authoritativeLabel>Biography</madsrdf:authoritativeLabel>
+          </madsrdf:GenreForm>
+        </madsrdf:componentList>
+        <bf:source>
+          <bf:Source>
+            <bf:code>lcsh</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:Place>
+    </bf:subject><bf:subject>
+      <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n79065767">
+        <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#PersonalName"/>
+        <madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Barrow, Clyde, 1909-1934.</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"/>
+        <bf:source>
+          <bf:Source>
+            <bf:code>lcsh</bf:code>
+          </bf:Source>
+        </bf:source>
+        <bflc:name00MatchKey xmlns:bflc="http://id.loc.gov/ontologies/bflc/">Barrow, Clyde, 1909-1934.</bflc:name00MatchKey>
+        <bflc:name00MarcKey xmlns:bflc="http://id.loc.gov/ontologies/bflc/">60010$aBarrow, Clyde,$d1909-1934.</bflc:name00MarcKey>
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Barrow, Clyde, 1909-1934.</rdfs:label>
+      </bf:Agent>
+    </bf:subject><bf:subject>
+      <bf:Topic rdf:about="http://bibframe.example.org/17943071#Topic650-32">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">TRUE CRIME / General.</rdfs:label>
+        <madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">TRUE CRIME / General.</madsrdf:authoritativeLabel>
+        <bf:source>
+          <bf:Source>
+            <bf:code>bisacsh</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:Topic>
+    </bf:subject></bf:Work></rdf:RDF>

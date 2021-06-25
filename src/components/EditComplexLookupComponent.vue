@@ -463,6 +463,12 @@ export default {
     returnAuthIcon: uiUtils.returnAuthIcon,
 
     validateHeading: function() {
+
+        // dont validate some ID lookups until we can get reource lookups working correctly
+        if (this.structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/Work' || this.structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/Instance' || this.structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/Item'){
+          this.validated = ''
+        }
+
         if (this.validated === false) {
             //console.log("the this")
             //console.log(this)

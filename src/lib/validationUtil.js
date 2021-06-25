@@ -83,10 +83,12 @@ const validationUtil = {
                 return this.headingNotChecked;
             }
             
+        } else if (uri.indexOf('/resources/works/') > 0 || uri.indexOf('/resources/instances/') > 0 || uri.indexOf('/resources/items/') > 0 ) {
+            // dont validate works instances or items
+            return this.headingNotChecked;
         } else if (uri.indexOf('id.loc.gov/') > 0) {
             // We have an ID URI.  We're done here, let's go home.
             return this.headingValid;
-
         } else {
             // URI was not an ID URI and it wasn't a dummy URI 
             // so let's leave it alone.

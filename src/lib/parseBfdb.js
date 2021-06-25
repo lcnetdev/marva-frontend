@@ -2133,6 +2133,15 @@ const parseBfdb = {
 							}
 						]
 					}
+
+					// we need to set the procInfo, so use whatever we have in the profile
+					profile.rt[pkey].pt[key].userValue['http://id.loc.gov/ontologies/bflc/procInfo'] = [
+						{
+							"@guid": short.generate(),
+							"http://id.loc.gov/ontologies/bflc/procInfo": profile.procInfo
+						}
+					]
+
 				}
 			}
 			

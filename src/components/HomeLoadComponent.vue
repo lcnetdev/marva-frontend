@@ -196,6 +196,7 @@ export default {
 
     loadInstance: async function(){
 
+      // if not provided load a test one for testing
       if (this.instanceEditorLink==''||this.instanceEditorLink==null){
         this.instanceEditorLink = this.instanceTests[Math.floor(Math.random() * this.instanceTests.length)];
 
@@ -412,7 +413,11 @@ export default {
 
       instanceTests:[
         //'/bfe2/editor/tests/instances/c0010058400001.editor-pkg.xml', //book
-        '/bfe2/editor/tests/instances/c0214680420001.editor-pkg.xml', // russian book
+        // '/bfe2/editor/tests/instances/c0214680420001.editor-pkg.xml', // russian book
+
+        '/bfe2/editor/tests/works/c017943071.rdf', // work only
+
+
 
 
         // '/bfe2/editor/tests/works/loc.natlib.works.e37922655107918597887531234370352861771.rdf', // work only
