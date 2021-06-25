@@ -1379,9 +1379,18 @@ const exportXML = {
 		let strXmlBasic = (new XMLSerializer()).serializeToString(rdfBasic)
 		let strXml = (new XMLSerializer()).serializeToString(rdf)
 
-
-		// console.log(strXml)
-		
+        /*
+            kefo note
+            In FF, only strXmlBasic has any real content.  The other two -
+            strXml and strXmlFormatted - contain only the root node, rdf:RDF,
+            and all the namespaces.
+            The below line fixes this in FF for me.
+        */
+        //strXmlFormatted = uiUtils.prettifyXmlJS(strXmlBasic, ' ')
+        //console.log("XML vars")
+        //console.log(strXmlFormatted)
+        //console.log(strXml)
+        //console.log(strXmlBasic)
 
 
 		
