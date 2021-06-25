@@ -471,22 +471,8 @@ export default {
                 validationUtil.validateHeading(userData)
                 .then((validationStatus) => {
                 
-                    const headingValid = '&#xe820;';
-                    const headingPartiallyValid = '&#xe821;';
-                    const headingInvalid = '&#xe822;';
-                    const headingNotChecked = '&#xe823;';
-        
                     this.validated = validationStatus;
-                    
-                    if (this.validated == headingValid) {
-                        this.validationMessage = "Heading is valid";
-                    } else if (this.validated == headingPartiallyValid) {
-                        this.validationMessage = "Partial heading validation";
-                    } else if (this.validated == headingInvalid) {
-                        this.validationMessage = "Invalid heading!";
-                    } else if (this.validated == headingNotChecked) {
-                        this.validationMessage = "Heading not checked";
-                    }
+                    this.validationMessage = validationUtil.getValidationMessage(validationStatus);
                     
                     if (userData["http://id.loc.gov/ontologies/bibframe/agent"] !== undefined) {
                         // We have a contribution resource.

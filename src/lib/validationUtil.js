@@ -1,17 +1,12 @@
-import config from "./config";
-
 const validationUtil = {
     
+    headingValid: '&#xe820;',
+    headingPartiallyValid: '&#xe821;',
+    headingInvalid: '&#xe822;',
+    headingNotChecked: '&#xe823;',
+    
     validateHeading: async function(userData, suppliedScheme = "") {
-        
-        const headingValid = '&#xe820;';
-        const headingPartiallyValid = '&#xe821;';
-        const headingInvalid = '&#xe822;';
-        const headingNotChecked = '&#xe823;';
-        
-        config.profileUrl;
-        //console.log(userData);
-        
+
         // What will a bnode be here?
         if (userData["http://id.loc.gov/ontologies/bibframe/agent"] !== undefined) {
             // We have a contribution resource.
@@ -21,11 +16,11 @@ const validationUtil = {
         
         let uri = userData["@id"];
         if (uri === undefined || uri.indexOf('example.org/') > 0 || uri.indexOf('/REPLACE/') > 0) {
-            // We have a dummy URI; Let's see if we can find it.
+            // We either don't have a URI or we have a dummy URI; Let's see if we can find it.
             var aLabel = this.getLabel(userData);
             if (!aLabel) {
                 console.warn("Unable to locate label for validation lookup!");
-                return headingNotChecked;
+                return this.headingNotChecked;
             }
             //console.log("Found label: " + aLabel);
             
@@ -35,7 +30,7 @@ const validationUtil = {
             }
             if (!scheme) {
                 console.warn("Unable to locate scheme for validation lookup!");
-                return headingNotChecked;
+                return this.headingNotChecked;
             }
             //console.log("Found scheme: " + scheme);
             
@@ -53,13 +48,11 @@ const validationUtil = {
                     newuri = newuri.replace('preprod.', '');
                     userData["@id"] = newuri;
                     
-                    
                     if (response.headers.get("x-preflabel") != aLabel) {
                         this._setLabel(userData, response.headers.get("x-preflabel"));
                     }
                     
-                    
-                    return headingValid; 
+                    return this.headingValid; 
                 } else if (lookupStatus == 404) {
                     // OK, we got here.  
                     // If this is a ComplexSubject, i.e. multiple components,
@@ -74,30 +67,30 @@ const validationUtil = {
                         ) {
                             // We're off to the races...
                             userData = userData["http://www.loc.gov/mads/rdf/v1#componentList"][0]
-                            console.log(userData);
+                            //console.log(userData);
                             var componentResult = await this.validateHeading(userData, scheme);
-                            if (componentResult == headingValid) {
-                                return headingPartiallyValid;
+                            if (componentResult == this.headingValid) {
+                                return this.headingPartiallyValid;
                             }
                         }
-                    return headingInvalid;
+                    return this.headingInvalid;
                 } else {
                     console.warn("Validation lookup returned unexpected response: " + lookupStatus);
-                    return headingInvalid;
+                    return this.headingInvalid;
                 }
             } else {
                 console.warn("Scheme for validation not ID.LOC.GOV: " + scheme);
-                return headingNotChecked;
+                return this.headingNotChecked;
             }
             
         } else if (uri.indexOf('id.loc.gov/') > 0) {
             // We have an ID URI.  We're done here, let's go home.
-            return headingValid;
+            return this.headingValid;
 
         } else {
             // URI was not an ID URI and it wasn't a dummy URI 
             // so let's leave it alone.
-            return headingNotChecked;
+            return this.headingNotChecked;
         }
 
     },
@@ -136,19 +129,6 @@ const validationUtil = {
             }
         }
         return false;
-    },
-    
-    _setLabel: function(userData, label) {
-        const labelProps = [
-                "http://www.loc.gov/mads/rdf/v1#authoritativeLabel",
-                "http://www.w3.org/2000/01/rdf-schema#label"
-            ];
-        for (var p of labelProps) {
-            if (userData[p] !== undefined) {
-                userData[p][0][p] = label;
-            }
-        }
-        return userData;
     },
     
     _getScheme: function(userData) {
@@ -219,6 +199,33 @@ const validationUtil = {
         
         // Alas...
         return false;
+    },
+    
+    getValidationMessage: function(validationStatus) {
+        if (this.headingValid == validationStatus) {
+            return "Heading is valid";
+        } else if (this.headingPartiallyValid == validationStatus) {
+            return "Partial heading validation";
+        } else if (this.headingInvalid == validationStatus) {
+            return "Invalid heading!";
+        } else if (this.headingNotChecked == validationStatus) {
+            return "Heading not checked";
+        } else {
+            return ""
+        }
+    },
+    
+    _setLabel: function(userData, label) {
+        const labelProps = [
+                "http://www.loc.gov/mads/rdf/v1#authoritativeLabel",
+                "http://www.w3.org/2000/01/rdf-schema#label"
+            ];
+        for (var p of labelProps) {
+            if (userData[p] !== undefined) {
+                userData[p][0][p] = label;
+            }
+        }
+        return userData;
     }
 
 };
