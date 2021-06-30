@@ -1128,8 +1128,10 @@ const exportXML = {
 
 		if (orginalProfile.procInfo.includes("update")){
 
+
+			
 			//build it cenered around the instance
-			if (tleLookup['Instance'].length>0){
+			if (Object.keys(tleLookup['Instance']).length>0){
 
 				for (let URI in tleLookup['Instance']){
 
