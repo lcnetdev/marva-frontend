@@ -1,7 +1,7 @@
 {
+    "id": "ec157852-4a16-4153-9a28-2a6abf48356b",
+    "name": "config",
     "configType": "startingPoints",
-    "created": "2019-04-11T17:08:14.983Z",
-    "id": "d1ab69a1-fe18-40d6-b596-40039a1144ae",
     "json": [
         {
             "menuGroup": "Monograph",
@@ -22,29 +22,6 @@
                     ],
                     "useResourceTemplates": [
                         "lc:RT:bf2:Monograph:Work"
-                    ]
-                }
-            ]
-        },
-        {
-            "menuGroup": "Monograph (Non-Latin)",
-            "menuItems": [
-                {
-                    "label": "Instance",
-                    "type": [
-                        "http://id.loc.gov/ontologies/bibframe/Instance"
-                    ],
-                    "useResourceTemplates": [
-                        "lc:RT:bf2:MonographNR:Instance"
-                    ]
-                },
-                {
-                    "label": "Work",
-                    "type": [
-                        "http://id.loc.gov/ontologies/bibframe/Work"
-                    ],
-                    "useResourceTemplates": [
-                        "lc:RT:bf2:MonographNR:Work"
                     ]
                 }
             ]
@@ -278,37 +255,11 @@
                     ]
                 }
             ]
-        },
-        {
-            "menuGroup": "Prints & Photographs",
-            "menuItems": [
-                {
-                    "label": "Instance",
-                    "type": [
-                        "http://id.loc.gov/ontologies/bibframe/Instance"
-                    ],
-                    "useResourceTemplates": [
-                        "lc:RT:bf2:PrintPhoto:Instance"
-                    ]
-                },
-                {
-                    "label": "Work",
-                    "type": [
-                        "http://id.loc.gov/ontologies/bibframe/Work"
-                    ],
-                    "useResourceTemplates": [
-                        "lc:RT:bf2:PrintPhoto:Work"
-                    ]
-                }
-            ]
         }
     ],
     "metadata": {
-        "createDate": "2019-04-11T17:08:14.983Z",
-        "createUser": null,
-        "updateDate": "2020-02-20T21:39:18.217Z",
+        "createDate": "2019-06-11T19:02:59.649Z",
+        "updateDate": "2020-03-20T18:06:28.173Z",
         "updateUser": null
-    },
-    "modified": "2020-02-20T21:39:18.217Z",
-    "name": "config"
+    }
 }
