@@ -714,8 +714,7 @@ const exportXML = {
 									// we are going to make a new predicate, same type but not the same one as the last one was attached to
 									pLvl2 = this.createElByBestNS(key1)
 								}
-								console.log('key1',key1)
-								console.log('value1',value1)
+								
 
 								// is it a bnode?
 								if (this.isBnode(value1)){
@@ -950,8 +949,6 @@ const exportXML = {
 							this.debug(ptObj.propertyURI, 'Does not have @type, something is wrong here', userValue)
 							console.warn("Should not be here")
 							// alert("Not everything entered was serialized into XML, please report this record and check the output.")
-							console.log(ptObj)
-							console.log(userValue)
 						}
 
 
@@ -1068,8 +1065,6 @@ const exportXML = {
 
 		let parser = new DOMParser();
 
-		console.log('tleLookup')
-		console.log(tleLookup)
 		
 		for (let URI in tleLookup['Work']){
 			
@@ -1091,8 +1086,7 @@ const exportXML = {
 
 
 			let items = this.returnHasItem(URI,orginalProfile,tleLookup)
-			console.log(URI,orginalProfile,tleLookup)
-			console.log('items',items)
+			
 			// alert(items.length)s
 			for (let item of items){
 				let uri = null

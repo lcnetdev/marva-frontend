@@ -7,7 +7,7 @@ const hashCode = s => s.split('').reduce((a,b) => (((a << 5) - a) + b.charCodeAt
 
 const cleanXmlEscapes = function(label){
 	
-
+	
 	label = label.replace(/&amp;/gi,'&')
 	return label
 }
@@ -2180,7 +2180,21 @@ const parseBfdb = {
 					for (let k in profile.rt[pkey].pt[key].userValue){
 
 						if (k == 'http://www.w3.org/2000/01/rdf-schema#label'){
-							profile.rt[pkey].pt[key].userValue[k] = cleanXmlEscapes(profile.rt[pkey].pt[key].userValue[k])
+
+							if (Array.isArray(profile.rt[pkey].pt[key].userValue[k])){
+								for (let kValue of profile.rt[pkey].pt[key].userValue[k]){
+
+									for (let kValueKey in kValue){
+										if (kValueKey == 'http://www.w3.org/2000/01/rdf-schema#label'){
+											kValue[kValueKey] = cleanXmlEscapes(kValue[kValueKey])
+										}
+									}
+
+
+								}
+							}
+
+							// profile.rt[pkey].pt[key].userValue[k] = cleanXmlEscapes(profile.rt[pkey].pt[key].userValue[k])
 						}
 
 						if (Array.isArray(profile.rt[pkey].pt[key].userValue[k])){
