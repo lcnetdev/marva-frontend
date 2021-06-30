@@ -71,6 +71,8 @@ export default new Vuex.Store({
 
     catInitials: null,
 
+    settingsDPackVoyager: true,
+
 
 
     // used for auto complete lookups 
@@ -200,6 +202,11 @@ export default new Vuex.Store({
       state.allRecords = val
     },     
 
+
+
+    SETTINGSDPACKVOYAGER(state, val) {
+      state.settingsDPackVoyager = val
+    },   
 
     ACTIVERECORDSAVED(state, val) {
       state.activeRecordSaved = val
@@ -349,6 +356,18 @@ export default new Vuex.Store({
       state.saveRecord(state,commit)
 
     },
+
+    
+    setSettingsDPackVoyager({ commit}, data){
+      commit('SETTINGSDPACKVOYAGER', data.settingsDPackVoyager)
+
+      localStorage.setItem('bfeSettingsDPackVoyager',data.settingsDPackVoyager)
+
+
+      console.log( localStorage.getItem('bfeSettingsDPackVoyager'))
+
+    },
+
 
     async removeValueSimple ({ commit, state }, data) {   
       let results = parseProfile.removeValueSimple(state.activeProfile, data.idGuid, data.labelGuid)

@@ -1,8 +1,36 @@
 <template>
   <div id="home-settings-diacritics">
+    
+    <h1>Diacritic Packs</h1>    
 
-    <h1>Diacritics</h1>
+    <div style="display: flex; background-color: whitesmoke; padding: 5px;">
+
+      <div style="flex:3;">
+
+        <div>Voyager Shortcuts</div>
+        <details>
+          <summary>Show shortcut keys:</summary>
+          <table style="border-top:1px solid #c6c9cc">
+            <tr v-for="(d,idx) of dPackVoyagerShortCuts" v-bind:key="idx">
+              <td>{{d.combo}}</td>
+              <td>{{d.nick}} {{(d.name) ? d.name : ''}}</td>
+            </tr>
+          </table>
+        </details>
+
+      </div>
+      <div style="flex:1"><input v-model="dPackVoyager" @change="settingsChange" type="checkbox" id="switch" /><label for="switch">Toggle</label></div>
+
+
+
+    </div>
+
+
+
     <hr>
+
+    <h1>Custom Diacritics</h1>
+
     <h3>Your custom defined diacritics</h3>
 
     <div class="current-diacritics" v-for="(rule, idx) in locatStorageDiacritics" :key="idx">
@@ -80,6 +108,8 @@
 
 import { mapState } from 'vuex'
 // import uiUtils from "@/lib/uiUtils"
+import diacrticsVoyager from "@/lib/diacritics/diacritic_pack_voyager.json"
+
 
 export default {
   name: "HomeSettingsDiacriticsComponent",
@@ -184,12 +214,36 @@ export default {
       // console.log(event)
       document.getElementById('newDiacriticDesc').focus()
       return false
+    },
+
+
+
+    settingsChange(){
+
+
+      console.log(this.dPackVoyager)
+
+
+      this.$store.dispatch("setSettingsDPackVoyager", { self: this, settingsDPackVoyager: this.dPackVoyager }).then(() => {
+        
+        console.log('settingsDPackVoyager',this.settingsDPackVoyager)
+
+      })   
+
+
+
+
     }
+
+
+
 
   },
   computed: mapState({
     profiles: 'profiles',
     profilesLoaded: 'profilesLoaded',
+    settingsDPackVoyager: 'settingsDPackVoyager',
+
     // isDiacritics () {
     //   return (this.$route.fullPath==="/settings/diacritics" || this.$route.fullPath==="/settings")
     // },
@@ -218,6 +272,9 @@ export default {
       newCutomDiacriticKey: null,
       newCutomDiacriticDesc: null,
       newCutomDiacriticKeyCode: null,
+      dPackVoyager:true,
+
+      dPackVoyagerShortCuts: [],
 
       locatStorageDiacritics: []
 
@@ -232,6 +289,17 @@ export default {
       bfeDiacritics = JSON.parse(bfeDiacritics)
     }
 
+
+    for (let k in diacrticsVoyager){
+      for (let d of diacrticsVoyager[k]){
+        this.dPackVoyagerShortCuts.push(d)
+      }
+    }
+
+
+
+    this.dPackVoyager = this.settingsDPackVoyager
+    console.log('this.dPackVoyager',this.dPackVoyager)
     this.locatStorageDiacritics = bfeDiacritics
 
   },
@@ -240,6 +308,50 @@ export default {
 
 
 <style scoped>
+
+
+  input[type=checkbox]{
+    height: 0;
+    width: 0;
+    visibility: hidden;
+  }
+
+  label {
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 50px;
+    height: 25px;
+    background: grey;
+    display: block;
+    border-radius: 25px;
+    position: relative;
+  }
+
+  label:after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: 22px;
+    height: 22px;
+    background: #fff;
+    border-radius: 22px;
+    transition: 0.3s;
+  }
+
+  input:checked + label {
+    background: #bada55;
+  }
+
+  input:checked + label:after {
+    left: calc(100% - 5px);
+    transform: translateX(-100%);
+  }
+
+  label:active:after {
+    width: 45px;
+  }
+
   
   .current-diacritics{
     display: flex;

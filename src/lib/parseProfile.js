@@ -2210,7 +2210,7 @@ const parseProfile = {
 
 
     returnMetaFromSavedXML: function(xml){
-        console.log('xml------',xml)
+        
 
         let parser = new DOMParser();
         xml = parser.parseFromString(xml, "text/xml");

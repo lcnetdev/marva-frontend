@@ -710,11 +710,7 @@ const exportXML = {
 							// loop through the value array of each of them
 							for (let value1 of userValue[key1]){
 
-								if (value1FirstLoop){
-									console.log("THIS IS THE FIRST ONE")
-								}else{
-									console.log("NOW SECOND+ ONE HEREEEEE")
-
+								if (!value1FirstLoop){
 									// we are going to make a new predicate, same type but not the same one as the last one was attached to
 									pLvl2 = this.createElByBestNS(key1)
 								}

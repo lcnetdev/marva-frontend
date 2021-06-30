@@ -238,7 +238,7 @@
               <div style="font-weight: bold;">Posting Record...</div>
 
 
-              <div v-if="showPostModalErrorMsg">
+              <div v-if="showPostModalErrorMsg" style="max-height: 500px; overflow-x:auto;">
                 <div style="font-weight: bold; color: red">We were unable to post the record. Please report this error.</div>
                 <pre>
                   <code>

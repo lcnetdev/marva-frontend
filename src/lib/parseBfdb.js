@@ -5,6 +5,13 @@ const short = require('short-uuid');
 
 const hashCode = s => s.split('').reduce((a,b) => (((a << 5) - a) + b.charCodeAt(0))|0, 0)
 
+const cleanXmlEscapes = function(label){
+	
+
+	label = label.replace(/&amp;/gi,'&')
+	return label
+}
+
 
 const parseBfdb = {
 
@@ -1016,9 +1023,7 @@ const parseBfdb = {
 		let profileOrginal = JSON.parse(JSON.stringify(profile))
 		let resultsTest = await this.transformRts(profileOrginal,true)
 
-		console.log('store.state.rtLookup')
-		console.log(store.state.rtLookup)
-		console.log(profile)
+		
 
 
 
@@ -1027,8 +1032,7 @@ const parseBfdb = {
 		for (const rtKey in resultsTest.rt) {
 
 
-			console.log('resultsTest.rt', resultsTest.rt[rtKey])
-
+			
 
 
 
@@ -1049,13 +1053,12 @@ const parseBfdb = {
 					for (let rt in profile.rt){
 						if (rt==rtKey){
 
-							// console.log('store.state.profiles[p].rt[rtKey]',rtKey)
-							// console.log(profile.rt[rtKey])
+
 							let label = dynamicRootLvlProperty.propertyURI + '_' + short.generate()
 
 							profile.rt[rtKey].pt[label] = dynamicRootLvlProperty
 							profile.rt[rtKey].ptOrder.push(label)
-							// console.log(profile)
+							
 
 						}
 					}
@@ -1170,10 +1173,7 @@ const parseBfdb = {
 				xml = this.activeDom.getElementsByTagName(tle)
 			}
 			
-			console.log(this.activeDom)
 			
-			console.log(tle)
-			console.log(xml)
 			// only return the top level, no nested related things
 			xml = this.returnOneWhereParentIs(xml, "rdf:RDF")
 			
@@ -1344,11 +1344,20 @@ const parseBfdb = {
 						// differentiate between creator and contributor
 						if (ptk.propertyURI == 'http://id.loc.gov/ontologies/bibframe/contribution'){
 							let isPrimaryContribXML = false
+
+							// does it have a rdf type of that 
 							for (let typeEl of e.getElementsByTagName('rdf:type')){
 								if (typeEl.attributes['rdf:resource'] && typeEl.attributes['rdf:resource'].value == 'http://id.loc.gov/ontologies/bflc/PrimaryContribution'){
 									isPrimaryContribXML = true
 								}
 							}
+
+							// or is using the <bflc:PrimaryContribution> element
+							if (e.getElementsByTagName('bflc:PrimaryContribution').length>0){
+								isPrimaryContribXML = true
+							}
+
+
 
 							if (ptk.valueConstraint.valueDataType.dataTypeURI && ptk.valueConstraint.valueDataType.dataTypeURI == "http://id.loc.gov/ontologies/bflc/PrimaryContribution"){
 								// the ptk says yes, if the xml doesn't jump to next
@@ -2122,7 +2131,7 @@ const parseBfdb = {
 			for (let key in profile.rt[pkey].pt){
 
 				if (profile.rt[pkey].pt[key].propertyURI == 'http://id.loc.gov/ontologies/bibframe/adminMetadata'){
-					console.log('hooooo',profile.rt[pkey].pt[key])
+					
 
 					// if it doesnt already have a cataloger id use ours
 					if (!profile.rt[pkey].pt[key].userValue['http://id.loc.gov/ontologies/bflc/catalogerId']){
@@ -2149,9 +2158,11 @@ const parseBfdb = {
 
 
 
+
 			// let totalHasDataLoaded = 0
 			let uniquePropertyURIs  = {}
 			// we are now going to do some ananlyis on profile, see how many properties are acutally used, what is not used, etc
+			// also do some post-load data cleanup (like &amp; -> &)
 			for (let key in profile.rt[pkey].pt){
 
 				
@@ -2164,6 +2175,51 @@ const parseBfdb = {
 				}else{
 					profile.rt[pkey].pt[key].dataLoaded=true
 					// totalHasDataLoaded++
+
+
+					for (let k in profile.rt[pkey].pt[key].userValue){
+
+						if (k == 'http://www.w3.org/2000/01/rdf-schema#label'){
+							profile.rt[pkey].pt[key].userValue[k] = cleanXmlEscapes(profile.rt[pkey].pt[key].userValue[k])
+						}
+
+						if (Array.isArray(profile.rt[pkey].pt[key].userValue[k])){
+							for (let kItem of profile.rt[pkey].pt[key].userValue[k]){
+
+								
+								for (let kItemKey in kItem){
+									
+
+									if (kItemKey == 'http://www.w3.org/2000/01/rdf-schema#label'){
+
+										if (Array.isArray(kItem[kItemKey])){
+											for (let kValue of kItem[kItemKey]){
+
+												for (let kValueKey in kValue){
+													if (kValueKey == 'http://www.w3.org/2000/01/rdf-schema#label'){
+														kValue[kValueKey] = cleanXmlEscapes(kValue[kValueKey])
+													}
+												}
+
+											}
+										}
+
+										
+									}
+
+
+								}
+
+
+							}
+						}
+
+
+					}
+
+
+
+
 					uniquePropertyURIs[profile.rt[pkey].pt[key].propertyURI].status = true
 
 					uniquePropertyURIs[profile.rt[pkey].pt[key].propertyURI].data.push({'json':profile.rt[pkey].pt[key].userValue,'propertyLabel': profile.rt[pkey].pt[key].propertyLabel, 'xml':profile.rt[pkey].pt[key].xmlSource})

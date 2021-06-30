@@ -85,6 +85,7 @@ export default {
   name: "App",
     computed: mapState({
       catInitials: 'catInitials',
+      settingsDPackVoyager: 'settingsDPackVoyager',
       region: 'region',
 
 
@@ -152,12 +153,21 @@ export default {
       this.$store.dispatch("setCatInitials", { self: this, catInitials: localStorage.getItem('bfeCatInitials') }).then(() => {
         
       })   
-
-
     }else{
       // this.isLoggedIn=false;
     }
 
+
+    if (localStorage.getItem('bfeSettingsDPackVoyager')!== null){
+      console.log("SETTING setSettingsDPackVoyager",JSON.parse(localStorage.getItem('bfeSettingsDPackVoyager')))
+      this.$store.dispatch("setSettingsDPackVoyager", { self: this, settingsDPackVoyager: JSON.parse(localStorage.getItem('bfeSettingsDPackVoyager')) }).then(() => {
+      })   
+    }
+
+        
+
+
+    console.log('this.settingsDPackVoyager',this.settingsDPackVoyager)
 
     let r = await lookupUtil.checkVersionOutOfDate()
     this.outOfDate = r

@@ -1,6 +1,8 @@
 <template>
   <div v-if="nested == false && hideField == false" class="component-container">
-    <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['ctrlKey','altKey'],preventDefault: false}]" @success="openDiacriticSelect" />
+    <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: false}]" @success="openDiacriticSelect" />
+    
+
 
     <div class="component-container-title">{{structure.propertyLabel}}</div>
     <div class="component-container-input-container">
@@ -8,7 +10,7 @@
           <div style="display: flex;">
             <div style="flex:1">
               <form autocomplete="off">            
-                <input  bfeType="EditLiteralComponent-unnested" :id="assignedId" v-on:keydown.enter.prevent="submitField" :name="assignedId" v-on:focus="focused" autocomplete="off" type="text" @keydown="nav" @keyup="change" v-model="inputValue"  class="input-single selectable-input">            
+                <input  bfeType="EditLiteralComponent-unnested" :id="assignedId" v-on:keydown.enter.prevent="submitField" :name="assignedId" ref="input" v-on:focus="focused" autocomplete="off" type="text" @keydown="nav" @keyup="change" v-model="inputValue"  class="input-single selectable-input">            
               </form>
             </div>
             <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-tooltip="'Diacritics [CTRL-ALT-D]'" @click="openDiacriticSelect"></button>
@@ -45,10 +47,9 @@
 
   <div v-else-if="hideField == false">
         
-        <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['ctrlKey','altKey'],preventDefault: true}]" @success="openDiacriticSelect" />
 
+        <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="openDiacriticSelect" />
 
-        <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['ctrlKey','altKey'],preventDefault: true}]" @success="openDiacriticSelect" />
 
         
 
@@ -58,12 +59,12 @@
 
               <form autocomplete="off" >
                 <div  class="component-nested-container-title">{{structure.propertyLabel}}</div>
-                <input v-if="!isNoteField(structure.propertyLabel)"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change" @keydown="nav" v-model="inputValue"  class="input-nested selectable-input">
+                <input v-if="!isNoteField(structure.propertyLabel)" ref="input"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change" @keydown="nav" v-model="inputValue"  class="input-nested selectable-input">
                 <textarea v-if="isNoteField(structure.propertyLabel)"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change" @keydown="nav" v-model="inputValue"  class="input-nested selectable-input"></textarea>
 
               </form>
             </div>
-            <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-tooltip="'Diacritics [CTRL-ALT-D]'" @click="openDiacriticSelect"></button>
+            <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-tooltip="'Diacritics [CTRL-ALT-SHIFT-D]'" @click="openDiacriticSelect"></button>
 
           </div>
         </div>
@@ -101,6 +102,8 @@
 import { mapState } from 'vuex'
 import uiUtils from "@/lib/uiUtils"
 import config from "@/lib/config"
+import diacrticsVoyager from "@/lib/diacritics/diacritic_pack_voyager.json"
+
 
 
 export default {
@@ -162,7 +165,7 @@ export default {
       return false
     },
 
-
+   
     openDiacriticSelect: function(event){
 
 
@@ -217,6 +220,9 @@ export default {
     },
 
     nav: function(event){
+
+
+
 
       if (event && event.key && this.showDiacritics == true){
 
@@ -281,6 +287,102 @@ export default {
     change: function(event){
 
 
+
+
+      if (diacrticsVoyager[event.code] && this.settingsDPackVoyager){
+
+
+        for (let macro of diacrticsVoyager[event.code]){
+
+          if (event.ctrlKey == macro.ctrlKey && event.altKey == macro.altKey && event.shiftKey == macro.shiftKey){
+
+            event.preventDefault();
+
+            console.log(this.$refs["input"])
+
+
+            this.$refs["input"].style.color="blue"
+            window.setTimeout(()=>{
+              this.$refs["input"].style.color="black"
+            },500)
+
+            if (!macro.combining){
+
+              // there is behavior where if it is a digit shortcut the numerial is still sent
+              // so if thats the case remove the last digit from the value
+              if (event.code.includes('Digit')){
+                // if it is in fact a digit char then remove it
+                if (this.inputValue.charAt(this.inputValue.length-1) == event.code.replace('Digit','')){
+                  // remove the last char
+                  this.inputValue = this.inputValue.slice(0, -1); 
+                }
+              }
+
+              // same for euqal key
+              if (event.code == 'Equal'){
+                if (this.inputValue.charAt(this.inputValue.length-1) == '='){
+                  // remove the last char
+                  this.inputValue = this.inputValue.slice(0, -1); 
+                }
+              }
+              // same for Backquote key
+              console.log('event.code',event.code)
+              if (event.code == 'Backquote'){
+                console.log('this.inputValue',this.inputValue)
+                if (this.inputValue.charAt(this.inputValue.length-1) == '`'){
+                  // remove the last char
+                  this.inputValue = this.inputValue.slice(0, -1); 
+                }
+
+              }
+
+
+              // it is not a combining unicode char so just insert it into the value
+              if (this.inputValue){
+                this.inputValue=this.inputValue+macro.codeEscape
+              }else{
+                this.inputValue = macro.codeEscape
+              }
+              
+            }else{
+
+
+              // same for Backquote key
+              console.log('event.code',event.code)
+              if (event.code == 'Backquote'){
+                console.log('this.inputValue',this.inputValue)
+                if (this.inputValue.charAt(this.inputValue.length-1) == '`'){
+                  // remove the last char
+                  this.inputValue = this.inputValue.slice(0, -1); 
+                }
+
+              }
+
+
+
+              this.inputValue=this.inputValue+macro.codeEscape
+    
+
+
+            }
+
+
+          }
+
+        }
+
+
+      }
+
+      // if (event.ctrlKey && event.altKey && event.code == 'KeyH'){
+      //   console.log('~~~~~~~~~~~~~~~~~~~~')
+      //   console.log(event)
+
+      //   this.inputValue=this.inputValue+'a\u0328'
+      // }
+
+
+
       // don't update if nothing changed or havent entered anythign yet...
       if (this.inputValue == null){
         return false
@@ -327,6 +429,7 @@ export default {
   computed: mapState({
     activeInput: 'activeInput',
     activeProfile: 'activeProfile',
+    settingsDPackVoyager: 'settingsDPackVoyager',
     assignedId (){
 
 
@@ -340,6 +443,7 @@ export default {
 
       inputValue: null,
       inputValueLast: null,
+      inputValueCombiningDiacritic: null,
       showDiacritics: false,
       diacriticData: [],
       diacriticDataNav: 0,
@@ -355,7 +459,7 @@ export default {
     let data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]
 
     this.inputValue = ""
-    let bnodeHasURI = false
+    // let bnodeHasURI = false
 
     // first test to see if this property exists in the user value at the parent structure / properturi lvl
     if (this.parentStructureObj && data.userValue[this.parentStructureObj.propertyURI]){
@@ -368,9 +472,9 @@ export default {
               this.inputValue = this.inputValue + childValue[this.structure.propertyURI]
 
               // for use later, does this bnode have a URI?              
-              if (parentValueArray['@id']){
-                bnodeHasURI = true
-              }
+              // if (parentValueArray['@id']){
+              //   bnodeHasURI = true
+              // }
 
               // also set the guid
               this.guid = childValue['@guid']
@@ -410,11 +514,14 @@ export default {
     if (config.profileHacks.agentsHideManualRDFLabelIfURIProvided.enabled){
       if (this.parentStructureObj && this.parentStructureObj.propertyURI == 'http://id.loc.gov/ontologies/bibframe/agent'){
         if (this.structure.propertyURI=='http://www.w3.org/2000/01/rdf-schema#label'){
-          if (bnodeHasURI){
+          // always hide it
+          // if (bnodeHasURI){
             this.hideField = true
-          }
+          // }
         }
       }
+
+
     }
 
 
@@ -459,6 +566,9 @@ export default {
   font-size: 1.5em;
   padding: 0.1em;
   background: none;
+  transition-property: color;
+  transition-duration: 500ms;
+
 }
 .input-single{
   width: 95%;
@@ -467,6 +577,8 @@ export default {
   font-size: 1.5em;
   padding: 0.5em 0 0 0.1em;
   background: none;
+  transition-property: color;
+  transition-duration: 500ms;
 }
 
 
