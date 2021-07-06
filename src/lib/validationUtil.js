@@ -163,7 +163,11 @@ const validationUtil = {
         if (userData["http://id.loc.gov/ontologies/bibframe/source"] !== undefined) {
             var source = userData["http://id.loc.gov/ontologies/bibframe/source"][0];
             // Does source have an ID from ID?  That would make this much easier.
-            if (source["@id"] !== undefined && source["@id"].indexOf('id.loc.gov/') > 0) {
+            if (
+                source["@id"] !== undefined && 
+                source["@id"].indexOf('id.loc.gov/') > 0 && 
+                source["@id"].indexOf('id.loc.gov/vocabulary') === -1 
+                ) {
                 return source["@id"];
             } else {
                 var code = false;
