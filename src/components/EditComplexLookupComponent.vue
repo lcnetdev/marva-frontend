@@ -174,7 +174,7 @@
 
     <!-- Always build this interface, the lookup modal -->
 
-    <div :id="assignedId" @click="closeModal" v-bind:class="['modaloverlay',{'modal-display':displayModal}]">
+    <div :id="assignedId"  v-bind:class="['modaloverlay',{'modal-display':displayModal}]">
       <div v-bind:class="['modal']">
 
         <div>
@@ -222,7 +222,7 @@
                   </div>
 
                   <select size="10"  class="modal-entity-select" :id="assignedId+'select'" @change="selectChange($event)"  style="height: 100%" @keydown="selectNav($event)">
-                    <option v-for="(r,idx) in activeComplexSearch" :value="r.uri" v-bind:key="idx" class="complex-lookup-result" v-html="returnAuthIcon(r) + ' ' + r.label">
+                    <option v-for="(r,idx) in activeComplexSearch" :data-label="r.label" :value="r.uri" v-bind:key="idx" class="complex-lookup-result" v-html="returnAuthIcon(r) + ' ' + r.label + ((r.literal) ? ' [Literal]' : '')">
                     </option>
                   </select>
 
@@ -309,9 +309,9 @@
                   </div>
 
 
-
-                  <button v-if="precoordinated.length == 0" @click="add" style="width: 75%" class="">Add Selected [SHIFT+Enter]</button>
-                  <button v-else @click="add" class="simptip-position-left" style="width: 75%;"  :data-tooltip="''">Add Pre-Coordinated [SHIFT+Enter]</button>
+                  <!-- Don't allow adding only a literal value -->
+                  <button v-if="precoordinated.length == 0 && !contextData.literal" @click="add" style="width: 75%" class="">Add Selected [SHIFT+Enter]</button>
+                  <button v-else-if="precoordinated.length > 0" @click="add" class="simptip-position-left" style="width: 75%;"  :data-tooltip="''">Add Pre-Coordinated [SHIFT+Enter]</button>
 
              
                 </div>
@@ -539,15 +539,37 @@ export default {
       if (Object.keys(this.contextData).length==0) return false
 
 
+
       let label = this.contextData.title
       let uri  = this.contextData.uri
       let contextType = this.contextData.type
+
+      // if they type is not in the context because it is a literal
+      // then use the contxt it was added to the precoord with
+      if (!this.contextData.typeFull){
+        if (type == 'Topic'){
+          this.contextData.typeFull = 'http://www.loc.gov/mads/rdf/v1#Topic'
+          contextType = 'Topic'
+        }else if (type == 'Geographic'){
+          this.contextData.typeFull = 'http://www.loc.gov/mads/rdf/v1#Geographic'
+          contextType = 'Geographic'
+        }else if (type == 'Temporal'){
+          this.contextData.typeFull = 'http://www.loc.gov/mads/rdf/v1#Temporal'
+          contextType = 'Temporal'
+        }else if (type == 'GenreForm'){
+          this.contextData.typeFull = 'http://www.loc.gov/mads/rdf/v1#GenreForm'
+          contextType = 'GenreForm'
+        }
+      }
+
 
       console.log(type)
       // if (contextType != type){
       //   alert(`${label} is not a ${type} type heading`)
       //   return false
       // }
+      console.log({uri:uri,label:label,type:contextType,typeFull:this.contextData.typeFull})
+
 
       this.precoordinated.push({uri:uri,label:label,type:contextType,typeFull:this.contextData.typeFull})
 
@@ -980,6 +1002,27 @@ export default {
             // remove the context because we're about to get a new one
             this.$store.dispatch("clearContext", { self: this})            
 
+            // if they are on the literal value
+            if (!o.value){
+              let tempContext = {
+                  "contextValue": true,                  
+                  "source": [],
+                  "type": "Literal Value",
+                  "variant": [],
+                  "uri": null,
+                  "title": o.dataset.label,
+                  "contributor": [],
+                  "date": null,
+                  "genreForm": null,
+                  "nodeMap": {},
+                  "precoordinated" : false,
+                  "literal": true
+              }        
+              this.$store.dispatch("setContextManually", { self: this, context: tempContext, })
+              return false
+            }
+
+
             this.contextRequestInProgress = true
             this.$store.dispatch("fetchContext", { self: this, searchPayload: o.value }).then(() => {
               this.contextRequestInProgress = false
@@ -1165,7 +1208,8 @@ export default {
 
       let searchPayload = {
         processor: null,
-        url: []
+        url: [],
+        searchValue: this.searchValue
       }
       // if (this.modeSelect == 'All'){
       //   this.modalSelectOptions.forEach((a)=>{
@@ -1258,6 +1302,13 @@ export default {
           return false
           // there is no context to add, so dont try
         }
+
+        if (this.contextData && this.contextData.literal){
+          return false
+          // they were tring to add only a literal value
+        }
+
+
         this.$store.dispatch("setValueComplex", { self: this, profileComponet: this.profileCompoent, template:this.activeTemplate, structure: this.structure, parentStructure: this.parentStructureObj }).then(() => {
           this.componentKey++
           this.displayModal = false
@@ -1457,6 +1508,11 @@ box-shadow: 10px 10px 15px -5px rgba(0,0,0,0.37);
   height: 75%; 
 }
 
+.modal-entity-select option[value=""]{
+
+  font-weight: bold;
+  font-style: oblique;
+}
 
 
 .fake-real-button{

@@ -190,24 +190,19 @@ const lookupUtil = {
 
             if (urlTemplate[idx].includes('q=?')){
               urlTemplate[idx] = urlTemplate[idx].replace('q=?','q=')+'&searchtype=keyword'
-              console.log('hererrerereerrere',urlTemplate[idx])
             }
           }
           
         }
         
-        console.log(urlTemplate)
-
 
         let results = []
         for (let url of urlTemplate) {
 
             // kind of hack, change to the public endpoint if we are in dev or public mode
             if (config.returnUrls().dev){
-              console.log(url)
               url = url.replace('http://preprod.id.','https://id.')
               url = url.replace('https://preprod-8230.id.loc.gov','https://id.loc.gov')
-              
             }
 
 
@@ -221,6 +216,7 @@ const lookupUtil = {
                   results.push({
                     label: hit.suggestLabel,
                     uri: hit.uri,
+                    literal:false,
                     extra: ''
 
                   })
@@ -249,12 +245,22 @@ const lookupUtil = {
                   results.push({
                     label: hit.label,
                     uri: hit.concepturi,
+                    literal:false,
                     extra: ''
                   })       
                 }     
             }
 
         }
+
+        // always add in the literal they searched for at the end
+        results.push({
+          label: searchPayload.searchValue,
+          uri: null,
+          literal:true,
+          extra: ''
+        }) 
+
         // console.log(results,"<results")
         return results
 
@@ -415,7 +421,7 @@ const lookupUtil = {
                 if (!results.nodeMap[k]) { results.nodeMap[k] = [] }
                 // loop through each uri we have for this type
                 nodeMap[k].forEach(function(uri){
-                  console.log(k, uri)
+
 
                   if (k == 'MADS Collection'){
                     if (results.nodeMap[k].indexOf(uri.split('/').slice(-1)[0].replace('collection_',''))==-1){
