@@ -389,8 +389,8 @@ const parseProfile = {
 
         
         
-        console.log("this.profiles")
-        console.log(this.profiles)
+        // console.log("this.profiles")
+        // console.log(this.profiles)
 
         return { profiles: this.profiles, lookup: this.rtLookup, startingPoints: this.startingPoints}
     },
@@ -501,7 +501,7 @@ const parseProfile = {
                                     }
 
                                     if (subpt.valueConstraint.defaults[0].defaultURI){
-                                        console.log('subpt',subpt)
+                                        // console.log('subpt',subpt)
                                         if (pt.userValue[subpt.propertyURI][0]){
                                             pt.userValue[subpt.propertyURI][0]['@id'] = subpt.valueConstraint.defaults[0].defaultURI    
                                             if (subpt.valueConstraint.valueDataType && subpt.valueConstraint.valueDataType.dataTypeURI){
@@ -971,7 +971,7 @@ const parseProfile = {
 
         let results = {newGuid:null}
 
-        console.log(value)
+        
         
         
 
@@ -1180,8 +1180,8 @@ const parseProfile = {
 
 
 
-            console.log('currentState, component, key, activeProfileName, template, value, structure,parentStructure')
-            console.log(currentState, component, key, activeProfileName, template, value, structure,parentStructure)
+            // console.log('currentState, component, key, activeProfileName, template, value, structure,parentStructure')
+            // console.log(currentState, component, key, activeProfileName, template, value, structure,parentStructure)
 
             // clearing a value works by clearing the context in the store,
             // if it is an empy object then the context was clered before 
@@ -1257,11 +1257,11 @@ const parseProfile = {
             
             if (currentState.rt[activeProfileName].pt[component]){
                     
-                console.log('>>>>',structure.type, parentStructure)
+                // console.log('>>>>',structure.type, parentStructure)
 
                 // need tofigure out what property to store this under the in the userValue
                 if (parentStructure && key == 'http://www.w3.org/2002/07/owl#sameAs' && currentState.rt[activeProfileName].pt[component].propertyURI != parentStructure.propertyURI){
-                    console.log('case 1')
+                    // console.log('case 1')
                     if (!currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI]){
                         currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI] = []
                     }
@@ -1350,7 +1350,7 @@ const parseProfile = {
 
 
                 }else if (parentStructure && key == 'http://www.w3.org/2002/07/owl#sameAs' && currentState.rt[activeProfileName].pt[component].propertyURI == parentStructure.propertyURI){
-                    console.log('case 2')
+                    // console.log('case 2')
                     currentState.rt[activeProfileName].pt[component].userValue = {
                             '@guid': short.generate(),
                             '@type': await exportXML.suggestType(parentStructure.propertyURI),
@@ -1367,7 +1367,7 @@ const parseProfile = {
 
                 }else if (structure.type == 'lookup' && parentStructure && relatedEdgecaseParentProperty > -1){
 
-                    console.log('hurrr Triggerd')
+                    // console.log('hurrr Triggerd')
                     // thre are some very nested template, which we are just checking for
                     if (!currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI]){
                         currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI] = []
@@ -1405,7 +1405,7 @@ const parseProfile = {
 
 
                 }else if (currentState.rt[activeProfileName].pt[component].valueConstraint && currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs && currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs.length > 1){
-                    console.log('case 4')
+                    // console.log('case 4')
                     // this is ref template, so they select what Type it is from the refTemeplate selector
 
                     // does it have it set? otherwise we need to set it to the default, first refTempalte
@@ -1435,7 +1435,7 @@ const parseProfile = {
                 
                 }else{
 
-                    console.log('ELES Triggerd')
+                    // console.log('ELES Triggerd')
 
                     // dunno, use the root level
                     currentState.rt[activeProfileName].pt[component].userValue = {
@@ -2051,7 +2051,7 @@ const parseProfile = {
                 for (let key in profile.rt[newRdId].pt){
 
                     if (profile.rt[newRdId].pt[key].propertyURI == 'http://id.loc.gov/ontologies/bibframe/adminMetadata'){
-                        console.log('hooooo',profile.rt[newRdId].pt[key])
+                        // console.log('hooooo',profile.rt[newRdId].pt[key])
 
                         // replace with our id
                         profile.rt[newRdId].pt[key].userValue['http://id.loc.gov/ontologies/bflc/catalogerId'] = [
@@ -2187,7 +2187,7 @@ const parseProfile = {
 
       useProfile.procInfo = meta.procInfo
       
-      console.log('meta',meta)
+      // console.log('meta',meta)
 
       // also give it an ID for storage
       useProfile.eId= meta.eid

@@ -62,6 +62,7 @@
         <!-- <EditMainComponent name="pt." v-for="pt in this.activeTemplate.propertyTemplates" v-bind:key="pt" v-bind:structure="pt"></EditMainComponent> -->
         <!-- <EditMainComponent name="yeet"></EditMainComponent> -->
 
+
         <EditMainComponent v-for="(pt,idx) in activeTemplate.propertyTemplates" :ptGuid="ptGuid"  :key="idx" :position="idx" :activeTemplate="Object.assign({nested:true},activeTemplate)" :structure="activeTemplate.propertyTemplates[idx]" :profileCompoent="profileCompoent" :profileName="profileName" :grandParentStructureObj="parentStructureObj" :parentStructureObj="structure" :parentStructure="['nothing']"  :nested="true"></EditMainComponent>
       </template>
 
@@ -212,10 +213,13 @@ export default {
     // do not render recursivly if the thing we are trying to render recursivly is one the of the things thAT WER ARE RENDERING TO BEGIN WITHHHHH!!!1
     if (this.parentStructure && this.parentStructure.indexOf(useId) ==-1){
       if (this.rtLookup[useId]){
-        this.multiTemplateSelect = this.rtLookup[useId].resourceLabel
+
+        let use = JSON.parse(JSON.stringify(this.rtLookup[useId]))
+
+        this.multiTemplateSelect = use.resourceLabel
         
         this.multiTemplateSelectURI = useId
-        this.activeTemplate = this.rtLookup[useId]     
+        this.activeTemplate = use     
         this.buildPropertyTemplatesOrderLookup()        
       }
     }else{
@@ -243,6 +247,9 @@ export default {
   methods: {
 
     buildPropertyTemplatesOrderLookup: function(){
+      
+
+      this.propertyTemplatesOrderLookup = {}
       this.activeTemplate.propertyTemplates.forEach((pt, i)=>{
         this.propertyTemplatesOrderLookup[pt.propertyURI+pt.propertyLabel] = i
       })
@@ -321,9 +328,11 @@ export default {
         // get the profile ready before we change the UI
         this.$store.dispatch("refTemplateChange", { self: this, profileName:this.profileName, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, parentId: this.structure.parentId, nextRef:this.rtLookup[nextRefID], thisRef: this.rtLookup[currentRefID] }).then(() => {
          
-          this.multiTemplateSelect = this.rtLookup[nextRefID].resourceLabel
+          let nextRef = JSON.parse(JSON.stringify(this.rtLookup[nextRefID]))
+
+          this.multiTemplateSelect = nextRef.resourceLabel
           this.multiTemplateSelectURI = nextRefID
-          this.activeTemplate = this.rtLookup[nextRefID]
+          this.activeTemplate = nextRef
           
           this.buildPropertyTemplatesOrderLookup()
           this.focused(event)

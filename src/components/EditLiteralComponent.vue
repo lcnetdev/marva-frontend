@@ -517,9 +517,10 @@ export default {
           // always hide it
           // if (bnodeHasURI){
 
-            if (!this.parentStructureObj.parentId.includes('ProductionInformation')){
+            if (!this.parentStructureObj.parentId.includes('Information')){
               this.hideField = true
             }
+            this.hideField = false
           // }
         }
       }

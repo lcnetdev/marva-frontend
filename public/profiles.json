@@ -6887,6 +6887,22 @@
                             },
                             {
                                 "mandatory": "false",
+                                "propertyLabel": "Name",
+                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/agent",
+                                "repeatable": "true",
+                                "resourceTemplates": [],
+                                "type": "resource",
+                                "valueConstraint": {
+                                    "defaults": [],
+                                    "useValuesFrom": [],
+                                    "valueDataType": {},
+                                    "valueTemplateRefs": [
+                                        "lc:RT:bf2:Provision:Name"
+                                    ]
+                                }
+                            },
+                            {
+                                "mandatory": "false",
                                 "propertyLabel": "Date",
                                 "propertyURI": "http://id.loc.gov/ontologies/bibframe/date",
                                 "remark": "http://access.rdatoolkit.org/2.10.6.html",
@@ -6915,23 +6931,7 @@
                                         "lc:RT:bf2:Note"
                                     ]
                                 }
-                            },
-                            {
-                                "mandatory": "false",
-                                "propertyLabel": "Name",
-                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/agent",
-                                "repeatable": "true",
-                                "resourceTemplates": [],
-                                "type": "resource",
-                                "valueConstraint": {
-                                    "defaults": [],
-                                    "useValuesFrom": [],
-                                    "valueDataType": {},
-                                    "valueTemplateRefs": [
-                                        "lc:RT:bf2:Provision:Name"
-                                    ]
-                                }
-                            }
+                            }                            
                         ],
                         "resourceLabel": "Manufacture",
                         "resourceURI": "http://id.loc.gov/ontologies/bibframe/Manufacture"
