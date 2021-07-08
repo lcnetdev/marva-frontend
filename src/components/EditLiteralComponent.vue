@@ -516,7 +516,10 @@ export default {
         if (this.structure.propertyURI=='http://www.w3.org/2000/01/rdf-schema#label'){
           // always hide it
           // if (bnodeHasURI){
-            this.hideField = true
+
+            if (!this.parentStructureObj.parentId.includes('ProductionInformation')){
+              this.hideField = true
+            }
           // }
         }
       }
