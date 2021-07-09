@@ -406,7 +406,9 @@ const exportXML = {
 
 			try{
 				return await this.toBFXMLProcess(profile)	
-			}catch{
+			}catch (error){
+
+				console.error(error);
 
 				alert("There was an error building the XML - Please 'Report Error'")
 				return false

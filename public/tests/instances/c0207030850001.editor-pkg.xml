@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:bf="http://id.loc.gov/ontologies/bibframe/" xmlns:bflc="http://id.loc.gov/ontologies/bflc/" xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pmo="http://performedmusicontology.org/ontology/"><bf:Instance rdf:about="http://id.loc.gov/resources/instances/c0207030850001"><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Print"/><bf:issuance>
+      <bf:Issuance rdf:about="http://id.loc.gov/vocabulary/issuance/mono"/>
+    </bf:issuance><bf:provisionActivity>
+      <bf:ProvisionActivity>
+        <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Publication"/>
+        <bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">2016</bf:date>
+        <bf:place>
+          <bf:Place rdf:about="http://id.loc.gov/vocabulary/countries/is"/>
+        </bf:place>
+      </bf:ProvisionActivity>
+    </bf:provisionActivity><bf:identifiedBy>
+      <bf:Lccn>
+        <rdf:value>  2018416678</rdf:value>
+      </bf:Lccn>
+    </bf:identifiedBy><bf:identifiedBy>
+      <bf:Local>
+        <rdf:value>on1048459650</rdf:value>
+        <bf:assigner>
+          <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/ocolc"/>
+        </bf:assigner>
+      </bf:Local>
+    </bf:identifiedBy><rdfs:label>Masekhet Giṭin : ʻim perush Rabi Mosheh ben Maimon : nusaḥ ha-Mishnah kefi she-heʻetiḳo ha-Rambam, ha-maḳor ha-ʻArvi shel ha-perush, targum ʻIvri ha-mevusas ʻal targumo shel ha-Rav Yosef Ḳapaḥ</rdfs:label><rdfs:label>מסכת גיטין : עם פירוש רבי משה בן מימון : נוסח המשנה כפי שהעתיקו הרמב״ם, המקור הערבי של הפירוש, תרגום עברי המבוסס על תרגומו של הרב יוסף קפאח</rdfs:label><bf:title>
+      <bf:Title>
+        <rdfs:label>Masekhet Giṭin : ʻim perush Rabi Mosheh ben Maimon : nusaḥ ha-Mishnah kefi she-heʻetiḳo ha-Rambam, ha-maḳor ha-ʻArvi shel ha-perush, targum ʻIvri ha-mevusas ʻal targumo shel ha-Rav Yosef Ḳapaḥ</rdfs:label>
+        <bflc:titleSortKey>Masekhet Giṭin : ʻim perush Rabi Mosheh ben Maimon : nusaḥ ha-Mishnah kefi she-heʻetiḳo ha-Rambam, ha-maḳor ha-ʻArvi shel ha-perush, targum ʻIvri ha-mevusas ʻal targumo shel ha-Rav Yosef Ḳapaḥ</bflc:titleSortKey>
+        <bf:mainTitle>Masekhet Giṭin</bf:mainTitle>
+        <bf:subtitle>ʻim perush Rabi Mosheh ben Maimon : nusaḥ ha-Mishnah kefi she-heʻetiḳo ha-Rambam, ha-maḳor ha-ʻArvi shel ha-perush, targum ʻIvri ha-mevusas ʻal targumo shel ha-Rav Yosef Ḳapaḥ</bf:subtitle>
+        <rdfs:label>מסכת גיטין : עם פירוש רבי משה בן מימון : נוסח המשנה כפי שהעתיקו הרמב״ם, המקור הערבי של הפירוש, תרגום עברי המבוסס על תרגומו של הרב יוסף קפאח</rdfs:label>
+        <bflc:titleSortKey>מסכת גיטין : עם פירוש רבי משה בן מימון : נוסח המשנה כפי שהעתיקו הרמב״ם, המקור הערבי של הפירוש, תרגום עברי המבוסס על תרגומו של הרב יוסף קפאח</bflc:titleSortKey>
+        <bf:mainTitle>מסכת גיטין</bf:mainTitle>
+        <bf:subtitle>עם פירוש רבי משה בן מימון : נוסח המשנה כפי שהעתיקו הרמב״ם, המקור הערבי של הפירוש, תרגום עברי המבוסס על תרגומו של הרב יוסף קפאח</bf:subtitle>
+      </bf:Title>
+    </bf:title><bf:title>
+      <bf:VariantTitle>
+        <bf:variantType>cover</bf:variantType>
+        <rdfs:label>מסכת גטין עם פירוש הרמב"ם</rdfs:label>
+        <bf:mainTitle>מסכת גטין עם פירוש הרמב"ם</bf:mainTitle>
+      </bf:VariantTitle>
+    </bf:title><bf:editionStatement>מהדורה מבוארת</bf:editionStatement><bf:provisionActivity>
+      <bf:ProvisionActivity>
+        <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Publication"/>
+        <bf:place>
+          <bf:Place>
+            <rdfs:label>מעלה אדומים</rdfs:label>
+          </bf:Place>
+        </bf:place>
+        <bf:place>
+          <bf:Place>
+            <rdfs:label>ירושלים</rdfs:label>
+          </bf:Place>
+        </bf:place>
+        <bf:agent>
+          <bf:Agent>
+            <rdfs:label>הוצאת מעליות שע״י ישיבת "ברכת משה"</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:date>התשע״ו</bf:date>
+      </bf:ProvisionActivity>
+    </bf:provisionActivity><bf:provisionActivityStatement>מעלה אדומים : ירושלים; הוצאת מעליות שע״י ישיבת "ברכת משה", התשע״ו.</bf:provisionActivityStatement><bf:copyrightDate>©2016</bf:copyrightDate><bf:extent>
+      <bf:Extent>
+        <rdfs:label>554 pages</rdfs:label>
+      </bf:Extent>
+    </bf:extent><bf:note>
+      <bf:Note>
+        <bf:noteType>Physical details</bf:noteType>
+        <rdfs:label>facsimiles, maps</rdfs:label>
+      </bf:Note>
+    </bf:note><bf:dimensions>24 cm</bf:dimensions><bf:media>
+      <bf:Media rdf:about="http://id.loc.gov/vocabulary/mediaTypes/n">
+        <rdfs:label>unmediated</rdfs:label>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdamedia"/>
+        </bf:source>
+      </bf:Media>
+    </bf:media><bf:carrier>
+      <bf:Carrier rdf:about="http://id.loc.gov/vocabulary/carriers/nc">
+        <rdfs:label>volume</rdfs:label>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacarrier"/>
+        </bf:source>
+      </bf:Carrier>
+    </bf:carrier><bf:instanceOf rdf:resource="http://id.loc.gov/resources/works/c020703085"/><bf:adminMetadata>
+      <bf:AdminMetadata>
+        <bf:generationProcess>
+          <bf:GenerationProcess>
+            <rdfs:label>DLC marc2bibframe2 v1.7.0-SNAPSHOT</rdfs:label>
+          </bf:GenerationProcess>
+        </bf:generationProcess>
+        <bf:status>
+          <bf:Status>
+            <rdfs:label>corrected or revised</rdfs:label>
+            <bf:code>c</bf:code>
+          </bf:Status>
+        </bf:status>
+        <bflc:encodingLevel>
+          <bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/f">
+            <rdfs:label>full</rdfs:label>
+          </bflc:EncodingLevel>
+        </bflc:encodingLevel>
+        <bf:descriptionConventions>
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd">
+            <rdfs:label>isbd</rdfs:label>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+        <bf:identifiedBy>
+          <bf:Local>
+            <rdf:value>20703085</rdf:value>
+            <bf:assigner>
+              <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+                <bf:code>DLC</bf:code>
+              </bf:Agent>
+            </bf:assigner>
+          </bf:Local>
+        </bf:identifiedBy>
+        <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-07-08T16:51:39</bf:changeDate>
+        <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2018-10-12</bf:creationDate>
+        <lclocal:d906>=906     $a 0 $b ibc $c copycat $d 2 $e ncip $f 20 $g y-nonroman</lclocal:d906>
+        <lclocal:d925>=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925>
+        <lclocal:d955>=955     $b cd04 2018-10-12 telework z-processor JACKPHY $a cd00 2018-10-15 to ASME/IJ $a cd23 2021-06-14 to cd23 for full cat. $i cd23 2021-07-08 telework to Hebraic shelves</lclocal:d955>
+        <bf:assigner>
+          <bf:Agent>
+            <bf:code>YYP</bf:code>
+          </bf:Agent>
+        </bf:assigner>
+        <bf:descriptionLanguage>
+          <bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/>
+        </bf:descriptionLanguage>
+        <bf:descriptionModifier>
+          <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+            <bf:code>DLC</bf:code>
+          </bf:Agent>
+        </bf:descriptionModifier>
+        <bf:descriptionConventions>
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda">
+            <rdf:value>rda</rdf:value>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+        <bf:descriptionAuthentication>
+          <bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/lccopycat">
+            <bf:code>lccopycat</bf:code>
+          </bf:DescriptionAuthentication>
+        </bf:descriptionAuthentication>
+      </bf:AdminMetadata>
+    </bf:adminMetadata></bf:Instance><bf:Work rdf:about="http://id.loc.gov/resources/works/c020703085"><bf:adminMetadata>
+      <bf:AdminMetadata>
+        <bf:generationProcess>
+          <bf:GenerationProcess>
+            <rdfs:label>DLC marc2bibframe2 v1.7.0-SNAPSHOT</rdfs:label>
+          </bf:GenerationProcess>
+        </bf:generationProcess>
+        <bf:status>
+          <bf:Status>
+            <rdfs:label>corrected or revised</rdfs:label>
+            <bf:code>c</bf:code>
+          </bf:Status>
+        </bf:status>
+        <bflc:encodingLevel>
+          <bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/f">
+            <rdfs:label>full</rdfs:label>
+          </bflc:EncodingLevel>
+        </bflc:encodingLevel>
+        <bf:descriptionConventions>
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd">
+            <rdfs:label>isbd</rdfs:label>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+        <bf:identifiedBy>
+          <bf:Local>
+            <rdf:value>20703085</rdf:value>
+            <bf:assigner>
+              <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+                <bf:code>DLC</bf:code>
+              </bf:Agent>
+            </bf:assigner>
+          </bf:Local>
+        </bf:identifiedBy>
+        <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-07-08T16:51:39</bf:changeDate>
+        <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2018-10-12</bf:creationDate>
+        <lclocal:d906>=906     $a 0 $b ibc $c copycat $d 2 $e ncip $f 20 $g y-nonroman</lclocal:d906>
+        <lclocal:d925>=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925>
+        <lclocal:d955>=955     $b cd04 2018-10-12 telework z-processor JACKPHY $a cd00 2018-10-15 to ASME/IJ $a cd23 2021-06-14 to cd23 for full cat. $i cd23 2021-07-08 telework to Hebraic shelves</lclocal:d955>
+        <bf:assigner>
+          <bf:Agent>
+            <bf:code>YYP</bf:code>
+          </bf:Agent>
+        </bf:assigner>
+        <bf:descriptionLanguage>
+          <bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/>
+        </bf:descriptionLanguage>
+        <bf:descriptionModifier>
+          <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+            <bf:code>DLC</bf:code>
+          </bf:Agent>
+        </bf:descriptionModifier>
+        <bf:descriptionConventions>
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda">
+            <rdf:value>rda</rdf:value>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+        <bf:descriptionAuthentication>
+          <bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/lccopycat">
+            <bf:code>lccopycat</bf:code>
+          </bf:DescriptionAuthentication>
+        </bf:descriptionAuthentication>
+      </bf:AdminMetadata>
+    </bf:adminMetadata><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Text"/><bf:language>
+      <bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/heb"/>
+    </bf:language><bf:illustrativeContent>
+      <bf:Illustration rdf:about="http://id.loc.gov/vocabulary/millus/fac">
+        <rdfs:label>facsimiles</rdfs:label>
+      </bf:Illustration>
+    </bf:illustrativeContent><bf:illustrativeContent>
+      <bf:Illustration rdf:about="http://id.loc.gov/vocabulary/millus/map">
+        <rdfs:label>maps</rdfs:label>
+      </bf:Illustration>
+    </bf:illustrativeContent><bf:supplementaryContent>
+      <bf:SupplementaryContent rdf:about="http://id.loc.gov/vocabulary/msupplcont/bibliography">
+        <rdfs:label>bibliography</rdfs:label>
+      </bf:SupplementaryContent>
+    </bf:supplementaryContent><bf:title>
+      <bf:Title>
+        <bf:mainTitle>Masekhet Giṭin</bf:mainTitle>
+        <bf:subtitle>ʻim perush Rabi Mosheh ben Maimon : nusaḥ ha-Mishnah kefi she-heʻetiḳo ha-Rambam, ha-maḳor ha-ʻArvi shel ha-perush, targum ʻIvri ha-mevusas ʻal targumo shel ha-Rav Yosef Ḳapaḥ</bf:subtitle>
+      </bf:Title>
+    </bf:title><bf:responsibilityStatement>ʻim tiḳunim, heʻarot nusaḥ, marʼe meḳomot, perush maḳif ha-kolel haḳbalot le-khol kitve ha-Rambam, u-meḥḳar shiṭati ʻal derekh ha-Rambam be-ferusho la-Mishnah / me-et Deror Fiḳsler</bf:responsibilityStatement><bf:content>
+      <bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/txt">
+        <rdfs:label>text</rdfs:label>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacontent"/>
+        </bf:source>
+      </bf:Content>
+    </bf:content><bf:supplementaryContent>
+      <bf:SupplementaryContent>
+        <rdfs:label>Includes bibliographical references (pages 551-554).</rdfs:label>
+      </bf:SupplementaryContent>
+    </bf:supplementaryContent><bf:subject>
+      <bf:Topic rdf:about="http://bibframe.example.org/20703085#Topic630-27">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
+        <madsrdf:authoritativeLabel>Mishnah. Gittin--Commentaries.</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/authorities/subjects">
+            <bf:code>lcsh</bf:code>
+          </bf:Source>
+        </bf:source>
+        <madsrdf:componentList rdf:parseType="Collection">
+          <bf:Work rdf:about="http://bibframe.example.org/20703085#Work630-27">
+            <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#"/>
+            <madsrdf:authoritativeLabel>Mishnah. Gittin</madsrdf:authoritativeLabel>
+            <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+            <bf:title>
+              <bf:Title>
+                <bflc:title30MatchKey>Mishnah. Gittin</bflc:title30MatchKey>
+                <bflc:title30MarcKey>63000$aMishnah.$pGittin$vCommentaries.</bflc:title30MarcKey>
+                <rdfs:label>Mishnah. Gittin</rdfs:label>
+                <bflc:titleSortKey>Mishnah. Gittin</bflc:titleSortKey>
+                <bf:mainTitle>Mishnah. Gittin</bf:mainTitle>
+              </bf:Title>
+            </bf:title>
+            <bf:source>
+              <bf:Source rdf:about="http://id.loc.gov/authorities/subjects">
+                <bf:code>lcsh</bf:code>
+              </bf:Source>
+            </bf:source>
+          </bf:Work>
+          <madsrdf:GenreForm rdf:about="https://id.loc.gov/authorities/subjects/sh99001404">
+            <madsrdf:authoritativeLabel>Commentaries</madsrdf:authoritativeLabel>
+          </madsrdf:GenreForm>
+        </madsrdf:componentList>
+      </bf:Topic>
+    </bf:subject><bf:subject>
+      <bf:Work rdf:about="http://bibframe.example.org/20703085#Work600-28">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#NameTitle"/>
+        <madsrdf:authoritativeLabel>Maimonides, Moses, 1135-1204. Sirāj. Giṭin.</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/authorities/subjects">
+            <bf:code>lcsh</bf:code>
+          </bf:Source>
+        </bf:source>
+        <bf:contribution>
+          <bf:Contribution>
+            <bf:agent>
+              <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n78096039">
+                <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+                <bflc:name00MatchKey>Maimonides, Moses, 1135-1204.</bflc:name00MatchKey>
+                <bflc:name00MarcKey>60010$aMaimonides, Moses,$d1135-1204.$tSirāj.$pGiṭin.</bflc:name00MarcKey>
+                <rdfs:label>Maimonides, Moses, 1135-1204.</rdfs:label>
+              </bf:Agent>
+            </bf:agent>
+            <bf:role>
+              <bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/ctb"/>
+            </bf:role>
+          </bf:Contribution>
+        </bf:contribution>
+        <bf:title>
+          <bf:Title>
+            <bflc:title00MatchKey>Sirāj. Giṭin.</bflc:title00MatchKey>
+            <bflc:title00MarcKey>60010$aMaimonides, Moses,$d1135-1204.$tSirāj.$pGiṭin.</bflc:title00MarcKey>
+            <rdfs:label>Sirāj. Giṭin.</rdfs:label>
+            <bflc:titleSortKey>Sirāj. Giṭin.</bflc:titleSortKey>
+            <bf:mainTitle>Sirāj. Giṭin.</bf:mainTitle>
+          </bf:Title>
+        </bf:title>
+      </bf:Work>
+    </bf:subject><bf:subject>
+      <bf:Work rdf:about="http://bibframe.example.org/20703085#Work630-29">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#"/>
+        <madsrdf:authoritativeLabel>Sirāj (Maimonides, Moses)</madsrdf:authoritativeLabel>
+        <bf:title>
+          <bf:Title>
+            <bflc:title30MatchKey>Sirāj (Maimonides, Moses)</bflc:title30MatchKey>
+            <bflc:title30MarcKey>63007$aSirāj (Maimonides, Moses)$2fast$0(OCoLC)fst01364911</bflc:title30MarcKey>
+            <rdfs:label>Sirāj (Maimonides, Moses)</rdfs:label>
+            <bflc:titleSortKey>Sirāj (Maimonides, Moses)</bflc:titleSortKey>
+            <bf:mainTitle>Sirāj (Maimonides, Moses)</bf:mainTitle>
+          </bf:Title>
+        </bf:title>
+        <bf:identifiedBy>
+          <bf:Identifier>
+            <rdf:value>fst01364911</rdf:value>
+            <bf:source>
+              <bf:Source>
+                <bf:code>OCoLC</bf:code>
+              </bf:Source>
+            </bf:source>
+          </bf:Identifier>
+        </bf:identifiedBy>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/fast">
+            <bf:code>fast</bf:code>
+          </bf:Source>
+        </bf:source>
+      </bf:Work>
+    </bf:subject><bf:genreForm>
+      <bf:GenreForm rdf:about="http://bibframe.example.org/20703085#GenreForm655-30">
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <rdfs:label>Commentaries.</rdfs:label>
+        <madsrdf:authoritativeLabel>Commentaries.</madsrdf:authoritativeLabel>
+        <bf:source>
+          <bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/fast">
+            <bf:code>fast</bf:code>
+          </bf:Source>
+        </bf:source>
+        <bf:identifiedBy>
+          <bf:Identifier>
+            <rdf:value>fst01423723</rdf:value>
+            <bf:source>
+              <bf:Source>
+                <bf:code>OCoLC</bf:code>
+              </bf:Source>
+            </bf:source>
+          </bf:Identifier>
+        </bf:identifiedBy>
+      </bf:GenreForm>
+    </bf:genreForm><bf:contribution>
+      <bf:Contribution>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/no2003069930">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+            <bflc:name00MatchKey>Fiḳsler, Deror,</bflc:name00MatchKey>
+            <bflc:name00MarcKey>7001 $6880-05$aFiḳsler, Deror,$eeditor,$ewriter of added commentary.</bflc:name00MarcKey>
+            <rdfs:label>Fiḳsler, Deror,</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label>editor</rdfs:label>
+          </bf:Role>
+        </bf:role>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label>writer of added commentary.</rdfs:label>
+          </bf:Role>
+        </bf:role>
+      </bf:Contribution>
+    </bf:contribution><bf:contribution>
+      <bf:Contribution>
+        <bf:agent>
+          <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n85369447">
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+            <bflc:name00MatchKey>Kafaḥ, Yosef, 1917-2000,</bflc:name00MatchKey>
+            <bflc:name00MarcKey>7001 $aKafaḥ, Yosef,$d1917-2000,$etranslator.</bflc:name00MarcKey>
+            <rdfs:label>Kafaḥ, Yosef, 1917-2000,</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label>translator.</rdfs:label>
+          </bf:Role>
+        </bf:role>
+      </bf:Contribution>
+    </bf:contribution><bf:hasPart>
+      <bf:Work rdf:about="http://bibframe.example.org/20703085#Work700-34">
+        <bf:contribution>
+          <bf:Contribution>
+            <bf:agent>
+              <bf:Agent rdf:about="https://id.loc.gov/authorities/names/n78096039">
+                <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+                <bflc:name00MatchKey>Maimonides, Moses, 1135-1204.</bflc:name00MatchKey>
+                <bflc:name00MarcKey>70012$aMaimonides, Moses,$d1135-1204.$tSirāj.$pGiṭin.$lHebrew &amp; Judeo-Arabic.</bflc:name00MarcKey>
+                <rdfs:label>Maimonides, Moses, 1135-1204.</rdfs:label>
+              </bf:Agent>
+            </bf:agent>
+            <bf:role>
+              <bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/ctb"/>
+            </bf:role>
+          </bf:Contribution>
+        </bf:contribution>
+        <bf:title>
+          <bf:Title>
+            <bflc:title00MatchKey>Sirāj. Giṭin. Hebrew &amp; Judeo-Arabic.</bflc:title00MatchKey>
+            <bflc:title00MarcKey>70012$aMaimonides, Moses,$d1135-1204.$tSirāj.$pGiṭin.$lHebrew &amp; Judeo-Arabic.</bflc:title00MarcKey>
+            <rdfs:label>Sirāj. Giṭin. Hebrew &amp; Judeo-Arabic.</rdfs:label>
+            <bflc:titleSortKey>Sirāj. Giṭin. Hebrew &amp; Judeo-Arabic.</bflc:titleSortKey>
+            <bf:mainTitle>Sirāj. Giṭin. Hebrew &amp; Judeo-Arabic.</bf:mainTitle>
+          </bf:Title>
+        </bf:title>
+      </bf:Work>
+    </bf:hasPart><bf:hasPart rdf:resource="http://id.loc.gov/resources/works/c014588608"/><bf:hasPart rdf:resource="http://id.loc.gov/resources/works/c0207030850001"/></bf:Work></rdf:RDF>
