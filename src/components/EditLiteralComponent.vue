@@ -50,7 +50,6 @@
 
         <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="openDiacriticSelect" />
 
-
         
 
         <div v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border', { 'component-container-fake-input-note' : isNoteField(structure.propertyLabel)  }]" >
@@ -600,11 +599,16 @@ export default {
 
             if (
                 !this.parentStructureObj.parentId.includes('Information') &&
-                !this.parentStructureObj.parentId.includes('PubPlace') &&
-                !this.parentStructureObj.parentId.includes('PubName')
+                !this.structure.parentId.includes('PubPlace') &&
+                !this.structure.parentId.includes('PubName') &&
+                !this.structure.parentId.includes(':Provision:')
+
+                
                 ){
               this.hideField = true
             }
+
+
 
           // }
         }
