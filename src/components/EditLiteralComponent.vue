@@ -222,6 +222,31 @@ export default {
 
     nav: function(event){
 
+      console.log(event)
+      console.log(this.settingsDPackVoyagerNative, this.diacrticsVoyagerNativeMode,event.code,event.ctrlKey)
+      // turn it on
+      if (this.settingsDPackVoyagerNative && this.diacrticsVoyagerNativeMode == false && event.code == 'KeyE' && event.ctrlKey == true){
+        this.$refs["input"].style.color="blue"
+        this.diacrticsVoyagerNativeMode = true
+        console.log("Here")
+        event.preventDefault()
+        return false
+      // turn it off
+      }else if (this.settingsDPackVoyagerNative && this.diacrticsVoyagerNativeMode == true && event.code == 'KeyE' && event.ctrlKey == true){
+        this.diacrticsVoyagerNativeMode = false
+        window.setTimeout(()=>{
+          this.$refs["input"].style.color="black"
+        },500)
+        event.preventDefault()
+        return false
+      // execute it
+      }
+
+
+
+
+
+
 
 
 
@@ -375,18 +400,14 @@ export default {
 
       }
 
-      // turn it on
+      // handled in the keydown
       if (this.settingsDPackVoyagerNative && this.diacrticsVoyagerNativeMode == false && event.code == 'KeyE' && event.ctrlKey == true){
-        this.$refs["input"].style.color="blue"
-        this.diacrticsVoyagerNativeMode = true
-
+        event.preventDefault()
+        return false
       // turn it off
       }else if (this.settingsDPackVoyagerNative && this.diacrticsVoyagerNativeMode == true && event.code == 'KeyE' && event.ctrlKey == true){
-        this.diacrticsVoyagerNativeMode = false
-        window.setTimeout(()=>{
-          this.$refs["input"].style.color="black"
-        },500)
-
+        event.preventDefault()
+        return false
       // execute it
       }else if (this.settingsDPackVoyagerNative && diacrticsVoyagerNative[event.code] && this.diacrticsVoyagerNativeMode == true){
 
