@@ -72,6 +72,7 @@ export default new Vuex.Store({
     catInitials: null,
 
     settingsDPackVoyager: true,
+    settingsDPackVoyagerNative: false,
 
 
 
@@ -207,6 +208,10 @@ export default new Vuex.Store({
     SETTINGSDPACKVOYAGER(state, val) {
       state.settingsDPackVoyager = val
     },   
+    SETTINGSDPACKVOYAGERNATIVE(state, val) {
+      state.settingsDPackVoyagerNative = val
+    },   
+    
 
     ACTIVERECORDSAVED(state, val) {
       state.activeRecordSaved = val
@@ -358,15 +363,18 @@ export default new Vuex.Store({
     },
 
     
+    // this is the macro express one
     setSettingsDPackVoyager({ commit}, data){
       commit('SETTINGSDPACKVOYAGER', data.settingsDPackVoyager)
-
       localStorage.setItem('bfeSettingsDPackVoyager',data.settingsDPackVoyager)
-
-
-      console.log( localStorage.getItem('bfeSettingsDPackVoyager'))
-
     },
+
+    // this is the native voyager one
+    setSettingsDPackVoyagerNative({ commit}, data){
+      commit('SETTINGSDPACKVOYAGERNATIVE', data.settingsDPackVoyagerNative)
+      localStorage.setItem('bfeSettingsDPackVoyagerNative',data.settingsDPackVoyagerNative)
+    },
+
 
 
     async removeValueSimple ({ commit, state }, data) {   

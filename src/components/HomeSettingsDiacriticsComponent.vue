@@ -2,12 +2,12 @@
   <div id="home-settings-diacritics">
     
     <h1>Diacritic Packs</h1>    
-
+    <div>You can only have one enabled at a time:</div>
     <div style="display: flex; background-color: whitesmoke; padding: 5px;">
 
       <div style="flex:3;">
 
-        <div>Voyager Shortcuts</div>
+        <div>Voyager Macro Express Shortcuts</div>
         <details>
           <summary>Show shortcut keys:</summary>
           <table style="border-top:1px solid #c6c9cc">
@@ -21,10 +21,38 @@
       </div>
       <div style="flex:1"><input v-model="dPackVoyager" @change="settingsChange" type="checkbox" id="switch" /><label for="switch">Toggle</label></div>
 
-
-
     </div>
 
+    <div style="display: flex; background-color: whitesmoke; padding: 5px;">
+
+      <div style="flex:3;">
+
+        <div>Voyager Diacritic Entry Mode Shortcuts</div>
+        <details>
+          <summary>Show shortcut keys:</summary>
+          <div>
+            With this mode you press Control+e to put the input into diacritic mode, then press one of the short cuts listed below.<br><br>
+            For example, to add an acute to a letter you would
+            <ol>
+              <li>Enter the letter, for example "a"</li>
+              <li>Press Control+e</li>
+              <li>Press they key "b"</li>
+            </ol>
+
+          </div>
+
+          <table style="border-top:1px solid #c6c9cc">
+            <tr v-for="(d,idx) of dPackVoyagerShortCutsNative" v-bind:key="idx">
+              <td>{{d.combo}}</td>
+              <td>{{d.nick}} {{(d.name) ? d.name : ''}}</td>
+            </tr>
+          </table>
+        </details>
+
+      </div>
+      <div style="flex:1"><input v-model="dPackVoyagerNative" @change="settingsChange" type="checkbox" id="switchNative" /><label for="switchNative">Toggle</label></div>
+
+    </div>
 
 
     <hr>
@@ -108,7 +136,8 @@
 
 import { mapState } from 'vuex'
 // import uiUtils from "@/lib/uiUtils"
-import diacrticsVoyager from "@/lib/diacritics/diacritic_pack_voyager.json"
+import diacrticsVoyagerMacroExpress from "@/lib/diacritics/diacritic_pack_voyager_macro_express.json"
+import diacrticsVoyagerNative from "@/lib/diacritics/diacritic_pack_voyager_native.json"
 
 
 export default {
@@ -171,7 +200,7 @@ export default {
 
       this.locatStorageDiacritics = bfeDiacritics
 
-      // console.log(localStorage.getItem('bfeDiacritics'))
+      
       this.newCutomDiacriticLetter = null
       this.newCutomDiacriticKey = ""
       this.newCutomDiacriticKeyCode = null
@@ -211,7 +240,7 @@ export default {
       // this.newCutomDiacriticKey = `"${event.key}" [key code: ${event.keyCode}]`
       this.newCutomDiacriticKey = `"${event.key}"`
       event.preventDefault()      
-      // console.log(event)
+      
       document.getElementById('newDiacriticDesc').focus()
       return false
     },
@@ -221,15 +250,36 @@ export default {
     settingsChange(){
 
 
-      console.log(this.dPackVoyager)
 
+
+
+
+      
 
       this.$store.dispatch("setSettingsDPackVoyager", { self: this, settingsDPackVoyager: this.dPackVoyager }).then(() => {
         
-        console.log('settingsDPackVoyager',this.settingsDPackVoyager)
+        
+        // you can't have everything
+        if (this.dPackVoyager && this.dPackVoyagerNative){
+          this.dPackVoyagerNative = false
+          this.settingsChange()          
+        }
+
 
       })   
 
+
+      this.$store.dispatch("setSettingsDPackVoyagerNative", { self: this, settingsDPackVoyagerNative: this.dPackVoyagerNative }).then(() => {
+        
+        
+        // you can't have everything
+        if (this.dPackVoyager && this.dPackVoyagerNative){
+          this.dPackVoyagerNative = false
+          this.settingsChange()
+        }
+
+
+      })   
 
 
 
@@ -243,6 +293,7 @@ export default {
     profiles: 'profiles',
     profilesLoaded: 'profilesLoaded',
     settingsDPackVoyager: 'settingsDPackVoyager',
+    settingsDPackVoyagerNative: 'settingsDPackVoyagerNative',
 
     // isDiacritics () {
     //   return (this.$route.fullPath==="/settings/diacritics" || this.$route.fullPath==="/settings")
@@ -273,9 +324,10 @@ export default {
       newCutomDiacriticDesc: null,
       newCutomDiacriticKeyCode: null,
       dPackVoyager:true,
+      dPackVoyagerNative: false,
 
       dPackVoyagerShortCuts: [],
-
+      dPackVoyagerShortCutsNative: [],
       locatStorageDiacritics: []
 
     }
@@ -290,16 +342,29 @@ export default {
     }
 
 
-    for (let k in diacrticsVoyager){
-      for (let d of diacrticsVoyager[k]){
+    for (let k in diacrticsVoyagerMacroExpress){
+      for (let d of diacrticsVoyagerMacroExpress[k]){
         this.dPackVoyagerShortCuts.push(d)
       }
     }
 
+    for (let k in diacrticsVoyagerNative){
+      for (let d of diacrticsVoyagerNative[k]){
+        this.dPackVoyagerShortCutsNative.push(d)
+      }
+    }
+
+
+    
+
 
 
     this.dPackVoyager = this.settingsDPackVoyager
-    console.log('this.dPackVoyager',this.dPackVoyager)
+    this.dPackVoyagerNative = this.settingsDPackVoyagerNative
+
+
+
+
     this.locatStorageDiacritics = bfeDiacritics
 
   },

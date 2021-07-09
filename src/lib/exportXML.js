@@ -1109,6 +1109,7 @@ const exportXML = {
 				}	
 
 				if (uri){
+					console.log('making has item')
 					let hasItem = this.createElByBestNS('bf:hasItem')
 					hasItem.setAttributeNS(this.namespace.rdf, 'rdf:resource', uri)
 					instance.appendChild(hasItem)
@@ -1223,14 +1224,15 @@ const exportXML = {
 
 				if (items.length > 0){
 
-					let p = this.createElByBestNS('bf:hasItem')
+					
 
 					for (let item of items){
+						let p = this.createElByBestNS('bf:hasItem')
 						p.appendChild(item)
-						
+						instance.appendChild(p)
 					}
 
-					instance.appendChild(p)
+					
 
 
 				}

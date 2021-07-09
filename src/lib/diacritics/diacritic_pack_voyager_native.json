@@ -1,0 +1,996 @@
+{
+  "KeyB": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | b",
+      "code": "KeyB",
+      "codeEscape": "\u0301",
+      "combining": true,
+      "nick": "Acute",
+      "unicode": "0301",
+      "name": "Acute / Combining Acute Accent (Oxia)"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + b",
+      "code": "KeyB",
+      "codeEscape": "\u00B2",
+      "combining": false,
+      "nick": "Superscript 2",
+      "unicode": "00B2",
+      "name": false
+    }
+  ],
+  "Digit5": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | 5",
+      "code": "Digit5",
+      "codeEscape": "\u00E6",
+      "combining": false,
+      "nick": "ae Digraph",
+      "unicode": "00E6",
+      "name": "ae Digraph (Lowercase)  / Latin Small Ligature ae"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + 5",
+      "code": "Digit5",
+      "codeEscape": "\u00C6",
+      "combining": false,
+      "nick": "AE Digraph",
+      "unicode": "00C6",
+      "name": "AE Digraph (Uppercase) / Latin Capital Ligature AE"
+    }
+  ],
+  "Period": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | .",
+      "code": "Period",
+      "codeEscape": "\u02BC",
+      "combining": false,
+      "nick": "Alif",
+      "unicode": "02BC",
+      "name": "Alif / Modifier Letter Right Half Ring"
+    }
+  ],
+  "Digit0": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | 0",
+      "code": "Digit0",
+      "codeEscape": "\u02BB",
+      "combining": false,
+      "nick": "Ayn",
+      "unicode": "02BB",
+      "name": "Ayn / Modifier Letter Turned Comma"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + 0",
+      "code": "Digit0",
+      "codeEscape": "\u266D",
+      "combining": false,
+      "nick": "Musical flat",
+      "unicode": "266D",
+      "name": "Music Flat Sign"
+    }
+  ],
+  "KeyF": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | f",
+      "code": "KeyF",
+      "codeEscape": "\u0306",
+      "combining": true,
+      "nick": "Breve",
+      "unicode": "0306",
+      "name": "Breve / Combining Breve (Vrachy)"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + f",
+      "code": "KeyF",
+      "codeEscape": "\u2076",
+      "combining": false,
+      "nick": "Superscript 6",
+      "unicode": "2076",
+      "name": false
+    }
+  ],
+  "Digit9": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | 9",
+      "code": "Digit9",
+      "codeEscape": "\u00A3",
+      "combining": false,
+      "nick": "British pound",
+      "unicode": "00A3",
+      "name": "British Pound / Pound Sign"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + 9",
+      "code": "Digit9",
+      "codeEscape": "\u00B7",
+      "combining": false,
+      "nick": "Dot at midline",
+      "unicode": "00B7",
+      "name": "Middle Dot"
+    }
+  ],
+  "KeyO": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | o",
+      "code": "KeyO",
+      "codeEscape": "\u0310",
+      "combining": true,
+      "nick": "Candrabindu",
+      "unicode": "0310",
+      "name": "Candrabindu / Combining Candrabindu"
+    }
+  ],
+  "KeyP": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | p",
+      "code": "KeyP",
+      "codeEscape": "\u0327",
+      "combining": true,
+      "nick": "Cedilla",
+      "unicode": "0327",
+      "name": "Cedilla / Combining Cedilla"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + p",
+      "code": "KeyP",
+      "codeEscape": "\u2080",
+      "combining": false,
+      "nick": "Subscript 0",
+      "unicode": "2080",
+      "name": false
+    }
+  ],
+  "KeyJ": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | j",
+      "code": "KeyJ",
+      "codeEscape": "\u030A",
+      "combining": true,
+      "nick": "Angstrom",
+      "unicode": "030A",
+      "name": "Circle Abov Angstrom / Combining Ring Above"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + j",
+      "code": "KeyJ",
+      "codeEscape": "\u207a",
+      "combining": false,
+      "nick": "Superscript +",
+      "unicode": "207a",
+      "name": "Superscript + (plus)"
+    }
+  ],
+  "KeyT": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | t",
+      "code": "KeyT",
+      "codeEscape": "\u0325",
+      "combining": true,
+      "nick": "Circle below",
+      "unicode": "0325",
+      "name": "Circle Below / Combining Ring Below"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + t",
+      "code": "KeyT",
+      "codeEscape": "\u2084",
+      "combining": false,
+      "nick": "Subscript 4",
+      "unicode": "2084",
+      "name": false
+    }
+  ],
+  "KeyC": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | c",
+      "code": "KeyC",
+      "codeEscape": "\u0302",
+      "combining": true,
+      "nick": "Circumflex",
+      "unicode": "0302",
+      "name": "Circumflex / Combining Circumflex Accent"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + c",
+      "code": "KeyC",
+      "codeEscape": "\u00B3",
+      "combining": false,
+      "nick": "Superscript 3",
+      "unicode": "00B3",
+      "name": false
+    }
+  ],
+  "Digit6": [
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + 6",
+      "code": "Digit6",
+      "codeEscape": "\u00A9",
+      "combining": false,
+      "nick": "Copyright",
+      "unicode": "00A9",
+      "name": "Copyright Sign"
+    },
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | 6",
+      "code": "Digit6",
+      "codeEscape": "\u0153",
+      "combining": false,
+      "nick": "oe digraph",
+      "unicode": "0153",
+      "name": "oe Digraph (Lowercase) / Latin Small Ligature oe"
+    }
+  ],
+  "Digit3": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | 3",
+      "code": "Digit3",
+      "codeEscape": "\u0111",
+      "combining": false,
+      "nick": "d with crossbar",
+      "unicode": "0111",
+      "name": "d With Crossbar (Lowercase) / Latin Small Letter D With Stroke"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + 3",
+      "code": "Digit3",
+      "codeEscape": "\u0110",
+      "combining": false,
+      "nick": "D with crossbar",
+      "unicode": "0110",
+      "name": "D With Crossbar (Uppercase) / Latin Capital Letter D With Stroke"
+    }
+  ],
+  "KeyN": [
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + n",
+      "code": "KeyN",
+      "codeEscape": "\u00B0",
+      "combining": false,
+      "nick": "Degree",
+      "unicode": "00B0",
+      "name": "Degree sign"
+    },
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | n",
+      "code": "KeyN",
+      "codeEscape": "\u030B",
+      "combining": true,
+      "nick": "Double acute",
+      "unicode": "030B",
+      "name": "Double Acute / Combining Double Acute Accent"
+    }
+  ],
+  "KeyR": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | r",
+      "code": "KeyR",
+      "codeEscape": "\u0323",
+      "combining": true,
+      "nick": "Dot below",
+      "unicode": "0323",
+      "name": "Dot Below / Combining Dot Below"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + r",
+      "code": "KeyR",
+      "codeEscape": "\u2082",
+      "combining": false,
+      "nick": "Subscript 2",
+      "unicode": "2082",
+      "name": false
+    }
+  ],
+  "KeyS": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | s",
+      "code": "KeyS",
+      "codeEscape": "\u0324",
+      "combining": true,
+      "nick": "Double dot below",
+      "unicode": "0324",
+      "name": "Double Dot Below / Combining Diaeresis Below"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + s",
+      "code": "KeyS",
+      "codeEscape": "\u2083",
+      "combining": false,
+      "nick": "Subscript 3",
+      "unicode": "2083",
+      "name": false
+    }
+  ],
+  "KeyZ": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | z",
+      "code": "KeyZ",
+      "codeEscape": "\uFE22",
+      "combining": false,
+      "nick": "Double tilde first half",
+      "unicode": "FE22",
+      "name": "Double Tilde First Half (Use Diacritic Mode"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + z",
+      "code": "KeyZ",
+      "codeEscape": "\u208a",
+      "combining": false,
+      "nick": "Subscript +",
+      "unicode": "208a",
+      "name": "Subscript + (plus)"
+    }
+  ],
+  "BracketLeft": [
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + [",
+      "code": "BracketLeft",
+      "codeEscape": "\uFE23",
+      "combining": false,
+      "nick": "Double tilde second half",
+      "unicode": "FE23",
+      "name": "Double Tilde Second Half (Use Diacritic Mode"
+    },
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | [",
+      "code": "BracketLeft",
+      "codeEscape": "\u208b",
+      "combining": false,
+      "nick": "Subscript -",
+      "unicode": "208b",
+      "name": "Subscript - (minus)"
+    }
+  ],
+  "KeyU": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | u",
+      "code": "KeyU",
+      "codeEscape": "\u0333",
+      "combining": true,
+      "nick": "Double underscore",
+      "unicode": "0333",
+      "name": "Double Underscore / Combining Double Low Line"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + u",
+      "code": "KeyU",
+      "codeEscape": "\u2085",
+      "combining": false,
+      "nick": "Subscript 5",
+      "unicode": "2085",
+      "name": false
+    }
+  ],
+  "Semicolon": [
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + ;",
+      "code": "Semicolon",
+      "codeEscape": "\u00F0",
+      "combining": false,
+      "nick": "Eth",
+      "unicode": "00F0",
+      "name": "Eth (Lowercase) / Latin Small Letter Eth (Icelandic)"
+    },
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | ;",
+      "code": "Semicolon",
+      "codeEscape": "\u20AC",
+      "combining": false,
+      "nick": "Euro",
+      "unicode": "20AC",
+      "name": false
+    }
+  ],
+  "KeyA": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | a",
+      "code": "KeyA",
+      "codeEscape": "\u0300",
+      "combining": true,
+      "nick": "Grave",
+      "unicode": "0300",
+      "name": "Grave / Combining Grave Accent (Varia)"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + a",
+      "code": "KeyA",
+      "codeEscape": "\u00B9",
+      "combining": false,
+      "nick": "Superscript 1",
+      "unicode": "00B9",
+      "name": false
+    }
+  ],
+  "KeyI": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | i",
+      "code": "KeyI",
+      "codeEscape": "\u030C",
+      "combining": true,
+      "nick": "Hachek",
+      "unicode": "030C",
+      "name": "Hacek / Combining Caron"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + i",
+      "code": "KeyI",
+      "codeEscape": "\u2079",
+      "combining": false,
+      "nick": "Superscript 9",
+      "unicode": "2079",
+      "name": false
+    }
+  ],
+  "Digit7": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | 7",
+      "code": "Digit7",
+      "codeEscape": "\u2033",
+      "combining": false,
+      "nick": "Hard Sign",
+      "unicode": "2033",
+      "name": ""
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + 7",
+      "code": "Digit7",
+      "codeEscape": "\u0152",
+      "combining": false,
+      "nick": "OE digraph",
+      "unicode": "0152",
+      "name": "OE Digraph (Uppercase) / Latin Capital Ligature OE"
+    }
+  ],
+  "KeyM": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | m",
+      "code": "KeyM",
+      "codeEscape": "\u0315",
+      "combining": true,
+      "nick": "High comma off center",
+      "unicode": "0315",
+      "name": "High Comma Off Center / Combining Comma Above Right"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + m",
+      "code": "KeyM",
+      "codeEscape": "\u207e",
+      "combining": false,
+      "nick": "Superscript )",
+      "unicode": "207e",
+      "name": "Superscript )  (right paren)"
+    }
+  ],
+  "Backquote": [
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + `",
+      "code": "Backquote",
+      "codeEscape": "\u0313",
+      "combining": true,
+      "nick": "High comma centered",
+      "unicode": "0313",
+      "name": "High Comma Centered / Combining Comma Above (Psili)"
+    },
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | `",
+      "code": "Backquote",
+      "codeEscape": "\u0309",
+      "combining": true,
+      "nick": "Pseudo question mark",
+      "unicode": "0309",
+      "name": "Pseudo Question Mark / Combining Hook Above"
+    }
+  ],
+  "BracketRight": [
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + }",
+      "code": "BracketRight",
+      "codeEscape": "\u00A1",
+      "combining": false,
+      "nick": "Inverted Exclmation",
+      "unicode": "00A1",
+      "name": false
+    },
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | ]",
+      "code": "BracketRight",
+      "codeEscape": "\u208e",
+      "combining": false,
+      "nick": "Subscript )",
+      "unicode": "208e",
+      "name": "Subscript )  (right paren)"
+    }
+  ],
+  "Backslash": [
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + |",
+      "code": "Backslash",
+      "codeEscape": "\u00BF",
+      "combining": false,
+      "nick": "Inverted Question Mark",
+      "unicode": "00BF",
+      "name": false
+    },
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | \\",
+      "code": "Backslash",
+      "codeEscape": "\u208d",
+      "combining": false,
+      "nick": "Subscript (",
+      "unicode": "208d",
+      "name": "Subscript (  (left paren)"
+    }
+  ],
+  "KeyW": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | w",
+      "code": "KeyW",
+      "codeEscape": "\u0326",
+      "combining": true,
+      "nick": "Hook left",
+      "unicode": "0326",
+      "name": "Left Hook (Comma Below) / Combining Comma Below"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + w",
+      "code": "KeyW",
+      "codeEscape": "\u2087",
+      "combining": false,
+      "nick": "Subscript 7",
+      "unicode": "2087",
+      "name": false
+    }
+  ],
+  "KeyK": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | k",
+      "code": "KeyK",
+      "codeEscape": "\uFE20",
+      "combining": false,
+      "nick": "Ligature left",
+      "unicode": "FE20",
+      "name": "Ligature First Half (Use Diacritic Mode"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + k",
+      "code": "KeyK",
+      "codeEscape": "\u207b",
+      "combining": false,
+      "nick": "Supercript -",
+      "unicode": "207b",
+      "name": "Superscript - (minus)"
+    }
+  ],
+  "KeyL": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | l",
+      "code": "KeyL",
+      "codeEscape": "\uFE21",
+      "combining": false,
+      "nick": "Ligature right",
+      "unicode": "FE21",
+      "name": "Ligature Second Half (Use Diacritic Mode"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + l",
+      "code": "KeyL",
+      "codeEscape": "\u207d",
+      "combining": false,
+      "nick": "Superscript (",
+      "unicode": "207d",
+      "name": "Superscript (  (left paren)"
+    }
+  ],
+  "KeyE": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | e",
+      "code": "KeyE",
+      "codeEscape": "\u0304",
+      "combining": true,
+      "nick": "Macron",
+      "unicode": "0304",
+      "name": "Macron / Combining Macron"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + e",
+      "code": "KeyE",
+      "codeEscape": "\u2075",
+      "combining": false,
+      "nick": "Superscript 5",
+      "unicode": "2075",
+      "name": false
+    }
+  ],
+  "Minus": [
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + -",
+      "code": "Minus",
+      "codeEscape": "\u266F",
+      "combining": false,
+      "nick": "Musical sharp",
+      "unicode": "266F",
+      "name": "Musical sharp sign"
+    },
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | -",
+      "code": "Minus",
+      "codeEscape": "\u01AF",
+      "combining": false,
+      "nick": "U hook",
+      "unicode": "01AF",
+      "name": "U-Hook (Uppercase) / Latin Capital Letter U With Horn"
+    }
+  ],
+  "Comma": [
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + ,",
+      "code": "Comma",
+      "codeEscape": "\u01A1",
+      "combining": false,
+      "nick": "o hook",
+      "unicode": "01A1",
+      "name": "o-Hook (Lowercase)  / Latin Small Letter O With Horn"
+    },
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | ,",
+      "code": "Comma",
+      "codeEscape": "\u01A0",
+      "combining": false,
+      "nick": "O hook",
+      "unicode": "01A0",
+      "name": "O-Hook (Uppercase) / Latin Capital Letter O With Horn"
+    }
+  ],
+  "Equal": [
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + =",
+      "code": "Equal",
+      "codeEscape": "\u00B1",
+      "combining": false,
+      "nick": "Plus or minus",
+      "unicode": "00B1",
+      "name": "Plus Or Minus / Plus-Minus Sign"
+    },
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | =",
+      "code": "Equal",
+      "codeEscape": "\u01B0",
+      "combining": false,
+      "nick": "u hook",
+      "unicode": "01B0",
+      "name": "u-Hook (Lowercase) / Latin Small Letter U With Horn"
+    }
+  ],
+  "Digit1": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | 1",
+      "code": "Digit1",
+      "codeEscape": "\u0142",
+      "combining": false,
+      "nick": "Polish l",
+      "unicode": "0142",
+      "name": "Polish L (Lowercase) / Latin Small Letter L With Stroke"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + 1",
+      "code": "Digit1",
+      "codeEscape": "\u0141",
+      "combining": false,
+      "nick": "Polish L",
+      "unicode": "0141",
+      "name": "Polish L (Uppercase) / Latin Capital Letter L With Stroke"
+    }
+  ],
+  "KeyX": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | x",
+      "code": "KeyX",
+      "codeEscape": "\u031C",
+      "combining": true,
+      "nick": "Right cedilla",
+      "unicode": "031C",
+      "name": "Right Cedilla / Combining Left Half Ring Below"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + x",
+      "code": "KeyX",
+      "codeEscape": "\u2088",
+      "combining": false,
+      "nick": "Subscript 8",
+      "unicode": "2088",
+      "name": false
+    }
+  ],
+  "KeyQ": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | q",
+      "code": "KeyQ",
+      "codeEscape": "\u0328",
+      "combining": true,
+      "nick": "Hook right",
+      "unicode": "0328",
+      "name": "Right Hook Ogonek / Combining Ogonek"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + q",
+      "code": "KeyQ",
+      "codeEscape": "\u2081",
+      "combining": false,
+      "nick": "Subscript 1",
+      "unicode": "2081",
+      "name": false
+    }
+  ],
+  "Digit2": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | 2",
+      "code": "Digit2",
+      "codeEscape": "\u00F8",
+      "combining": false,
+      "nick": "Scandinavian o",
+      "unicode": "00F8",
+      "name": "Scandinavian o (Lowercase) / Latin Small Letter O With Stroke"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + 2",
+      "code": "Digit2",
+      "codeEscape": "\u2070",
+      "combining": false,
+      "nick": "Superscript 0",
+      "unicode": "2070",
+      "name": false
+    }
+  ],
+  "Quote": [
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + '",
+      "code": "Quote",
+      "codeEscape": "\u00D8",
+      "combining": false,
+      "nick": "Scandinavian O",
+      "unicode": "00D8",
+      "name": "Scandinavian O (Uppercase) / Latin Capital Letter O With Stroke"
+    },
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | '",
+      "code": "Quote",
+      "codeEscape": "\u02B9",
+      "combining": false,
+      "nick": "Myagkii znak",
+      "unicode": "02B9",
+      "name": "Soft Sign/Prime/ Miagkii znak / Modifier Letter Prime"
+    }
+  ],
+  "Space": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | [space]",
+      "code": "Space",
+      "codeEscape": "\u2113",
+      "combining": false,
+      "nick": "Script Small L",
+      "unicode": "2113",
+      "name": false
+    }
+  ],
+  "KeyV": [
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + v",
+      "code": "KeyV",
+      "codeEscape": "\u2086",
+      "combining": false,
+      "nick": "Subscript 6",
+      "unicode": "2086",
+      "name": false
+    },
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | v",
+      "code": "KeyV",
+      "codeEscape": "\u0332",
+      "combining": true,
+      "nick": "Underscore",
+      "unicode": "0332",
+      "name": "Underscore / Combining Low Line"
+    }
+  ],
+  "KeyY": [
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + y",
+      "code": "KeyY",
+      "codeEscape": "\u2089",
+      "combining": false,
+      "nick": "Subscript 9",
+      "unicode": "2089",
+      "name": false
+    },
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | y",
+      "code": "KeyY",
+      "codeEscape": "\u032E",
+      "combining": true,
+      "nick": "Upadhmaniya",
+      "unicode": "032E",
+      "name": "Upadhmaniya / Combining Breve Below"
+    }
+  ],
+  "KeyG": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | g",
+      "code": "KeyG",
+      "codeEscape": "\u0307",
+      "combining": true,
+      "nick": "Dot above",
+      "unicode": "0307",
+      "name": "Superior Dot / Combining Dot Above"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + g",
+      "code": "KeyG",
+      "codeEscape": "\u2077",
+      "combining": false,
+      "nick": "Superscript 7",
+      "unicode": "2077",
+      "name": false
+    }
+  ],
+  "KeyD": [
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + d",
+      "code": "KeyD",
+      "codeEscape": "\u2074",
+      "combining": false,
+      "nick": "Superscript 4",
+      "unicode": "2074",
+      "name": false
+    },
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | d",
+      "code": "KeyD",
+      "codeEscape": "\u0303",
+      "combining": true,
+      "nick": "Tilde",
+      "unicode": "0303",
+      "name": "Tilde / Combining Tilde"
+    }
+  ],
+  "KeyH": [
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + h",
+      "code": "KeyH",
+      "codeEscape": "\u2078",
+      "combining": false,
+      "nick": "Superscript 8",
+      "unicode": "2078",
+      "name": false
+    },
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | h",
+      "code": "KeyH",
+      "codeEscape": "\u0308",
+      "combining": false,
+      "nick": "Umlaut",
+      "unicode": "0308",
+      "name": false
+    }
+  ],
+  "Digit4": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | 4",
+      "code": "Digit4",
+      "codeEscape": "\u00DE",
+      "combining": false,
+      "nick": "Icelandic Thorn",
+      "unicode": "00DE",
+      "name": "Thorn"
+    },
+    {
+      "shiftKey": true,
+      "combo": "Ctrl+e | Shift + 4",
+      "code": "Digit4",
+      "codeEscape": "\u00FE",
+      "combining": false,
+      "nick": "Icelandic thorn",
+      "unicode": "00FE",
+      "name": "thorn"
+    }
+  ],
+  "Digit8": [
+    {
+      "shiftKey": false,
+      "combo": "Ctrl+e | 8",
+      "code": "Digit8",
+      "codeEscape": "\u0131",
+      "combining": false,
+      "nick": "Turkish i (Lowercase)",
+      "unicode": "0131",
+      "name": "Turkish i (Lowercase)  / Latin Small Letter Dotless i"
+    }
+  ]
+}

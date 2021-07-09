@@ -157,6 +157,13 @@ export default {
       // this.isLoggedIn=false;
     }
 
+    if (localStorage.getItem('bfeSettingsDPackVoyagerNative') === 'undefined'){
+      localStorage.removeItem('bfeSettingsDPackVoyagerNative')
+    }
+    if (localStorage.getItem('bfeSettingsDPackVoyager') === 'undefined'){
+      localStorage.removeItem('bfeSettingsDPackVoyager')
+    }
+
 
     if (localStorage.getItem('bfeSettingsDPackVoyager')!== null){
       console.log("SETTING setSettingsDPackVoyager",JSON.parse(localStorage.getItem('bfeSettingsDPackVoyager')))
@@ -164,6 +171,12 @@ export default {
       })   
     }
 
+
+    if (localStorage.getItem('bfeSettingsDPackVoyagerNative')!== null){
+      console.log("SETTING setSettingsDPackVoyager",JSON.parse(localStorage.getItem('bfeSettingsDPackVoyagerNative')))
+      this.$store.dispatch("setSettingsDPackVoyagerNative", { self: this, settingsDPackVoyagerNative: JSON.parse(localStorage.getItem('bfeSettingsDPackVoyagerNative')) }).then(() => {
+      })   
+    }
         
 
 

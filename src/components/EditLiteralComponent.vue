@@ -102,7 +102,8 @@
 import { mapState } from 'vuex'
 import uiUtils from "@/lib/uiUtils"
 import config from "@/lib/config"
-import diacrticsVoyager from "@/lib/diacritics/diacritic_pack_voyager.json"
+import diacrticsVoyagerMacroExpress from "@/lib/diacritics/diacritic_pack_voyager_macro_express.json"
+import diacrticsVoyagerNative from "@/lib/diacritics/diacritic_pack_voyager_native.json"
 
 
 
@@ -289,10 +290,10 @@ export default {
 
 
 
-      if (diacrticsVoyager[event.code] && this.settingsDPackVoyager){
+      if (diacrticsVoyagerMacroExpress[event.code] && this.settingsDPackVoyager){
 
 
-        for (let macro of diacrticsVoyager[event.code]){
+        for (let macro of diacrticsVoyagerMacroExpress[event.code]){
 
           if (event.ctrlKey == macro.ctrlKey && event.altKey == macro.altKey && event.shiftKey == macro.shiftKey){
 
@@ -374,6 +375,63 @@ export default {
 
       }
 
+      // turn it on
+      if (this.settingsDPackVoyagerNative && this.diacrticsVoyagerNativeMode == false && event.code == 'KeyE' && event.ctrlKey == true){
+        this.$refs["input"].style.color="blue"
+        this.diacrticsVoyagerNativeMode = true
+
+      // turn it off
+      }else if (this.settingsDPackVoyagerNative && this.diacrticsVoyagerNativeMode == true && event.code == 'KeyE' && event.ctrlKey == true){
+        this.diacrticsVoyagerNativeMode = false
+        window.setTimeout(()=>{
+          this.$refs["input"].style.color="black"
+        },500)
+
+      // execute it
+      }else if (this.settingsDPackVoyagerNative && diacrticsVoyagerNative[event.code] && this.diacrticsVoyagerNativeMode == true){
+
+        window.setTimeout(()=>{
+          this.$refs["input"].style.color="black"
+        },500)
+
+        // remove the shortcut key we just dumped into the text box
+        this.inputValue = this.inputValue.slice(0, -1); 
+
+        this.diacrticsVoyagerNativeMode = false
+        
+        let useMacro
+        for (let macro of diacrticsVoyagerNative[event.code]){          
+          if (macro.shiftKey == event.shiftKey){
+            useMacro = macro
+            break
+          }
+        }
+
+
+        if (!useMacro.combining){
+          // it is not a combining unicode char so just insert it into the value
+          if (this.inputValue){
+            this.inputValue=this.inputValue+useMacro.codeEscape
+          }else{
+            this.inputValue = useMacro.codeEscape
+          }
+
+        }else{
+              this.inputValue=this.inputValue+useMacro.codeEscape
+
+        }
+
+      }
+
+
+
+
+      // }
+
+
+
+
+
       // if (event.ctrlKey && event.altKey && event.code == 'KeyH'){
       //   console.log('~~~~~~~~~~~~~~~~~~~~')
       //   console.log(event)
@@ -430,6 +488,7 @@ export default {
     activeInput: 'activeInput',
     activeProfile: 'activeProfile',
     settingsDPackVoyager: 'settingsDPackVoyager',
+    settingsDPackVoyagerNative: 'settingsDPackVoyagerNative',
     assignedId (){
 
 
@@ -448,7 +507,8 @@ export default {
       diacriticData: [],
       diacriticDataNav: 0,
       hideField: false,
-      guid: null
+      guid: null,
+      diacrticsVoyagerNativeMode:false
 
 
     }
@@ -520,7 +580,7 @@ export default {
             if (!this.parentStructureObj.parentId.includes('Information')){
               this.hideField = true
             }
-            this.hideField = false
+
           // }
         }
       }
