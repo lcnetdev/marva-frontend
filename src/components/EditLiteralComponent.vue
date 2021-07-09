@@ -598,7 +598,11 @@ export default {
           // always hide it
           // if (bnodeHasURI){
 
-            if (!this.parentStructureObj.parentId.includes('Information')){
+            if (
+                !this.parentStructureObj.parentId.includes('Information') &&
+                !this.parentStructureObj.parentId.includes('PubPlace') &&
+                !this.parentStructureObj.parentId.includes('PubName')
+                ){
               this.hideField = true
             }
 
