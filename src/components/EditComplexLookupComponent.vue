@@ -53,7 +53,9 @@
               <div v-if="displaySelectedDetails==true" class="selected-value-details">
                 
                 <button class="selected-value-details-close" @click="toggleSelectedDetails">Close</button>
-                <a style="color:white; text-decoration: none;" target="_blank" :href="rewriteURI(displayContext.uri)">View Entity</a>
+                <button class="selected-value-details-edit" @click="openEditSubjectEditor">Edit</button>
+
+                <a v-if="rewriteURI(displayContext.uri)" style="color:white; text-decoration: none;" target="_blank"  :href="rewriteURI(displayContext.uri)">View Entity</a>
                 <div class="modal-context-data-title">{{userData['@type']}}</div>
 
                 <div v-if="displayContext">
@@ -101,6 +103,9 @@
 
     <div v-else>
 
+      <Keypress v-if="structure.propertyURI=='http://www.loc.gov/mads/rdf/v1#Topic'" key-event="keydown" :multiple-keys="[{keyCode: 69, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="openEditSubjectEditor" />
+
+
       
       <div style="position: relative;" v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search']">       
           <div class="component-nested-container-title" style="top: 0; width: 100%">
@@ -123,12 +128,16 @@
                 </form>
               </div>
 
+              <button v-if="structure.propertyURI=='http://www.loc.gov/mads/rdf/v1#Topic'" tabindex="-1" class="temp-icon-search fake-real-button simptip-position-top" style="position:absolute;right: -2px;top:-26px" @click="openEditSubjectEditor" :data-tooltip="'Edit this Subject Heading [CTRL-ALT-SHIFT-E]'"></button>
+
               <!-- This is the detail drop down that can be click to show context of the entitiy -->
               
               <div v-if="displaySelectedDetails==true" class="selected-value-details">
                 
                 <button class="selected-value-details-close" @click="toggleSelectedDetails">Close</button>
-                <a style="color:white; text-decoration: none;" target="_blank" :href="rewriteURI(displayContext.uri)">View Entity</a>
+                <button class="selected-value-details-edit" @click="openEditSubjectEditor">Edit</button>
+
+                <a v-if="rewriteURI(displayContext.uri)" style="color:white; text-decoration: none;" target="_blank" :href="rewriteURI(displayContext.uri)">View Entity</a>
                 <div class="modal-context-data-title">{{userData['@type']}}</div>
 
                 <div v-if="displayContext">
@@ -171,7 +180,6 @@
     </div>
 
 
-
     <!-- Always build this interface, the lookup modal -->
 
     <div :id="assignedId"  v-bind:class="['modaloverlay',{'modal-display':displayModal}]">
@@ -185,7 +193,16 @@
             
           </div>
           <div class="modal-content">
-            <div v-bind:class="['modal-content-flex-container',{'modal-content-flex-container-complex':(canBuildComplex()==true && displayPreCoordinated == true), 'modal-content-flex-container-complex-prompt': displayPreCoordinated==false, 'modal-content-flex-container-complex-hide' : (canBuildComplex()==false) }]">
+
+
+            <div v-if="structure.propertyURI=='http://www.loc.gov/mads/rdf/v1#Topic'">
+
+              <EditSubjectEditor ref="EditSubjectEditor" @subjectAdded="subjectAdded"></EditSubjectEditor>
+
+            </div>
+
+
+            <div v-else v-bind:class="['modal-content-flex-container',{'modal-content-flex-container-complex':(canBuildComplex()==true && displayPreCoordinated == true), 'modal-content-flex-container-complex-prompt': displayPreCoordinated==false, 'modal-content-flex-container-complex-hide' : (canBuildComplex()==false) }]">
 
 
               
@@ -320,6 +337,9 @@
             </div>
 
 
+
+
+
           </div> <!--- end modal-content --->
           
 
@@ -338,11 +358,14 @@ import uiUtils from "@/lib/uiUtils"
 import validationUtil from "@/lib/validationUtil"
 import config from "@/lib/config"
 import parseProfile from "@/lib/parseProfile"
+import EditSubjectEditor from "@/components/EditSubjectEditor.vue";
+
 
 export default {
   name: "EditComplexLookupComponent",
   components: {    
-    Keypress: () => import('vue-keypress')    
+    Keypress: () => import('vue-keypress'),
+    EditSubjectEditor    
   },  
   props: {
     structure: Object,
@@ -395,6 +418,7 @@ export default {
     lookupLibrary: 'lookupLibrary',
     activeInput: 'activeInput',
     activeProfile: 'activeProfile', 
+    activeProfileName: 'activeProfileName',
     activeComplexSearch: 'activeComplexSearch',
     activeComplexSearchInProgress: 'activeComplexSearchInProgress',
     contextData: 'contextData',
@@ -525,6 +549,10 @@ export default {
 
     rewriteURI: function(uri){
 
+      if (!uri){
+        return false
+      }
+
       if (uri.includes('/resources/works/') || uri.includes('/resources/instances/') || uri.includes('/resources/items/')){
         uri = uri.replace('https://id.loc.gov/', config.returnUrls().bfdb )
         uri = uri.replace('http://id.loc.gov/', config.returnUrls().bfdb )
@@ -637,6 +665,7 @@ export default {
 
     doubleDeleteCheck: function(event){
 
+
       if (event && event.key && event.key==='Backspace'){ 
 
         if (this.doubleDelete){
@@ -647,6 +676,7 @@ export default {
           this.doubleDelete = true        
         }
       }else if(event.key!='ArrowUp' && event.key!='ArrowDown' && event.key!='Tab'){
+
         event.preventDefault()
         return false
 
@@ -912,8 +942,19 @@ export default {
           event.preventDefault()
           // set the last input, but do it after the modal has been displaed
           setTimeout(()=>{
-            document.getElementById(this.assignedId+'search').focus()
+            if (document.getElementById(this.assignedId+'search')){
+              document.getElementById(this.assignedId+'search').focus()
+            }
           },0)
+
+          this.$store.dispatch("disableMacroNav", { self: this})
+
+          this.$nextTick(() => {
+            this.$refs.EditSubjectEditor.$refs.subjectInput.focus()
+            this.$refs.EditSubjectEditor.loadUserValue()
+            
+          })
+
 
          },50)
          
@@ -931,6 +972,7 @@ export default {
       // turn on the modal
       this.displayModal = true
       this.initalSearchState = true
+
       // for copy paste
       this.searchValue = event.key
 
@@ -948,8 +990,21 @@ export default {
       event.preventDefault()
       // set the last input, but do it after the modal has been displaed
       setTimeout(()=>{
-        document.getElementById(this.assignedId+'search').focus()
+        if (document.getElementById(this.assignedId+'search')){
+          document.getElementById(this.assignedId+'search').focus()
+        }
       },0)
+
+
+      this.$store.dispatch("disableMacroNav", { self: this})
+
+
+
+      this.$nextTick(() => {
+        this.$refs.EditSubjectEditor.$refs.subjectInput.focus()
+        console.log(this.searchValue)
+        this.$refs.EditSubjectEditor.loadUserValue(this.searchValue)
+      })
       return false
     },
 
@@ -970,6 +1025,8 @@ export default {
         return false
       }
 
+      this.$store.dispatch("enableMacroNav", { self: this})
+
       this.displayModal = false
       this.displayPreCoordinated = false
       this.precoordinated = []
@@ -979,6 +1036,50 @@ export default {
 
       this.focusCurrentInput()
       
+    },
+
+
+    openEditSubjectEditor: function(){
+
+      this.$store.dispatch("disableMacroNav", { self: this})
+
+      this.displayModal = true
+
+      this.$nextTick(() => {
+        this.$refs.EditSubjectEditor.$refs.subjectInput.focus()
+        console.log(this.searchValue)
+        this.$refs.EditSubjectEditor.loadUserValue(this.activeProfile.rt[this.activeProfileName].pt[this.profileCompoent].userValue)
+      })
+
+
+
+    },
+
+
+
+    subjectAdded: function(components){
+
+
+      console.log(components)
+
+      this.$store.dispatch("setValueSubject", { self: this, profileComponet: this.profileCompoent, subjectComponents: components }).then(() => {
+        this.componentKey++
+        this.displayModal = false
+        this.checkForUserData()
+        this.$emit('updated', null)
+        // put the focus back on the input
+        setTimeout(()=>{
+            document.getElementById(this.assignedId).focus()
+              this.$store.dispatch("enableMacroNav", { self: this})
+
+        },0)
+
+      }) 
+
+
+
+
+
     },
 
 
@@ -1458,6 +1559,14 @@ input{
    padding: 0.3em;    
 }
 .selected-value-details-close{
+  color: #2c3e50 !important;
+  border: none !important;
+  background: white !important;
+  border: solid 2px #2c3e50 !important; 
+  margin-left: 0.75em;
+}
+
+.selected-value-details-edit{
   color: #2c3e50 !important;
   border: none !important;
   background: white !important;

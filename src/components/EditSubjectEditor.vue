@@ -1,0 +1,1053 @@
+<template>
+
+  <div style="width: 99%; margin-left: auto; margin-right: auto; margin-top:10em">
+    
+ 
+    <div style="display: flex; height: 400px;">
+
+      <div style="flex:1; align-self: flex-end;">
+        <div v-if="activeSearch!==false">{{activeSearch}}</div>
+        <div v-if="searchResults !== null">
+
+          <div v-if="searchResults.names.length>0">
+            <div v-for="(name,idx) in searchResults.names" @click="selectContext((searchResults.names.length - idx)*-1)" @mouseover="loadContext((searchResults.names.length - idx)*-1)" :data-id="(searchResults.names.length - idx)*-1" :key="name.uri" :class="['fake-option', {'unselected':(pickPostion != (searchResults.names.length - idx)*-1 ), 'selected':(pickPostion == (searchResults.names.length - idx)*-1 ),'picked': (pickLookup[(searchResults.names.length - idx)*-1] && pickLookup[(searchResults.names.length - idx)*-1].picked)}]">{{name.suggestLabel}}<span> [LCNAF]</span></div>
+            <hr>
+          </div>
+
+          <div v-if="searchResults.subjectsComplex.length>0">
+            <div v-for="(subjectC,idx) in searchResults.subjectsComplex" @click="selectContext(idx)" @mouseover="loadContext(idx)" :data-id="idx" :key="subjectC.uri" :class="['fake-option', {'unselected':(pickPostion != idx), 'selected':(pickPostion == idx), 'picked': (pickLookup[idx] && pickLookup[idx].picked)}]">{{subjectC.suggestLabel}}<span></span></div>
+            <hr>
+          </div>
+
+          <div v-if="searchResults.subjectsSimple.length>0">
+            <div v-for="(subject,idx) in searchResults.subjectsSimple" @click="selectContext(searchResults.subjectsComplex.length + idx)" @mouseover="loadContext(searchResults.subjectsComplex.length + idx)" :data-id="searchResults.subjectsComplex.length + idx" :key="subject.uri" :class="['fake-option', {'unselected':(pickPostion != searchResults.subjectsComplex.length + idx ), 'selected':(pickPostion == searchResults.subjectsComplex.length + idx ), 'picked': (pickLookup[searchResults.subjectsComplex.length + idx] && pickLookup[searchResults.subjectsComplex.length + idx].picked), 'literal-option':(subject.literal)}]" >{{subject.suggestLabel}}<span  v-if="subject.literal">{{subject.label}}</span> <span  v-if="subject.literal">[Literal]</span></div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <div style="flex:1; align-self: flex-start; padding: 2em;height: 335px;overflow-y: scroll;background: whitesmoke;">
+
+
+
+        <div v-if="contextRequestInProgress" style="font-weight: bold;">Retrieving data...</div>
+        <div class="modal-context" :style="{ }" v-if="Object.keys(contextData).length>0">
+
+          
+          <h3><span class="modal-context-icon simptip-position-top" :data-tooltip="'Type: ' + contextData.type" v-html="returnAuthIcon(contextData.type)"></span>{{contextData.title}}</h3>
+
+          <div class="modal-context-data-title">{{contextData.type}}</div>
+          <a style="color:#2c3e50" :href="contextData.uri" target="_blank">view on id.loc.gov</a>
+          <div v-if="contextData.variant && contextData.variant.length>0">
+            <div class="modal-context-data-title">Variants:</div>
+            <ul>
+              <li class="modal-context-data-li" v-for="(v,idx) in contextData.variant" v-bind:key="'var' + idx">{{v}}</li>
+            </ul>
+
+
+          </div>
+
+          <div v-for="key in Object.keys(contextData.nodeMap)" :key="key">
+            <div class="modal-context-data-title">{{key}}:</div>
+              <ul>
+                <li class="modal-context-data-li" v-for="v in contextData.nodeMap[key]" v-bind:key="v">{{v}}</li>
+              </ul>
+          </div>
+
+
+          <div v-if="contextData.source && contextData.source.length>0">
+            <div class="modal-context-data-title">Sources:</div>
+            <ul>
+              <li class="modal-context-data-li" v-for="v in contextData.source" v-bind:key="v">{{v}}</li>
+            </ul>
+
+
+          </div>
+
+
+        </div>  
+
+
+
+
+
+
+
+
+      </div>
+      
+
+    </div>
+
+    <div class="">
+
+
+        <div class="component-container-fake-input">
+          <div style="display: flex;">
+            <div style="flex:1; position: relative;">
+              <form autocomplete="off" style="height: 3em;">            
+                <input v-on:keydown.enter.prevent="navInput" ref="subjectInput"  autocomplete="off" type="text" v-model="subjectString" @input="subjectStringChanged" @keydown="navInput" @keyup="navString" @click="navStringClick"  class="input-single-subject subject-input">            
+              </form>
+
+              <div v-for="(c, idx) in components" :ref="'cBackground' + idx" :class="['color-holder',{'color-holder-okay':(c.uri !== null || c.literal)},{'color-holder-type-okay':(c.type !== null || showTypes===false)}]" v-bind:key="idx" >
+                {{c.label}}
+              </div>
+
+
+            </div>
+
+
+
+
+          </div>
+          
+        </div>
+        <div style="display: flex;">
+          
+          <div style="flex:2">
+            <ol v-if="showTypes">
+              <li :class="['type-item', {'type-item-selected':(type.selected)}]" v-for="type in activeTypes" :key="type.value" @click="setTypeClick($event,type.value)">{{type.label}}</li>
+            </ol>
+          </div>
+          <div style="flex:1">
+            <button v-if="okayToAdd==true" style="float: right;margin: 0.6em;" @click="add" class="">Add [SHIFT+Enter]</button>
+            <button v-else-if="okayToAdd==false && subjectString.length==0" disabled style="float: right;margin: 0.6em; display: none;" class="">Please Check Headings</button>
+            <button v-else-if="okayToAdd==false" disabled style="float: right;margin: 0.6em;" class="">Can't Add. Please Check Headings</button>
+          </div>
+
+          
+
+        </div>
+
+    </div>
+
+   
+
+  </div>
+
+</template>
+
+
+<style type="text/css">
+
+    body #app{
+      background-color: white !important;
+    }
+
+    .color-holder{
+
+      font-size: 1.5em;
+      position: absolute;
+      padding-top: 0.3em;
+
+      pointer-events: none;    
+      border-style: solid;
+      border-width: 3px;
+      border-color: rgb(255 132 132 / 52%);
+      border-radius: 0.25em;
+      color: transparent;
+      
+      background-color: rgb(255 132 132 / 25%);
+      /*letter-spacing: -0.04em;*/
+      
+      height: 1.5em;
+      font-family: sans-serif;
+
+      left: 0;
+      top: 0;
+
+
+
+    }
+
+    .subject-input{
+      font-family: sans-serif;
+    }
+
+
+    .input-single{
+      width: 95%;
+      border:none;
+      height: 100%;
+      font-size: 1.5em;
+
+
+      background: none;
+      transition-property: color;
+      transition-duration: 500ms;
+    }
+    .input-single:focus {outline:none !important}
+
+
+    .fake-option{
+      font-size: 1.25em;
+      cursor: pointer;
+    } 
+
+    .fake-option:hover{
+      background-color: whitesmoke;
+    }
+
+    .literal-option{
+      font-style: italic;
+    }
+
+    .unselected::before {
+      content: "• ";
+      color: #999999;
+    }
+
+    .selected{
+      background-color: whitesmoke;
+    }
+    .selected::before {
+      content: "> ";
+      color: #999999;
+    }
+
+    .picked::before{      
+      content: "✓ " !important;
+      transition-property: all;
+      transition-duration: 500ms;
+    }
+
+
+
+    .modal-context-data-title{
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    .modal-context ul{
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    .modal-context-data-li{
+      font-size: 0.85em;
+    }
+
+    .modal-context  h3{
+      margin: 0;
+      padding: 0;
+    }
+
+    .modal-context-icon{
+      font-family: "fontello", Avenir, Helvetica, Arial, sans-serif;
+      font-size: 1.25em;
+      padding-right: 0.25em;
+
+    }
+
+    .color-holder-okay{
+      background-color: #0080001f;
+    }
+
+    .color-holder-type-okay{
+      border-color: #00800047;
+    }
+
+    .type-item{
+      display: inline-block;
+      border: solid 1px #9aa4a4;
+      border-radius: 0.5em;
+      padding: 0.1em;
+      margin-left: 1em;
+      cursor: pointer;
+    }
+
+    .type-item::before{
+      content: " ";
+    }
+
+
+    .type-item-selected{
+      background-color: #0080001f;
+    }
+
+  .input-single-subject{
+    width: 95%;
+    border:none;
+    font-size: 1.5em;
+    min-height: 2em;
+    max-height: 2em;  
+    background:none;
+  }
+
+  .input-single-subject:focus {outline:0;}
+
+/*
+.left-menu-list-item-has-data::before {
+    content: "✓ " !important;
+    color: #999999;
+}
+
+li::before {
+    content: "• ";
+    color: #999999;
+}*/
+
+</style>
+
+<script>
+// @ is an alias to /src
+// import HelloWorld from "@/components/HelloWorld.vue";
+
+import { mapState } from 'vuex'
+// import parseId from '@/lib/parseId'
+import uiUtils from "@/lib/uiUtils"
+
+import lookupUtil from "@/lib/lookupUtil"
+
+
+
+const debounce = (callback, wait) => {
+  let timeoutId = null;
+  return (...args) => {
+    window.clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(() => {
+      callback.apply(null, args);
+    }, wait);
+  };
+}
+
+
+
+
+
+export default {
+  name: "TestSubject",
+  components: {
+    // HelloWorld
+    
+  },
+
+  data: function() {
+    return {
+
+      subjectString: '',
+      components: [],
+      lookup: {},
+      searchResults: null,
+      activeSearch: false,
+      pickPostion: 0,
+      pickLookup: {},
+      activeComponent: null,
+      activeComponentIndex:0,
+      contextRequestInProgress: false,
+      componetLookup: {},
+      nextInputIsTypeSelection:false,
+      typeLookup:{},
+      okayToAdd: false,
+
+      showTypes: false,
+
+      activeTypes: {
+        'madsrdf:Topic': {label:'Topic / Heading ($a $x)', value:'madsrdf:Topic',selected:false},
+        'madsrdf:GenreForm': {label:'Genre ($v)', value:'madsrdf:GenreForm',selected:false},
+        'madsrdf:Geographic': {label:'Geographic ($z)', value:'madsrdf:Geographic',selected:false},
+        'madsrdf:Temporal': {label:'Chronological ($y)', value:'madsrdf:Temporal',selected:false},
+      }
+
+
+    }
+  },
+
+  computed: mapState({
+      profilesLoaded: 'profilesLoaded',
+      activeProfile: 'activeProfile', 
+      idWorkSearchResults: 'idWorkSearchResults',
+      rtLookup:'rtLookup',
+      profiles: 'profiles',
+      idXML:'idXML',
+
+      contextData: 'contextData',
+      
+
+    }),
+  methods: {
+
+
+    returnAuthIcon: uiUtils.returnAuthIcon,
+
+
+    // some context messing here, pass the debounce func a ref to the vue "this" as that to ref in the function callback
+    searchApis: debounce(async (searchString,searchStringFull,that) => {
+      that.searchResults=null
+      that.activeSearch = 'Seaching...'
+      that.pickPostion=0
+
+      // make the "searching..." text grow
+      let ti = window.setInterval(()=>{ that.activeSearch = that.activeSearch + '.'},100)
+      
+      searchString=searchString.replaceAll('‑','-')
+      searchStringFull=searchStringFull.replaceAll('‑','-')
+
+      
+
+
+      that.searchResults = await lookupUtil.subjectSearch(searchString,searchStringFull) 
+
+
+
+
+      for (let s of that.searchResults.subjectsComplex){
+        s.labelOrginal = s.label
+        s.complex=true
+        s.label = s.label.replaceAll('-','‑')
+      }
+
+      
+      that.pickLookup = {}
+
+      that.pickPostion = that.searchResults.subjectsSimple.length + that.searchResults.subjectsComplex.length -1
+      
+      for (let x in that.searchResults.subjectsComplex){
+        that.pickLookup[x] = that.searchResults.subjectsComplex[x]
+      }
+
+
+      for (let x in that.searchResults.subjectsSimple){
+        that.pickLookup[parseInt(x)+parseInt(that.searchResults.subjectsComplex.length)] = that.searchResults.subjectsSimple[x]
+      }
+
+
+      for (let x in that.searchResults.names){
+        that.pickLookup[(that.searchResults.names.length - x)*-1] = that.searchResults.names[x]
+      }
+
+      for (let k in that.pickLookup){
+
+        that.pickLookup[k].picked = false
+
+        if (searchString.toLowerCase() == that.pickLookup[k].label.toLowerCase() && !that.pickLookup[k].literal ){
+
+
+          // if the labels are the same for the current one selected don't overide it
+          if (that.pickLookup[k].label == that.activeComponent.label && that.activeComponent.uri){
+
+
+            if (that.activeComponent.uri == that.pickLookup[k].uri){
+
+              that.pickPostion=k
+              that.pickLookup[k].picked=true          
+              that.selectContext()
+
+            }
+
+          }else{
+            that.pickPostion=k
+            that.pickLookup[k].picked=true          
+            that.selectContext()
+
+          }
+
+
+
+
+
+        }
+      }
+
+
+      that.$store.dispatch("clearContext", { self: that})
+      if (!that.pickLookup[that.pickPostion].literal){
+        that.contextRequestInProgress = true
+        that.$store.dispatch("fetchContext", { self: that, searchPayload: that.pickLookup[that.pickPostion].uri }).then(() => {
+          that.contextRequestInProgress = false
+        })         
+      }
+
+ 
+
+
+      window.clearInterval(ti)
+      that.activeSearch = false
+    }, 500),
+
+    navStringClick: function(event){
+      // when clicked send it over to the navString func with fake key property to trigger if statement
+      event.key='ArrowLeft'
+      this.navString(event)
+    },
+
+    navString: function(event){
+
+      if (event.key == 'ArrowLeft' || event.key == 'ArrowRight' ){
+
+
+        if (!event.target){
+          event = {target:this.$refs.subjectInput}
+        }
+
+        for (let c of this.components){
+          if (event.target.selectionStart >= c.posStart && event.target.selectionStart <= c.posEnd+1){
+            this.activeComponent = c
+            this.activeComponentIndex = c.id            
+            break
+          }
+        }
+
+        this.updateAvctiveTypeSelected()
+        this.subjectStringChanged(event)
+
+      }
+
+
+    },
+
+    loadContext: function(pickPostion){
+
+
+        this.pickPostion = pickPostion
+
+
+        this.$store.dispatch("clearContext", { self: this})
+
+        if (this.pickLookup[this.pickPostion].literal){
+          return false
+        }
+
+        this.contextRequestInProgress = true
+        this.$store.dispatch("fetchContext", { self: this, searchPayload: this.pickLookup[this.pickPostion].uri }).then(() => {
+          this.contextRequestInProgress = false
+        })  
+
+
+
+    },
+
+    selectContext: function(pickPostion){
+
+
+      if (pickPostion){
+        this.pickPostion=pickPostion
+      }
+
+      if (this.pickLookup[this.pickPostion].complex){
+        // if it is a complex authorized heading then just replace the whole things with it
+        this.subjectString = this.pickLookup[this.pickPostion].label
+        this.activeComponentIndex = 0
+
+        this.componetLookup = {}
+        this.componetLookup[this.activeComponentIndex] = {}
+        this.componetLookup[this.activeComponentIndex][this.pickLookup[this.pickPostion].label] = this.pickLookup[this.pickPostion]
+        for (let k in this.pickLookup){
+          this.pickLookup[k].picked=false
+        }
+
+        this.pickLookup[this.pickPostion].picked=true
+        this.subjectStringChanged()
+        this.$refs.subjectInput.focus()
+
+      }else{
+
+
+
+        // take the subject string and split
+        let splitString = this.subjectString.split('--')
+
+        // replace the string with what we selected
+
+        splitString[this.activeComponentIndex] = this.pickLookup[this.pickPostion].label
+
+        this.subjectString = splitString.join('--')
+
+
+        if (!this.componetLookup[this.activeComponentIndex]){
+          this.componetLookup[this.activeComponentIndex]= {}
+        }
+
+        this.componetLookup[this.activeComponentIndex][this.pickLookup[this.pickPostion].label] = this.pickLookup[this.pickPostion]
+
+        for (let k in this.pickLookup){
+          this.pickLookup[k].picked=false
+        }
+
+        this.pickLookup[this.pickPostion].picked=true
+
+
+        this.subjectStringChanged()
+        console.log(this.componetLookup)
+
+      }
+
+
+      
+    },
+
+
+    navInput: function(event){
+
+      if (event.key == 'ArrowUp'){
+        if (parseInt(this.pickPostion) <= this.searchResults.names.length*-1){
+          return false
+        }
+        this.loadContext(parseInt(this.pickPostion) - 1 )
+        event.preventDefault()
+        return false
+      }else if (event.key == 'ArrowDown'){
+        console.log("HERE")
+        if (parseInt(this.pickPostion) >= this.searchResults.subjectsSimple.length - 1 + this.searchResults.subjectsComplex.length){
+          return false
+        }
+     
+
+        this.loadContext(parseInt(this.pickPostion) + 1 )
+        event.preventDefault()
+        return false
+      }else if (event.key == 'Enter'){
+
+
+
+        if (event.shiftKey){
+          this.add()
+          return
+        }
+
+
+
+
+        this.selectContext()
+
+      }      
+
+    },
+
+    updateAvctiveTypeSelected: function(){
+
+      //set them all false
+      for (let k in this.activeTypes){
+        this.activeTypes[k].selected=false
+      }
+
+      if (this.activeComponent && this.activeComponent.type){
+        if (this.activeTypes[this.activeComponent.type]){
+          this.activeTypes[this.activeComponent.type].selected=true
+        }
+      }
+
+
+    },
+
+    setTypeClick: function(event,type){
+
+      this.typeLookup[this.activeComponentIndex] =type
+      this.subjectStringChanged()
+      this.$refs.subjectInput.focus()
+
+    },
+
+    renderHintBoxes: function(){
+
+        // wait for the UI to render
+        this.$nextTick(() => {
+          // loop through the current components
+          let activeLeft=0
+          for (let com of this.components){       
+            // set the left 
+            this.$refs['cBackground'+com.id][0].style.left = `${activeLeft}px`
+            // add the width of all the existing components to the var
+            // add 12 to accomodate the "--" seperator
+            activeLeft = activeLeft + this.$refs['cBackground'+com.id][0].offsetWidth + 11
+          }          
+        })
+
+    },
+
+
+    subjectStringChanged: async function(event){
+
+      // they are setting the type, next key inputed is important
+      if (event && event.data === '$'){
+        this.nextInputIsTypeSelection=true
+        return false
+      }
+
+      // if the event coming in is the keystroke after a '$' then check to change the type
+      if (event && this.nextInputIsTypeSelection){
+
+        if (event.data.toLowerCase()==='a' || event.data.toLowerCase()==='x'){
+          this.typeLookup[this.activeComponentIndex] = 'madsrdf:Topic'
+          this.subjectString=this.subjectString.replace('$'+event.data,'')
+        }
+        if (event.data.toLowerCase()==='v'){
+          this.typeLookup[this.activeComponentIndex] = 'madsrdf:GenreForm'
+          this.subjectString=this.subjectString.replace('$'+event.data,'')
+        }
+        if (event.data.toLowerCase()==='z'){
+          this.typeLookup[this.activeComponentIndex] = 'madsrdf:Geographic'
+          this.subjectString=this.subjectString.replace('$'+event.data,'')
+        }
+        if (event.data.toLowerCase()==='y'){
+          this.typeLookup[this.activeComponentIndex] = 'madsrdf:Temporal'
+          this.subjectString=this.subjectString.replace('$'+event.data,'')
+        }
+
+        this.nextInputIsTypeSelection = false
+
+      }else{
+
+        // its a normal keystroke not after '$' but check to see if it was a keyboard event
+        // if not then event will be null and was just evoked from code, if its a event then they are typeing in a search value, clear out the old
+        if (event){
+          this.searchResults=null  
+        }        
+      }
+
+
+
+      this.showTypes=true
+      
+      // if they erase everything remove the components
+      if (this.subjectString.length==0){
+        this.activeComponent = null
+        this.activeComponentIndex=0
+        this.componetLookup = {}
+        this.typeLookup={}
+      }
+
+      let subjectStringSplit = this.subjectString.split('--')
+
+
+      // clear the current
+      this.components = []
+      let id = 0      
+
+      let activePosStart = 0
+
+      for (let ss of subjectStringSplit){
+
+
+        // check the lookup to see if we have the data for this label
+
+        let uri = null
+        let type = null
+        let literal = null
+
+        if (this.componetLookup[id] && this.componetLookup[id][ss]){
+          uri = this.componetLookup[id][ss].uri
+          literal = this.componetLookup[id][ss].literal
+        }
+
+        if (this.typeLookup[id]){
+          type = this.typeLookup[id]
+        }
+
+
+        this.components.push({
+
+          label: ss,
+          uri: uri,
+          id: id,
+          type:type,
+          complex: ss.includes('‑'),
+          literal:literal,
+          posStart: activePosStart,
+          posEnd: activePosStart + ss.length - 1,
+        })
+
+
+        // increase the start length by the length of the string and also add 2 for the "--"
+        activePosStart = activePosStart + ss.length + 2
+
+
+
+        this.renderHintBoxes()
+
+
+        id++
+      }
+
+      console.log(this.components)
+
+
+
+
+      // if they are typing in the heading select it as we go
+      if (event){
+        for (let c of this.components){
+          if (event.target.selectionStart >= c.posStart && event.target.selectionStart <= c.posEnd+1){
+            this.activeComponent = c
+            this.activeComponentIndex = c.id
+            // it is not empty
+            // it dose not end with "-" so it the '--' typing doesn't trigger
+            if (c.label.trim() != '' && !c.label.endsWith('-')){
+              this.searchApis(c.label,event.target.value,this)
+            
+            // BUT if it ends with a number and - then it is a name with open life dates
+            // so do look that one up
+            }else if (/[0-9]{4}\??-/.test(c.label)){
+              this.searchApis(c.label,event.target.value,this)
+
+
+
+            }
+
+
+            //            // BUT if it starts with 
+
+            break
+          }
+        }
+      }else{
+
+        // if there is no event this was triggered from code
+        // so the current active component is the one we need to update with anything changed
+        // which would likely be the type if not a keyboard event
+
+        this.activeComponent = this.components[this.activeComponentIndex]
+        
+
+      }
+
+      this.updateAvctiveTypeSelected()
+
+      if (this.components.length==1 && this.components[0].complex){
+        this.showTypes=false
+
+      }
+
+      console.log(this.components)
+
+      this.okayToAdd = false
+      let allHaveURI = true
+      let allHaveType = true
+
+      for (let c of this.components){
+
+        if (!c.uri && !c.literal){
+          allHaveURI = false
+        }
+        if (!c.type){
+          allHaveType = false
+        }
+
+      }
+
+      if (allHaveURI && allHaveType){
+        this.okayToAdd = true
+      }
+      if (allHaveURI && !allHaveType && this.components.length==1){
+        this.okayToAdd = true
+      }
+
+
+
+
+      // if (event === null){
+      //   console.log(event)
+      // }
+
+    },
+
+    add: function(){
+
+      // remove our werid hyphens before we send it back
+      for (let c of this.components){
+        c.label = c.label.replaceAll('‑','-')
+      }
+
+      this.$emit('subjectAdded', this.components)
+
+
+    },
+
+
+    loadUserValue: function(userValue){
+      console.log(userValue,typeof userValue)
+      if (!userValue){
+        return
+      }
+      if (typeof userValue == "string"){
+        this.subjectString=userValue
+        console.log('here')
+        return
+      }
+
+      // if they just passed a string they are typing a new one not editing
+      // if (typeof userValue == "string"){
+      //   this.subjectString=userValue
+      //   return
+      // }
+
+
+
+
+
+      let completeLabel = null
+
+        // does it have a component list?
+
+        if (userValue['http://www.loc.gov/mads/rdf/v1#componentList']){
+
+          let authLabels = []
+          
+          let componentLabelParts = []
+
+          // if there is a complex heading string use that as a backup for labels if needed
+          if (userValue['http://www.w3.org/2000/01/rdf-schema#label']){
+            if (userValue['http://www.w3.org/2000/01/rdf-schema#label'].length>0){
+              authLabels = userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label'].split('--')
+              completeLabel = userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
+            }
+          }else if (userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
+            if (userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'].length>0){
+              authLabels = userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'].split('--')
+              completeLabel = userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
+            }
+          }
+
+
+
+          let id = 0
+          let activePosStart = 0
+
+          for (let component of userValue['http://www.loc.gov/mads/rdf/v1#componentList']){
+
+            let label = ''
+            let uri = null
+            let type = null
+            let literal = false
+
+
+
+
+            // does it have a URI
+            if (component['@id']){
+              uri = component['@id']
+            }else{
+              
+              // we can't assume it is a literal, it might just be a label without no uri
+              // they need to check it
+              // literal = true
+            }
+
+            if (component['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'] && component['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'].length>0){
+              if (component['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
+                label = component['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
+              }
+            }else if (component['http://www.w3.org/2000/01/rdf-schema#label'] && component['http://www.w3.org/2000/01/rdf-schema#label'].length>0){
+              if (component['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']){
+                label = component['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
+              }
+            }
+
+
+            if (component['@type']){
+
+              if (component['@type']=='http://www.loc.gov/mads/rdf/v1#Geographic'){
+                type = 'madsrdf:Geographic'
+              }
+              if (component['@type']=='http://www.loc.gov/mads/rdf/v1#Topic'){
+                type = 'madsrdf:Topic'
+              }
+              if (component['@type']=='http://www.loc.gov/mads/rdf/v1#GenreForm'){
+                type = 'madsrdf:GenreForm'
+              }
+              if (component['@type']=='http://www.loc.gov/mads/rdf/v1#Temporal'){
+                type = 'madsrdf:Temporal'
+              }                            
+
+            }
+
+
+            if (label == '' && authLabels[id]){
+              console.log('missing label',authLabels[id])
+              label = authLabels[id]
+            }
+
+
+            let toAdd = {
+              label: label,
+              uri: uri,
+              id: id,
+              type:type,
+              complex: label.includes('‑'),
+              literal:literal,
+              posStart: activePosStart,
+              posEnd: activePosStart + label.length - 1,
+            }
+
+            componentLabelParts.push(label)
+
+            this.components.push(toAdd)
+
+            if (!this.componetLookup[id]){
+              this.componetLookup[id]={}
+            }
+
+            if (type){
+              this.typeLookup[id]=type
+            }
+
+            this.componetLookup[id][label] = toAdd
+
+
+            activePosStart = activePosStart + label.length + 2
+
+            id++
+
+          }
+
+
+          
+          completeLabel = componentLabelParts.join('--')
+
+
+
+          console.log(this.components)
+
+        }else{
+
+          if (userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
+            completeLabel = userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
+          }else if(userValue['http://www.w3.org/2000/01/rdf-schema#label']){
+            completeLabel = userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
+          }
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+        this.subjectString=completeLabel
+
+        // this.subjectStringChanged()
+        // this.updateAvctiveTypeSelected()
+
+        // wait for the ui to render and then pretend keydonw to trigger update of things
+        this.$nextTick(() => {
+          this.navString({key:'ArrowRight'})        
+        })
+
+    }
+
+
+
+
+  },
+
+
+
+
+  created: function () {
+
+    this.loadUserValue()
+
+  },
+
+
+  mounted: function () {
+ 
+
+  }
+};
+</script>

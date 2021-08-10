@@ -206,7 +206,7 @@ const lookupUtil = {
             }
 
 
-
+            url = url + "&blastdacache=" + Date.now() 
 
             let r = await this.fetchSimpleLookup(url)
             if (searchPayload.processor == 'lcAuthorities'){
@@ -214,7 +214,8 @@ const lookupUtil = {
                 
                 for (let hit of r.hits){
                   results.push({
-                    label: hit.suggestLabel,
+                    label: hit.aLabel,
+                    suggestLabel: hit.suggestLabel,
                     uri: hit.uri,
                     literal:false,
                     extra: ''
@@ -266,6 +267,64 @@ const lookupUtil = {
 
     },
 
+
+    // a special subject method to do sepcial subject things
+    subjectSearch: async function(searchVal,complexVal){
+
+      let namesUrl = config.lookupConfig['http://preprod.id.loc.gov/authorities/names'].modes[0]['NAF All'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=4')
+      let subjectUrlComplex = config.lookupConfig['http://id.loc.gov/authorities/subjects'].modes[0]['LCSH All'].url.replace('<QUERY>',complexVal).replace('&count=25','&count=5')+'&rdftype=ComplexType'
+      let subjectUrlSimple = config.lookupConfig['http://id.loc.gov/authorities/subjects'].modes[0]['LCSH All'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=4')+'&rdftype=SimpleType'
+
+
+
+      let searchPayloadNames = {
+        processor: 'lcAuthorities',
+        url: [namesUrl],
+        searchValue: searchVal
+      }
+
+      let searchPayloadSubjectsSimple = {
+        processor: 'lcAuthorities',
+        url: [subjectUrlSimple],
+        searchValue: searchVal
+      }
+      let searchPayloadSubjectsComplex = {
+        processor: 'lcAuthorities',
+        url: [subjectUrlComplex],
+        searchValue: searchVal
+      }
+
+      let [resultsNames, resultsSubjectsSimple, resultsSubjectsComplex] = await Promise.all([
+          this.searchComplex(searchPayloadNames),
+          this.searchComplex(searchPayloadSubjectsSimple),
+          this.searchComplex(searchPayloadSubjectsComplex)
+      ]);
+
+      // drop the litearl value from names and complex
+      resultsNames.pop()
+      resultsSubjectsComplex.pop()
+
+      
+      resultsSubjectsSimple.push(resultsSubjectsSimple.pop())
+      resultsSubjectsSimple.reverse()
+
+
+      resultsSubjectsComplex.reverse()
+
+
+
+      let results = {
+        'subjectsSimple': resultsSubjectsSimple,
+        'subjectsComplex': resultsSubjectsComplex,
+        'names':resultsNames
+      }
+
+      console.log('results')
+      console.log(results)
+      return results
+
+    },
+
     returnContext: async function(uri){
 
         let d = await this.fetchContextData(uri)
@@ -277,17 +336,17 @@ const lookupUtil = {
 
     fetchContextData: async function(uri){
 
-          console.log(uri)
+
           if (uri.startsWith('http://id.loc.gov') && uri.match(/(authorities|vocabularies)/)) {
             var jsonuri = uri + '.madsrdf_raw.jsonld';
-            console.log(uri)
+
             //if we are in production use preprod
             if (config.returnUrls().env == 'production'){
               jsonuri = jsonuri.replace('http://id.', 'https://preprod.id.')
               jsonuri = jsonuri.replace('https://id.', 'https://preprod.id.')
               
             }
-            console.log(uri)
+
 
           }else if (uri.includes('http://www.wikidata.org/entity/')){ 
             jsonuri = uri.replace('http://www.wikidata.org/entity/','https://www.wikidata.org/wiki/Special:EntityData/')
@@ -528,7 +587,7 @@ const lookupUtil = {
 
           }
           
-          console.log(results)
+
           return results;
         },
 

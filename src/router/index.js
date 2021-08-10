@@ -5,6 +5,8 @@ import Home from "../views/Home.vue";
 import Edit from "../views/Edit.vue";
 import TestParseId from "../views/TestParseId.vue";
 import TestParseBfdb from "../views/TestParseBfdb.vue";
+import TestSubject from "../views/TestSubject.vue";
+
 import Errors from "../views/Errors.vue";
 
 
@@ -30,6 +32,12 @@ const routes = [
     name: "TestParseBfdb",
     component: TestParseBfdb
   },
+  {
+    path: "/TestSubject",
+    name: "TestSubject",
+    component: TestSubject
+  },
+
   {
     path: "/errors",
     name: "Errors",

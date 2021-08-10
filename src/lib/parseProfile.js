@@ -838,6 +838,9 @@ const parseProfile = {
         return currentState
     },
 
+
+
+
     setValueSimple: async function(currentState, ptGuid, parentURI, URI, valueURI, valueLabel){
 
         let results = {newData:{}}
@@ -1157,6 +1160,133 @@ const parseProfile = {
         results.currentState = currentState
 
         return results
+
+
+    },
+
+
+
+    // a special funtion just for subject headings (how fun)
+    
+    setValueSubject: async function(currentState, component, activeProfileName, subjectComponents){
+
+        // we're just going to overwrite the whole userValue with the constructed headings
+
+
+        // find it
+        if (currentState.rt[activeProfileName].pt[component]){
+
+            // hard code some properties that are used
+            let userValue = {
+                "@root": currentState.rt[activeProfileName].pt[component].userValue['@root'],
+                "@guid": currentState.rt[activeProfileName].pt[component].userValue['@guid'],
+                "@type": "http://id.loc.gov/ontologies/bibframe/Topic",
+                "http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme": [{
+                    "@guid": "7M2siXsnQb73NRmttF333f",
+                    "@id": "http://id.loc.gov/authorities/subjects"
+                }],
+                // "http://id.loc.gov/ontologies/bibframe/source": [{
+                //     "@guid": short.generate(),
+                //     "@type": "http://id.loc.gov/ontologies/bibframe/Source",
+                //     "http://www.w3.org/2000/01/rdf-schema#label": [{
+                //         "@guid": short.generate(),
+                //         "http://www.w3.org/2000/01/rdf-schema#label": "Library of Congress subject headings"
+                //     }],
+                //     "http://id.loc.gov/ontologies/bibframe/code": [{
+                //         "@guid": short.generate(),
+                //         "http://id.loc.gov/ontologies/bibframe/code": "lcsh"
+                //     }],                    
+                //     "@id": "http://id.loc.gov/vocabulary/subjectSchemes/lcsh"
+                // }]
+
+
+
+            }
+
+            // overwrite the guid if it already exists in the source
+            // if (currentState.rt[activeProfileName].pt[component].userValue['http://id.loc.gov/ontologies/bibframe/source']){
+            //     userValue['http://id.loc.gov/ontologies/bibframe/source']['@guid'] = currentState.rt[activeProfileName].pt[component].userValue['http://id.loc.gov/ontologies/bibframe/source']['@guid']
+            // }
+
+
+            // if it is a solo subject heading
+            if (subjectComponents.length==1){
+
+                userValue['@id'] = subjectComponents[0].uri
+
+                userValue["http://www.loc.gov/mads/rdf/v1#authoritativeLabel"] = [{
+                    "@guid": short.generate(),
+                    "http://www.loc.gov/mads/rdf/v1#authoritativeLabel": subjectComponents[0].label
+                }]
+                userValue["http://www.w3.org/2000/01/rdf-schema#label"] = [{
+                    "@guid": short.generate(),
+                    "http://www.w3.org/2000/01/rdf-schema#label": subjectComponents[0].label
+                }]
+
+
+            }else if (subjectComponents.length>1){
+
+                //userValue
+
+                
+                let fullLabel = subjectComponents.map((c)=>{return c.label}).join('--')
+
+                userValue["http://www.loc.gov/mads/rdf/v1#authoritativeLabel"] = [{
+                    "@guid": short.generate(),
+                    "http://www.loc.gov/mads/rdf/v1#authoritativeLabel": fullLabel
+                }]
+                userValue["http://www.w3.org/2000/01/rdf-schema#label"] = [{
+                    "@guid": short.generate(),
+                    "http://www.w3.org/2000/01/rdf-schema#label": fullLabel
+                }]
+
+                // we need to make the component list then
+
+
+                userValue["http://www.loc.gov/mads/rdf/v1#componentList"] = []
+
+                for (let c of subjectComponents){
+
+                    let compo = {
+                            "@guid": short.generate(),
+                            "@type": c.type.replace('madsrdf:','http://www.loc.gov/mads/rdf/v1#'),
+                            "http://www.loc.gov/mads/rdf/v1#authoritativeLabel": [{
+                                "@guid": short.generate(),
+                                "http://www.loc.gov/mads/rdf/v1#authoritativeLabel": c.label
+                            }]
+                    }
+
+                    if (c.uri){
+                        compo['@id'] = c.uri
+                    }
+
+                    userValue["http://www.loc.gov/mads/rdf/v1#componentList"].push(compo)
+
+
+                }
+
+
+
+
+
+
+
+            }
+
+
+
+            currentState.rt[activeProfileName].pt[component].userValue = userValue
+
+        }
+
+
+
+
+
+
+
+        return currentState
+
 
 
     },

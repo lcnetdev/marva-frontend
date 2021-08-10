@@ -412,12 +412,15 @@ export default {
 
 
       instanceTests:[
-        //'/bfe2/editor/tests/instances/c0010058400001.editor-pkg.xml', //book
+        // '/bfe2/editor/tests/instances/c0010058400001.editor-pkg.xml', //book
+        
         // '/bfe2/editor/tests/instances/c0214680420001.editor-pkg.xml', // russian book
 
-        // '/bfe2/editor/tests/works/c017943071.rdf', // work only
+        '/bfe2/editor/tests/works/c017943071.rdf', // work only
 
-        '/bfe2/editor/tests/instances/c0207030850001.editor-pkg.xml', // 
+
+
+        // '/bfe2/editor/tests/instances/c0207030850001.editor-pkg.xml', // has invalid headings
 
 
 

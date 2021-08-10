@@ -11,7 +11,7 @@
 
               <!--  -->
             
-             <EditTemplateRefComponent  :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditTemplateRefComponent>
+             <EditTemplateRefComponent  :ptGuid="ptGuid" :parentURI="parentURI" :key="useKey" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditTemplateRefComponent>
 
 
           </template>
@@ -22,10 +22,10 @@
            
            <!-- <EditAdminComponent v-else-if="returnLookupType(structure) == 'admin'" :ptGuid="ptGuid" :parentURI="parentURI" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditAdminComponent> -->
           
-           <EditLiteralComponent v-else-if="structure.type == 'literal' || structure.type == 'literal-lang'" :ptGuid="ptGuid" :parentURI="parentURI"  :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditLiteralComponent>
-           <EditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested"  :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate" ></EditSimpleLookupComponent>
-           <EditComplexLookupComponent v-else-if="returnLookupType(structure) == 'complex'" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditComplexLookupComponent>          
-           <EditTemplateRefComponent v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditTemplateRefComponent>
+           <EditLiteralComponent v-else-if="structure.type == 'literal' || structure.type == 'literal-lang'" :key="useKey" :ptGuid="ptGuid" :parentURI="parentURI"  :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditLiteralComponent>
+           <EditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" :ptGuid="ptGuid" :key="useKey" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested"  :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate" ></EditSimpleLookupComponent>
+           <EditComplexLookupComponent v-else-if="returnLookupType(structure) == 'complex'" :key="useKey" @updated="forceUpdate" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditComplexLookupComponent>          
+           <EditTemplateRefComponent v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" :key="useKey" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditTemplateRefComponent>
         
 
 
@@ -57,10 +57,10 @@
 
 
 
-        <EditLiteralComponent v-if="structure.type == 'literal' || structure.type == 'literal-lang'" :ptGuid="ptGuid"  :parentURI="parentURI" :activeTemplate="activeTemplate" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" ></EditLiteralComponent>
-        <EditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" :ptGuid="ptGuid" :parentURI="parentURI" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested"  :profileName="profileName" :profileCompoent="profileCompoent"  ></EditSimpleLookupComponent>
-        <EditComplexLookupComponent v-else-if="returnLookupType(structure) == 'complex'" :ptGuid="ptGuid" :parentURI="parentURI" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent"   ></EditComplexLookupComponent>          
-        <EditTemplateRefComponent v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" :ptGuid="ptGuid" :parentURI="parentURI" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :profileName="profileName" :profileCompoent="profileCompoent" :nested="nested"></EditTemplateRefComponent>
+        <EditLiteralComponent v-if="structure.type == 'literal' || structure.type == 'literal-lang'" :key="useKey" :ptGuid="ptGuid"  :parentURI="parentURI" :activeTemplate="activeTemplate" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" ></EditLiteralComponent>
+        <EditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" :key="useKey" :ptGuid="ptGuid" :parentURI="parentURI" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested"  :profileName="profileName" :profileCompoent="profileCompoent"  ></EditSimpleLookupComponent>
+        <EditComplexLookupComponent v-else-if="returnLookupType(structure) == 'complex'" :key="useKey" @updated="forceUpdate" :ptGuid="ptGuid" :parentURI="parentURI" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent"   ></EditComplexLookupComponent>          
+        <EditTemplateRefComponent v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" :key="useKey" :ptGuid="ptGuid" :parentURI="parentURI" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :profileName="profileName" :profileCompoent="profileCompoent" :nested="nested"></EditTemplateRefComponent>
 
 
 
@@ -116,6 +116,7 @@ import uiUtils from "@/lib/uiUtils"
 // 
 import VueJsonPretty from 'vue-json-pretty'
 
+const short = require('short-uuid');
 
 
 export default {
@@ -149,6 +150,7 @@ export default {
       // these are the labes that are used in the static text of compoennts
       labels: labels,
       displayDebug: false,
+      useKey: short.generate(),
 
       // is a lookup url require a simple or complex lookup interface, and its options
       lookupType:config.lookupConfig
@@ -158,6 +160,19 @@ export default {
 
     prettifyXml: uiUtils.prettifyXml,
 
+
+    forceUpdate: function(){
+
+      // console.log('before',this.useKey)
+
+      // this.useKey = short.generate()
+      // // doesnt do anything
+      // this.$forceUpdate();
+
+      // console.log('after',this.useKey)
+
+
+    },
 
     showDupeRemove: function(){
 

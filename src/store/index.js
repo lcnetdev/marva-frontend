@@ -352,6 +352,8 @@ export default new Vuex.Store({
       // 
       // 
 
+      //    setValueComplex: async function          (currentState,               component,    key,                       activeProfileName, template, value, structure,parentStructure){
+
       let nap = await parseProfile.setValueComplex(state.activeProfile, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, state.contextData, data.structure, data.parentStructure)
       commit('ACTIVEPROFILE', nap)
       commit('ACTIVEEDITCOUNTER') 
@@ -361,6 +363,18 @@ export default new Vuex.Store({
       state.saveRecord(state,commit)
 
     },
+
+    async setValueSubject({ commit, state }, data) { 
+
+      let nap = await parseProfile.setValueSubject(state.activeProfile, data.profileComponet, state.activeProfileName, data.subjectComponents)
+
+      commit('ACTIVEPROFILE', nap)
+      commit('ACTIVEEDITCOUNTER') 
+
+      commit('ACTIVERECORDSAVED', false)
+      state.saveRecord(state,commit)
+
+    }, 
 
     
     // this is the macro express one

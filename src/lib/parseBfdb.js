@@ -101,6 +101,17 @@ const parseBfdb = {
 	},
 
 
+	extractURI: function(uri){
+
+		uri=uri.replace('https://id.loc.gov','http://id.loc.gov')
+
+
+		return uri
+
+
+	},
+
+
 	returnOneWhereParentIs: function(selection, requiredParent){
 
 		
@@ -128,459 +139,7 @@ const parseBfdb = {
 
 	specialTransforms: {
 
-
-		// 'bf:subject' : function(xml,profile){
-
-		// 	//   <bf:subject>
-		// 	//      <bf:Place>
-		// 	//        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
-		// 	//        <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Skye, Island of (Scotland)--Fiction.</rdfs:label>
-		// 	//        <madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Skye, Island of (Scotland)--Fiction.</madsrdf:authoritativeLabel>
-		// 	//        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"/>
-		// 	//        <madsrdf:componentList rdf:parseType="Collection" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">
-		// 	//          <madsrdf:Geographic>
-		// 	//            <madsrdf:authoritativeLabel>Skye, Island of (Scotland)</madsrdf:authoritativeLabel>
-		// 	//          </madsrdf:Geographic>
-		// 	//          <madsrdf:GenreForm>
-		// 	//            <madsrdf:authoritativeLabel>Fiction</madsrdf:authoritativeLabel>
-		// 	//          </madsrdf:GenreForm>
-		// 	//        </madsrdf:componentList>
-		// 	//        <bflc:aap-normalized xmlns:bflc="http://id.loc.gov/ontologies/bflc/">skyeislandof(scotland)fiction</bflc:aap-normalized>
-		// 	//      </bf:Place>
-		// 	//    </bf:subject>
-
-		// 	// ---------------------
-
-		// 	// <bf:subject xmlns:bf="http://id.loc.gov/ontologies/bibframe/">
-		// 	//   <bf:Topic xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="http://bibframe.example.org/21468042#Topic650-26">
-		// 	//     <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Historians--Russia--Congresses.</rdfs:label>
-		// 	//     <madsrdf:isMemberOfMADSScheme xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" rdf:resource="http://id.loc.gov/authorities/subjects"/>
-		// 	//     <madsrdf:componentList xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" rdf:parseType="Collection">
-		// 	//       <madsrdf:Topic>
-		// 	//         <madsrdf:authoritativeLabel>Historians</madsrdf:authoritativeLabel>
-		// 	//       </madsrdf:Topic>
-		// 	//       <madsrdf:Geographic rdf:about="https://id.loc.gov/authorities/names/n80001203">
-		// 	//         <madsrdf:authoritativeLabel>Russia</madsrdf:authoritativeLabel>
-		// 	//       </madsrdf:Geographic>
-		// 	//       <madsrdf:GenreForm>
-		// 	//         <madsrdf:authoritativeLabel>Congresses</madsrdf:authoritativeLabel>
-		// 	//       </madsrdf:GenreForm>
-		// 	//     </madsrdf:componentList>
-		// 	//     <madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Historians--Russia--Congresses.</madsrdf:authoritativeLabel>
-		// 	//     <bf:source>
-		// 	//       <bf:Source>
-		// 	//         <bf:code>lcsh</bf:code>
-		// 	//       </bf:Source>
-		// 	//     </bf:source>
-		// 	//   </bf:Topic>
-		// 	// </bf:subject>
-
-		// 	// grab the label and uri and type
-		// 	let typeNode = xml.children[0]
-		// 	if (!typeNode){
-		// 		console.error('xml.children[0] for this subject does not exist')
-		// 		return profile
-		// 	}
-
-		// 	profile.userValue['http://www.w3.org/2002/07/owl#sameAs'] = {}
-		// 	let userValue = profile.userValue['http://www.w3.org/2002/07/owl#sameAs']
-
-
-
-
-		// 	userValue['@type'] = this.UriNamespace(typeNode.tagName)
-		// 	userValue['URI'] = null
-		// 	let label = null
-
-		// 	if (typeNode.attributes && typeNode.attributes['rdf:about']){
-		// 		userValue['URI'] = typeNode.attributes['rdf:about'].value
-		// 	}
-
-		// 	for (let el of typeNode.children){
-		// 		if (el.tagName == 'madsrdf:authoritativeLabel' || el.tagName == this.UriNamespace('madsrdf:authoritativeLabel') ){
-		// 			label = el.innerHTML
-		// 			userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'] = el.innerHTML
-		// 		}else if (el.tagName == 'http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme' || el.tagName == this.UriNamespace('madsrdf:isMemberOfMADSScheme') ){
-		// 			if (el.attributes && el.attributes['rdf:resource']){
-		// 				userValue['http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme'] = el.attributes['rdf:resource'].value
-		// 			}
-		// 		}
-
-
-		// 	}
-
-		// 	for (let el of typeNode.children){
-		// 		if ( (el.tagName == 'rdfs:label' || el.tagName == this.UriNamespace('rdfs:label ')) && label === null ){
-		// 			label = el.innerHTML
-		// 		}
-		// 	}
-
-		// 	if (typeNode.getElementsByTagName('bf:Source').length>0){
-		// 		for (let el of typeNode.getElementsByTagName('bf:Source')){
-
-		// 			userValue[this.UriNamespace('bf:source')] = {}
-
-		// 			for (let elc of el.children){
-		// 				userValue[this.UriNamespace('bf:source')][this.UriNamespace(elc.tagName)] = elc.innerHTML
-		// 			}
-
-		// 		}
-		// 	}else if (typeNode.getElementsByTagName('bf:source').length>0){
-
-				
-		// 		let s = xml.getElementsByTagName('bf:source')[0]
-		// 		if (s.attributes && s.attributes['rdf:resource']){
-		// 			profile.userValue[this.UriNamespace('bf:source')] ={'URI':s.attributes['rdf:resource'].value, 'http://www.w3.org/2000/01/rdf-schema#label': null}
-					
-		// 		}
-
-
-		// 	}
-
-
-
-		// 	let componentList = []
-
-			
-		// 	userValue['http://www.w3.org/2000/01/rdf-schema#label'] = label
-
-		// 	let allCLabels = []
-
-
-		// 	if (typeNode.getElementsByTagName('madsrdf:componentList').length>0){
-
-		// 		for (let child of typeNode.getElementsByTagName('madsrdf:componentList')[0].children){
-
-		// 			let ctype = this.UriNamespace(child.tagName)
-		// 			let clabel = null
-		// 			if (child.getElementsByTagName('madsrdf:authoritativeLabel').length>0){
-		// 				clabel = child.getElementsByTagName('madsrdf:authoritativeLabel')[0].innerHTML
-		// 			}
-		// 			if (child.getElementsByTagName('rdfs:label').length>0){
-		// 				clabel = child.getElementsByTagName('rdfs:label')[0].innerHTML
-		// 			}
-
-		// 			let URI = null
-
-					
-		// 			if (child.attributes && child.attributes['rdf:about']){
-		// 				URI = child.attributes['rdf:about'].value
-		// 			}
-
-		// 			if (clabel){
-		// 				allCLabels.push(clabel)
-		// 			}
-		// 			componentList.push({'http://www.w3.org/2000/01/rdf-schema#label':clabel, URI:URI, '@type':ctype})
-
-
-		// 		}
-
-		// 	}
-
-		// 	// if there was no label for the whole thing use the components to build one
-		// 	if (!userValue['http://www.w3.org/2000/01/rdf-schema#label']){
-		// 		if (allCLabels.length>0){
-		// 			userValue['http://www.w3.org/2000/01/rdf-schema#label'] = allCLabels.join('--')
-		// 		}
-		// 	}
-			
-
-		// 	userValue['http://www.loc.gov/mads/rdf/v1#componentList'] = componentList
-
-
-		// 	if (userValue['http://id.loc.gov/ontologies/bibframe/source']){
-		// 		if (userValue['http://id.loc.gov/ontologies/bibframe/source']['http://id.loc.gov/ontologies/bibframe/code']){
-		// 			if (userValue['http://id.loc.gov/ontologies/bibframe/source']['http://id.loc.gov/ontologies/bibframe/code']=='lcsh' && !userValue['http://id.loc.gov/ontologies/bibframe/source'].URI){
-		// 				userValue['http://id.loc.gov/ontologies/bibframe/source']['@id'] = 'http://id.loc.gov/vocabulary/subjectSchemes/lcsh'
-		// 			}
-		// 		}
-		// 	}
-
-		// 	if (userValue['http://id.loc.gov/ontologies/bibframe/source']){
-		// 		if (userValue['http://id.loc.gov/ontologies/bibframe/source']['http://www.w3.org/2000/01/rdf-schema#label']){
-		// 			if (userValue['http://id.loc.gov/ontologies/bibframe/source']['http://www.w3.org/2000/01/rdf-schema#label']=='lcsh' && !userValue['http://id.loc.gov/ontologies/bibframe/source'].URI){
-		// 				userValue['http://id.loc.gov/ontologies/bibframe/source']['@id'] = 'http://id.loc.gov/vocabulary/subjectSchemes/lcsh'
-		// 			}
-		// 		}
-		// 	}
-
-			
-			
-			
-
-		// 	return profile
-
-
-		// },
-		// // 'bf:Work' : function(xml,profile){
-
-			
-			
-		// // 	let titleStr = xml.attributes['rdf:about'].value
-			
-		// // 	let titleEl = xml.getElementsByTagName("bflc:aap")[0]
-		// // 	if (titleEl){
-		// // 		titleStr = titleEl.innerHTML
-		// // 	}
-
-		// // 	// "http://www.w3.org/2002/07/owl#sameAs": {
-		// // 	profile.userValue['http://www.w3.org/2002/07/owl#sameAs'] = {
-		// // 		'http://www.w3.org/2000/01/rdf-schema#label': titleStr,
-		// // 		'URI' : xml.attributes['rdf:about'].value
-		// // 	}
-
-		
-
-
-		// // 	profile.userValue['@id'] = xml.attributes['rdf:about'].value
-		// // 	profile.userValue['http://www.w3.org/2000/01/rdf-schema#label'] = titleStr
-		// // 	return profile
-		// // },
-
-
-		// 'bf:contribution' : function(xml,profile){
-
-
-		// 	// <bf:contribution>
-		// 	//   <bf:Contribution>
-		// 	//     <bf:agent>
-		// 	//       <bf:Agent rdf:about="http://id.loc.gov/rwo/agents/n87899079">
-		// 	//         <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
-		// 	//         <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Kemp, Sandra.</rdfs:label>
-		// 	//         <madsrdf:isIdentifiedByAuthority rdf:resource="http://id.loc.gov/authorities/names/n87899079" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"/>
-		// 	//       </bf:Agent>
-		// 	//     </bf:agent>
-		// 	//     <bf:role>
-		// 	//       <bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/ctb">
-		// 	//         <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Contributor</rdfs:label>
-		// 	//       </bf:Role>
-		// 	//     </bf:role>
-		// 	//   </bf:Contribution>
-		// 	// </bf:contribution>
-
-
-
-		// 	let madsToBf = {
-
-		// 		//http://id.loc.gov/ontologies/bibframe/Jurisdiction
-
-		// 		'http://www.loc.gov/mads/rdf/v1#CorporateName': 'http://id.loc.gov/ontologies/bibframe/Organization',
-		// 		'http://www.loc.gov/mads/rdf/v1#ConferenceName': 'http://id.loc.gov/ontologies/bibframe/Meeting',
-		// 		'http://www.loc.gov/mads/rdf/v1#PersonalName': 'http://id.loc.gov/ontologies/bibframe/Person',
-		// 		'http://www.loc.gov/mads/rdf/v1#FamilyName': 'http://id.loc.gov/ontologies/bibframe/Family'
-		// 	}
-
-
-
-
-
-
-
-
-
-
-		// 	// a little tricky here because there are possibly multiple bf:contributor properties, one might be the primary contributor
-		// 	// the others are just other contributor
-		// 	// so test to see if they match, if we have the primary contributor xml and not the primary contributor PT then kick back
-		// 	// so it can be picked up by another correct PT
-
-		// 	let isPrimaryContribXML = false
-
-		// 	for (let el of xml.getElementsByTagName('rdf:type')){
-		// 		if (el.attributes['rdf:resource'] && el.attributes['rdf:resource'].value == 'http://id.loc.gov/ontologies/bflc/PrimaryContribution'){
-		// 			isPrimaryContribXML = true
-		// 		}
-		// 	}
-
-
-		// 	if (profile.valueConstraint.valueDataType.dataTypeURI && profile.valueConstraint.valueDataType.dataTypeURI == "http://id.loc.gov/ontologies/bflc/PrimaryContribution"){
-		// 		// the profile says yes, if the xml doesn't kick it back
-		// 		if (!isPrimaryContribXML){
-					
-		// 			return false
-		// 		}
-		// 	}else{
-		// 		// the profile says no, if the xml says yesh then kick it back
-		// 		if (isPrimaryContribXML){
-					
-		// 			return false
-		// 		}
-		// 	}
-
-
-
-			
-
-		// 	// grab the label and uri and type
-		// 	let typeNode = xml.getElementsByTagName("bf:agent")[0].children[0]
-
-		// 	if (typeNode){
-
-		// 		profile.userValue['http://www.w3.org/2002/07/owl#sameAs'] = {}
-
-		// 		profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type'] = this.UriNamespace(typeNode.tagName)
-		// 		profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['URI'] = null
-		// 		let label = null
-
-		// 		if (typeNode.getElementsByTagName('rdf:type').length>0){
-		// 			profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type'] = typeNode.getElementsByTagName('rdf:type')[0].attributes['rdf:resource'].value
-		// 		}
-
-		// 		if (typeNode.attributes && typeNode.attributes['rdf:about']){
-		// 			profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['URI'] = typeNode.attributes['rdf:about'].value
-		// 		}
-
-		// 		if (typeNode.getElementsByTagName('madsrdf:authoritativeLabel').length>0){
-		// 			label = typeNode.getElementsByTagName('madsrdf:authoritativeLabel')[0].innerHTML
-		// 		}else if (typeNode.getElementsByTagName('rdfs:label').length>0){
-		// 			label = typeNode.getElementsByTagName('rdfs:label')[0].innerHTML
-		// 		}
-
-		
-
-		// 		profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['http://www.w3.org/2000/01/rdf-schema#label'] = label
-
-
-		// 		// add in any other properties in the agent bnode
-		// 		for (let c of typeNode.children){
-
-		// 			if (c.tagName != 'rdfs:label' && c.tagName != 'rdf:type'){
-		// 				profile.userValue['http://www.w3.org/2002/07/owl#sameAs'][this.UriNamespace(c.tagName)] = c.innerHTML
-		// 			}
-
-		// 		}
-
-
-
-		// 	}else{
-
-		// 		// no <bf:agent><bf:Person> or whatever
-		// 		// just <bf:agent/> with a rdf:resource
-
-		// 		//console.error('xml.children[0] for this agent does not exist')
-		// 		//return profile
-
-		// 		let justAgent = xml.getElementsByTagName("bf:agent")[0]
-
-		// 		profile.userValue['http://www.w3.org/2002/07/owl#sameAs'] = {}
-
-		// 		profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type'] = this.UriNamespace("bf:Agent")
-		// 		profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['URI'] = null
-		// 		let label = null
-
-
-		// 		if (justAgent.attributes && justAgent.attributes['rdf:about']){
-		// 			profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['URI'] = justAgent.attributes['rdf:about'].value
-		// 		}
-		// 		if (justAgent.attributes && justAgent.attributes['rdf:resource']){
-		// 			profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['URI'] = justAgent.attributes['rdf:resource'].value
-		// 		}
-
-		// 		if (justAgent.getElementsByTagName('madsrdf:authoritativeLabel').length>0){
-		// 			label = justAgent.getElementsByTagName('madsrdf:authoritativeLabel')[0].innerHTML
-		// 		}else if (justAgent.getElementsByTagName('rdfs:label').length>0){
-		// 			label = justAgent.getElementsByTagName('rdfs:label')[0].innerHTML
-		// 		}
-
-		// 		profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['http://www.w3.org/2000/01/rdf-schema#label'] = label
-
-
-		// 	}
-
-
-
-
-		// 	if (xml.getElementsByTagName('bf:Role').length>0){
-
-		// 		for (let roleEl of xml.getElementsByTagName('bf:Role')){
-
-					
-
-
-		// 			let roleuri = null
-		// 			let rolelabel = null
-		// 			if (roleEl.attributes && roleEl.attributes['rdf:about']){
-		// 				roleuri = roleEl.attributes['rdf:about'].value
-		// 			}
-
-		// 			if (roleEl.getElementsByTagName('rdfs:label').length>0){
-		// 				rolelabel= roleEl.getElementsByTagName('rdfs:label')[0].innerHTML
-		// 			}
-
-					
-	
-
-
-
-		// 			//if it already exists then there are multiple
-		// 			if (profile.userValue['http://id.loc.gov/ontologies/bibframe/role']){
-		// 				if (!Array.isArray(profile.userValue['http://id.loc.gov/ontologies/bibframe/role'])){
-		// 					profile.userValue['http://id.loc.gov/ontologies/bibframe/role'] = [profile.userValue['http://id.loc.gov/ontologies/bibframe/role']]
-		// 				}
-						
-		// 				let val = {'URI':roleuri, 'http://www.w3.org/2000/01/rdf-schema#label': rolelabel}
-
-		// 				// if it does not have a URI then it is a non controlled term
-		// 				if (!roleuri){
-		// 					val.BFE2METAnotControled = true 
-		// 				}
-
-		// 				profile.userValue['http://id.loc.gov/ontologies/bibframe/role'].push(val)
-
-
-		// 			}else{
-		// 				profile.userValue['http://id.loc.gov/ontologies/bibframe/role'] = {'URI':roleuri, 'http://www.w3.org/2000/01/rdf-schema#label': rolelabel}	
-		// 				if (!roleuri){
-		// 					profile.userValue['http://id.loc.gov/ontologies/bibframe/role'].BFE2METAnotControled = true 
-		// 				}
-
-		// 			}
-
-
-
-					
-
-
-
-		// 		}
-
-		// 	}else if (xml.getElementsByTagName('bf:role').length>0){
-
-		// 		profile.userValue['http://id.loc.gov/ontologies/bibframe/role'] = []
-
-		// 		for (let role of xml.getElementsByTagName('bf:role')){
-		// 			if (role.attributes && role.attributes['rdf:resource']){						
-		// 				profile.userValue['http://id.loc.gov/ontologies/bibframe/role'].push({'URI':role.attributes['rdf:resource'].value, 'http://www.w3.org/2000/01/rdf-schema#label': null})
-		// 			}
-		// 		}
-
-				
-		// 	}else{
-
-		// 		// no role? make a empty bnode just so it doesn't mess up the display
-
-		// 		profile.userValue['http://id.loc.gov/ontologies/bibframe/role'] = []
-
-
-
-		// 	}
-
-
-		// 	// if it has a MADs try to map it
-		// 	if (profile.userValue['http://www.w3.org/2002/07/owl#sameAs'] && profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type']){
-		// 		if (madsToBf[profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type']]){
-		// 			profile.userValue["@type"] = madsToBf[profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type']]
-		// 		}else if (profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type'].includes('/bibframe/')){
-		// 			// if it is arleady a bibframe type set it
-		// 			profile.userValue["@type"] = profile.userValue['http://www.w3.org/2002/07/owl#sameAs']['@type']
-		// 		}
-		// 	}
-			
-
-		// 	return profile
-
-
-		// }
+		// not currently used
 
 
 
@@ -1423,9 +982,9 @@ const parseBfdb = {
 
 								// check for URI
 								if (e.attributes && e.attributes['rdf:about']){
-									populateData.userValue['@id'] = e.attributes['rdf:about'].value
+									populateData.userValue['@id'] = this.extractURI(e.attributes['rdf:about'].value)
 								}else if (e.attributes && e.attributes['rdf:resource']){
-									populateData.userValue['@id'] = e.attributes['rdf:resource'].value
+									populateData.userValue['@id'] = this.extractURI(e.attributes['rdf:resource'].value)
 								}else{
 									// console.log('No URI for this child property')
 								}
@@ -1449,7 +1008,7 @@ const parseBfdb = {
 							}else if (e.attributes['rdf:resource'] && e.innerHTML.trim() == ''){
 								// it is a property pointing to another resource with no label or anything
 								populateData.userValue['@guid'] = short.generate()
-								populateData.userValue['@id'] = e.attributes['rdf:resource'].value
+								populateData.userValue['@id'] = this.extractURI(e.attributes['rdf:resource'].value)
 
 							}else{
 
@@ -1462,9 +1021,9 @@ const parseBfdb = {
 								let eData = {'@guid': short.generate()}
 
 								if (e.attributes && e.attributes['rdf:about']){
-									eData['@id'] = e.attributes['rdf:about'].value
+									eData['@id'] = this.extractURI(e.attributes['rdf:about'].value)
 								}else if (e.attributes && e.attributes['rdf:resource']){
-									eData['@id'] = e.attributes['rdf:resource'].value
+									eData['@id'] = this.extractURI(e.attributes['rdf:resource'].value)
 								}else{
 									// console.log('No URI for this child property')
 								}
@@ -1544,9 +1103,9 @@ const parseBfdb = {
 								// <bf:title><bf:Title rdf:about="http://...."> 
 
 								if (child.attributes && child.attributes['rdf:about']){
-									populateData.userValue['@id'] = child.attributes['rdf:about'].value
+									populateData.userValue['@id'] = this.extractURI(child.attributes['rdf:about'].value)
 								}else if (child.attributes && child.attributes['rdf:resource']){
-									populateData.userValue['@id'] = child.attributes['rdf:resource'].value
+									populateData.userValue['@id'] = this.extractURI(child.attributes['rdf:resource'].value)
 								}else{
 
 
@@ -1594,9 +1153,9 @@ const parseBfdb = {
 											let gChildData = {'@guid': short.generate()}
 
 											if (gChild.attributes && gChild.attributes['rdf:about']){
-												gChildData['@id'] = gChild.attributes['rdf:about'].value
+												gChildData['@id'] = this.extractURI(gChild.attributes['rdf:about'].value)
 											}else if (gChild.attributes && gChild.attributes['rdf:resource']){
-												gChildData['@id'] = gChild.attributes['rdf:resource'].value
+												gChildData['@id'] = this.extractURI(gChild.attributes['rdf:resource'].value)
 											}else{
 												// console.log('No URI for this child property')
 											}
@@ -1684,9 +1243,9 @@ const parseBfdb = {
 
 												// check for URI
 												if (ggChild.attributes && ggChild.attributes['rdf:about']){
-													gChildData['@id'] = ggChild.attributes['rdf:about'].value
+													gChildData['@id'] = this.extractURI(ggChild.attributes['rdf:about'].value)
 												}else if (ggChild.attributes && ggChild.attributes['rdf:resource']){
-													gChildData['@id'] = ggChild.attributes['rdf:resource'].value
+													gChildData['@id'] = this.extractURI(ggChild.attributes['rdf:resource'].value)
 												}else{
 													// console.log('No URI for this child property')
 												}
@@ -1726,9 +1285,9 @@ const parseBfdb = {
 															// it doesn't have any children, so it will be a literal or something like that
 															let gggChildData = {'@guid': short.generate()}
 															if (gggChild.attributes && gggChild.attributes['rdf:about']){
-																gggChildData['@id'] = gggChild.attributes['rdf:about'].value
+																gggChildData['@id'] = this.extractURI(gggChild.attributes['rdf:about'].value)
 															}else if (gggChild.attributes && gggChild.attributes['rdf:resource']){
-																gggChildData['@id'] = gggChild.attributes['rdf:resource'].value
+																gggChildData['@id'] = this.extractURI(gggChild.attributes['rdf:resource'].value)
 															}else{
 																// console.log('No URI for this child property')
 															}
@@ -1809,9 +1368,9 @@ const parseBfdb = {
 
 																// check for URI
 																if (ggggChild.attributes && ggggChild.attributes['rdf:about']){
-																	gggData['@id'] = ggggChild.attributes['rdf:about'].value
+																	gggData['@id'] = this.extractURI(ggggChild.attributes['rdf:about'].value)
 																}else if (ggggChild.attributes && ggggChild.attributes['rdf:resource']){
-																	gggData['@id'] = ggggChild.attributes['rdf:resource'].value
+																	gggData['@id'] = this.extractURI(ggggChild.attributes['rdf:resource'].value)
 																}else{
 																	// console.log('No URI for this child property')
 																}
@@ -1853,9 +1412,9 @@ const parseBfdb = {
 																			let ggggChildData = {'@guid': short.generate()}
 
 																			if (gggggChild.attributes && gggggChild.attributes['rdf:about']){
-																				gggData['@id'] = gggggChild.attributes['rdf:about'].value
+																				gggData['@id'] = this.extractURI(gggggChild.attributes['rdf:about'].value)
 																			}else if (gggggChild.attributes && gggggChild.attributes['rdf:resource']){
-																				gggData['@id'] = gggggChild.attributes['rdf:resource'].value
+																				gggData['@id'] = this.extractURI(gggggChild.attributes['rdf:resource'].value)
 																			}else{
 																				// console.log('No URI for this child property')
 																			}
@@ -1912,9 +1471,9 @@ const parseBfdb = {
 																// it doesn't have any children, so it will be a literal or something like that
 
 																if (ggggChild.attributes && ggggChild.attributes['rdf:about']){
-																	gggData['@id'] = ggggChild.attributes['rdf:about'].value
+																	gggData['@id'] = this.extractURI(ggggChild.attributes['rdf:about'].value)
 																}else if (ggggChild.attributes && ggggChild.attributes['rdf:resource']){
-																	gggData['@id'] = ggggChild.attributes['rdf:resource'].value
+																	gggData['@id'] = this.extractURI(ggggChild.attributes['rdf:resource'].value)
 																}else{
 																	// console.log('No URI for this child property')
 																}
@@ -2006,9 +1565,9 @@ const parseBfdb = {
 														// it doesn't have any children, so it will be a literal or something like that
 														let ggChildData = {'@guid': short.generate()}
 														if (ggChild.attributes && ggChild.attributes['rdf:about']){
-															ggChildData['@id'] = ggChild.attributes['rdf:about'].value
+															ggChildData['@id'] = this.extractURI(ggChild.attributes['rdf:about'].value)
 														}else if (ggChild.attributes && ggChild.attributes['rdf:resource']){
-															ggChildData['@id'] = ggChild.attributes['rdf:resource'].value
+															ggChildData['@id'] = this.extractURI(ggChild.attributes['rdf:resource'].value)
 														}else{
 															// console.log('No URI for this child property')
 														}
@@ -2127,8 +1686,11 @@ const parseBfdb = {
 
 			// let parser = new DOMParser();
 			// profile.rt[pkey].unusedXmlNodes = parser.parseFromString(xml.outerHTML, "text/xml").children[0];
-
+			// let namespaceValues = Object.values(this.namespace)
+			
 			for (let key in profile.rt[pkey].pt){
+
+				// populate the admin data
 
 				if (profile.rt[pkey].pt[key].propertyURI == 'http://id.loc.gov/ontologies/bibframe/adminMetadata'){
 					
@@ -2152,6 +1714,36 @@ const parseBfdb = {
 					]
 
 				}
+
+
+				// we can potentailly prevent some xml errors from propagating further here
+
+
+				// // like empty RDF types
+				// if (profile.rt[pkey].pt[key].userValue['@type']){
+
+				// 	if (namespaceValues.indexOf(profile.rt[pkey].pt[key].userValue['@type'])>-1){
+
+				// 		// delete profile.rt[pkey].pt[key].userValue['@type']
+				// 		console.log('----------x_x-----------')
+				// 		console.log(profile.rt[pkey].pt[key].userValue)
+				// 		console.log('---------------------')						
+
+
+				// 	}
+				// }
+				// check the first level bnodes as well
+				// for (let key in profile.rt[pkey].pt[key].userValue){
+				// 	if (!key.includes('@')){
+
+
+
+
+				// 	}
+				// }
+
+
+
 			}
 			
 
@@ -2453,6 +2045,8 @@ const parseBfdb = {
 		if (!xml){
 			xml = this.testXml
 		}	
+
+
 
 
 		// use the browser if we can, should be faster, fall back to the library if not running in the browser
