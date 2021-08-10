@@ -1,6 +1,6 @@
 <template>
 
-  <div style="width: 99%; margin-left: auto; margin-right: auto; margin-top:7em">
+  <div style="width: 99%; margin-left: auto; margin-right: auto; margin-top:6em">
     
  
     <div style="display: flex; height: 400px;">
@@ -106,7 +106,7 @@
         <div style="display: flex;">
           
           <div style="flex:2">
-            <ol v-if="showTypes">
+            <ol v-if="showTypes" style="padding-left: 0">
               <li :class="['type-item', {'type-item-selected':(type.selected)}]" v-for="type in activeTypes" :key="type.value" @click="setTypeClick($event,type.value)">{{type.label}}</li>
             </ol>
           </div>
