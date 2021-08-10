@@ -1,6 +1,6 @@
 <template>
 
-  <div style="width: 99%; margin-left: auto; margin-right: auto; margin-top:10em">
+  <div style="width: 99%; margin-left: auto; margin-right: auto; margin-top:7em">
     
  
     <div style="display: flex; height: 400px;">
