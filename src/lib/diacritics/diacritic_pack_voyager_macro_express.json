@@ -347,7 +347,7 @@
       "combo": "Ctrl+Alt+l",
       "code": "KeyL",
       "codeEscape": "\uFE21",
-      "combining": false,
+      "combining": true,
       "nick": "Ligature right",
       "unicode": "FE21",
       "name": "Ligature Second Half (Use Diacritic Mode"
@@ -479,7 +479,7 @@
       "combo": "Alt+9",
       "code": "Digit9",
       "codeEscape": "\uFE20",
-      "combining": false,
+      "combining": true,
       "nick": "Ligature left",
       "unicode": "FE20",
       "name": "Ligature First Half (Use Diacritic Mode"

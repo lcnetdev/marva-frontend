@@ -7,10 +7,10 @@
     <div class="component-container-title">{{structure.propertyLabel}}</div>
     <div class="component-container-input-container">
         <div v-bind:class="'component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border'">
-          <div style="display: flex;">
+          <div style="display: flex; position: relative;">
             <div style="flex:1">
               <form autocomplete="off">            
-                <input  bfeType="EditLiteralComponent-unnested" :id="assignedId" v-on:keydown.enter.prevent="submitField" :name="assignedId" ref="input" v-on:focus="focused" autocomplete="off" type="text" @keydown="nav" @keyup="change" v-model="inputValue"  class="input-single selectable-input">            
+                <input  bfeType="EditLiteralComponent-unnested" :id="assignedId" v-on:keydown.enter.prevent="submitField" :name="assignedId" ref="input" v-on:focus="focused" autocomplete="off" type="text" @keydown="nav" @keyup="change" v-model="inputValue"  :class="['input-single', 'selectable-input', {'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">            
               </form>
             </div>
             <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-tooltip="'Diacritics [CTRL-ALT-D]'" @click="openDiacriticSelect"></button>
@@ -53,12 +53,12 @@
         
 
         <div v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border', { 'component-container-fake-input-note' : isNoteField(structure.propertyLabel)  }]" >
-          <div style="display: flex;">
+          <div style="display: flex; position: relative;">
             <div style="flex:1">
 
               <form autocomplete="off" >
                 <div  class="component-nested-container-title">{{structure.propertyLabel}}</div>
-                <input v-if="!isNoteField(structure.propertyLabel)" ref="input"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change" @keydown="nav" v-model="inputValue"  class="input-nested selectable-input">
+                <input v-if="!isNoteField(structure.propertyLabel)" ref="input"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change" @keydown="nav" v-model="inputValue" :class="['input-nested', 'selectable-input', {'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">
                 <textarea v-if="isNoteField(structure.propertyLabel)"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change" @keydown="nav" v-model="inputValue"  class="input-nested selectable-input"></textarea>
 
               </form>
@@ -126,6 +126,13 @@ export default {
   },
 
   methods: {
+
+
+
+    containsNonLatinCodepoints: function(s) {
+        return /[^\u0000-\u00ff]/.test(s); // eslint-disable-line
+    },
+
 
     // this stores the active input at the global var level so it knows how to tab forward
     focused: function(event){     
@@ -384,7 +391,9 @@ export default {
               }
 
 
-
+              // little cheap hack here, on macos the Alt+9 makes ª digits 1-0 do this with Alt+## but we only 
+              // have one short cut that uses Alt+9 so just remove that char for now
+              this.inputValue=this.inputValue.replace('ª','')
               this.inputValue=this.inputValue+macro.codeEscape
     
 
@@ -672,6 +681,13 @@ export default {
   background: none;
   transition-property: color;
   transition-duration: 500ms;
+  line-height: 1.6em;
+
+}
+
+.input-accommodate-diacritics{
+  line-height: 1.6em; /* this allows for diacritic ligatures to be visible */
+
 }
 
 
@@ -775,6 +791,8 @@ textarea{
 
 .temp-icon-keyboard{
   display: none;
+  position: absolute;
+  right: 0;
 }
 .component-container-fake-input:focus-within .temp-icon-keyboard {
   /*border: solid 1px #718ec3 !important;*/

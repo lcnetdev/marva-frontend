@@ -73,7 +73,7 @@ export default new Vuex.Store({
 
     settingsDPackVoyager: true,
     settingsDPackVoyagerNative: false,
-
+    settingsLookupsUseTextSubjectEditor: true,
 
 
     // used for auto complete lookups 
@@ -210,6 +210,9 @@ export default new Vuex.Store({
     },   
     SETTINGSDPACKVOYAGERNATIVE(state, val) {
       state.settingsDPackVoyagerNative = val
+    },   
+    SETTINGSLOOKUPSUSETEXTSUBJECTEDITOR(state, val) {
+      state.settingsLookupsUseTextSubjectEditor = val
     },   
     
 
@@ -388,6 +391,14 @@ export default new Vuex.Store({
       commit('SETTINGSDPACKVOYAGERNATIVE', data.settingsDPackVoyagerNative)
       localStorage.setItem('bfeSettingsDPackVoyagerNative',data.settingsDPackVoyagerNative)
     },
+
+    // use the new subject editor or not
+    settingsLookupsUseTextSubjectEditor({ commit}, data){
+      commit('SETTINGSLOOKUPSUSETEXTSUBJECTEDITOR', data.settingsLookupsUseTextSubjectEditor)
+      localStorage.setItem('bfeSettingsDPackVoyagerNative',data.settingsLookupsUseTextSubjectEditor)
+    },
+
+
 
 
 

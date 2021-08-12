@@ -8,8 +8,11 @@
             
 
             <ul class="sidebar-menu">
-              <p>(There is only one setting so far)</p>
+
               <li v-bind:class="{ active: isDiacritics }"><router-link v-bind:class="{ active: isDiacritics }" to="/settings/diacritics">Diacritics</router-link></li>
+              <li v-bind:class="{ active: isLookups }"><router-link v-bind:class="{ active: isLookups }" to="/settings/lookups">Authority &amp; Lookups</router-link></li>
+
+
 
 
             </ul>
@@ -21,6 +24,7 @@
         <article id="settings-content">
 
           <HomeSettingsDiacriticsComponent v-if="isDiacritics"></HomeSettingsDiacriticsComponent>
+          <HomeSettingsAuthorityLookupComponent v-if="isLookups"></HomeSettingsAuthorityLookupComponent>
 
 
 
@@ -43,12 +47,16 @@
 import { mapState } from 'vuex'
 // import uiUtils from "@/lib/uiUtils"
 import HomeSettingsDiacriticsComponent from "@/components/HomeSettingsDiacriticsComponent.vue";
+import HomeSettingsAuthorityLookupComponent from "@/components/HomeSettingsAuthorityLookupComponent.vue";
+
+
 
 export default {
   name: "HomeSettingsComponent",
   components: {
       // Keypress: () => import('vue-keypress')
-      HomeSettingsDiacriticsComponent
+      HomeSettingsDiacriticsComponent,
+      HomeSettingsAuthorityLookupComponent
   },
   props: {
   },
@@ -63,6 +71,11 @@ export default {
     isDiacritics () {
       return (this.$route.fullPath==="/settings/diacritics" || this.$route.fullPath==="/settings")
     },
+    isLookups () {
+      return (this.$route.fullPath==="/settings/lookups")
+    },
+
+
     // assignedId (){
 
 

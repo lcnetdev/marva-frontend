@@ -105,6 +105,7 @@
 import { mapState } from 'vuex'
 // import uiUtils from "@/lib/uiUtils"
 const short = require('short-uuid');
+const translator = short();
 const decimalTranslator = short("0123456789");
 
 
@@ -190,13 +191,13 @@ export default {
 
         // make a new uri for each one
         if (rt.includes(':Work')){
-          uri = 'http://id.loc.gov/resources/works/e' + decimalTranslator.new()
+          uri = 'http://id.loc.gov/resources/works/' + translator.toUUID(translator.new())
           workUri = uri
         }else if (rt.includes(':Instance')){
-          uri = 'http://id.loc.gov/resources/instances/e' + decimalTranslator.new()
+          uri = 'http://id.loc.gov/resources/instances/' + translator.toUUID(translator.new())
 
         }else if (rt.includes(':Item')){  
-          uri = 'http://id.loc.gov/resources/items/e' + decimalTranslator.new()
+          uri = 'http://id.loc.gov/resources/items/' + translator.toUUID(translator.new())
         
         }        
         useProfile.rt[rt].URI = uri

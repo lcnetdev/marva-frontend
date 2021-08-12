@@ -467,6 +467,7 @@ export default {
   font-size: 1.5em;
   padding: 0.1em;
   background: none;
+  line-height: 1.6em;
 }
 .component-container-fake-input:focus-within {
   /*border: solid 1px #718ec3 !important;*/

@@ -6,7 +6,7 @@ import store from "../store";
 
 
 const short = require('short-uuid');
-const decimalTranslator = short("0123456789");
+const translator = short();
 
 
 // function setCharAt(str,index,chr) {
@@ -1391,7 +1391,7 @@ const parseProfile = {
 
                 // need tofigure out what property to store this under the in the userValue
                 if (parentStructure && key == 'http://www.w3.org/2002/07/owl#sameAs' && currentState.rt[activeProfileName].pt[component].propertyURI != parentStructure.propertyURI){
-                    // console.log('case 1')
+                    console.log('case 1')
                     if (!currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI]){
                         currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI] = []
                     }
@@ -1480,7 +1480,7 @@ const parseProfile = {
 
 
                 }else if (parentStructure && key == 'http://www.w3.org/2002/07/owl#sameAs' && currentState.rt[activeProfileName].pt[component].propertyURI == parentStructure.propertyURI){
-                    // console.log('case 2')
+                    console.log('case 2')
                     currentState.rt[activeProfileName].pt[component].userValue = {
                             '@guid': short.generate(),
                             '@type': await exportXML.suggestType(parentStructure.propertyURI),
@@ -1497,7 +1497,7 @@ const parseProfile = {
 
                 }else if (structure.type == 'lookup' && parentStructure && relatedEdgecaseParentProperty > -1){
 
-                    // console.log('hurrr Triggerd')
+                    console.log('hurrr Triggerd')
                     // thre are some very nested template, which we are just checking for
                     if (!currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI]){
                         currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI] = []
@@ -1535,7 +1535,7 @@ const parseProfile = {
 
 
                 }else if (currentState.rt[activeProfileName].pt[component].valueConstraint && currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs && currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs.length > 1){
-                    // console.log('case 4')
+                    console.log('case 4')
                     // this is ref template, so they select what Type it is from the refTemeplate selector
 
                     // does it have it set? otherwise we need to set it to the default, first refTempalte
@@ -1543,7 +1543,7 @@ const parseProfile = {
                        currentState.rt[activeProfileName].pt[component].activeType =  this.rtLookup[currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs[0]].resourceURI
                     }
                     
-                    
+                    console.log(value)
                     
                     currentState.rt[activeProfileName].pt[component].userValue = {
                             '@guid': short.generate(),
@@ -1565,7 +1565,7 @@ const parseProfile = {
                 
                 }else{
 
-                    // console.log('ELES Triggerd')
+                    console.log('ELES Triggerd')
 
                     // dunno, use the root level
                     currentState.rt[activeProfileName].pt[component].userValue = {
@@ -1864,7 +1864,7 @@ const parseProfile = {
         profile.rtOrder.push(newRdId)
 
         // setup the new instance's properies
-        profile.rt[newRdId].URI = 'http://id.loc.gov/resources/items/e' + decimalTranslator.new()
+        profile.rt[newRdId].URI = 'http://id.loc.gov/resources/items/'+ translator.toUUID(translator.new())
         profile.rt[newRdId].itemOf = uri
 
 
@@ -1980,7 +1980,7 @@ const parseProfile = {
                 profile.rtOrder.splice(profile.rtOrder.indexOf(rtId), 0, newRdId)
 
                 // setup the new instance's properies
-                profile.rt[newRdId].URI = 'http://id.loc.gov/resources/instances/e' + decimalTranslator.new()
+                profile.rt[newRdId].URI = 'http://id.loc.gov/resources/instances/'+ translator.toUUID(translator.new())
 
 
 
@@ -2103,7 +2103,7 @@ const parseProfile = {
         profile.rtOrder.push(newRdId)
 
         // setup the new instance's properies
-        profile.rt[newRdId].URI = 'http://id.loc.gov/resources/instances/e' + decimalTranslator.new()
+        profile.rt[newRdId].URI = 'http://id.loc.gov/resources/instances/'+ translator.toUUID(translator.new())
         profile.rt[newRdId].instanceOf = workUri
 
 
@@ -2174,7 +2174,7 @@ const parseProfile = {
                 profile.rtOrder.splice(profile.rtOrder.indexOf(rtId), 0, newRdId)
 
                 // setup the new instance's properies
-                profile.rt[newRdId].URI = 'http://id.loc.gov/resources/instances/e' + decimalTranslator.new()
+                profile.rt[newRdId].URI = 'http://id.loc.gov/resources/instances/'+ translator.toUUID(translator.new())
 
 
                 // admin metadata

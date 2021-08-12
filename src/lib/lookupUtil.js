@@ -424,12 +424,22 @@ const lookupUtil = {
             }
 
 
+          }else if(data.uri.includes('id.loc.gov/resources/works/') || data.uri.includes('id.loc.gov/resources/instances/')){
+
+
+            console.log('wwwwororororor')
+            console.log(data)
+
+
+
           }else{
 
             // if it is in jsonld format
             if (data['@graph']){
               data = data['@graph'];
             }
+
+            console.log(data)
             
             var nodeMap = {};
             

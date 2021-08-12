@@ -210,6 +210,11 @@
       content: "✓ " !important;
       transition-property: all;
       transition-duration: 500ms;
+      font-weight: bold;
+      color: green;
+      font-size: larger;
+
+
     }
 
 
@@ -333,7 +338,9 @@ export default {
       pickPostion: 0,
       pickLookup: {},
       activeComponent: null,
+      oldActiveComponent: null,
       activeComponentIndex:0,
+      oldActiveComponentIndex: 99,
       contextRequestInProgress: false,
       componetLookup: {},
       nextInputIsTypeSelection:false,
@@ -488,8 +495,14 @@ export default {
           }
         }
 
-        this.updateAvctiveTypeSelected()
-        this.subjectStringChanged(event)
+
+        // keep track of where we were so that we don't do unessary refreshes
+        if (this.oldActiveComponentIndex != this.activeComponentIndex){
+          this.updateAvctiveTypeSelected()
+          this.subjectStringChanged(event)
+          this.oldActiveComponentIndex = this.activeComponentIndex
+        }
+
 
       }
 
@@ -855,13 +868,33 @@ export default {
 
 
     loadUserValue: function(userValue){
-      console.log(userValue,typeof userValue)
+
+      // reset things if they might be opening this again for some reason
+      this.components= []
+      this.lookup= {}
+      this.searchResults= null
+      this.activeSearch= false
+      this.pickPostion= 0
+      this.pickLookup= {}
+      this.activeComponent= null
+      this.oldActiveComponent= null
+      this.activeComponentIndex=0
+      this.oldActiveComponentIndex= 99
+      this.contextRequestInProgress= false
+      this.componetLookup= {}
+      this.nextInputIsTypeSelection=false
+      this.typeLookup={}
+      this.okayToAdd= false
+      this.showTypes= false
+
+
+
       if (!userValue){
         return
       }
       if (typeof userValue == "string"){
         this.subjectString=userValue
-        console.log('here')
+
         return
       }
 
@@ -1046,7 +1079,8 @@ export default {
 
 
   mounted: function () {
- 
+    
+
 
   }
 };

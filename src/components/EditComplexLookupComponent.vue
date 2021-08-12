@@ -39,7 +39,8 @@
                 <div class="selected-value-container-nested" style="display: inline-block; position: relative; bottom: 2px;">
                     <span  @click="toggleSelectedDetails" style="padding-right: 0.3em; font-weight: bold"><span class="selected-value-icon" v-html="returnAuthIcon(this.displayType)"></span>{{displayLabel}}</span>
                     <span  class="selected-value-icon" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em" v-html="validateHeading()"></span>
-                    <span  @click="removeValue" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">x</span>
+                    <span v-if="showEditLink()"  @click="openEditor" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">edit</span>
+                    <span v-if="showRemoveLink()" @click="removeValue" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">x</span>
                 </div>
 
                 <!-- We are displaying the input here to act as a landing pad for when moving through and also to double detel remove lookups -->
@@ -53,7 +54,7 @@
               <div v-if="displaySelectedDetails==true" class="selected-value-details">
                 
                 <button class="selected-value-details-close" @click="toggleSelectedDetails">Close</button>
-                <button class="selected-value-details-edit" @click="openEditSubjectEditor">Edit</button>
+                <button class="selected-value-details-edit" @click="openEditor">Edit</button>
 
                 <a v-if="rewriteURI(displayContext.uri)" style="color:white; text-decoration: none;" target="_blank"  :href="rewriteURI(displayContext.uri)">View Entity</a>
                 <div class="modal-context-data-title">{{userData['@type']}}</div>
@@ -103,7 +104,7 @@
 
     <div v-else>
 
-      <Keypress v-if="structure.propertyURI=='http://www.loc.gov/mads/rdf/v1#Topic'" key-event="keydown" :multiple-keys="[{keyCode: 69, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="openEditSubjectEditor" />
+      <Keypress v-if="useSubjectEditor()" key-event="keydown" :multiple-keys="[{keyCode: 69, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="openEditor" />
 
 
       
@@ -119,7 +120,9 @@
                 <div class="selected-value-container-nested" style="display: inline-block; position: relative; bottom: 2px;">
                     <span  @click="toggleSelectedDetails" style="padding-right: 0.3em; font-weight: bold"><span class="selected-value-icon" v-html="returnAuthIcon(this.displayType)"></span>{{displayLabel}}</span>
                     <span  class="selected-value-icon" v-html="validateHeading()" v-bind:title="validationMessage" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em"></span>
-                    <span  @click="removeValue" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">x</span>
+                    <span v-if="showEditLink()"  @click="openEditor" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">edit</span>
+
+                    <span v-if="showRemoveLink()" @click="removeValue" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">x</span>
                 </div>
 
                 <!-- We are displaying the input here to act as a landing pad for when moving through and also to double detel remove lookups -->
@@ -128,14 +131,14 @@
                 </form>
               </div>
 
-              <button v-if="structure.propertyURI=='http://www.loc.gov/mads/rdf/v1#Topic'" tabindex="-1" class="temp-icon-search fake-real-button simptip-position-top" style="position:absolute;right: -2px;top:-26px" @click="openEditSubjectEditor" :data-tooltip="'Edit this Subject Heading [CTRL-ALT-SHIFT-E]'"></button>
+              <button v-if="useSubjectEditor()" tabindex="-1" class="temp-icon-search fake-real-button simptip-position-top" style="position:absolute;right: -2px;top:-26px" @click="openEditor" :data-tooltip="'Edit this Subject Heading [CTRL-ALT-SHIFT-E]'"></button>
 
               <!-- This is the detail drop down that can be click to show context of the entitiy -->
               
               <div v-if="displaySelectedDetails==true" class="selected-value-details">
                 
                 <button class="selected-value-details-close" @click="toggleSelectedDetails">Close</button>
-                <button class="selected-value-details-edit" @click="openEditSubjectEditor">Edit</button>
+                <button class="selected-value-details-edit" @click="openEditor">Edit</button>
 
                 <a v-if="rewriteURI(displayContext.uri)" style="color:white; text-decoration: none;" target="_blank" :href="rewriteURI(displayContext.uri)">View Entity</a>
                 <div class="modal-context-data-title">{{userData['@type']}}</div>
@@ -195,7 +198,7 @@
           <div class="modal-content">
 
 
-            <div v-if="structure.propertyURI=='http://www.loc.gov/mads/rdf/v1#Topic'">
+            <div v-if="useSubjectEditor()">
 
               <EditSubjectEditor ref="EditSubjectEditor" @subjectAdded="subjectAdded"></EditSubjectEditor>
 
@@ -486,6 +489,42 @@ export default {
 
     returnAuthIcon: uiUtils.returnAuthIcon,
 
+    showEditLink: function(){
+
+      let show = true
+
+      if (this.displayLabel.includes('id.loc.gov/resources/works/')){
+        show = false
+      }
+
+      return show
+    },
+
+
+    showRemoveLink: function(){
+
+      let show = true
+
+      if (this.displayLabel.includes('id.loc.gov/resources/works/')){
+        show = false
+      }
+      return show
+
+    },
+
+    useSubjectEditor: function(){
+
+      let use = false
+
+
+      if (this.structure.propertyURI=='http://www.loc.gov/mads/rdf/v1#Topic'){
+        use = true
+      }
+
+
+      return use
+    },
+
     validateHeading: function() {
 
         // dont validate some ID lookups until we can get reource lookups working correctly
@@ -708,6 +747,7 @@ export default {
       this.displayGuid = null
 
       let userValue = parseProfile.returnUserValues(this.activeProfile, this.profileCompoent,this.structure.propertyURI)
+      console.log(userValue)
       let rootPropertyURI = parseProfile.returnRootPropertyURI(this.activeProfile, this.profileCompoent,this.structure.propertyURI)
 
       if (userValue['http://www.w3.org/2000/01/rdf-schema#label'] || userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'] || userValue['http://id.loc.gov/ontologies/bibframe/code']){
@@ -1039,17 +1079,30 @@ export default {
     },
 
 
-    openEditSubjectEditor: function(){
+    openEditor: function(){
 
       this.$store.dispatch("disableMacroNav", { self: this})
 
       this.displayModal = true
 
-      this.$nextTick(() => {
-        this.$refs.EditSubjectEditor.$refs.subjectInput.focus()
-        console.log(this.searchValue)
-        this.$refs.EditSubjectEditor.loadUserValue(this.activeProfile.rt[this.activeProfileName].pt[this.profileCompoent].userValue)
-      })
+      if (this.useSubjectEditor()){
+        this.$nextTick(() => {
+          this.$refs.EditSubjectEditor.$refs.subjectInput.focus()
+          console.log(this.searchValue)
+          this.$refs.EditSubjectEditor.loadUserValue(this.activeProfile.rt[this.activeProfileName].pt[this.profileCompoent].userValue)
+        })
+      }else{
+
+        console.log(this.displayLabel)
+        this.searchValue = this.displayLabel
+        this.initalSearchState = true
+        this.search()
+        this.$nextTick(() => {
+          document.getElementById(this.assignedId+'search').focus()
+
+        })
+
+      }
 
 
 
