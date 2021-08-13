@@ -676,6 +676,7 @@ export default {
   width: 95%;
   border:none;
   /*height: 90%;*/
+  height: auto;
   font-size: 1.5em;
   padding: 0.5em 0 0 0.1em;
   background: none;

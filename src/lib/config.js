@@ -192,7 +192,10 @@ const config = {
 
 		"https://preprod-8230.id.loc.gov/resources/works" : {"name":"Works", "processor" : 'lcAuthorities', "type":"complex", "modes":[
 			{
-			"All":{"url":"https://test-8080.id.lctl.gov/resources/works/suggest2/?q=<QUERY>&count=25", "all":true}, 					
+			"Works":{"url":"https://test-8080.id.lctl.gov/resources/works/suggest2/?q=<QUERY>&count=25", "all":true}, 					
+			"Hubs":{"url":"https://test-8080.id.lctl.gov/resources/hubs/suggest2/?q=<QUERY>&count=25"}, 					
+
+			
 			}
 		]},
 

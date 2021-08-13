@@ -1,16 +1,22 @@
 <template>
 
-  <div style="width: 99%; margin-left: auto; margin-right: auto; margin-top:6em">
+  <div style="width: 99%; margin-left: auto; margin-right: auto; height: 470px;">
     
  
-    <div style="display: flex; height: 400px;">
+    <div style="display: flex; height: 468px;">
 
       <div style="flex:1; align-self: flex-end;">
         <div v-if="activeSearch!==false">{{activeSearch}}</div>
         <div v-if="searchResults !== null">
 
           <div v-if="searchResults.names.length>0">
-            <div v-for="(name,idx) in searchResults.names" @click="selectContext((searchResults.names.length - idx)*-1)" @mouseover="loadContext((searchResults.names.length - idx)*-1)" :data-id="(searchResults.names.length - idx)*-1" :key="name.uri" :class="['fake-option', {'unselected':(pickPostion != (searchResults.names.length - idx)*-1 ), 'selected':(pickPostion == (searchResults.names.length - idx)*-1 ),'picked': (pickLookup[(searchResults.names.length - idx)*-1] && pickLookup[(searchResults.names.length - idx)*-1].picked)}]">{{name.suggestLabel}}<span> [LCNAF]</span></div>
+            <div v-for="(name,idx) in searchResults.names" @click="selectContext((searchResults.names.length - idx)*-1)" @mouseover="loadContext((searchResults.names.length - idx)*-1)" :data-id="(searchResults.names.length - idx)*-1" :key="name.uri" :class="['fake-option', {'unselected':(pickPostion != (searchResults.names.length - idx)*-1 ), 'selected':(pickPostion == (searchResults.names.length - idx)*-1 ),'picked': (pickLookup[(searchResults.names.length - idx)*-1] && pickLookup[(searchResults.names.length - idx)*-1].picked)}]">
+                
+                <span v-if="name.suggestLabel.length>41">{{name.suggestLabel.substring(0,41)}}...</span>
+                <span v-else>{{name.suggestLabel}}</span>
+                <span> [LCNAF]</span>
+
+              </div>
             <hr>
           </div>
 
@@ -27,7 +33,7 @@
       </div>
 
 
-      <div style="flex:1; align-self: flex-start; padding: 2em;height: 335px;overflow-y: scroll;background: whitesmoke;">
+      <div style="flex:1; align-self: flex-start; padding: 2em;height: 403px;overflow-y: scroll;background: whitesmoke;">
 
 
 
@@ -204,6 +210,9 @@
     .selected::before {
       content: "> ";
       color: #999999;
+    }
+    .picked{
+      font-weight: bold;
     }
 
     .picked::before{      
@@ -888,12 +897,25 @@ export default {
       this.showTypes= false
 
 
+      console.log(userValue)
 
       if (!userValue){
         return
       }
+
+
       if (typeof userValue == "string"){
+
+        console.log('userValue',userValue,userValue.slice(-1),userValue.slice(0,-1))
+        // they sometimes come in with '.' at the end of the authorized form
+        if (userValue.slice(-1)=='.'){
+          userValue=userValue.slice(0,-1)
+        }
         this.subjectString=userValue
+        this.$nextTick(() => {
+          this.navString({key:'ArrowRight'})        
+        })
+
 
         return
       }
@@ -1037,6 +1059,12 @@ export default {
             completeLabel = userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
           }else if(userValue['http://www.w3.org/2000/01/rdf-schema#label']){
             completeLabel = userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
+          }
+
+
+          // if it has a trailing '.' in the auth heading drop that for search 
+          if (completeLabel.slice(-1)=='.'){
+            completeLabel=completeLabel.slice(0,-1)
           }
 
 

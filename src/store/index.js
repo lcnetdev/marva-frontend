@@ -394,8 +394,9 @@ export default new Vuex.Store({
 
     // use the new subject editor or not
     settingsLookupsUseTextSubjectEditor({ commit}, data){
+
       commit('SETTINGSLOOKUPSUSETEXTSUBJECTEDITOR', data.settingsLookupsUseTextSubjectEditor)
-      localStorage.setItem('bfeSettingsDPackVoyagerNative',data.settingsLookupsUseTextSubjectEditor)
+      localStorage.setItem('bfeSettingsLookupsUseTextSubjectEditor',data.settingsLookupsUseTextSubjectEditor)
     },
 
 

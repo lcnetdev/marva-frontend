@@ -20,7 +20,7 @@
             <div v-if="userData[structure.propertyURI]">
               Data
             </div>
-            <input v-else bfeType="EditComplexLookupComponent" :id="assignedId"  v-on:focus="focused" type="text"  class="selectable-input input-single" @keydown="activate($event)"   />
+            <input v-else bfeType="EditComplexLookupComponent" :id="assignedId"  v-on:focus="focused" type="text"  class="selectable-input input-single" @input="activate($event)"   />
           </div>
       </div>
 
@@ -57,6 +57,8 @@
                 <button class="selected-value-details-edit" @click="openEditor">Edit</button>
 
                 <a v-if="rewriteURI(displayContext.uri)" style="color:white; text-decoration: none;" target="_blank"  :href="rewriteURI(displayContext.uri)">View Entity</a>
+                
+
                 <div class="modal-context-data-title">{{userData['@type']}}</div>
 
                 <div v-if="displayContext">
@@ -93,7 +95,7 @@
 
           <!-- Just display the input, no data populated -->
           <form v-else autocomplete="off" v-on:submit.prevent>
-            <input  bfeType="EditComplexLookupComponent" type="text" class="selectable-input input-nested" :id="assignedId"  v-on:focus="focused" @keydown="activate($event)"   />
+            <input  bfeType="EditComplexLookupComponent" type="text" class="selectable-input input-nested" :id="assignedId"  v-on:focus="focused" @input="activate($event)"   />
           </form>
       </div>
 
@@ -177,7 +179,7 @@
 
           <!-- Just display the input, no data populated -->
           <form v-else autocomplete="off" v-on:submit.prevent>
-            <input  bfeType="EditComplexLookupComponent" type="text" class="selectable-input input-nested" :id="assignedId"  v-on:focus="focused" @keydown="activate($event)"   />
+            <input  bfeType="EditComplexLookupComponent" type="text" class="selectable-input input-nested" :id="assignedId"  v-on:focus="focused" @input="activate($event)"   />
           </form>
       </div>
     </div>
@@ -261,6 +263,8 @@
                   <h3><span class="modal-context-icon simptip-position-top" :data-tooltip="'Type: ' + contextData.type" v-html="returnAuthIcon(contextData.type)"></span>{{contextData.title}}</h3>
 
                   <div class="modal-context-data-title">{{contextData.type}}</div>
+
+                  <a style="color:#2c3e50; float: none;    border: none;border-radius: 0;background-color: transparent;font-size: 1em;padding: 0;" :href="rewriteURI(contextData.uri)" target="_blank">view on id.loc.gov</a>
 
                   <div v-if="contextData.variant && contextData.variant.length>0">
                     <div class="modal-context-data-title">Variants:</div>
@@ -424,6 +428,7 @@ export default {
     activeProfileName: 'activeProfileName',
     activeComplexSearch: 'activeComplexSearch',
     activeComplexSearchInProgress: 'activeComplexSearchInProgress',
+    settingsLookupsUseTextSubjectEditor:'settingsLookupsUseTextSubjectEditor',
     contextData: 'contextData',
     assignedId (){
       return uiUtils.assignID(this.structure,this.parentStructure,config)
@@ -497,6 +502,10 @@ export default {
         show = false
       }
 
+      if (this.structure.propertyURI=='http://www.loc.gov/mads/rdf/v1#Topic' && this.settingsLookupsUseTextSubjectEditor===false){
+        show = false
+      }
+
       return show
     },
 
@@ -521,6 +530,10 @@ export default {
         use = true
       }
 
+      if (this.settingsLookupsUseTextSubjectEditor===false){
+        use = false
+      }
+
 
       return use
     },
@@ -542,6 +555,8 @@ export default {
             if (userData !== false) {
                 validationUtil.validateHeading(userData)
                 .then((validationStatus) => {
+
+                    console.log('validationStatus',validationStatus)
                 
                     this.validated = validationStatus;
                     this.validationMessage = validationUtil.getValidationMessage(validationStatus);
@@ -589,6 +604,10 @@ export default {
     rewriteURI: function(uri){
 
       if (!uri){
+        return false
+      }
+
+      if (uri.includes('bibframe.example.org')){
         return false
       }
 
@@ -957,50 +976,50 @@ export default {
       }
 
 
-      if ((event.ctrlKey || event.metaKey) && event.keyCode == 86) {
-         // they are doing a paste value
+      // if ((event.ctrlKey || event.metaKey) && event.keyCode == 86) {
+      //    // they are doing a paste value
 
          
-         window.setTimeout(()=>{
+      //    window.setTimeout(()=>{
 
-          this.displayModal = true
-          this.initalSearchState = true
-          // for copy paste
-          this.searchValue = event.target.value
-          event.target.value= ''
+      //     this.displayModal = true
+      //     this.initalSearchState = true
+      //     // for copy paste
+      //     this.searchValue = event.target.value
+      //     event.target.value= ''
 
-          this.$store.dispatch("clearContext", { self: this})
+      //     this.$store.dispatch("clearContext", { self: this})
 
-          this.$store.dispatch("clearLookupValuesComplex", { self: this}).then(() => {
-            // clear the values from any previous attempt
-            // but if there is a value kick off that same search again
-            if (this.searchValue != ''){
-              this.search()
-            }
-          })    
+      //     this.$store.dispatch("clearLookupValuesComplex", { self: this}).then(() => {
+      //       // clear the values from any previous attempt
+      //       // but if there is a value kick off that same search again
+      //       if (this.searchValue != ''){
+      //         this.search()
+      //       }
+      //     })    
 
-          event.preventDefault()
-          // set the last input, but do it after the modal has been displaed
-          setTimeout(()=>{
-            if (document.getElementById(this.assignedId+'search')){
-              document.getElementById(this.assignedId+'search').focus()
-            }
-          },0)
+      //     event.preventDefault()
+      //     // set the last input, but do it after the modal has been displaed
+      //     setTimeout(()=>{
+      //       if (document.getElementById(this.assignedId+'search')){
+      //         document.getElementById(this.assignedId+'search').focus()
+      //       }
+      //     },0)
 
-          this.$store.dispatch("disableMacroNav", { self: this})
+      //     this.$store.dispatch("disableMacroNav", { self: this})
 
-          this.$nextTick(() => {
-            this.$refs.EditSubjectEditor.$refs.subjectInput.focus()
-            this.$refs.EditSubjectEditor.loadUserValue()
+      //     this.$nextTick(() => {
+      //       this.$refs.EditSubjectEditor.$refs.subjectInput.focus()
+      //       this.$refs.EditSubjectEditor.loadUserValue()
             
-          })
+      //     })
 
 
-         },50)
+      //    },50)
          
          
-         return false
-      }
+      //    return false
+      // }
 
 
       // if (event.ctrlKey){
@@ -1009,12 +1028,18 @@ export default {
       // }
 
 
+      if (event.target.value.trim() == ''){
+        return false
+      }
+
+
+
       // turn on the modal
       this.displayModal = true
       this.initalSearchState = true
 
-      // for copy paste
-      this.searchValue = event.key
+
+      this.searchValue = event.target.value
 
       this.$store.dispatch("clearContext", { self: this})
 
@@ -1042,9 +1067,12 @@ export default {
 
       this.$nextTick(() => {
         this.$refs.EditSubjectEditor.$refs.subjectInput.focus()
-        console.log(this.searchValue)
         this.$refs.EditSubjectEditor.loadUserValue(this.searchValue)
       })
+
+      event.target.value = ''
+
+
       return false
     },
 
@@ -1091,6 +1119,7 @@ export default {
           console.log(this.searchValue)
           this.$refs.EditSubjectEditor.loadUserValue(this.activeProfile.rt[this.activeProfileName].pt[this.profileCompoent].userValue)
         })
+
       }else{
 
         console.log(this.displayLabel)
@@ -1120,6 +1149,10 @@ export default {
         this.displayModal = false
         this.checkForUserData()
         this.$emit('updated', null)
+
+        this.validated = false
+        this.validateHeading()
+
         // put the focus back on the input
         setTimeout(()=>{
             document.getElementById(this.assignedId).focus()
@@ -1438,6 +1471,10 @@ export default {
             this.componentKey++
             this.displayModal = false
             this.checkForUserData()
+
+            this.validated = false
+            this.validateHeading()
+
             // put the focus back on the input
             setTimeout(()=>{
               document.getElementById(this.assignedId).focus()
@@ -1467,6 +1504,10 @@ export default {
           this.componentKey++
           this.displayModal = false
           this.checkForUserData()
+
+          this.validated = false
+          this.validateHeading()
+
           // put the focus back on the input
           setTimeout(()=>{
             document.getElementById(this.assignedId).focus()
@@ -1663,7 +1704,7 @@ box-shadow: 10px 10px 15px -5px rgba(0,0,0,0.37);
 .complex-lookup-results{
   padding: 0 1em 0 1em;
   height: 73%; 
-  margin-top: 1em;
+  margin-top: 1.25em;
 }
 
 .complex-lookup-results-complex{

@@ -15,7 +15,9 @@ const validationUtil = {
         }
         
         let uri = userData["@id"];
-        if (uri === undefined || uri.indexOf('example.org/') > 0 || uri.indexOf('/REPLACE/') > 0) {
+        if (uri === undefined || uri === null || (uri && uri.indexOf('example.org/') > 0) || (uri && uri.indexOf('/REPLACE/') > 0)) {
+                
+                
             // We either don't have a URI or we have a dummy URI; Let's see if we can find it.
             var aLabel = this.getLabel(userData);
             if (!aLabel) {
@@ -32,7 +34,7 @@ const validationUtil = {
                 console.warn("Unable to locate scheme for validation lookup!");
                 return this.headingNotChecked;
             }
-            //console.log("Found scheme: " + scheme);
+            // console.log("Found scheme: " + scheme);
             
             if (scheme.indexOf('id.loc.gov') > 0) {
                 // We have an ID scheme, so we know how 

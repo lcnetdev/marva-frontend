@@ -203,6 +203,9 @@ const lookupUtil = {
             if (config.returnUrls().dev){
               url = url.replace('http://preprod.id.','https://id.')
               url = url.replace('https://preprod-8230.id.loc.gov','https://id.loc.gov')
+              url = url.replace('https://test-8080.id.lctl.gov','https://id.loc.gov')
+
+
             }
 
 
@@ -319,8 +322,7 @@ const lookupUtil = {
         'names':resultsNames
       }
 
-      console.log('results')
-      console.log(results)
+
       return results
 
     },
@@ -424,11 +426,60 @@ const lookupUtil = {
             }
 
 
-          }else if(data.uri.includes('id.loc.gov/resources/works/') || data.uri.includes('id.loc.gov/resources/instances/')){
+          }else if(data.uri.includes('id.loc.gov/resources/works/') || data.uri.includes('id.loc.gov/resources/instances/')|| data.uri.includes('id.loc.gov/resources/hubs/')){
 
 
             console.log('wwwwororororor')
             console.log(data)
+
+            let uriIdPart = data.uri.split('/').slice(-1)[0]
+
+            console.log(uriIdPart)
+
+            //find the right graph
+            for (let g of data){
+
+              if (g && g['@id'] && (g['@id'].endsWith(`/works/${uriIdPart}`) || g['@id'].endsWith(`/instances/${uriIdPart}`) || g['@id'].endsWith(`/hubs/${uriIdPart}`)) ){
+                
+
+                if (
+                  (g['@id'].endsWith(`/works/${uriIdPart}`) && data.uri.includes('id.loc.gov/resources/works/')) || 
+                  (g['@id'].endsWith(`/instances/${uriIdPart}`) && data.uri.includes('id.loc.gov/resources/instances/')) || 
+                  (g['@id'].endsWith(`/hubs/${uriIdPart}`) && data.uri.includes('id.loc.gov/resources/hubs/'))
+                  ){
+
+                  console.log('Main graph:')
+                  console.log(g)
+
+                  if (g['http://www.w3.org/2000/01/rdf-schema#label'] && g['http://www.w3.org/2000/01/rdf-schema#label'][0]){
+                    results.title = g['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value']
+                  }else if (g['http://id.loc.gov/ontologies/bflc/aap'] && g['http://id.loc.gov/ontologies/bflc/aap'][0]){
+                    results.title = g['http://id.loc.gov/ontologies/bflc/aap'][0]['@value']
+
+                  }
+
+                  
+
+                  if (g['@type'] && g['@type'][0]){
+                    results.type = this.rdfType(g['@type'][0])
+                    results.typeFull = g['@type'][0]
+                  }
+
+                    
+                  
+
+                }
+
+
+              }
+            }
+            // console.log(uriIdPart)
+
+
+
+
+
+
 
 
 
@@ -597,7 +648,7 @@ const lookupUtil = {
 
           }
           
-
+          console.log(results)
           return results;
         },
 
@@ -634,7 +685,15 @@ const lookupUtil = {
         rdftype = 'ComplexSubject';
       }else if (type == 'Q5') {
         rdftype = 'PersonalName';
+      }else if (type == 'http://id.loc.gov/ontologies/bibframe/Work') {
+        rdftype = 'Work';
+      }else if (type == 'http://id.loc.gov/ontologies/bibframe/Instance') {
+        rdftype = 'Instance';
       }
+
+
+
+
 
       
 
@@ -718,6 +777,11 @@ const lookupUtil = {
     },
 
     fetchBfdbXML: async function(url){
+
+        // bdfb quirk /works/ only serve xml at .rdf
+        if (url.includes('/works/')){
+          url = url.replace(/\.jsonld/,'.rdf')
+        }
 
         url = url.replace(/\.jsonld/,'.xml')
 

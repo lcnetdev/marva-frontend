@@ -369,8 +369,8 @@ box-shadow: 4px 14px 39px -10px rgba(0,0,0,0.75);
 }
 @media (min-width: 1440px) {
   .modaloverlay .modal {
-    height: 85%;
-    margin: 2% auto;
+    height: 99%;
+    margin: 0.2% auto;
     max-height: 57em;
     max-width: 66em;
     width:58%;

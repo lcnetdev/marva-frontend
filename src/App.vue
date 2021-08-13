@@ -163,24 +163,31 @@ export default {
     if (localStorage.getItem('bfeSettingsDPackVoyager') === 'undefined'){
       localStorage.removeItem('bfeSettingsDPackVoyager')
     }
+    if (localStorage.getItem('bfeSettingsLookupsUseTextSubjectEditor') === 'undefined'){
+      localStorage.removeItem('bfeSettingsLookupsUseTextSubjectEditor')
+    }
+
 
 
     if (localStorage.getItem('bfeSettingsDPackVoyager')!== null){
-      console.log("SETTING setSettingsDPackVoyager",JSON.parse(localStorage.getItem('bfeSettingsDPackVoyager')))
       this.$store.dispatch("setSettingsDPackVoyager", { self: this, settingsDPackVoyager: JSON.parse(localStorage.getItem('bfeSettingsDPackVoyager')) }).then(() => {
       })   
     }
 
 
     if (localStorage.getItem('bfeSettingsDPackVoyagerNative')!== null){
-      console.log("SETTING setSettingsDPackVoyager",JSON.parse(localStorage.getItem('bfeSettingsDPackVoyagerNative')))
       this.$store.dispatch("setSettingsDPackVoyagerNative", { self: this, settingsDPackVoyagerNative: JSON.parse(localStorage.getItem('bfeSettingsDPackVoyagerNative')) }).then(() => {
       })   
     }
-        
 
 
-    console.log('this.settingsDPackVoyager',this.settingsDPackVoyager)
+    if (localStorage.getItem('bfeSettingsLookupsUseTextSubjectEditor')!== null){
+      console.log("APP Loading, set to:",localStorage.getItem('bfeSettingsLookupsUseTextSubjectEditor'), JSON.parse(localStorage.getItem('bfeSettingsLookupsUseTextSubjectEditor')))
+      this.$store.dispatch("settingsLookupsUseTextSubjectEditor", { self: this, settingsLookupsUseTextSubjectEditor: JSON.parse(localStorage.getItem('bfeSettingsLookupsUseTextSubjectEditor')) }).then(() => {
+      })   
+    }        
+
+
 
     let r = await lookupUtil.checkVersionOutOfDate()
     this.outOfDate = r
