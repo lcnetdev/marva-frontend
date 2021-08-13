@@ -1066,8 +1066,10 @@ export default {
 
 
       this.$nextTick(() => {
-        this.$refs.EditSubjectEditor.$refs.subjectInput.focus()
-        this.$refs.EditSubjectEditor.loadUserValue(this.searchValue)
+        if (this.$refs.EditSubjectEditor){
+          this.$refs.EditSubjectEditor.$refs.subjectInput.focus()
+          this.$refs.EditSubjectEditor.loadUserValue(this.searchValue)
+        }
       })
 
       event.target.value = ''
@@ -1086,12 +1088,15 @@ export default {
       })
     },
     closeModal: function(event){
+
       if (event && event.target && event.target.classList.contains('close')){
         this.displayModal = false
       }
-      if (event && event.target && !event.target.classList.contains('modaloverlay')){
-        return false
-      }
+
+      // if (event && event.target && !event.target.classList.contains('modaloverlay')){
+      //   return false
+      // }
+
 
       this.$store.dispatch("enableMacroNav", { self: this})
 
@@ -1115,9 +1120,10 @@ export default {
 
       if (this.useSubjectEditor()){
         this.$nextTick(() => {
-          this.$refs.EditSubjectEditor.$refs.subjectInput.focus()
-          console.log(this.searchValue)
-          this.$refs.EditSubjectEditor.loadUserValue(this.activeProfile.rt[this.activeProfileName].pt[this.profileCompoent].userValue)
+          if (this.$refs.EditSubjectEditor){
+            this.$refs.EditSubjectEditor.$refs.subjectInput.focus()
+            this.$refs.EditSubjectEditor.loadUserValue(this.activeProfile.rt[this.activeProfileName].pt[this.profileCompoent].userValue)
+          }
         })
 
       }else{
