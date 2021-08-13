@@ -390,12 +390,24 @@ export default {
     // some context messing here, pass the debounce func a ref to the vue "this" as that to ref in the function callback
     searchApis: debounce(async (searchString,searchStringFull,that) => {
       that.searchResults=null
-      that.activeSearch = 'Seaching...'
+      that.x = 'Seaching...'
       that.pickPostion=0
+
+      searchString = searchString.trim()
+      searchStringFull = searchStringFull.trim()
 
       // make the "searching..." text grow
       let ti = window.setInterval(()=>{ that.activeSearch = that.activeSearch + '.'},100)
       
+      // a backup here just in case the search times out or takes forever
+      let tiBackup = window.setTimeout(()=>{
+        window.clearInterval(ti)
+        that.activeSearch = false
+
+      }, 10000)
+
+
+
       searchString=searchString.replaceAll('‑','-')
       searchStringFull=searchStringFull.replaceAll('‑','-')
 
@@ -478,7 +490,12 @@ export default {
 
 
       window.clearInterval(ti)
+      window.clearTimeout(tiBackup)
       that.activeSearch = false
+
+
+
+
     }, 500),
 
     navStringClick: function(event){
@@ -707,6 +724,7 @@ export default {
         }
 
         this.nextInputIsTypeSelection = false
+        this.subjectStringChanged()
 
       }else{
 
