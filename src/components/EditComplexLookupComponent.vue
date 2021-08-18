@@ -1069,6 +1069,8 @@ export default {
         if (this.$refs.EditSubjectEditor){
           this.$refs.EditSubjectEditor.$refs.subjectInput.focus()
           this.$refs.EditSubjectEditor.loadUserValue(this.searchValue)
+
+          this.$refs.EditSubjectEditor.checkToolBarHeight()
         }
       })
 
@@ -1123,6 +1125,8 @@ export default {
           if (this.$refs.EditSubjectEditor){
             this.$refs.EditSubjectEditor.$refs.subjectInput.focus()
             this.$refs.EditSubjectEditor.loadUserValue(this.activeProfile.rt[this.activeProfileName].pt[this.profileCompoent].userValue)
+            this.$refs.EditSubjectEditor.checkToolBarHeight()
+            
           }
         })
 
