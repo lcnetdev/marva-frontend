@@ -42,16 +42,11 @@ const validationUtil = {
                 var response = await this._doLabelLookup(aLabel, scheme);
                 var lookupStatus = response.status;
                 if (lookupStatus == 200) {
-                    var newuri = response.headers.get("x-uri");
-                    
-                    // Obviously this needs to be fixed in Id, but for now....
-                    newuri = newuri.replace('preprod-8080.', '');
-                    newuri = newuri.replace('preprod-8288.', '');
-                    newuri = newuri.replace('preprod.', '');
+                    var newuri = response.x_uri;
                     userData["@id"] = newuri;
                     
-                    if (response.headers.get("x-preflabel") != aLabel) {
-                        this._setLabel(userData, response.headers.get("x-preflabel"));
+                    if (response.foundLabel != aLabel) {
+                        this._setLabel(userData, response.foundLabel);
                     }
                     
                     return this.headingValid; 
@@ -104,22 +99,53 @@ const validationUtil = {
             method: 'GET', // *GET, POST, PUT, DELETE, etc.
             redirect: 'follow', // manual, *follow, error
             referrerPolicy: 'no-referrer',
-            headers: { "Accept": "application/rdf+xml" }
+            headers: { "Accept": "application/ld+json" }
         };
         
         var url = scheme + "/label/" + encodeURIComponent(label);
         url = url.replace(/^(http:)/,"https:");
         url = url.replace('//id.loc.gov/','//preprod.id.loc.gov/');
         
-        try {
+        //try {
             const response = await fetch(url, fetchInit);
+            if (response.status == 200) {
+                var x_uri = response.headers.get("x-uri");
+                
+                // Obviously this needs to be fixed in Id, but for now....
+                x_uri = x_uri.replace('preprod-8080.', '');
+                x_uri = x_uri.replace('preprod-8288.', '');
+                x_uri = x_uri.replace('preprod.', '');
+                response.x_uri = x_uri;
+                
+                var found_label = response.headers.get("x-preflabel");
+                var graph = await response.json();
+                
+                /*
+                    Need to do this because HTTP headers are decoded
+                    as ISO-8859-1, not UTF8. While there may be a large
+                    number of utilities that regardless support UTF8
+                    headers, browsers - Chrome and Firefox certainly - 
+                    strictly interpret the HTTP spec and expect these 
+                    values to be ISO-8859-1.
+                */
+                graph.forEach(r => {
+                    if (r["@id"] !== undefined && r["@id"] == x_uri) {
+                        found_label = this._getLabelFromJSONLD(r);
+                        if (found_label !== false) {
+                            response.foundLabel = found_label;
+                            return response;
+                        }
+                    }
+                });
+                return response;
+            }
             return response;
-        } catch(err) {
+        //} catch(err) {
             // There was an error, or just a 404, which is yet another 
             // fix for ID.
-            console.warn("Label lookup failed for " + url);
-            return { status: 404 }
-        }
+        //    console.warn("Label lookup failed for " + url);
+        //    return { status: 404 }
+        //}
     },
     
     getLabel: function(userData) {
@@ -130,6 +156,19 @@ const validationUtil = {
         for (var p of labelProps) {
             if (userData[p] !== undefined) {
                 return userData[p][0][p];
+            }
+        }
+        return false;
+    },
+    
+    _getLabelFromJSONLD: function(resource) {
+        const labelProps = [
+                "http://www.loc.gov/mads/rdf/v1#authoritativeLabel",
+                "http://www.w3.org/2000/01/rdf-schema#label"
+            ];
+        for (var p of labelProps) {
+            if (resource[p] !== undefined) {
+                return resource[p][0]["@value"];
             }
         }
         return false;
