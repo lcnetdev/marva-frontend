@@ -59,7 +59,7 @@
               <form autocomplete="off" >
                 <div  class="component-nested-container-title">{{structure.propertyLabel}}</div>
                 <input v-if="!isNoteField(structure.propertyLabel)" ref="input"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change" @keydown="nav" v-model="inputValue" :class="['input-nested', 'selectable-input', {'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">
-                <textarea v-if="isNoteField(structure.propertyLabel)"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change" @keydown="nav" v-model="inputValue"  class="input-nested selectable-input"></textarea>
+                <textarea v-if="isNoteField(structure.propertyLabel)"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change" @keydown="nav" v-model="inputValue"  class="input-nested input-textarea-nested selectable-input"></textarea>
 
               </form>
             </div>
@@ -686,6 +686,10 @@ export default {
 
 }
 
+.input-textarea-nested{
+  width: 90%;
+}
+
 .input-accommodate-diacritics{
   line-height: 1.6em; /* this allows for diacritic ligatures to be visible */
 
@@ -694,7 +698,7 @@ export default {
 
 .fake-real-button{
   height: 4em;
-  min-width: 4em;
+  min-width: 2.75em;
   background-color: transparent;
   border: none;
   outline: none;
