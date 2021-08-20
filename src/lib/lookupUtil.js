@@ -429,12 +429,11 @@ const lookupUtil = {
           }else if(data.uri.includes('id.loc.gov/resources/works/') || data.uri.includes('id.loc.gov/resources/instances/')|| data.uri.includes('id.loc.gov/resources/hubs/')){
 
 
-            console.log('wwwwororororor')
-            console.log(data)
+
 
             let uriIdPart = data.uri.split('/').slice(-1)[0]
 
-            console.log(uriIdPart)
+
 
             //find the right graph
             for (let g of data){
@@ -448,8 +447,7 @@ const lookupUtil = {
                   (g['@id'].endsWith(`/hubs/${uriIdPart}`) && data.uri.includes('id.loc.gov/resources/hubs/'))
                   ){
 
-                  console.log('Main graph:')
-                  console.log(g)
+
 
                   if (g['http://www.w3.org/2000/01/rdf-schema#label'] && g['http://www.w3.org/2000/01/rdf-schema#label'][0]){
                     results.title = g['http://www.w3.org/2000/01/rdf-schema#label'][0]['@value']
@@ -490,7 +488,7 @@ const lookupUtil = {
               data = data['@graph'];
             }
 
-            console.log(data)
+
             
             var nodeMap = {};
             
@@ -529,11 +527,20 @@ const lookupUtil = {
               if (n['http://www.loc.gov/mads/rdf/v1#isMemberOfMADSCollection']){
                 nodeMap['MADS Collection'] = n['http://www.loc.gov/mads/rdf/v1#isMemberOfMADSCollection'].map(function(d){ return d['@id']})
               } 
+              if (n['http://www.loc.gov/mads/rdf/v1#classification']){
+                console.log("n['http://www.loc.gov/mads/rdf/v1#classification']",n['http://www.loc.gov/mads/rdf/v1#classification'])
+
+                nodeMap['Classification'] = n['http://www.loc.gov/mads/rdf/v1#classification'].map(function(d){ return d['@value']})
+
+              } 
+
 
 
 
             })
             // pull out the labels
+
+            
             data.forEach(function(n){
               
               // loop through all the possible types of row
@@ -547,6 +554,13 @@ const lookupUtil = {
                     if (results.nodeMap[k].indexOf(uri.split('/').slice(-1)[0].replace('collection_',''))==-1){
                       results.nodeMap[k].push(uri.split('/').slice(-1)[0].replace('collection_',''))
                     }
+                  }
+
+                  if (k == 'Classification'){
+                    if (nodeMap[k].length>0){
+                      results.nodeMap[k]=nodeMap[k]
+                    }
+
                   }
 
                   if (n['@id'] && n['@id'] == uri){
@@ -574,6 +588,7 @@ const lookupUtil = {
               
               var citation = '';
               var variant = '';
+              // var seeAlso = '';
               var title = '';
 
               if (n['http://www.loc.gov/mads/rdf/v1#citation-source']) {
@@ -600,6 +615,13 @@ const lookupUtil = {
               if (n['http://www.loc.gov/mads/rdf/v1#variantLabel']) {
                 variant = variant + n['http://www.loc.gov/mads/rdf/v1#variantLabel'].map(function (v) { return v['@value'] + ' '; })
               }
+
+              // if (n['http://www.w3.org/2000/01/rdf-schema#seeAlso']) {
+              //   seeAlso = seeAlso + n['http://www.w3.org/2000/01/rdf-schema#seeAlso'].map(function (v) { return v['@value'] + ' '; })
+              // }
+
+              
+              
 
               if (n['@id'] && n['@id'] == data.uri && n['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){            
                 title = title + n['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'].map(function (v) { return v['@value'] + ' '; })
@@ -648,7 +670,7 @@ const lookupUtil = {
 
           }
           
-          console.log(results)
+          
           return results;
         },
 
