@@ -1,9 +1,9 @@
 <template>
 
-  <div style="width: 99%; margin-left: auto; margin-right: auto; height: 470px;">
+  <div :class="['subject-editor-container', {'subject-editor-container-lowres':lowResMode}]">
     
- 
-    <div style="display: flex; height: 468px;">
+
+    <div :class="['subject-editor-container-left', {'subject-editor-container-left-lowres':lowResMode}]">
 
       <div style="flex:1; align-self: flex-end;">
         <div v-if="activeSearch!==false">{{activeSearch}}</div>
@@ -33,7 +33,7 @@
       </div>
 
 
-      <div style="flex:1; align-self: flex-start; padding: 2em;height: 403px;overflow-y: scroll;background: whitesmoke;">
+      <div :class="['subject-editor-container-right', {'subject-editor-container-right-lowres':lowResMode}]">
 
 
 
@@ -89,101 +89,39 @@
     <div class="">
 
 
-        <template v-if="lowResMode==false">
 
-          <div class="component-container-fake-input">
-            <div  style="display: flex;">
-              <div  style="flex:1; position: relative;">
-                <form autocomplete="off" style="height: 3em;">            
-                  <input v-on:keydown.enter.prevent="navInput" placeholder="Enter Subject Headings Here" ref="subjectInput"  autocomplete="off" type="text" v-model="subjectString" @input="subjectStringChanged" @keydown="navInput" @keyup="navString" @click="navStringClick"  class="input-single-subject subject-input">            
-                </form>
+        <div class="component-container-fake-input">
+          <div  style="display: flex;">
+            <div  style="flex:1; position: relative;">
+              <form autocomplete="off" style="height: 3em;">            
+                <input v-on:keydown.enter.prevent="navInput" placeholder="Enter Subject Headings Here" ref="subjectInput"  autocomplete="off" type="text" v-model="subjectString" @input="subjectStringChanged" @keydown="navInput" @keyup="navString" @click="navStringClick"  class="input-single-subject subject-input">            
+              </form>
 
-                <div v-for="(c, idx) in components" :ref="'cBackground' + idx" :class="['color-holder',{'color-holder-okay':(c.uri !== null || c.literal)},{'color-holder-type-okay':(c.type !== null || showTypes===false)}]" v-bind:key="idx" >
-                  {{c.label}}
-                </div>
+              <div v-for="(c, idx) in components" :ref="'cBackground' + idx" :class="['color-holder',{'color-holder-okay':(c.uri !== null || c.literal)},{'color-holder-type-okay':(c.type !== null || showTypes===false)}]" v-bind:key="idx" >
+                {{c.label}}
               </div>
-            </div>          
+            </div>
+          </div>          
+        </div>
+        <div ref="toolbar" style="display: flex;">          
+          <div style="flex:2">
+            <ol v-if="showTypes" :class="['type-list-ol',{'type-list-ol-lowres':lowResMode}]">
+              <li :class="['type-item', {'type-item-selected':(type.selected)}]" v-for="type in activeTypes" :key="type.value" @click="setTypeClick($event,type.value)">{{type.label}}</li>
+            </ol>
           </div>
-          <div ref="toolbar" style="display: flex;">          
-            <div style="flex:2">
-              <ol v-if="showTypes" style="padding-left: 0">
-                <li :class="['type-item', {'type-item-selected':(type.selected)}]" v-for="type in activeTypes" :key="type.value" @click="setTypeClick($event,type.value)">{{type.label}}</li>
-              </ol>
-            </div>
-            <div style="flex:1">
-              <button v-if="okayToAdd==true" style="float: right;margin: 0.6em;" @click="add" class="">Add [SHIFT+Enter]</button>
-              <button v-else-if="okayToAdd==false && subjectString.length==0" disabled style="float: right;margin: 0.6em; display: none;" class="">Please Check Headings</button>
-              <button v-else-if="okayToAdd==false" disabled style="float: right;margin: 0.6em;" class="">Can't Add. Please Check Headings</button>
-            </div>
+          <div style="flex:1">
+
+            <button v-if="lowResMode" @click="closeEditor" style="float: right;margin: 0.6em; background-color: white; border: solid 1px rgb(42,42,42); color: rgb(42,42,42);" :class="[{'add-button-lowres':lowResMode}]">Close</button>
+            <button v-if="okayToAdd==true" style="float: right;margin: 0.6em;" @click="add" :class="[{'add-button-lowres':lowResMode}]">Add [SHIFT+Enter]</button>
+            <button v-else-if="okayToAdd==false && subjectString.length==0" disabled style="float: right;margin: 0.6em; display: none;" :class="[{'add-button-lowres':lowResMode}]">Can't Add</button>
+            <button v-else-if="okayToAdd==false" disabled style="float: right;margin: 0.6em;" :class="[{'add-button-lowres':lowResMode}]">Can't Add</button>
+
+            
+            
           </div>
-
-        </template>
-
-
-        <!-- Low res mode -->
-        <template v-else>
-            <div  style="display: flex;">
-              <div  style="flex:1; position: relative;">
-                <div class="component-container-fake-input">
-                  <form autocomplete="off" style="height: 3em;">            
-                    <input v-on:keydown.enter.prevent="navInput" placeholder="Enter Subject Headings Here" ref="subjectInput"  autocomplete="off" type="text" v-model="subjectString" @input="subjectStringChanged" @keydown="navInput" @keyup="navString" @click="navStringClick"  class="input-single-subject subject-input">            
-                  </form>
-                  <div v-for="(c, idx) in components" :ref="'cBackground' + idx" :class="['color-holder',{'color-holder-okay':(c.uri !== null || c.literal)},{'color-holder-type-okay':(c.type !== null || showTypes===false)}]" v-bind:key="idx" >
-                    {{c.label}}
-                  </div>
-                </div>
-              </div>
-
-              <div style="flex:1; position: relative;">
-                <ol v-if="showTypes" style="padding-left: 0">
+        </div>
 
 
-
-
-
-                <li style="position: absolute;left: 1em;top: -1em;" :class="['type-item', {'type-item-selected':(activeTypes['madsrdf:Topic'].selected)}]" :key="activeTypes['madsrdf:Topic'].value" @click="setTypeClick($event,activeTypes['madsrdf:Topic'].value)">{{activeTypes['madsrdf:Topic'].label}}</li>
-                <li style="position: absolute;left: 12em;top: -1em;" :class="['type-item', {'type-item-selected':(activeTypes['madsrdf:Temporal'].selected)}]" :key="activeTypes['madsrdf:Temporal'].value" @click="setTypeClick($event,activeTypes['madsrdf:Temporal'].value)">{{activeTypes['madsrdf:Temporal'].label}}</li>
-                <li style="position: absolute;left: 1em;top: 1em;" :class="['type-item', {'type-item-selected':(activeTypes['madsrdf:GenreForm'].selected)}]" :key="activeTypes['madsrdf:GenreForm'].value" @click="setTypeClick($event,activeTypes['madsrdf:GenreForm'].value)">{{activeTypes['madsrdf:GenreForm'].label}}</li>
-                <li style="position: absolute;left: 7em;top: 1em;" :class="['type-item', {'type-item-selected':(activeTypes['madsrdf:Geographic'].selected)}]" :key="activeTypes['madsrdf:Geographic'].value" @click="setTypeClick($event,activeTypes['madsrdf:Geographic'].value)">{{activeTypes['madsrdf:Geographic'].label}}</li>
-
-
-                  
-                </ol>        
-
-
-                <button v-if="okayToAdd==true" style="float: right;" @click="add" class="">Add [SHIFT+Enter]</button>
-                <button v-else-if="okayToAdd==false && subjectString.length==0" disabled style="float: right; display: none;" class="">Please Check Headings</button>
-                <button v-else-if="okayToAdd==false" disabled style="float: right;" class="">Can't Add. Please Check Headings</button>
-
-
-
-              </div>
-
-            </div>          
-          
-          
-
-          <!-- <div ref="toolbar" style="display: flex;">          
-            <div style="flex:2">
-              <ol v-if="showTypes" style="padding-left: 0">
-                <li :class="['type-item', {'type-item-selected':(type.selected)}]" v-for="type in activeTypes" :key="type.value" @click="setTypeClick($event,type.value)">{{type.label}}</li>
-              </ol>
-            </div>
-            <div style="flex:1">
-              <button v-if="okayToAdd==true" style="float: right;margin: 0.6em;" @click="add" class="">Add [SHIFT+Enter]</button>
-              <button v-else-if="okayToAdd==false && subjectString.length==0" disabled style="float: right;margin: 0.6em; display: none;" class="">Please Check Headings</button>
-              <button v-else-if="okayToAdd==false" disabled style="float: right;margin: 0.6em;" class="">Can't Add. Please Check Headings</button>
-            </div>
-          </div>
- -->
-
-
-
-
-
-
-
-        </template>
 
 
     </div>
@@ -200,6 +138,72 @@
     body #app{
       background-color: white !important;
     }
+
+    .subject-editor-container{
+      width: 99%; 
+      margin-left: auto; 
+      margin-right: auto; 
+      height: 470px;
+    }
+
+    .subject-editor-container-lowres{
+      height: 350px;
+      max-height: 350px;
+    }
+
+    .add-button-lowres{
+      margin-top: 0 !important;
+    }
+
+
+
+
+    .subject-editor-container-left{
+      display: flex; 
+      height: 468px;
+    }
+
+    .subject-editor-container-left .modal-context-data-li{
+      /*font-size: 1em;*/
+    }
+
+    
+
+    .subject-editor-container-left-lowres{
+
+      font-size: 0.75em !important;
+      height: 352px;
+      max-height: 352px;
+
+    }
+
+
+
+    .subject-editor-container-right{
+      flex:1; 
+      align-self: flex-start; 
+      padding: 2em;
+      height: 403px;
+      overflow-y: scroll;
+      background: whitesmoke;
+    }
+
+    .subject-editor-container-right-lowres{
+      height: 304px;
+      max-height: 304px;
+    }
+
+
+    .type-list-ol{
+      padding-left: 0
+    }
+
+    .type-list-ol-lowres{
+      margin: 0;
+    }
+
+
+
 
     .color-holder{
 
@@ -350,6 +354,8 @@
   }
 
   .input-single-subject:focus {outline:0;}
+
+
 
 /*
 .left-menu-list-item-has-data::before {
@@ -555,6 +561,9 @@ export default {
       window.clearTimeout(tiBackup)
       that.activeSearch = false
 
+      that.$nextTick(() => {
+        that.checkToolBarHeight()
+      })
 
 
 
@@ -934,6 +943,9 @@ export default {
         this.okayToAdd = true
       }
 
+      this.$nextTick(() => {
+        this.checkToolBarHeight()
+      })
 
 
 
@@ -953,6 +965,15 @@ export default {
       this.$emit('subjectAdded', this.components)
 
 
+      
+
+    },
+
+
+    closeEditor: function(){
+
+      this.$emit('closeEditor', true)
+
     },
 
     checkToolBarHeight: function(){
@@ -961,11 +982,10 @@ export default {
       // in very very low res setups sometimes this area gets clipped
       if (this.$refs.toolbar.getBoundingClientRect().bottom > window.innerHeight){
         this.lowResMode=true  
+        this.$emit('lowResModeActivate', true)
       }
 
-      
-
-
+      console.log("Setting this.lowResMode",this.lowResMode)
     },
 
 

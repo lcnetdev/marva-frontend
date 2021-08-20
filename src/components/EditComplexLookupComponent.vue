@@ -191,18 +191,20 @@
       <div v-bind:class="['modal']">
 
         <div>
-          <div class="close temp-icon-close" @click="closeModal"></div>
-          <div class="modal-title">
+
+          <div v-if="!lowResMode" class="close temp-icon-close" @click="closeModal"></div>
+          <div v-if="!lowResMode" class="modal-title">
             <span v-if="parentStructureObj && structure.propertyLabel == 'Lookup'">{{parentStructureObj.propertyLabel}} -- </span>
             <span>{{structure.propertyLabel}}</span>
             
           </div>
+
           <div class="modal-content">
 
 
             <div v-if="useSubjectEditor()">
 
-              <EditSubjectEditor ref="EditSubjectEditor" @subjectAdded="subjectAdded"></EditSubjectEditor>
+              <EditSubjectEditor ref="EditSubjectEditor" @closeEditor="closeModal" @lowResModeActivate="lowResModeActivate" @subjectAdded="subjectAdded"></EditSubjectEditor>
 
             </div>
 
@@ -412,6 +414,8 @@ export default {
       contextRequestInProgress: false,
       validated: false,
       validationMessage: "",
+
+      lowResMode:false,
 
       userData: {}
     }
@@ -1081,6 +1085,7 @@ export default {
     },
 
     focused: function(event){     
+
       this.$store.dispatch("setActiveInput", { self: this, id: event.target.id, profileCompoent: this.profileCompoent, profileName: this.profileName }).then(()=>{
 
         // now focus the side bars
@@ -1101,7 +1106,7 @@ export default {
 
 
       this.$store.dispatch("enableMacroNav", { self: this})
-
+      this.lowResMode =false
       this.displayModal = false
       this.displayPreCoordinated = false
       this.precoordinated = []
@@ -1116,6 +1121,15 @@ export default {
 
     openEditor: function(){
 
+
+
+
+      this.$store.dispatch("setActiveInput", { self: this, id: this.assignedId, profileCompoent: this.profileCompoent, profileName: this.profileName }).then(()=>{
+        // just make sure the parent input is focused if they clicked "edit" without it being focused
+      })
+
+
+
       this.$store.dispatch("disableMacroNav", { self: this})
 
       this.displayModal = true
@@ -1126,7 +1140,7 @@ export default {
             this.$refs.EditSubjectEditor.$refs.subjectInput.focus()
             this.$refs.EditSubjectEditor.loadUserValue(this.activeProfile.rt[this.activeProfileName].pt[this.profileCompoent].userValue)
             this.$refs.EditSubjectEditor.checkToolBarHeight()
-            
+
           }
         })
 
@@ -1147,6 +1161,15 @@ export default {
 
     },
 
+
+    // the modal content is telling this modal that things dont fit
+    lowResModeActivate: function() {
+      
+
+      this.lowResMode=true
+
+
+    },
 
 
     subjectAdded: function(components){
