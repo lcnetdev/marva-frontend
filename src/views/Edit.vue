@@ -207,6 +207,14 @@
                                     <circle fill="#7badad" cx="0.55em" cy="0.6em" r="0.45em"/>
                                 </svg>
                                 <div v-if="profileName.includes('Instance')" style="height: 1em;width: 1em; display: inline-block;" class="temp-icon-instance"></div>
+                                
+                                <div v-if="profileName.includes(':Item')" style="height: 1em;width: 1em; display: inline-block;">
+                                  
+
+                                </div>
+
+
+
                                 <span>{{profileName.split(':').slice(-1)[0]}}</span>
                             </div>
                             
@@ -242,11 +250,23 @@
 
 
                         <div style="display: flex;">
+
                           <div style="flex: 0">
+
                             <div v-if="profileName.includes('Instance')" style="height: 1.75em;width: 2em; margin-left: 1.5em;" class="temp-icon-instance"></div>
+
                             <svg v-if="profileName.split(':').slice(-1)[0] == 'Work'" width="3em" height="2.5em" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                 <circle fill="#7badad" cx="1.5em" cy="1em" r="0.75em"/>
                             </svg>
+
+                            <div style="display:inline-block;     width: 26px;margin-right: 5px;" v-if="profileName.includes(':Item')">
+                              <svg  viewBox="0 0 50 72" version="1.1" xmlns="http://www.w3.org/2000/svg">
+
+                                   <rect width="50px" height="50px" style="fill:#eaeaea;stroke-width:0.5;stroke:rgb(0,0,0)" />
+                              </svg>
+                            </div>
+
+
                           </div>
                           <div style="flex-basis: auto; font-size: 1.25em; font-weight: bold; text-align: left;">{{profileName.split(':').slice(-1)[0]}}</div>
                           <div style="flex: 1; text-align: right;line-height: 1.25em;">{{activeProfile.rt[profileName].URI}}</div>
@@ -319,6 +339,22 @@
 
                                 <div v-if="profileName.includes('Instance')" style="height: 1em;width: 1em; display: inline-block;" class="temp-icon-instance"></div>
                                 <span v-if="profileName.includes('Instance')">{{profileName.split(':').slice(-1)[0]}}</span>
+
+
+
+                              <div v-if="profileName.includes(':Item')">
+                                <div style="display:inline-block; height: 28px;   width: 26px;margin-right: 5px;" v-if="profileName.includes(':Item')">
+                                  <svg  viewBox="0 -25 70 72" version="1.1" xmlns="http://www.w3.org/2000/svg">
+
+                                       <rect width="40px" height="40px" style="fill:#eaeaea;stroke-width:0.5;stroke:rgb(0,0,0)" />
+                                  </svg>
+                                </div>
+                                <span>Item</span>
+                              </div>
+
+
+
+
 
                             </div>
                             
