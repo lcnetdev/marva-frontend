@@ -210,6 +210,12 @@
                                 
                                 <div v-if="profileName.includes(':Item')" style="height: 1em;width: 1em; display: inline-block;">
                                   
+                                  <svg  viewBox="0 -32 50 72" version="1.1" xmlns="http://www.w3.org/2000/svg">
+
+                                       <rect width="40px" height="40px" style="fill:#eaeaea;stroke-width:0.5;stroke:rgb(0,0,0)" />
+                                  </svg>
+
+
 
                                 </div>
 
@@ -250,7 +256,6 @@
 
 
                         <div style="display: flex;">
-
                           <div style="flex: 0">
 
                             <div v-if="profileName.includes('Instance')" style="height: 1.75em;width: 2em; margin-left: 1.5em;" class="temp-icon-instance"></div>
@@ -264,7 +269,11 @@
 
                                    <rect width="50px" height="50px" style="fill:#eaeaea;stroke-width:0.5;stroke:rgb(0,0,0)" />
                               </svg>
-                            </div>
+                          </div>
+
+
+
+
 
 
                           </div>
@@ -351,7 +360,6 @@
                                 </div>
                                 <span>Item</span>
                               </div>
-
 
 
 
