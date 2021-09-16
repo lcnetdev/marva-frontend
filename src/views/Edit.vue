@@ -133,15 +133,31 @@
 
 
               <div style="display:inline-block; margin-right:1em;">
+                <div class="simptip-position-left" data-tooltip="View the editor manual" style="display:flex; height: 20px;max-height: 20px;">
+                  <div style="flex:1">
 
-                <div v-if="activeRecordSaved">
-                    
-                    <div style="display: inline-block; height: 10px; margin-right: 5px; width:10px; border-radius:1em; background-color:green"></div><div style="display: inline-block;">Saved</div>
+                  <a href="https://guides.loc.gov/c.php?g=1170551&p=8550706&preview=003264c97f504caf990125066b248e24" target="_blank">
+                  <svg width="20px" height="20px" version="1.1" viewBox="5 -10 110 110" xmlns="http://www.w3.org/2000/svg">
+                   <path d="m45.102 84.898l52.801-30.699-5.6992-3.3008-47.102 27.402-7.8984-4.6016-29.102-16.699v-7.6992l26 15 11 6.3008 52.801-30.699-5.6992-3.3008-47.102 27.398-7.8984-4.6016-29-16.699-0.003906-7.6992 36.801 21.301 52.801-30.699-42.801-24.801-52.898 30.699v42.902l32 18.398 11 6.3008 52.801-30.699-5.6992-3.3008-47.102 27.5-7.9023-4.6016-29-16.699v-7.6992l26 15zm-5.7031-55.598c1.6016-0.80078 3.1016-1.1992 4.3984-1.3984 1.8008-0.19922 4.3008-0.10156 7.6016 0.19922 1.6016 0.19922 3.1992 0.19922 4.6992 0 1.5-0.19922 2.8008-0.69922 4-1.3008 1.1992-0.69922 1.8984-1.5 2-2.3008 0.10156-0.80078-0.5-1.6016-1.6992-2.3008-1-0.60156-2.1016-0.89844-3.3984-0.89844-0.80078 0-1.6016 0.10156-2.3984 0.30078-0.89844 0.30078-2.1016 0.19922-2.8984-0.30078l-4.7031-2.8008c-0.60156-0.39844-0.60156-0.89844 0.10156-1.1992 2.6992-1.3984 5.6016-1.8984 8.8008-1.6992 3.6016 0.30078 7 1.3984 10.301 3.3008 3.5 2 5.3984 4.1992 5.6992 6.3984 0.30078 2.1992-1.1016 4.1992-4.1016 5.8984-1.8008 1.1016-4.1016 1.6992-6.8008 2s-5.3008 0.19922-7.8984-0.30078c-1.6016-0.19922-2.8984-0.19922-3.8984 0.10156-0.69922 0.19922-1.5 0.39844-2.3008 0.80078-0.60156 0.30078-1.6016 0.30078-2.1992-0.10156l-5.1992-3c-0.80469-0.39844-0.80469-1.0977-0.10547-1.3984zm-8.7969 5.0977l2.6992-1.6016c0.89844-0.5 2.3984-0.5 3.3008 0l4.1992 2.3984c0.89844 0.5 0.89844 1.3984 0 1.8984l-2.6992 1.6016c-0.89844 0.5-2.3984 0.5-3.3008 0l-4.1992-2.3984c-0.90234-0.49609-0.90234-1.3984 0-1.8984z"/>
+                  </svg>
+                  </a>
+
+                  </div>
+
+                  <div style="flex:1">
+                                    <a style="color:#2c3e50" href="https://guides.loc.gov/c.php?g=1170551&p=8550706&preview=003264c97f504caf990125066b248e24" target="_blank">Manual</a></div>
+
 
                 </div>
-                <div v-else>
 
-                    <div style="display: inline-block; height: 10px; margin-right: 5px; width:10px; border-radius:1em; background-color:orange"></div><div style="display: inline-block;">Saving</div>
+                <div class="simptip-position-left" data-tooltip="This record is saved in your My Records page" v-if="activeRecordSaved">
+                    
+                    <div  style="display: inline-block; height: 10px; margin-right: 5px; width:10px; border-radius:1em; background-color:green"></div><div style="display: inline-block;">Saved</div>
+
+                </div>
+                <div class="simptip-position-left" data-tooltip="The record has not yet saved to your My Records page" v-else>
+
+                    <div  style="display: inline-block; height: 10px; margin-right: 5px; width:10px; border-radius:1em; background-color:orange"></div><div style="display: inline-block;">Saving</div>
 
                 </div>
 
