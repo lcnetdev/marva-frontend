@@ -234,7 +234,7 @@
         <article >
             
             <div v-if="profilesLoaded">
-                <div>{{activeProfile.rtOrder}}</div>
+
                 <div v-for="profileName in activeProfile.rtOrder" :key="profileName">
 
                     
