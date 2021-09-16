@@ -396,17 +396,29 @@ const parseProfile = {
     },
 
 
-    populateDefaultValuesIntoUserValues: function(profile){
+    populateDefaultValuesIntoUserValues: function(profile,onlyNew){
 
 
         // loop thorugh the profile being passed and add in the default values to all the userValue property
 
         for (let rt in profile.rt){
 
+
+            // if the optional onlyNew is passeds and an arg then make sure
+            // the RT we are working on is a brand new one with that flag
+            // and don't reprocess existing RTs, this is for when a new instance/item is added
+            if (onlyNew && !profile.rt[rt].isNew){
+                continue
+            }else{
+                delete profile.rt[rt].isNew
+            }
+            
+            
+
             for (let pt in profile.rt[rt].pt){
 
                 pt = profile.rt[rt].pt[pt]
-                
+
                 // if its right there in the PT
                 if (pt.valueConstraint.defaults && pt.valueConstraint.defaults.length>0){
                     pt.userValue['@guid'] = short.generate()
@@ -1797,13 +1809,11 @@ const parseProfile = {
 
         // the URI is acutally the profile name, so turn that into a URI
 
-        uri = profile.rt[uri].URI
+        if (!uri.startsWith('http')){
+            uri = profile.rt[uri].URI
+        }
 
-        
-        
 
-
-        
         
         // find the RT for the instance of this profile orginally
         // get the work rt
@@ -1845,7 +1855,7 @@ const parseProfile = {
         let items = Object.keys(profile.rt).filter(i => i.includes(":Item"))
         itemCount = items.length
         
-
+        console.log(items)
         for (let i of items){
             if (i.includes('-')){
                 let nid = parseInt(i.split('-')[1])
@@ -1860,6 +1870,8 @@ const parseProfile = {
         itemCount++
 
         let newRdId = itemName+'-'+itemCount  
+        // mark it for when we process the default values
+        itemRt.isNew = true
         profile.rt[newRdId] = itemRt
         profile.rtOrder.push(newRdId)
 
@@ -1901,7 +1913,7 @@ const parseProfile = {
 
 
 
-        
+        profile = this.populateDefaultValuesIntoUserValues(profile,true)
 
 
 
@@ -2099,6 +2111,7 @@ const parseProfile = {
         instanceCount++
 
         let newRdId = instanceName+'-'+instanceCount  
+        instanceRt.isNew = true
         profile.rt[newRdId] = instanceRt
         profile.rtOrder.push(newRdId)
 
@@ -2138,6 +2151,8 @@ const parseProfile = {
         profile.rt[newRdId].pt[adminMetadataPropertyLabel] = JSON.parse(JSON.stringify(adminMetadataProperty))
         profile.rt[newRdId].ptOrder.push(adminMetadataPropertyLabel)
 
+
+        profile = this.populateDefaultValuesIntoUserValues(profile,true)
 
 
         return profile
@@ -2270,7 +2285,7 @@ const parseProfile = {
       }else{
         alert('Cannot find that profile:',meta.profile)
       }
-      
+
       // we might need to load in a item
       if (parseBfdb.hasItem>0){ 
 
@@ -2291,22 +2306,31 @@ const parseProfile = {
         }
 
 
-         
+        for (let step = 0; step < parseBfdb.hasItem; step++) {
+     
 
-        for (let pkey in this.profiles){
-          
-          for (let rtkey in this.profiles[pkey].rt){
-            if (rtkey == useItemRtLabel){
-              let useItem = JSON.parse(JSON.stringify(this.profiles[pkey].rt[rtkey]))
-              useProfile.rtOrder.push(useItemRtLabel)
-              useProfile.rt[useItemRtLabel] = useItem                
+            for (let pkey in this.profiles){
+              
+              for (let rtkey in this.profiles[pkey].rt){
+                if (rtkey == useItemRtLabel){
+                  let useItem = JSON.parse(JSON.stringify(this.profiles[pkey].rt[rtkey]))
+                  useProfile.rtOrder.push(useItemRtLabel+'-'+step)
+                  useProfile.rt[useItemRtLabel+'-'+step] = useItem                
+                }
+              }
             }
-          }
-        }
+
+
+
+        }         
+
+        
 
 
       }
 
+      console.log('useProfile useProfile')
+      console.log(useProfile)
       if (!useProfile.log){
         useProfile.log = []
       
@@ -2328,13 +2352,80 @@ const parseProfile = {
       
       let transformResults  = await parseBfdb.transform(useProfile)
 
-
+      transformResults = this.reorderRTOrder(transformResults)
 
 
       return transformResults
 
 
 
+    },
+
+
+
+    reorderRTOrder: function(profile){
+
+        //send it a profile and it will reorder the rtOrder based on how it should flow Work->Instance1->Item1,Item2->Instance2-Item2-1,etc..
+
+        //build an item lookup
+        let itemLookup = {}
+
+        for (let rt of profile.rtOrder){
+
+            if (rt.includes(':Item')){
+                if (profile.rt[rt] && profile.rt[rt].itemOf){
+                    itemLookup[rt] = profile.rt[rt].itemOf
+                }else{
+                    console.warn('Cannot find the itemOf of this item',rt)
+                }                
+            }
+        }
+
+        let newOrder = []
+        let theWork = null
+
+        for (let rt of profile.rtOrder){
+            if (rt.includes(':Work')){
+                theWork = rt
+            }
+
+            if (rt.includes(':Instance')){
+
+                console.log(rt)
+                // add itself in 
+                newOrder.push(rt)
+                let thisInstanceURI = profile.rt[rt].URI
+
+                // then look for its items
+                for (let k in itemLookup){
+                    if (itemLookup[k] == thisInstanceURI){
+                        console.log('--',k)
+                        newOrder.push(k)                        
+                    }
+                }
+            }
+        }
+
+        // add the work first
+        if (theWork){
+            newOrder.unshift(theWork)
+        }
+
+
+        // as a backup if there is anything in the old order than is not present just toss it in
+        for (let rt of profile.rtOrder){
+            if (newOrder.indexOf(rt)===-1){
+                newOrder.push(rt)
+            }
+
+
+        }
+
+
+        profile.rtOrder = JSON.parse(JSON.stringify(newOrder))
+
+
+        return profile
     },
 
 
@@ -2396,7 +2487,80 @@ const parseProfile = {
             user:user
 
         }
+    },
+
+
+
+    returnDiagramMiniMap: function(activeProfile){
+
+
+        console.log('returnDiagramMiniMapreturnDiagramMiniMapreturnDiagramMiniMapreturnDiagramMiniMap')
+        console.log(activeProfile)
+
+        // this.hasInstance = []
+        // this.hasItem = []
+        // this.instanceOf = null
+
+        let miniMapWork= null
+        let miniMapInstance = []
+
+        let workCounter = 0
+        let instanceCounter = 0
+        let itemCounter = 0
+
+        for (let rt of Object.keys(activeProfile.rt)){        
+           
+            // there can be only one work, so build the instances this work has in this record
+            if (activeProfile.rt[rt].instanceOf){                                             
+                miniMapInstance.push({type:'Instance',URI:activeProfile.rt[rt].URI, rt:rt, counter: instanceCounter, jumpTo:activeProfile.rt[rt].ptOrder[1],  details: activeProfile.rt[rt].pt[activeProfile.rt[rt].ptOrder[1]], items:[] })
+                instanceCounter++
+            }
+
+            // // there is only one work, so all instances are instancOf that work...
+            if (rt.includes(':Work')){              
+                miniMapWork = {type:'Work',URI:activeProfile.rt[rt].URI, rt:rt, counter:workCounter, jumpTo:activeProfile.rt[rt].ptOrder[1],  details: activeProfile.rt[rt].pt[activeProfile.rt[rt].ptOrder[1]], instances:[]}
+                workCounter++
+            }
+
+            // if (rt.includes(':Instance') ){
+
+            //   let thisURI = activeProfile.rt[rt].URI
+              
+            //   for (let rt2 of Object.keys(activeProfile.rt)){
+            //     if (activeProfile.rt[rt2].itemOf && activeProfile.rt[rt2].itemOf == thisURI){
+            //       this.hasItem.push(activeProfile.rt[rt2].URI)
+            //     }
+            //   }
+            // }
+        }
+
+        for (let instanceData of miniMapInstance){
+
+            instanceData.parent = miniMapWork.URI
+
+
+            let thisURI = instanceData.URI
+
+            for (let rt2 of Object.keys(activeProfile.rt)){
+                if (activeProfile.rt[rt2].itemOf && activeProfile.rt[rt2].itemOf == thisURI){
+                  
+
+                    instanceData.items.push({type:'Item', parent:thisURI,URI:activeProfile.rt[rt2].URI, rt:rt2, counter:itemCounter, jumpTo:activeProfile.rt[rt2].ptOrder[1],  details: activeProfile.rt[rt2].pt[activeProfile.rt[rt2].ptOrder[1]]})
+                    // itemCounter++
+                }
+            }
+
+        }
+
+        miniMapWork.instances = miniMapInstance
+
+        return miniMapWork
+
     }
+
+
+
+
 
 }
 

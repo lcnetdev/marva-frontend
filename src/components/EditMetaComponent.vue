@@ -208,22 +208,8 @@ export default {
               this.hasItem.push(this.activeProfile.rt[rt2].URI)
             }
           }
-
-
-
-
         }
-
-
-
-
-
       }
-
-        
-        
-        
-
 
     }
 

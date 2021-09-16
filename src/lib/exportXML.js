@@ -902,6 +902,7 @@ const exportXML = {
 
 					let items = this.returnHasItem(URI,orginalProfile,tleLookup)
 
+
 					if (items.length > 0){
 
 						let p = this.createElByBestNS('bf:hasItem')
@@ -1179,6 +1180,25 @@ const exportXML = {
 		for (let rt in profile.rt){
 
 			if (profile.rt[rt].itemOf && profile.rt[rt].itemOf == URI){
+
+				console.log("ITEM ALERT")
+				console.log(tleLookup['Item'][profile.rt[rt].URI])
+
+
+				if (tleLookup['Item'][profile.rt[rt].URI].getElementsByTagName('bf:itemOf').length==0){
+
+
+					let hasItem = this.createElByBestNS('bf:itemOf')
+					hasItem.setAttributeNS(this.namespace.rdf, 'rdf:resource', profile.rt[rt].itemOf)
+					tleLookup['Item'][profile.rt[rt].URI].appendChild(hasItem)
+
+
+
+				}
+
+
+
+
 
 				let item = (new XMLSerializer()).serializeToString(tleLookup['Item'][profile.rt[rt].URI])
 				item = parser.parseFromString(item, "text/xml").children[0];

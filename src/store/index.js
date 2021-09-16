@@ -104,6 +104,9 @@ export default new Vuex.Store({
     myRecords: [],
 
 
+    diagramMiniMap: false,
+
+
     saveRecord : debounce((state,commit) => {
 
       console.log(state, commit,exportXML)
@@ -220,6 +223,13 @@ export default new Vuex.Store({
       state.activeRecordSaved = val
     }, 
 
+
+    DIAGRAMMINIMAP(state, val) {
+      state.diagramMiniMap = val
+    }, 
+
+
+
     
 
     
@@ -327,8 +337,16 @@ export default new Vuex.Store({
         data.profile = parseProfile.populateDefaultValuesIntoUserValues(data.profile)
       }
 
+      console.log("before REFORDER",JSON.parse(JSON.stringify(data.profile)))
+      data.profile = parseProfile.reorderRTOrder(data.profile)
+
+      console.log("AFTER REFORDER",JSON.parse(JSON.stringify(data.profile)))
       commit('ACTIVEPROFILE', data.profile)
-      
+
+
+
+      let mini = parseProfile.returnDiagramMiniMap(data.profile)
+      commit('DIAGRAMMINIMAP', mini)    
       
     },
 
@@ -449,34 +467,76 @@ export default new Vuex.Store({
 
 
 
+
+
+    returnDiagramMiniMap ({ commit, state }) {   
+      let mini = parseProfile.returnDiagramMiniMap(state.activeProfile)
+      commit('DIAGRAMMINIMAP', mini)    
+    },
+
+
+
     cloneInstance ({ commit, state }, data) {    
       let nap = parseProfile.cloneInstance(state.activeProfile, data.uri)
       commit('ACTIVEPROFILE', nap)   
+
+      let mini = parseProfile.returnDiagramMiniMap(nap)
+      commit('DIAGRAMMINIMAP', mini)    
+
     },
 
     addInstance ({ commit, state }) {    
       let nap = parseProfile.addInstance(state.activeProfile)
+      nap = parseProfile.reorderRTOrder(nap)
       commit('ACTIVEPROFILE', nap)   
+      
+
+      let mini = parseProfile.returnDiagramMiniMap(nap)
+      commit('DIAGRAMMINIMAP', mini)    
+
+
     },
     deleteInstance ({ commit, state }, data) {    
       let nap = parseProfile.deleteInstance(state.activeProfile, data.uri)
+      nap = parseProfile.reorderRTOrder(nap)
       commit('ACTIVEPROFILE', nap)   
+
+      let mini = parseProfile.returnDiagramMiniMap(nap)
+      commit('DIAGRAMMINIMAP', mini)    
+
+
     },
     deleteItem ({ commit, state }, data) {    
       let nap = parseProfile.deleteItem(state.activeProfile, data.uri)
+      nap = parseProfile.reorderRTOrder(nap)
       commit('ACTIVEPROFILE', nap)   
+
+
+      let mini = parseProfile.returnDiagramMiniMap(nap)
+      commit('DIAGRAMMINIMAP', mini)    
+
     },
     duplicateItem ({ commit, state }, data) {    
       let nap = parseProfile.duplicateItem(state.activeProfile, data.uri)
+      nap = parseProfile.reorderRTOrder(nap)
       commit('ACTIVEPROFILE', nap)   
+
+      let mini = parseProfile.returnDiagramMiniMap(nap)
+      commit('DIAGRAMMINIMAP', mini)    
+
+
     },
     
 
-
-
     addItem ({ commit, state }, data) {    
       let nap = parseProfile.addItem(state.activeProfile, data.uri)
+      nap = parseProfile.reorderRTOrder(nap)
       commit('ACTIVEPROFILE', nap)   
+
+      let mini = parseProfile.returnDiagramMiniMap(nap)
+      commit('DIAGRAMMINIMAP', mini)    
+      console.log('mini',mini)
+
     },
 
 

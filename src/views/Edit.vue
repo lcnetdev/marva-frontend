@@ -6,16 +6,173 @@
 
 
 
-      <header>
+      <header ref="header" class="inital">
                     <!-- <div style="display: ">loaded profile -- {{profilesLoaded}} </div> -->
-                    <div>
+<!-- 
                       <router-link style="font-size: 1.5em;color: black;text-decoration: none;padding-left: 0.5em;" to="/myrecords">&lt; Back</router-link>
 
                       <span style="color:red; margin-left:20%" v-if="!isProd()"> THIS IS THE STAGING (TEST) REGION -- DATA IS NOT SAVED TO PRODUCTION</span>
 
                       <a @click="reportError" href="#" style="float:right;font-size: 1.5em;color: black;text-decoration: none;padding-left: 0.5em;">Report Error</a>
+
+
+ -->
+        <div style="display:flex; height: 50px;">
+            
+            <div style="flex:1">
+
+              <div v-if="diagramMiniMap !== false" style="height: 50px; padding-left: 10px;">
+                
+                  <div  style="display:inline-block; cursor: pointer" @click="miniMapClick(diagramMiniMap)">
+                    
+                    <svg v-if="activeMiniMap.URI != diagramMiniMap.URI" width="2.1em" height="3.1em" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                        <circle fill="#7badad" cx="1em" cy="1.5em" r="0.9em"/>
+                    </svg>
+
+                    <svg v-else  width="2.1em" height="3.1em" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                        <circle stroke="rgb(255 49 49)" stroke-width="2" fill="#7badad" cx="1em" cy="1.5em" r="0.9em"/>
+                    </svg>
+
+                  </div>
+                  <div style="display:inline-block; height: 50px; top: 0; line-height: 50px;" v-for="instance in diagramMiniMap.instances" v-bind:key="instance.uri">
+                    
+
+                    <div style="display:inline-block; width: 25px;">
+
+
+
+                      <svg  viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="0" y1="0" x2="100" y2="0" stroke="black" stroke-width="10" />
+                      </svg>
+
+
+                    </div>
+                    <div style="display:inline-block;cursor: pointer;" @click="miniMapClick(instance)">
+
+
+                      <svg v-if="activeMiniMap.URI != instance.URI" data-v-6fe723ec="" version="1.1" viewBox="0 0 100 100" style="width: 2em; height:3em"><path data-v-6fe723ec="" d="M50,1.4l48.8,48.8L50,99.1L1.2,50.3L50,1.4z" style="fill: rgb(139, 88, 139); stroke: rgb(10, 19, 26); stroke-width: 0.5; stroke-miterlimit: 10;"></path></svg>
+                      <svg v-else data-v-6fe723ec="" version="1.1" viewBox="0 0 100 100" style="width: 2em; height:3em"><path data-v-6fe723ec="" d="M50,1.4l48.8,48.8L50,99.1L1.2,50.3L50,1.4z" style="fill: rgb(139, 88, 139); stroke: rgb(255 49 49); stroke-width: 5; stroke-miterlimit: 10;"></path></svg>
+
+                    </div>
+                  
+
+                    <div style="display:inline-block; height: 50px; line-height: 50px;" v-for="item in instance.items" v-bind:key="item.uri">
+
+                      
+                      <div style="display:inline-block; width: 15px;">
+                        <svg viewBox="0 0 100 160" xmlns="http://www.w3.org/2000/svg">
+                          <line x1="0" y1="0" x2="100" y2="0" stroke="black" stroke-width="10" />
+                        </svg>
+                      </div>
+
+                      <div style="display:inline-block; height:50px; width: 25px;cursor: pointer;" @click="miniMapClick(item)">
+                        <svg v-if="activeMiniMap.URI != item.URI" viewBox="0 0 50 72" version="1.1" xmlns="http://www.w3.org/2000/svg">
+
+                             <rect width="50px" height="50px" style="fill:#eaeaea;stroke-width:0.5;stroke:rgb(0,0,0)" />
+                        </svg>
+                        <svg v-else viewBox="0 0 50 72" version="1.1" xmlns="http://www.w3.org/2000/svg">
+
+                             <rect width="50px" height="50px" style="fill:#eaeaea;stroke-width:5;stroke:rgb(255 49 49)" />
+                        </svg>
+
+                        
+                      </div>
+
+
+
+
                     </div>
 
+                  </div>
+
+
+
+
+                <div style="display:inline-block;height: 50px; position:relative; padding-left: 10px;">
+                    
+
+                    <select v-model="miniMapActionValue" @change="miniMapAction" v-if="activeMiniMap.type == 'Instance'" style="position:absolute; top:15px; font-size: larger;    border-radius: 0.25em; width:100px">
+                      <option selected disabled value="Actions">Actions</option>
+                      <option value="cloneInstance">Clone and Replace Instance</option>
+                      <option value="addItem">Add Item</option>
+                      <option value="deleteInstance">Delete Instance</option>
+
+
+                    </select>
+
+                    <select v-else-if="activeMiniMap.type == 'Item'" v-model="miniMapActionValue" @change="miniMapAction"  style="position:absolute; top:15px; font-size: larger;    border-radius: 0.25em; width:100px">
+                      <option selected disabled value="Actions">Actions</option>
+                      <option value="deleteItem">Remove Item</option>
+                      <option value="cloneItem">Duplicate Item</option>
+
+                    </select>
+
+                    <select v-else v-model="miniMapActionValue" @change="miniMapAction"  style="position:absolute; top:15px; font-size: larger;    border-radius: 0.25em; width:100px">
+                      <option selected disabled value="Actions">Actions</option>
+                      <option value="addInstance">Add Instance</option>
+
+                    </select>
+
+    
+
+                </div>
+
+
+              </div>
+
+
+
+
+
+
+            </div>
+
+
+            <div style="flex:1"></div>
+            <div style="flex:1; text-align: right;">
+
+
+              <div style="display:inline-block; margin-right:1em;">
+
+                <div v-if="activeRecordSaved">
+                    
+                    <div style="display: inline-block; height: 10px; margin-right: 5px; width:10px; border-radius:1em; background-color:green"></div><div style="display: inline-block;">Saved</div>
+
+                </div>
+                <div v-else>
+
+                    <div style="display: inline-block; height: 10px; margin-right: 5px; width:10px; border-radius:1em; background-color:orange"></div><div style="display: inline-block;">Saving</div>
+
+                </div>
+
+
+              </div>
+
+             <button class="simptip-position-left" @click="togglePreview" data-tooltip="Preview XML ([CTRL+SHIFT+X])" style="background-color:whitesmoke; cursor:pointer; margin-right: 1em;">
+
+<svg width="50px" height="34px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+ <path d="m60.199 12.367c2.1836 0.58984 3.4766 2.8281 2.8906 5.0156l-18.273 67.949c-0.48828 1.8281-2.1406 3.0312-3.9492 3.0312-0.35156 0-0.71484-0.042969-1.0664-0.14453-2.1836-0.58984-3.4766-2.8281-2.8906-5.0156l18.273-67.949c0.58984-2.1875 2.8555-3.4844 5.0156-2.8867zm-30.332 17.617c1.5977 1.5977 1.5977 4.1914 0 5.7891l-14.445 14.445 14.461 14.617c1.5938 1.6094 1.5742 4.2031-0.03125 5.793-0.80078 0.78125-1.8359 1.1758-2.8789 1.1758-1.0547 0-2.1055-0.40234-2.9141-1.2109l-17.32-17.508c-0.84375-0.84766-1.2344-1.9766-1.1758-3.0859 0.046875-0.98047 0.44531-1.9453 1.1914-2.6953l17.324-17.32c1.5977-1.5898 4.1914-1.5898 5.7891 0zm45.855-0.027344 17.504 17.324c0.67188 0.66016 1.0625 1.5 1.1797 2.3633 0.16797 1.2266-0.21875 2.5156-1.1602 3.4609l-17.508 17.508c-0.80078 0.78906-1.8516 1.1914-2.8945 1.1914s-2.0977-0.40234-2.8945-1.1914c-1.6016-1.6016-1.6016-4.1953 0-5.793l14.602-14.605-14.586-14.434c-1.6094-1.5898-1.6172-4.1797-0.035156-5.7891 1.582-1.6055 4.1758-1.625 5.793-0.035157z"/>
+</svg>
+
+
+
+              </button>
+
+
+              <button class="simptip-position-left" @click="publish" data-tooltip="Post record ([CTRL+SHIFT+P])" style="background-color:whitesmoke; cursor:pointer; margin-right:1em">
+
+<svg width="50px" height="34px" version="1.1" viewBox="25 20 55 55" xmlns="http://www.w3.org/2000/svg">
+ <path d="m19.805 59.453s-1.2109 1.6445 5.0625 4.3242c1.8203 0.77734 4.6055-1.5 7.6328-0.875 2.6367 0.54297 6.7695 2.5664 10.359 2.5664s7.8203-2.5664 11.785-2.5664c6.2227 0 8.7891 3.6406 12.918 3.0938 2.7695-0.36328 5.6055-2.8203 7.3516-3.2188 1.7422-0.40234 3.7227 0.66016 5.1328 0 5.668-2.6602 5.8906-9.9258 5.8906-9.9258zm33.434-20.445c-0.24609-6.0273-4.6172-20.863-4.6172-20.863s10.688 9.1953 16.551 16.535c5.8672 7.3359 10.711 16.473 10.711 16.473l-22.645 1.7656s0.24609-7.793 0-13.91zm-3.8984-8.6523s-2.0781 10.699-5.5547 16.309c-3.4727 5.6133-8.8867 8.7227-8.8867 8.7227l15.836-1.9531zm28.012 35.406c-4.3516 0-7.5117 3.1172-11.363 2.7188-3.1055-0.32031-8.1875-2.6523-11.32-2.7188-3.6523-0.078125-8.5977 2.2812-11.719 2.043-4.9883-0.37891-9.5859-2.043-11.32-2.043-7.3086 0-11.629 5.7656-11.629 5.7656s8.1016-3.0469 11.629-3.0469c4.3828 0 5.5664 2.5508 11.32 3.0469 3.7656 0.32031 7.7109-2.6758 11.719-2.5742 4.793 0.11719 6.8906 2.5078 11.32 3.1758 3.9062 0.58594 7.6289-3.2109 11.363-3.1758 5.7734 0.050781 8.3633 3.5508 8.3633 3.5508s-4.0078-6.7422-8.3633-6.7422z" fill-rule="evenodd"/>
+</svg>
+
+
+              </button>
+
+
+            </div>
+
+
+        </div>
 
 
 
@@ -77,7 +234,7 @@
         <article >
             
             <div v-if="profilesLoaded">
-
+                <div>{{activeProfile.rtOrder}}</div>
                 <div v-for="profileName in activeProfile.rtOrder" :key="profileName">
 
                     
@@ -308,7 +465,8 @@ export default {
       activeComponent: 'activeComponent',
       activeProfileName: 'activeProfileName',
       activeEditCounter: 'activeEditCounter',
-      activeRecordSaved: 'activeRecordSaved'
+      activeRecordSaved: 'activeRecordSaved',
+      diagramMiniMap: 'diagramMiniMap',
 
       // to access local state with `this`, a normal function must be used
       // countPlusLocalState (state) {
@@ -343,7 +501,7 @@ export default {
               // load the ontology lookups if they arnt
               this.loadProfileOntologyLookupsBuild()
 
-
+              console.log('-----diagramMiniMap:',this.diagramMiniMap)
 
             })
 
@@ -388,6 +546,7 @@ export default {
 
             })
 
+            console.log('-----diagramMiniMap:',this.diagramMiniMap)
 
 
           })
@@ -411,7 +570,84 @@ export default {
     this.$nextTick(function () {
         uiUtils.renderBorders()
         window.setTimeout(()=>{document.getElementsByTagName('input')[0].focus()},500)
+  
+
         
+
+        window.addEventListener( 'scroll', () => {         
+
+          // if they clicked it with their mouse at the top don't hide it  
+          if (this.lastMouseY <= 75){
+            this.headerState = 'deployed'
+          }      
+
+          if (this.headerState == 'deployed'){
+
+            if (this.$refs.header){
+              this.$refs.header.classList.remove('retracted')
+              this.$refs.header.classList.remove('inital')
+              this.$refs.header.classList.add('deployed')
+            }
+
+            return false
+          }
+
+
+
+
+          if (window.pageYOffset>5){
+            this.headerState='retracted'
+            if (this.$refs.header){
+              this.$refs.header.classList.remove('inital')
+              this.$refs.header.classList.remove('deployed')
+              this.$refs.header.classList.add('retracted')
+            }
+
+          }else if (window.pageYOffset<=5){
+
+            if (this.$refs.header){
+              this.$refs.header.classList.remove('retracted')
+              this.$refs.header.classList.remove('deployed')
+
+              this.$refs.header.classList.add('inital')
+            }
+            this.headerState='inital'
+
+          }
+
+
+        } );
+
+        window.addEventListener('mousemove', (e) => {
+
+          this.lastMouseY = e.y
+
+          if (e.y < 75){
+
+            if (this.headerState == 'retracted'){
+              if (this.$refs.header){              
+                this.$refs.header.classList.remove('retracted')
+                this.$refs.header.classList.remove('inital')
+                this.$refs.header.classList.add('deployed')
+              }
+              this.headerState = 'deployed'
+            }
+          }else if (e.y > 75 && this.headerState == 'deployed'){
+
+            this.headerState='retracted'
+            if (this.$refs.header){
+              this.$refs.header.classList.remove('inital')
+              this.$refs.header.classList.remove('deployed')
+
+              this.$refs.header.classList.add('retracted')
+            }
+
+          }
+
+
+
+        });
+
     })
   },
 
@@ -446,7 +682,11 @@ export default {
       xmlPreview: 'Loading...',
       showPostModal: false,
       showPostModalErrorMsg: false,
-      resourceLinks: []
+      resourceLinks: [],
+      headerState: 'inital',
+      activeMiniMap: {URI:null},
+      miniMapActionValue: 'Actions',
+      lastMouseY: 10,
     }
   },
 
@@ -463,6 +703,95 @@ export default {
     dupeProperty: uiUtils.dupeProperty,
 
 
+    miniMapAction: function(){
+
+
+      if (this.miniMapActionValue == 'addItem'){
+
+        console.log(this.activeMiniMap.parent)
+        this.$store.dispatch("addItem",{uri:this.activeMiniMap.URI}).then(() => {        
+
+        })
+
+      }
+      if (this.miniMapActionValue == 'deleteItem'){
+
+
+        this.$store.dispatch("deleteItem",{uri:this.activeMiniMap.URI}).then(() => {        
+
+        })
+
+      }
+      if (this.miniMapActionValue == 'cloneInstance'){
+
+
+        this.$store.dispatch("cloneInstance",{uri:this.activeMiniMap.URI}).then(() => {        
+
+        }) 
+      }
+      if (this.miniMapActionValue == 'cloneItem'){
+
+
+        this.$store.dispatch("duplicateItem",{uri:this.activeMiniMap.URI}).then(() => {        
+
+        }) 
+      }      
+      if (this.miniMapActionValue == 'deleteItem'){
+
+
+        this.$store.dispatch("deleteItem",{uri:this.activeMiniMap.URI}).then(() => {        
+
+        }) 
+      } 
+      if (this.miniMapActionValue == 'deleteInstance'){
+
+
+        this.$store.dispatch("deleteInstance",{uri:this.activeMiniMap.URI}).then(() => {        
+
+        }) 
+      } 
+      if (this.miniMapActionValue == 'addInstance'){
+
+
+        this.$store.dispatch("addInstance",{uri:this.activeMiniMap.URI}).then(() => {        
+
+        }) 
+      } 
+
+
+      this.miniMapActionValue='Actions'
+
+    },
+
+    miniMapClick: function(value){
+
+      let rtName = value.rt
+
+      if (value.counter == 0){
+        rtName=rtName+'1'      
+      }else if (value.counter>0){
+
+        rtName=rtName+'1'
+      }
+
+      
+
+
+      let id = rtName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_') + value.jumpTo.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')
+
+      console.log(value)
+      console.log(id)
+      this.scrollFieldContainerIntoView(null,id)
+
+
+      
+
+      this.activeMiniMap = value
+
+
+
+
+    },
 
     togglePreview: async function(){
 
@@ -620,6 +949,9 @@ export default {
 
 
     scrollFieldContainerIntoView: function(event,id){
+      console.log('-----')
+      console.log(id)
+      console.log(document.getElementById('container-for-'+id))
       document.getElementById('container-for-'+id).scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"})
       window.setTimeout(()=>{
         if (document.querySelector('#container-for-'+id + ' input')){
@@ -628,8 +960,10 @@ export default {
         
       },400)
 
-      event.preventDefault()
-      return false
+      if (event){
+        event.preventDefault()
+        return false
+      }
 
 
     },

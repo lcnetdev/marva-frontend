@@ -579,6 +579,38 @@ const parseBfdb = {
 			profile.rt[rt].ptOrder.push(adminMetadataPropertyLabel)
 		}
 
+
+
+		// see how many instances and items we have
+		let instanceCount = this.activeDom.getElementsByTagName('bf:Instance').length
+		console.log('profile',profile)
+		if (instanceCount>1){
+
+			// there is one instance in the profile, but need to add more to match the xml
+
+			let instanceProfile = null
+			let instanceRtId = null
+			for (let rt in profile.rt){	
+				if (rt.includes(':Instance')){
+					instanceRtId = rt
+					instanceProfile = JSON.parse(JSON.stringify(profile.rt[rt]))
+				}
+
+			}
+
+			if (instanceProfile){
+
+				for (let instanceCounter = 1; instanceCounter < instanceCount; instanceCounter++) {
+					let rtID = instanceRtId + '-' + (instanceCounter+1)
+					profile.rt[rtID] = instanceProfile
+					profile.rtOrder.push(rtID)
+				}
+			}
+
+
+		}
+
+
 		let profileOrginal = JSON.parse(JSON.stringify(profile))
 		let resultsTest = await this.transformRts(profileOrginal,true)
 
@@ -735,7 +767,8 @@ const parseBfdb = {
 			
 			// only return the top level, no nested related things
 			xml = this.returnOneWhereParentIs(xml, "rdf:RDF")
-			
+			console.log('selecting to process:',xml)
+
 			if (!xml){
 				console.warn('Could not find the requested XML fragment, looking for ', tle)
 				toDeleteNoData.push(pkey)
@@ -804,6 +837,8 @@ const parseBfdb = {
 
 			// find itemOf
 			if (tle == 'bf:Item'){
+				console.log("-------bf:ITEM!!!!!")
+				console.log(xml)
 				if (xml.getElementsByTagName('bf:itemOf').length>0){
 					let itemOf = xml.getElementsByTagName('bf:itemOf')[0]
 					if (itemOf.attributes['rdf:resource']){
@@ -1885,8 +1920,11 @@ const parseBfdb = {
 
 			
 			
-			
-
+			// remove it for the next item if there is one
+			if (tle == 'bf:Item' || tle == 'bf:Instance'){
+				console.log('removing',xml)
+				xml.remove()
+			}
 
 			
 			
@@ -1919,7 +1957,7 @@ const parseBfdb = {
 			// profile.rtOrder.splice(profile.rtOrder.indexOf(x), 1);
 		}
 
-		
+
 		return profile
 
 
