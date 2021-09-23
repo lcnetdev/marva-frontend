@@ -105,6 +105,10 @@ const validationUtil = {
         var url = scheme + "/label/" + encodeURIComponent(label);
         url = url.replace(/^(http:)/,"https:");
         url = url.replace('//id.loc.gov/','//preprod.id.loc.gov/');
+
+        if (window.location.href.includes('//localhost')){
+            url = url.replace('//preprod.id.loc.gov/','//id.loc.gov/');
+        }
         
         //try {
             const response = await fetch(url, fetchInit);

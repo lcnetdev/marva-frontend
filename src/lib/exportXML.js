@@ -905,14 +905,15 @@ const exportXML = {
 
 					if (items.length > 0){
 
-						let p = this.createElByBestNS('bf:hasItem')
+						
 
 						for (let item of items){
+							let p = this.createElByBestNS('bf:hasItem')
 							p.appendChild(item)
-							
+							instance.appendChild(p)
 						}
 
-						instance.appendChild(p)
+						
 
 
 					}
