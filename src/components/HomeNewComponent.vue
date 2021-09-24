@@ -94,7 +94,35 @@
     </table>    
 
 
+
+
+    <div>
+
+      <details style="margin-top: 2em;">
+        
+        <summary>Show All Profiles</summary>
+        <ul style="margin-left:0; padding-left: 0;">
+
+          <li style="margin-bottom:0.75em" v-for="p in Object.keys(profiles)" v-bind:key="p"><span style="font-weight: bold;">{{p}}</span>
+            <a href="#" v-on:click.prevent="loadTemplate(p,false)" style="color: #2c3e50; padding-left: 0.5em;">Load</a>
+            <details style="margin-left: 2em;font-size: 0.75em; cursor: pointer;">
+
+              <summary>View RTs</summary>
+              <ol><li style="font-size: 0.9em;" v-for="rt in profiles[p].rtOrder" v-bind:key="rt">{{rt}}</li></ol>
+            </details>
+          </li>
+
+
+        </ul>
+
+      </details>
+
+    </div>
+
   </div>
+
+
+
 
 
 </template>
@@ -155,8 +183,14 @@ export default {
     },
 
 
-    loadTemplate(useStartingPoint){
 
+
+
+    loadTemplate(useStartingPoint,addAdmin){
+
+      if (!addAdmin){
+        addAdmin=true
+      }
 
       let useProfile = JSON.parse(JSON.stringify(this.profiles[useStartingPoint]))
 
@@ -197,9 +231,15 @@ export default {
           uri = 'http://id.loc.gov/resources/instances/' + translator.toUUID(translator.new())
 
         }else if (rt.includes(':Item')){  
-          uri = 'http://id.loc.gov/resources/items/' + translator.toUUID(translator.new())
-        
+          uri = 'http://id.loc.gov/resources/items/' + translator.toUUID(translator.new())       
+        }else{
+
+          // dunno what this is give it a random uri
+          uri = 'http://id.loc.gov/resources/unknown/' + translator.toUUID(translator.new())       
+
         }        
+
+        console.log(uri)
         useProfile.rt[rt].URI = uri
 
         for (let pt in useProfile.rt[rt].pt){
@@ -236,45 +276,47 @@ export default {
 
       console.log(useProfile)
 
+      if (addAdmin){
 
-      for (let rt in useProfile.rt){
 
-        let adminMetadataProperty = {
-            "mandatory": false,
-            "propertyLabel": "Admin Metadata",
-            "propertyURI": "http://id.loc.gov/ontologies/bibframe/adminMetadata",
-            "repeatable": false,
-            "resourceTemplates": [],
-            '@guid': short.generate(),
-            "type": "resource",
-            "userValue": {
-              "@root":"http://id.loc.gov/ontologies/bibframe/adminMetadata",
-              "@type": "http://id.loc.gov/ontologies/bibframe/AdminMetadata",
+        for (let rt in useProfile.rt){
+
+          let adminMetadataProperty = {
+              "mandatory": false,
+              "propertyLabel": "Admin Metadata",
+              "propertyURI": "http://id.loc.gov/ontologies/bibframe/adminMetadata",
+              "repeatable": false,
+              "resourceTemplates": [],
               '@guid': short.generate(),
-              "http://id.loc.gov/ontologies/bflc/catalogerId": [
-                {
-                "@guid": short.generate(),
-                "http://id.loc.gov/ontologies/bflc/catalogerId": this.catInitials
-                }
-              ]
+              "type": "resource",
+              "userValue": {
+                "@root":"http://id.loc.gov/ontologies/bibframe/adminMetadata",
+                "@type": "http://id.loc.gov/ontologies/bibframe/AdminMetadata",
+                '@guid': short.generate(),
+                "http://id.loc.gov/ontologies/bflc/catalogerId": [
+                  {
+                  "@guid": short.generate(),
+                  "http://id.loc.gov/ontologies/bflc/catalogerId": this.catInitials
+                  }
+                ]
 
-            },
-            "valueConstraint": {
-              "defaults": [],
-              "useValuesFrom": [],
-              "valueDataType": {},
-              "valueTemplateRefs": ['lc:RT:bf2:AdminMetadata:BFDB']
+              },
+              "valueConstraint": {
+                "defaults": [],
+                "useValuesFrom": [],
+                "valueDataType": {},
+                "valueTemplateRefs": ['lc:RT:bf2:AdminMetadata:BFDB']
+              }
             }
-          }
 
-        let adminMetadataPropertyLabel = 'http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'
+          let adminMetadataPropertyLabel = 'http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'
 
 
-        
-        useProfile.rt[rt].pt[adminMetadataPropertyLabel] = JSON.parse(JSON.stringify(adminMetadataProperty))
-        useProfile.rt[rt].ptOrder.push(adminMetadataPropertyLabel)
+          
+          useProfile.rt[rt].pt[adminMetadataPropertyLabel] = JSON.parse(JSON.stringify(adminMetadataProperty))
+          useProfile.rt[rt].ptOrder.push(adminMetadataPropertyLabel)
+        }
       }
-
 
 
 
@@ -364,7 +406,9 @@ export default {
   created: function(){
 
 
-
+    setTimeout(()=>{
+      console.log(this.profiles)
+    },1000)
 
 
   },

@@ -2501,7 +2501,7 @@ const parseProfile = {
         // this.hasItem = []
         // this.instanceOf = null
 
-        let miniMapWork= null
+        let miniMapWork= false
         let miniMapInstance = []
 
         let workCounter = 0
@@ -2552,7 +2552,9 @@ const parseProfile = {
 
         }
 
-        miniMapWork.instances = miniMapInstance
+        if (miniMapWork){
+            miniMapWork.instances = miniMapInstance
+        }
 
         return miniMapWork
 
