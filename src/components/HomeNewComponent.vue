@@ -188,7 +188,7 @@ export default {
 
     loadTemplate(useStartingPoint,addAdmin){
 
-      if (!addAdmin){
+      if (typeof addAdmin === 'undefined'){
         addAdmin=true
       }
 
