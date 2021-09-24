@@ -149,10 +149,10 @@ export default {
   }),
   created: function () {
     
-
     // grab the first component from the struecture, but there might be mutluple ones
     let useId = this.structure.valueConstraint.valueTemplateRefs[0]
     let foundBetter = false
+
 
     
     // do we have user data and a possible @type to use
@@ -162,7 +162,7 @@ export default {
       // loop thrugh all the refs and see if there is a URI that matches it better
       this.structure.valueConstraint.valueTemplateRefs.forEach((tmpid)=>{
 
-                
+
         if (foundBetter) return false
 
         if (this.rtLookup[tmpid].resourceURI === this.structure.userValue['@type']){
@@ -207,9 +207,9 @@ export default {
 
     } 
 
-       
+
     
-    
+
     // do not render recursivly if the thing we are trying to render recursivly is one the of the things thAT WER ARE RENDERING TO BEGIN WITHHHHH!!!1
     if (this.parentStructure && this.parentStructure.indexOf(useId) ==-1){
       if (this.rtLookup[useId]){
@@ -224,6 +224,9 @@ export default {
       }
     }else{
 
+
+
+
       // little hack here for now
       if (useId == 'lc:RT:bf2:Monograph:Dissertation'){
         this.multiTemplateSelect = this.rtLookup[useId].resourceLabel
@@ -231,6 +234,14 @@ export default {
         this.activeTemplate = this.rtLookup[useId]     
         this.buildPropertyTemplatesOrderLookup()          
       }
+
+      if (useId == 'lc:RT:bf2:Hub:Contribution'){
+        this.multiTemplateSelect = this.rtLookup[useId].resourceLabel
+        this.multiTemplateSelectURI = useId
+        this.activeTemplate = this.rtLookup[useId]     
+        this.buildPropertyTemplatesOrderLookup()          
+      }
+
 
 
     }
