@@ -280,7 +280,7 @@
                                 <circle fill="#7badad" cx="1.5em" cy="1em" r="0.75em"/>
                             </svg>
 
-                            <div style="display:inline-block;     width: 26px;margin-right: 5px;" v-if="profileName.includes(':Item')">
+                            <div style="display:inline-block;     width: 26px; margin-left: 25px; margin-right: 5px;" v-if="profileName.includes(':Item')">
                               <svg  viewBox="0 0 50 72" version="1.1" xmlns="http://www.w3.org/2000/svg">
 
                                    <rect width="50px" height="50px" style="fill:#eaeaea;stroke-width:0.5;stroke:rgb(0,0,0)" />
@@ -770,7 +770,7 @@ export default {
 
         console.log(this.activeMiniMap.parent)
         this.$store.dispatch("addItem",{uri:this.activeMiniMap.URI}).then(() => {        
-
+          console.log(this.activeProfile)
         })
 
       }

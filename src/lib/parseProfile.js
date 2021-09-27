@@ -6,7 +6,7 @@ import store from "../store";
 
 
 const short = require('short-uuid');
-const translator = short();
+// const translator = short();
 
 
 // function setCharAt(str,index,chr) {
@@ -1805,6 +1805,79 @@ const parseProfile = {
     },
 
 
+    suggestURI: function(profile,type,URI){
+
+
+        // for items find the instance URI and then count up the items and add it as a suffix to the instance URI pattern
+        if (type === 'bf:Item'){
+
+
+            for (let rtId in profile.rt){
+                if (profile.rt[rtId].URI == URI){
+
+                    let newURI = profile.rt[rtId].URI.replace('/instances/','/items/')
+
+                    let itemCount = 0
+
+                    for (let rtId2 in profile.rt){
+                        if (rtId2.includes(":Item")){
+                            itemCount++
+                        }
+                    }
+
+
+                    let itemCountLabel = String(itemCount).padStart(4, '0');
+
+                    newURI = newURI + '-' + itemCountLabel
+                    return newURI
+                }
+            }
+
+        }
+
+
+        if (type === 'bf:Instance'){
+
+            let instanceURIbasedOnWork = URI.replace('/works/','/instances/')
+            // let workID = URI.split('/').slice(-1)[0]
+
+            // if there are no instances yet, make a new instance and just use the work's URI
+            let instanceCount = 0
+            // let workUriUsed = false
+            for (let rtId2 in profile.rt){
+                if (rtId2.includes(":Instance")){
+                    instanceCount++
+                    if (profile.rt.URI == instanceURIbasedOnWork){
+                        // workUriUsed=true
+                    }
+                }
+            }
+            console.log(instanceCount, instanceURIbasedOnWork)
+
+            // if there are no instances yet use the instanceURIbasedOnWork
+            if (instanceCount==0){
+                return instanceURIbasedOnWork
+            }else{
+
+
+                // there are already instances, so use the work id but append a suffix to it
+                return instanceURIbasedOnWork + '-' + String(instanceCount).padStart(4, '0');
+
+            }
+
+
+
+
+
+
+        }
+
+
+
+
+    },
+
+
     addItem: function(profile, uri){
 
         // the URI is acutally the profile name, so turn that into a URI
@@ -1875,14 +1948,23 @@ const parseProfile = {
         profile.rt[newRdId] = itemRt
         profile.rtOrder.push(newRdId)
 
+
+        
+
         // setup the new instance's properies
-        profile.rt[newRdId].URI = 'http://id.loc.gov/resources/items/'+ translator.toUUID(translator.new())
+        //profile.rt[newRdId].URI = 'http://id.loc.gov/resources/items/'+ translator.toUUID(translator.new())
+        profile.rt[newRdId].URI = this.suggestURI(profile,'bf:Item',uri)
+
         profile.rt[newRdId].itemOf = uri
 
+        // give it all new guids
 
-        // add it into the pts as well
+        for (let pt in profile.rt[newRdId].pt){
+            profile.rt[newRdId].pt[pt]['@guid'] = short.generate()
+        }
 
 
+        
         for (let rtId in profile.rt){
             if (rtId.includes(":Instance")){
 
@@ -1974,6 +2056,8 @@ const parseProfile = {
 
             if (profile.rt[rtId].URI && profile.rt[rtId].URI == uri){
 
+                let instanceURI = profile.rt[rtId].itemOf
+
                 //see how many of these there are
                 let itemCount = Object.keys(profile.rt).filter(i => i.includes(":Item")).length
 
@@ -1987,13 +2071,23 @@ const parseProfile = {
                 let newRdId = rtId.split('-')[0]+'-'+itemCount                
                 profile.rt[newRdId] = JSON.parse(JSON.stringify(profile.rt[rtId]))
 
+                // give it all new guids
+                for (let pt in profile.rt[newRdId].pt){
+                    profile.rt[newRdId].pt[pt]['@guid'] = short.generate()
+                }
+
+
 
                 // insert into the rtOrder
                 profile.rtOrder.splice(profile.rtOrder.indexOf(rtId), 0, newRdId)
 
-                // setup the new instance's properies
-                profile.rt[newRdId].URI = 'http://id.loc.gov/resources/instances/'+ translator.toUUID(translator.new())
 
+
+                // setup the new instance's properies
+                // profile.rt[newRdId].URI = 'http://id.loc.gov/resources/instances/'+ translator.toUUID(translator.new())
+
+                
+                profile.rt[newRdId].URI = this.suggestURI(profile,'bf:Item',instanceURI)
 
 
             }
@@ -2115,8 +2209,17 @@ const parseProfile = {
         profile.rt[newRdId] = instanceRt
         profile.rtOrder.push(newRdId)
 
+        // give it all new guids
+        for (let pt in profile.rt[newRdId].pt){
+            profile.rt[newRdId].pt[pt]['@guid'] = short.generate()
+        }
+
+
         // setup the new instance's properies
-        profile.rt[newRdId].URI = 'http://id.loc.gov/resources/instances/'+ translator.toUUID(translator.new())
+        // profile.rt[newRdId].URI = 'http://id.loc.gov/resources/instances/'+ translator.toUUID(translator.new())
+
+        profile.rt[newRdId].URI = this.suggestURI(profile,'bf:Instance',workUri)
+
         profile.rt[newRdId].instanceOf = workUri
 
 
@@ -2171,6 +2274,8 @@ const parseProfile = {
 
             if (profile.rt[rtId].URI && profile.rt[rtId].URI == uri){
 
+                let workUri = profile.rt[rtId].instanceOf
+
                 //see how many of these there are
                 let instanceCount = Object.keys(profile.rt).filter(i => i.includes(":Instance")).length
 
@@ -2188,8 +2293,20 @@ const parseProfile = {
                 // insert into the rtOrder
                 profile.rtOrder.splice(profile.rtOrder.indexOf(rtId), 0, newRdId)
 
+
+                // give it all new guids
+                for (let pt in profile.rt[newRdId].pt){
+                    profile.rt[newRdId].pt[pt]['@guid'] = short.generate()
+                }
+
+
                 // setup the new instance's properies
-                profile.rt[newRdId].URI = 'http://id.loc.gov/resources/instances/'+ translator.toUUID(translator.new())
+                profile.rt[newRdId].URI = this.suggestURI(profile,'bf:Instance',workUri)
+
+
+
+                // // setup the new instance's properies
+                // profile.rt[newRdId].URI = 'http://id.loc.gov/resources/instances/'+ translator.toUUID(translator.new())
 
 
                 // admin metadata

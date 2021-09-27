@@ -218,6 +218,7 @@ export default {
       }
 
       let workUri = null
+      let workUriId = translator.toUUID(translator.new())
 
       for (let rt in useProfile.rt){
 
@@ -225,10 +226,12 @@ export default {
 
         // make a new uri for each one
         if (rt.includes(':Work')){
-          uri = 'http://id.loc.gov/resources/works/' + translator.toUUID(translator.new())
+          uri = 'http://id.loc.gov/resources/works/' + workUriId
           workUri = uri
         }else if (rt.includes(':Instance')){
-          uri = 'http://id.loc.gov/resources/instances/' + translator.toUUID(translator.new())
+       
+          // when making a new instance from scratch use the work URI Id peice as the instance ID piece
+          uri = 'http://id.loc.gov/resources/instances/' + workUriId
 
         }else if (rt.includes(':Item')){  
           uri = 'http://id.loc.gov/resources/items/' + translator.toUUID(translator.new())       
