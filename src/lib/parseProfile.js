@@ -1991,6 +1991,36 @@ const parseProfile = {
 
 
 
+        let adminMetadataProperty = {
+          "mandatory": false,
+          "propertyLabel": "Admin Metadata",
+          "propertyURI": "http://id.loc.gov/ontologies/bibframe/adminMetadata",
+          "repeatable": false,
+          "resourceTemplates": [],
+          '@guid': short.generate(),
+          "type": "resource",
+          "userValue": {
+            "@root":"http://id.loc.gov/ontologies/bibframe/adminMetadata",
+            "http://id.loc.gov/ontologies/bflc/catalogerId": [
+              {
+              "@guid": short.generate(),
+              "http://id.loc.gov/ontologies/bflc/catalogerId": store.state.catInitials
+              }
+            ]
+
+          },
+          "valueConstraint": {
+            "defaults": [],
+            "useValuesFrom": [],
+            "valueDataType": {},
+          "valueTemplateRefs": ['lc:RT:bf2:AdminMetadata:BFDB']
+          }
+        }
+
+        let adminMetadataPropertyLabel = 'http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'
+        profile.rt[newRdId].pt[adminMetadataPropertyLabel] = JSON.parse(JSON.stringify(adminMetadataProperty))
+        profile.rt[newRdId].ptOrder.push(adminMetadataPropertyLabel)
+
 
 
 
