@@ -434,8 +434,10 @@ const exportXML = {
 					continue
 				}
 
+
 				// does it even have any userValues?
 				if (this.hasUserValue(userValue)){
+
 
 
 					// keep track of what resource teplates we used in this record
@@ -446,14 +448,24 @@ const exportXML = {
 						xmlVoidDataType.push(rootElName)
 					}
 
+					if (rootElName == 'Item' && pt =='http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'){
+						console.log('here')
+						console.log(userValue)
+					}
+
+
 					// is it a BNODEEEEE
 					if (this.isBnode(userValue)){
+
+
 
 
 						this.debug(ptObj.propertyURI,'root level element, is bnode', userValue)
 
 						let pLvl1 = this.createElByBestNS(ptObj.propertyURI)
 						let bnodeLvl1 = this.createBnode(userValue, ptObj.propertyURI)
+
+
 
 						// loop though the properties
 						for (let key1 of Object.keys(userValue).filter(k => (!k.includes('@') ? true : false ) )){
@@ -717,9 +729,13 @@ const exportXML = {
 					}
 
 
-					// build the predicate
-					//
 
+					// build the predicate
+					// //
+					// if (rootElName ==='Item'){
+					// 	console.log(pt)
+					// 	console.log(rootEl)
+					// }
 
 
 				}

@@ -2001,6 +2001,7 @@ const parseProfile = {
           "type": "resource",
           "userValue": {
             "@root":"http://id.loc.gov/ontologies/bibframe/adminMetadata",
+            "@type": "http://id.loc.gov/ontologies/bibframe/AdminMetadata",
             "http://id.loc.gov/ontologies/bflc/catalogerId": [
               {
               "@guid": short.generate(),
@@ -2264,6 +2265,7 @@ const parseProfile = {
           "type": "resource",
           "userValue": {
             "@root":"http://id.loc.gov/ontologies/bibframe/adminMetadata",
+            "@type": "http://id.loc.gov/ontologies/bibframe/AdminMetadata",
             "http://id.loc.gov/ontologies/bflc/catalogerId": [
               {
               "@guid": short.generate(),
