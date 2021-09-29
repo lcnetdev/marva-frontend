@@ -225,18 +225,34 @@ export default {
         if (parseBfdb.hasItem>0){ 
 
 
-          // look for the RT for this item
-          let useItemRtLabel = this.instanceSelected.replace(':Instance',':Item')
+          // loop the number of ITEMS there are in the XML
+          Array.from(Array(parseBfdb.hasItem)).map((_,i) => {
+            
 
-          for (let pkey in this.profiles){
-            for (let rtkey in this.profiles[pkey].rt){
-              if (rtkey == useItemRtLabel){
-                let useItem = JSON.parse(JSON.stringify(this.profiles[pkey].rt[rtkey]))
-                useProfile.rtOrder.push(useItemRtLabel)
-                useProfile.rt[useItemRtLabel] = useItem                
+
+            // look for the RT for this item
+            let useItemRtLabel = this.instanceSelected.replace(':Instance',':Item')
+
+            for (let pkey in this.profiles){
+              for (let rtkey in this.profiles[pkey].rt){
+                if (rtkey == useItemRtLabel){
+                  let useRtLabel =  useItemRtLabel + '-' + (i+1) 
+                  let useItem = JSON.parse(JSON.stringify(this.profiles[pkey].rt[rtkey]))
+                  useProfile.rtOrder.push(useRtLabel)
+                  useProfile.rt[useRtLabel] = useItem                
+                }
               }
             }
-          }
+
+
+
+
+          });
+
+
+
+
+
 
 
         }
@@ -423,9 +439,9 @@ export default {
         // '/bfe2/editor/tests/instances/c0207030850001.editor-pkg.xml', // has invalid headings
 
 
-        '/bfe2/editor/tests/instances/21923950.editor-pkg.xml', // item test
+        // '/bfe2/editor/tests/instances/21923950.editor-pkg.xml', // item test
 
-
+        '/bfe2/editor/tests/instances/4602142.editor-pkg.xml', // multiple items
 
         // '/bfe2/editor/tests/works/loc.natlib.works.e37922655107918597887531234370352861771.rdf', // work only
 

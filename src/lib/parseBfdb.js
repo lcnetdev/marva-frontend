@@ -751,6 +751,7 @@ const parseBfdb = {
 				tle = "bf:Instance"
 			}else if (pkey.includes(':Item')){
 				tle = "bf:Item"
+				console.log("DOIN AN ITEM NOWOWOWOWO")
 			}
 
 			// select the right part of the profile
