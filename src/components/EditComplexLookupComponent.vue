@@ -505,6 +505,10 @@ export default {
       if (this.displayLabel.includes('id.loc.gov/resources/works/')){
         show = false
       }
+      if (this.displayLabel.includes('id.loc.gov/resources/hubs/')){
+        show = false
+      }
+
 
       if (this.structure.propertyURI=='http://www.loc.gov/mads/rdf/v1#Topic' && this.settingsLookupsUseTextSubjectEditor===false){
         show = false
@@ -1424,6 +1428,10 @@ export default {
       if (this.searchValue.trim()==''){
         return false
       }
+
+      if (this.searchValue.length<3){
+        return false
+      }
       window.clearTimeout(this.searchTimeout)
 
       let searchPayload = {
@@ -1453,7 +1461,8 @@ export default {
       // }
 
 
-      this.searchTimeout = window.setTimeout(()=>{    
+      this.searchTimeout = window.setTimeout(()=>{
+        console.log('searching',searchPayload)    
         this.$store.dispatch("fetchLookupValuesComplex", { self: this, searchPayload: searchPayload }).then(() => {
           this.initalSearchState =false;
         })    
@@ -1738,8 +1747,13 @@ box-shadow: 10px 10px 15px -5px rgba(0,0,0,0.37);
   padding: 0 1em 0 1em;
   height: 73%; 
   margin-top: 1.25em;
+
 }
 
+.complex-lookup-result{
+  border-bottom: 1px lightgray solid;
+  cursor: pointer;
+}
 .complex-lookup-results-complex{
   height: 75%; 
 }

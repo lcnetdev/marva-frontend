@@ -211,6 +211,11 @@ const lookupUtil = {
 
             url = url + "&blastdacache=" + Date.now() 
 
+            // don't allow a ? in the keyword if it is already marked as keyword search
+            if (url.includes('searchtype=keyword') && url.includes('q=?')){
+              url = url.replace('q=?','q=')
+            }
+
             let r = await this.fetchSimpleLookup(url)
             if (searchPayload.processor == 'lcAuthorities'){
                 // process the results as a LC suggest service
@@ -244,7 +249,7 @@ const lookupUtil = {
                 //   }
                 // }
             }else if (searchPayload.processor == 'wikidataAPI'){
-              console.log(r)
+
                 for (let hit of r.search){
                   results.push({
                     label: hit.label,
@@ -258,12 +263,16 @@ const lookupUtil = {
         }
 
         // always add in the literal they searched for at the end
-        results.push({
-          label: searchPayload.searchValue,
-          uri: null,
-          literal:true,
-          extra: ''
-        }) 
+        // if it is not a hub or work
+
+        if (!searchPayload.url[0].includes('/works/') && !searchPayload.url[0].includes('/hubs/')){
+          results.push({
+            label: searchPayload.searchValue,
+            uri: null,
+            literal:true,
+            extra: ''
+          }) 
+        }
 
         // console.log(results,"<results")
         return results
@@ -331,7 +340,15 @@ const lookupUtil = {
 
         let d = await this.fetchContextData(uri)
         d.uri = uri
-        let results =  this.extractContextData(d)
+
+        let results
+
+        if (uri.includes('resources/works/') || uri.includes('resources/hubs/')){
+          results = await this.extractContextDataWorksHubs(d)
+        }else{
+          results =  this.extractContextData(d)  
+        }
+        
         return results
 
     },
@@ -348,7 +365,9 @@ const lookupUtil = {
               jsonuri = jsonuri.replace('https://id.', 'https://preprod.id.')
               
             }
+          }else if (uri.includes('resources/works/') || uri.includes('resources/hubs/')){
 
+            jsonuri = uri + '.bibframe.json';
 
           }else if (uri.includes('http://www.wikidata.org/entity/')){ 
             jsonuri = uri.replace('http://www.wikidata.org/entity/','https://www.wikidata.org/wiki/Special:EntityData/')
@@ -372,6 +391,146 @@ const lookupUtil = {
 
 
     },   
+
+
+    extractContextDataWorksHubs: async function(data){
+
+
+      var results = { contextValue: true, source: [], type: null, typeFull: null, aap:null, variant : [], uri: data.uri, title: null, contributor:[], date:null, genreForm: null, nodeMap:{}};
+
+      if (data.uri.includes('/works/')){
+        results.type = 'Work'
+        results.typeFull='http://id.loc.gov/ontologies/bibframe/Work'
+      }else{
+        results.type = 'Hub'
+        results.typeFull='http://id.loc.gov/ontologies/bibframe/Hub'
+      }
+
+
+      // let nodeLookup = {}
+
+      // for (let key in data){
+
+      // }
+
+
+      let instances = []
+
+
+      // grab the title
+      for (let val of data){
+
+        if (val['@id']){
+
+          console.log(val['@id'])
+
+          if (val['@id'] == data.uri){
+            // this is the main graph
+            
+            for (let k in val){
+              //find the title
+              if (k == 'http://www.w3.org/2000/01/rdf-schema#label'){
+                results.title = val[k][0]['@value']
+              }
+
+              if (k == 'http://id.loc.gov/ontologies/bflc/aap'){
+                results.aap = val[k][0]['@value']
+              }
+
+              
+
+              if (k == 'http://id.loc.gov/ontologies/bibframe/hasInstance'){
+
+                
+                let counter = 1
+                for (let i of val['http://id.loc.gov/ontologies/bibframe/hasInstance']){
+
+                  if (counter>4){
+                    break
+                  }
+                  counter++
+
+
+                  console.log(i['@id'])
+
+                  let response = await fetch(i['@id']+'.nt');
+                  let text  = await response.text()
+
+                  let instanceText = ""
+                  for (let line of text.split('\n')){
+
+                    
+                    if (line.includes(`<${i["@id"]}> <http://www.w3.org/2000/01/rdf-schema#label>`)){
+                      let t = line.split('>')[2]
+                      t= t.split('@')[0]
+                      t = t.replaceAll('"','')
+                      t= t.replace(' .','')
+                      instanceText = instanceText + t                      
+                    }
+                    if (line.includes(`<${i["@id"]}> <http://id.loc.gov/ontologies/bibframe/provisionActivityStatement>`)){
+                      let t = line.split('>')[2]
+                      t= t.split('@')[0]
+                      t = t.replaceAll('"','')
+                      t= t.replace(' .','')
+                      instanceText = instanceText + t                      
+                    }
+
+
+
+                  }
+                  instances.push(instanceText)
+
+
+                  console.log(instances)
+                  // https://id.loc.gov/resources/instances/18109312.nt
+
+                }
+
+
+              }
+
+
+
+
+            }
+
+          }
+
+
+          // subjects
+          if (val['http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme']){
+
+            if (!results.nodeMap['Subjects']){
+              results.nodeMap['Subjects'] = []
+            }
+
+            if (val['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
+              results.nodeMap['Subjects'].push(val['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['@value'])
+            }
+
+
+          }
+
+
+
+        }
+
+      }
+
+
+      if (!results.title){
+        results.title = results.aap
+      }
+
+
+      if (instances.length>0){
+        results.nodeMap['Instances'] = instances
+      }
+
+
+
+      return results
+    },
 
     extractContextData: function(data){
           var results = { contextValue: true, source: [], type: null, typeFull: null, variant : [], uri: data.uri, title: null, contributor:[], date:null, genreForm: null, nodeMap:{}};
