@@ -453,7 +453,7 @@ const lookupUtil = {
 
                   console.log(i['@id'])
 
-                  let response = await fetch(i['@id']+'.nt');
+                  let response = await fetch(i['@id'].replace('http://','https://')+'.nt');
                   let text  = await response.text()
 
                   let instanceText = ""
