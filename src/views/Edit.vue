@@ -25,6 +25,12 @@
                 
                   <div  style="display:inline-block; cursor: pointer" @click="miniMapClick(diagramMiniMap)">
                     
+<!-- 
+<svg width="100pt" height="100pt" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+ <path d="m62.113 24.66 1.9023-15.238 18.875 32.691-7.5469 20.004 15.238 1.9023-32.691 18.875-20.004-7.5469-1.9023 15.238-18.875-32.691 7.5469-20.004-15.238-1.9023 32.691-18.875zm-17.684 15.695-4.0781 15.215 15.215 4.0781 4.0781-15.215z" fill-rule="evenodd"/>
+</svg>
+
+ -->
                     <svg v-if="activeMiniMap.URI != diagramMiniMap.URI" width="2.1em" height="3.1em" version="1.1" xmlns="http://www.w3.org/2000/svg">
                         <circle fill="#7badad" cx="1em" cy="1.5em" r="0.9em"/>
                     </svg>
@@ -225,15 +231,17 @@
                                 <div v-if="profileName.includes('Instance')" style="height: 1em;width: 1em; display: inline-block;" class="temp-icon-instance"></div>
                                 
                                 <div v-if="profileName.includes(':Item')" style="height: 1em;width: 1em; display: inline-block;">
-                                  
                                   <svg  viewBox="0 -32 50 72" version="1.1" xmlns="http://www.w3.org/2000/svg">
-
                                        <rect width="40px" height="40px" style="fill:#eaeaea;stroke-width:0.5;stroke:rgb(0,0,0)" />
                                   </svg>
-
-
-
                                 </div>
+
+                                <div v-if="profileName.endsWith(':Hub')" style="height: 1.25em;width: 1.25em; display: inline-block;">
+                                    <svg  version="1.1" viewBox="0 -20 100 100" xmlns="http://www.w3.org/2000/svg">
+                                     <path fill="lightblue" d="m62.113 24.66 1.9023-15.238 18.875 32.691-7.5469 20.004 15.238 1.9023-32.691 18.875-20.004-7.5469-1.9023 15.238-18.875-32.691 7.5469-20.004-15.238-1.9023 32.691-18.875zm-17.684 15.695-4.0781 15.215 15.215 4.0781 4.0781-15.215z" fill-rule="evenodd"/>
+                                    </svg>                           
+                                </div>
+
 
 
 
@@ -285,7 +293,15 @@
 
                                    <rect width="50px" height="50px" style="fill:#eaeaea;stroke-width:0.5;stroke:rgb(0,0,0)" />
                               </svg>
-                          </div>
+                            </div>
+
+                                <div v-if="profileName.endsWith(':Hub')" style="height: 15px;  display:inline-block;  width: 26px; margin-left: 25px; margin-right: 5px;">
+                                    <svg width="50px" height="40px"  version="1.1" viewBox="25 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                     <path fill="lightblue" d="m62.113 24.66 1.9023-15.238 18.875 32.691-7.5469 20.004 15.238 1.9023-32.691 18.875-20.004-7.5469-1.9023 15.238-18.875-32.691 7.5469-20.004-15.238-1.9023 32.691-18.875zm-17.684 15.695-4.0781 15.215 15.215 4.0781 4.0781-15.215z" fill-rule="evenodd"/>
+                                    </svg>                           
+                                </div>
+
+
 
 
 

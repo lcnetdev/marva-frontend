@@ -24,7 +24,8 @@ const parseBfdb = {
 
 	namespace: {
 		'bflc': 'http://id.loc.gov/ontologies/bflc/',
-		'bf':'http://id.loc.gov/ontologies/bibframe/',		
+		'bf':'http://id.loc.gov/ontologies/bibframe/',	
+		'bfsimple':'http://id.loc.gov/ontologies/bfsimple/',
 		'madsrdf': 'http://www.loc.gov/mads/rdf/v1#',
 		'rdfs':'http://www.w3.org/2000/01/rdf-schema#',
 		'rdf' : 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
@@ -565,6 +566,26 @@ const parseBfdb = {
 
 	transform: async function(profile){ 
 
+
+		// remove any non top level entities from the profile, this can be if they are defined and used in the same profile,
+		// we don't want to parse anything ecept HUB WORK INSTANCE ITEM
+		let toRemove = []
+		let toKeep = []
+		for (let rt of profile.rtOrder){
+			if (!rt.endsWith(':Work')&&!rt.endsWith(':Item')&&!rt.endsWith(':Instance')&&!rt.endsWith(':Hub')){
+				toRemove.push(rt)
+			}else{
+				toKeep.push(rt)
+			}
+		}
+
+		for (let rt of toRemove){
+			delete profile.rt[rt]
+		}
+		profile.rtOrder = toKeep
+
+
+
 		this.tempTemplates = {}
 
 
@@ -742,7 +763,6 @@ const parseBfdb = {
 		for (const pkey in profile.rt) {
 
 
-			
 
 			let tle = ""			
 			if (pkey.includes(':Work')){
@@ -751,8 +771,13 @@ const parseBfdb = {
 				tle = "bf:Instance"
 			}else if (pkey.includes(':Item')){
 				tle = "bf:Item"
-				console.log("DOIN AN ITEM NOWOWOWOWO")
+			}else if (pkey.endsWith(':Hub')){
+				tle = "bf:Hub"
+			}else{
+				// don't mess with anything other than top level entities in the profile, remove them from the profile
+				continue
 			}
+
 
 			// select the right part of the profile
 			let pt = profile.rt[pkey].pt
@@ -838,8 +863,8 @@ const parseBfdb = {
 
 			// find itemOf
 			if (tle == 'bf:Item'){
-				console.log("-------bf:ITEM!!!!!")
-				console.log(xml)
+
+
 				if (xml.getElementsByTagName('bf:itemOf').length>0){
 					let itemOf = xml.getElementsByTagName('bf:itemOf')[0]
 					if (itemOf.attributes['rdf:resource']){
@@ -889,6 +914,7 @@ const parseBfdb = {
 				// we only want top level elements, not nested things like dupe notes etc.
 				let el = []
 				for (let e of xml.children){
+					console.log(this.UriNamespace(e.tagName), propertyURI)
 					if (this.UriNamespace(e.tagName) == propertyURI){
 						el.push(e)
 					}
@@ -915,9 +941,23 @@ const parseBfdb = {
 
 
 
+				// sometimes the profile has a rdf:type selectable in the profile itself, we probably 
+				// took that piece of data out eariler and set it at the RT level, so fake that userValue for this piece of
+				// data in the properties because el will be empty
 
-				
-				
+				if (profile.rt[pkey]['@type'] && propertyURI == 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'){
+
+					ptk.userValue={
+						'@root': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+						'@guid': short.generate() ,
+						'@id': profile.rt[pkey]['@type'],
+					}
+
+					pt[k] = ptk
+					continue
+
+				}
+
 				
 
 				if (el.length>0){
@@ -1003,7 +1043,7 @@ const parseBfdb = {
 
 						}else if (e.children.length == 0){
 
-
+							console.log(e.tagName)
 							
 							// if (!populateData.userValue){
 								populateData.userValue['@guid'] = short.generate()
@@ -1039,6 +1079,7 @@ const parseBfdb = {
 									console.warn(e)
 									console.warn('---------------------------------------------')
 								}
+
 
 
 							}else if (e.attributes['rdf:resource'] && e.innerHTML.trim() == ''){
@@ -2097,6 +2138,7 @@ const parseBfdb = {
 
 			// test to see if there are any Items,
 			this.hasItem = this.activeDom.getElementsByTagName('bf:Item').length
+			this.hasInstance = this.activeDom.getElementsByTagName('bf:Instance').length
 
 
 		// the library very much doesn't work on anything but chrome

@@ -14,7 +14,8 @@ const exportXML = {
 
 	namespace: {
 		'bflc': 'http://id.loc.gov/ontologies/bflc/',
-		'bf':'http://id.loc.gov/ontologies/bibframe/',		
+		'bf':'http://id.loc.gov/ontologies/bibframe/',	
+		'bfsimple':'http://id.loc.gov/ontologies/bfsimple/',
 		'madsrdf': 'http://www.loc.gov/mads/rdf/v1#',
 		'rdfs':'http://www.w3.org/2000/01/rdf-schema#',
 		'rdf' : 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
@@ -127,6 +128,22 @@ const exportXML = {
 
 		// some try something else
 		// TODO if needed
+
+
+		// some properties being used are not available yet....
+		if (propertyURI==='http://id.loc.gov/ontologies/bfsimple/prefTitle'){
+			return 'http://www.w3.org/2000/01/rdf-schema#Literal'
+		}
+		if (propertyURI==='http://id.loc.gov/ontologies/bfsimple/variantTitle'){
+			return 'http://www.w3.org/2000/01/rdf-schema#Literal'
+		}
+		if (propertyURI==='http://id.loc.gov/ontologies/bfsimple/transTitle'){
+			return 'http://www.w3.org/2000/01/rdf-schema#Literal'
+		}
+
+
+
+
 
 
 		// if fails
@@ -304,9 +321,10 @@ const exportXML = {
 
 	createLiteral: function(property,userValue){
 
-
+		console.log(property)
 		let p = this.createElByBestNS(property)
-
+		console.log(p)
+		console.log(userValue)
 		// it should be stored under the same key
 		if (userValue[property]){
 			p.innerHTML = userValue[property]
@@ -380,6 +398,7 @@ const exportXML = {
 			Work: {},
 			Instance: {},
 			Item: {},
+			Hub:{}
 		}
 
 
@@ -407,6 +426,13 @@ const exportXML = {
 				tleArray = tleItem
 				rootEl = document.createElementNS(this.namespace.bf,"bf:Item");
 				rootElName = "Item"
+			}else if (rt.endsWith(':Hub')){
+				tleArray = tleItem
+				rootEl = document.createElementNS(this.namespace.bf,"bf:Hub");
+				rootElName = "Hub"
+			}else{
+				// don't mess with anything that is not a top level entitiy in the profile, there can be other referenced RTs that we don't want to export they are just used in the main RT
+				continue
 			}
 
 
@@ -434,7 +460,7 @@ const exportXML = {
 					continue
 				}
 
-
+				console.log('--->',pt)
 				// does it even have any userValues?
 				if (this.hasUserValue(userValue)){
 
@@ -453,6 +479,7 @@ const exportXML = {
 						console.log(userValue)
 					}
 
+					console.log(userValue)
 
 					// is it a BNODEEEEE
 					if (this.isBnode(userValue)){
@@ -627,7 +654,7 @@ const exportXML = {
 						this.debug(ptObj.propertyURI, 'root level element does not look like a bnode', userValue)
 
 						// but it might be a bnode, but with only a URI
-
+						console.log(await this.suggestType(ptObj.propertyURI))
 
 						if (userValue['@flags'] && userValue['@flags'].indexOf('simpleLookupTopLevelMulti') > -1){
 
@@ -826,7 +853,7 @@ const exportXML = {
 			
 
 			// build the lookup
-
+			console.log(orginalProfile.rt[rt])
 			tleLookup[rootElName][orginalProfile.rt[rt].URI] = rootEl
 
 
@@ -850,6 +877,17 @@ const exportXML = {
 
 			rdfBasic.appendChild(theWork)
 		}
+
+		for (let URI in tleLookup['Hub']){
+			
+			let theHub = (new XMLSerializer()).serializeToString(tleLookup['Hub'][URI])
+			// theHub = theHub.replace(/\sxmlns:[a-z]+="http.*?"/g,'')
+			theHub = parser.parseFromString(theHub, "text/xml").children[0];
+
+			rdfBasic.appendChild(theHub)
+		}
+
+		
 
 		for (let URI in tleLookup['Instance']){
 
@@ -1032,17 +1070,26 @@ const exportXML = {
 
 
 
+		// are we just editing a single HUB?
+		if (Object.keys(tleLookup['Work']).length==0 && Object.keys(tleLookup['Hub']).length == 1){
+			rdf = rdfBasic
+		}
+		console.log(tleLookup['Work'],Object.keys(tleLookup['Work']).length)
+		console.log(tleLookup['Hub'],Object.keys(tleLookup['Hub']).length)
 
+		console.log(rdfBasic)
+		console.log(rdf)
 
-
-
-		
 		
 		
 		
 	
 		if (rdfBasic.getElementsByTagName("bf:mainTitle").length>0){
 			xmlVoidDataTitle = rdfBasic.getElementsByTagName("bf:mainTitle")[0].innerHTML
+
+		}else if (rdfBasic.getElementsByTagName("bfsimple:prefTitle").length>0){
+			xmlVoidDataTitle = rdfBasic.getElementsByTagName("bfsimple:prefTitle")[0].innerHTML
+
 		}else{
 			console.warn('no title found for db')
 		}

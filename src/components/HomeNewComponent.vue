@@ -193,6 +193,31 @@ export default {
       }
 
       let useProfile = JSON.parse(JSON.stringify(this.profiles[useStartingPoint]))
+      console.log(useProfile)
+
+
+
+      // some profiles have nested components at the root level used in that component
+      // so if it doesn't end with one of the main type of resources we want to edit 
+      // then we don't want to render it, since it is probably being used in the main RT somewhere
+      let toRemove = []
+      let toKeep = []
+      for (let rt of useProfile.rtOrder){
+        if (!rt.endsWith(':Work')&&!rt.endsWith(':Item')&&!rt.endsWith(':Instance')&&!rt.endsWith(':Hub')){
+          toRemove.push(rt)
+        }else{
+          toKeep.push(rt)
+        }
+      }
+
+      for (let rt of toRemove){
+        delete useProfile.rt[rt]
+      }
+      useProfile.rtOrder = toKeep
+      
+
+      console.log('here',useProfile)
+
 
       if (!useProfile.log){
         useProfile.log=[]
@@ -222,19 +247,26 @@ export default {
 
       for (let rt in useProfile.rt){
 
+
+
+
         let uri = null
 
         // make a new uri for each one
-        if (rt.includes(':Work')){
+        if (rt.endsWith(':Work')){
           uri = 'http://id.loc.gov/resources/works/' + workUriId
           workUri = uri
-        }else if (rt.includes(':Instance')){
+        }else if (rt.endsWith(':Instance')){
        
           // when making a new instance from scratch use the work URI Id peice as the instance ID piece
           uri = 'http://id.loc.gov/resources/instances/' + workUriId
 
-        }else if (rt.includes(':Item')){  
-          uri = 'http://id.loc.gov/resources/items/' + translator.toUUID(translator.new())       
+        }else if (rt.endsWith(':Item')){  
+          uri = 'http://id.loc.gov/resources/items/' + translator.toUUID(translator.new())   
+        }else if (rt.endsWith(':Hub')){  
+          uri = 'http://id.loc.gov/resources/hubs/' + translator.toUUID(translator.new())   
+
+
         }else{
 
           // dunno what this is give it a random uri
