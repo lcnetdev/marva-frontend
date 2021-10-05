@@ -85,6 +85,17 @@
                     <svg style="width: 1.5em" version="1.1" viewBox="0 0 100 100"><path style="fill:#8B588B;stroke:#0A131A;stroke-width:0.5;stroke-miterlimit:10;" d="M50,1.4l48.8,48.8L50,99.1L1.2,50.3L50,1.4z"/></svg>
                     <span class="general-template-type-label">Instance</span>
                   </span>
+
+
+                  <span v-if="startingPoints[sp].hub">
+
+                        <svg width="30px" height="30px"  version="1.1" viewBox="0 -10 100 100" xmlns="http://www.w3.org/2000/svg">
+                         <path fill="royalblue" d="m62.113 24.66 1.9023-15.238 18.875 32.691-7.5469 20.004 15.238 1.9023-32.691 18.875-20.004-7.5469-1.9023 15.238-18.875-32.691 7.5469-20.004-15.238-1.9023 32.691-18.875zm-17.684 15.695-4.0781 15.215 15.215 4.0781 4.0781-15.215z" fill-rule="evenodd"/>
+                        </svg>  
+                        <span class="general-template-type-label">Hub</span>
+
+                  </span> 
+
                 </td>
                 <td colspan="2"></td>
 
@@ -190,7 +201,10 @@ export default {
 
       if (typeof addAdmin === 'undefined'){
         addAdmin=true
-      }
+      } 
+      console.log(useStartingPoint)
+      console.log(this.profiles)
+      console.log(this.profiles[useStartingPoint])
 
       let useProfile = JSON.parse(JSON.stringify(this.profiles[useStartingPoint]))
       console.log(useProfile)
@@ -214,9 +228,8 @@ export default {
         delete useProfile.rt[rt]
       }
       useProfile.rtOrder = toKeep
-      
 
-      console.log('here',useProfile)
+
 
 
       if (!useProfile.log){
@@ -353,6 +366,7 @@ export default {
         }
       }
 
+      console.log(useProfile)
 
 
 
@@ -443,6 +457,7 @@ export default {
 
     setTimeout(()=>{
       console.log(this.profiles)
+      console.log(this.startingPoints)
     },1000)
 
 

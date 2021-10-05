@@ -63,6 +63,29 @@ const parseProfile = {
         this.profileSource = await this.fetchProfiles()
         this.startingPointData = await this.fetchStartingPoints()
 
+        console.log(this.startingPointData)
+        // TEMP HACK ADD IN HUBS
+        this.startingPointData.json.push(
+            {
+                "menuGroup": "Hub",
+                "menuItems": [
+                    {
+                        "label": "Hub",
+                        "type": [
+                            "http://id.loc.gov/ontologies/bibframe/Hub"
+                        ],
+                        "useResourceTemplates": [
+                            "lc:RT:bf2:Hub:Hub"
+                        ]
+                    }                    
+                ]
+            }
+        )        
+
+
+
+        console.log('this.startingPointData',this.startingPointData)
+
         // TEMP HACK, striping RDA fields for some things for the new editor
         for (let p of this.profileSource){
             
@@ -358,17 +381,24 @@ const parseProfile = {
 
             this.startingPoints[sp.menuGroup] = {name:sp.menuGroup, work: null, instance: null, item: null }
             sp.menuItems.forEach((mi)=>{
-
-                if (mi.type.indexOf('http://id.loc.gov/ontologies/bibframe/Instance')){
+                
+                if (mi.type.indexOf('http://id.loc.gov/ontologies/bibframe/Instance')>-1){
+                    
                     this.startingPoints[sp.menuGroup].instance = mi.useResourceTemplates[0]
                 }
-                if (mi.type.indexOf('http://id.loc.gov/ontologies/bibframe/Work')){
+                if (mi.type.indexOf('http://id.loc.gov/ontologies/bibframe/Work')>-1){
+                    
                     this.startingPoints[sp.menuGroup].work = mi.useResourceTemplates[0]
                 }
-                if (mi.type.indexOf('http://id.loc.gov/ontologies/bibframe/Item')){
+                if (mi.type.indexOf('http://id.loc.gov/ontologies/bibframe/Item')>-1){
+                    
                     this.startingPoints[sp.menuGroup].item = mi.useResourceTemplates[0]
                 }
-
+                if (mi.type.indexOf('http://id.loc.gov/ontologies/bibframe/Hub')>-1){
+                    
+                    this.startingPoints[sp.menuGroup].hub = mi.useResourceTemplates[0]
+                }
+                
 
             })
 
@@ -383,6 +413,11 @@ const parseProfile = {
                 this.profiles[sp.menuGroup].rt[this.startingPoints[sp.menuGroup].work] = plookup[this.startingPoints[sp.menuGroup].work]
                 this.profiles[sp.menuGroup].rtOrder.push(this.startingPoints[sp.menuGroup].work)
             }
+            if (this.startingPoints[sp.menuGroup].hub){
+                this.profiles[sp.menuGroup].rt[this.startingPoints[sp.menuGroup].hub] = plookup[this.startingPoints[sp.menuGroup].hub]
+                this.profiles[sp.menuGroup].rtOrder.push(this.startingPoints[sp.menuGroup].hub)
+            }
+
 
         })
 
@@ -2651,6 +2686,7 @@ const parseProfile = {
         // this.instanceOf = null
 
         let miniMapWork= false
+        let miniMapHub= false
         let miniMapInstance = []
 
         let workCounter = 0
@@ -2670,6 +2706,13 @@ const parseProfile = {
                 miniMapWork = {type:'Work',URI:activeProfile.rt[rt].URI, rt:rt, counter:workCounter, jumpTo:activeProfile.rt[rt].ptOrder[1],  details: activeProfile.rt[rt].pt[activeProfile.rt[rt].ptOrder[1]], instances:[]}
                 workCounter++
             }
+
+            // // there is only one hub
+            if (rt.endsWith(':Hub')){              
+                miniMapHub = {type:'Hub',URI:activeProfile.rt[rt].URI, rt:rt, counter:0, jumpTo:activeProfile.rt[rt].ptOrder[1],  details: activeProfile.rt[rt].pt[activeProfile.rt[rt].ptOrder[1]], works:[]}
+            }
+
+
 
             // if (rt.includes(':Instance') ){
 
@@ -2703,6 +2746,10 @@ const parseProfile = {
 
         if (miniMapWork){
             miniMapWork.instances = miniMapInstance
+        }
+
+        if(miniMapHub){
+            return miniMapHub
         }
 
         return miniMapWork

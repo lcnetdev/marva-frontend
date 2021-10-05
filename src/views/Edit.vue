@@ -29,17 +29,35 @@
 <svg width="100pt" height="100pt" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
  <path d="m62.113 24.66 1.9023-15.238 18.875 32.691-7.5469 20.004 15.238 1.9023-32.691 18.875-20.004-7.5469-1.9023 15.238-18.875-32.691 7.5469-20.004-15.238-1.9023 32.691-18.875zm-17.684 15.695-4.0781 15.215 15.215 4.0781 4.0781-15.215z" fill-rule="evenodd"/>
 </svg>
-
+    
  -->
-                    <svg v-if="activeMiniMap.URI != diagramMiniMap.URI" width="2.1em" height="3.1em" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                        <circle fill="#7badad" cx="1em" cy="1.5em" r="0.9em"/>
-                    </svg>
 
-                    <svg v-else  width="2.1em" height="3.1em" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                        <circle stroke="rgb(255 49 49)" stroke-width="2" fill="#7badad" cx="1em" cy="1.5em" r="0.9em"/>
-                    </svg>
+
+
+                    <template v-if="diagramMiniMap.type != 'Hub'">
+                        <svg v-if="activeMiniMap.URI != diagramMiniMap.URI" width="2.1em" height="3.1em" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                            <circle fill="#7badad" cx="1em" cy="1.5em" r="0.9em"/>
+                        </svg>
+
+                        <svg v-else  width="2.1em" height="3.1em" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                            <circle stroke="rgb(255 49 49)" stroke-width="2" fill="#7badad" cx="1em" cy="1.5em" r="0.9em"/>
+                        </svg>
+                    </template>
+                    <template v-else>
+
+                        <svg width="50px" height="50px"  version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                         <path fill="royalblue" d="m62.113 24.66 1.9023-15.238 18.875 32.691-7.5469 20.004 15.238 1.9023-32.691 18.875-20.004-7.5469-1.9023 15.238-18.875-32.691 7.5469-20.004-15.238-1.9023 32.691-18.875zm-17.684 15.695-4.0781 15.215 15.215 4.0781 4.0781-15.215z" fill-rule="evenodd"/>
+                        </svg>   
+
+
+                    </template>
+
 
                   </div>
+
+
+
+
                   <div style="display:inline-block; height: 50px; top: 0; line-height: 50px;" v-for="instance in diagramMiniMap.instances" v-bind:key="instance.uri">
                     
 
@@ -112,6 +130,14 @@
                       <option value="cloneItem">Duplicate Item</option>
 
                     </select>
+
+                    <select v-else-if="diagramMiniMap.type == 'Hub'" v-model="miniMapActionValue" @change="miniMapAction"  style="position:absolute; top:15px; font-size: larger;    border-radius: 0.25em; width:100px">
+                      <option selected disabled value="Actions">Actions</option>
+
+
+                    </select>
+
+
 
                     <select v-else v-model="miniMapActionValue" @change="miniMapAction"  style="position:absolute; top:15px; font-size: larger;    border-radius: 0.25em; width:100px">
                       <option selected disabled value="Actions">Actions</option>
@@ -238,7 +264,7 @@
 
                                 <div v-if="profileName.endsWith(':Hub')" style="height: 1.25em;width: 1.25em; display: inline-block;">
                                     <svg  version="1.1" viewBox="0 -20 100 100" xmlns="http://www.w3.org/2000/svg">
-                                     <path fill="lightblue" d="m62.113 24.66 1.9023-15.238 18.875 32.691-7.5469 20.004 15.238 1.9023-32.691 18.875-20.004-7.5469-1.9023 15.238-18.875-32.691 7.5469-20.004-15.238-1.9023 32.691-18.875zm-17.684 15.695-4.0781 15.215 15.215 4.0781 4.0781-15.215z" fill-rule="evenodd"/>
+                                     <path fill="royalblue" d="m62.113 24.66 1.9023-15.238 18.875 32.691-7.5469 20.004 15.238 1.9023-32.691 18.875-20.004-7.5469-1.9023 15.238-18.875-32.691 7.5469-20.004-15.238-1.9023 32.691-18.875zm-17.684 15.695-4.0781 15.215 15.215 4.0781 4.0781-15.215z" fill-rule="evenodd"/>
                                     </svg>                           
                                 </div>
 
@@ -297,7 +323,7 @@
 
                                 <div v-if="profileName.endsWith(':Hub')" style="height: 15px;  display:inline-block;  width: 26px; margin-left: 25px; margin-right: 5px;">
                                     <svg width="50px" height="40px"  version="1.1" viewBox="25 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                     <path fill="lightblue" d="m62.113 24.66 1.9023-15.238 18.875 32.691-7.5469 20.004 15.238 1.9023-32.691 18.875-20.004-7.5469-1.9023 15.238-18.875-32.691 7.5469-20.004-15.238-1.9023 32.691-18.875zm-17.684 15.695-4.0781 15.215 15.215 4.0781 4.0781-15.215z" fill-rule="evenodd"/>
+                                     <path fill="royalblue" d="m62.113 24.66 1.9023-15.238 18.875 32.691-7.5469 20.004 15.238 1.9023-32.691 18.875-20.004-7.5469-1.9023 15.238-18.875-32.691 7.5469-20.004-15.238-1.9023 32.691-18.875zm-17.684 15.695-4.0781 15.215 15.215 4.0781 4.0781-15.215z" fill-rule="evenodd"/>
                                     </svg>                           
                                 </div>
 
@@ -392,6 +418,20 @@
                                 </div>
                                 <span>Item</span>
                               </div>
+
+                            <div v-if="profileName.endsWith(':Hub')">
+                                <div style="display:flex;">
+                                    <div style="flex:0">
+                                        <svg style="height:1.25em"  version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                         <path fill="royalblue" d="m62.113 24.66 1.9023-15.238 18.875 32.691-7.5469 20.004 15.238 1.9023-32.691 18.875-20.004-7.5469-1.9023 15.238-18.875-32.691 7.5469-20.004-15.238-1.9023 32.691-18.875zm-17.684 15.695-4.0781 15.215 15.215 4.0781 4.0781-15.215z" fill-rule="evenodd"/>
+                                        </svg>   
+                                    </div>
+                                    <div style="flex:1; text-align:left;"><span>Hub</span> </div>
+                                </div>
+
+                                                       
+                            </div>
+
 
 
 
