@@ -65,7 +65,7 @@ const parseProfile = {
 
         console.log(this.startingPointData)
         // TEMP HACK ADD IN HUBS
-        this.startingPointData.json.push(
+        this.startingPointData[0].json.push(
             {
                 "menuGroup": "Hub",
                 "menuItems": [
