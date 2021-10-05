@@ -1,5 +1,354 @@
 [
     {
+        "id": "9bbae8a5-0143-4e3c-a34b-741f2f67f0d1",
+        "name": "Test BF Hub",
+        "configType": "profile",
+        "json": {
+            "Profile": {
+                "resourceTemplates": [
+                    {
+                        "propertyTemplates": [
+                            {
+                                "type": "resource",
+                                "resourceTemplates": [],
+                                "valueConstraint": {
+                                    "valueTemplateRefs": [
+                                        "lc:RT:bf2:Hub:Contribution"
+                                    ],
+                                    "useValuesFrom": [],
+                                    "defaults": [],
+                                    "valueDataType": {}
+                                },
+                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/contribution",
+                                "propertyLabel": "Contributor",
+                                "mandatory": "false",
+                                "repeatable": "true"
+                            },
+                            {
+                                "repeatable": "false",
+                                "resourceTemplates": [],
+                                "valueConstraint": {
+                                    "valueTemplateRefs": [],
+                                    "useValuesFrom": [],
+                                    "defaults": [
+                                        {
+                                            "defaultURI": "",
+                                            "defaultLiteral": ""
+                                        }
+                                    ],
+                                    "valueDataType": {}
+                                },
+                                "propertyURI": "http://id.loc.gov/ontologies/bfsimple/prefTitle",
+                                "propertyLabel": "Preferred Title",
+                                "mandatory": "false",
+                                "type": "literal"
+                            },
+                            {
+                                "resourceTemplates": [],
+                                "valueConstraint": {
+                                    "valueTemplateRefs": [],
+                                    "useValuesFrom": [],
+                                    "defaults": [],
+                                    "valueDataType": {}
+                                },
+                                "propertyURI": "http://id.loc.gov/ontologies/bfsimple/variantTitle",
+                                "propertyLabel": "Variant Title",
+                                "mandatory": "false",
+                                "repeatable": "true",
+                                "type": "literal"
+                            },
+                            {
+                                "resourceTemplates": [],
+                                "valueConstraint": {
+                                    "valueTemplateRefs": [],
+                                    "useValuesFrom": [],
+                                    "defaults": [],
+                                    "valueDataType": {},
+                                    "valueLanguage": "",
+                                    "languageURI": "http://id.loc.gov/vocabulary/languages/und"
+                                },
+                                "propertyURI": "http://id.loc.gov/ontologies/bfsimple/transTitle",
+                                "propertyLabel": "Transliterated Title",
+                                "mandatory": "false",
+                                "repeatable": "true",
+                                "type": "literal"
+                            },
+                            {
+                                "repeatable": "false",
+                                "resourceTemplates": [],
+                                "valueConstraint": {
+                                    "valueTemplateRefs": [],
+                                    "useValuesFrom": [],
+                                    "defaults": [],
+                                    "valueDataType": {}
+                                },
+                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/originDate",
+                                "propertyLabel": "Date Work Created",
+                                "mandatory": "false",
+                                "type": "literal"
+                            },
+                            {
+                                "type": "lookup",
+                                "resourceTemplates": [],
+                                "valueConstraint": {
+                                    "valueTemplateRefs": [],
+                                    "useValuesFrom": [
+                                        "http://id.loc.gov/vocabulary/resourceTypes",
+                                        "http://id.loc.gov/vocabulary/bflcTypes",
+                                        "http://id.loc.gov/vocabulary/bfTypes"
+                                    ],
+                                    "defaults": [],
+                                    "valueDataType": {
+                                        "dataTypeURI": "",
+                                        "dataTypeLabel": "",
+                                        "remark": ""
+                                    }
+                                },
+                                "propertyURI": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+                                "propertyLabel": "Type",
+                                "mandatory": "false",
+                                "repeatable": "true"
+                            },
+                            {
+                                "type": "lookup",
+                                "resourceTemplates": [],
+                                "valueConstraint": {
+                                    "valueTemplateRefs": [],
+                                    "useValuesFrom": [
+                                        "http://id.loc.gov/vocabulary/languages"
+                                    ],
+                                    "defaults": [],
+                                    "valueDataType": {
+                                        "dataTypeURI": "",
+                                        "dataTypeLabel": "",
+                                        "remark": ""
+                                    }
+                                },
+                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/language",
+                                "propertyLabel": "Language",
+                                "mandatory": "false",
+                                "repeatable": "true"
+                            },
+                            {
+                                "type": "lookup",
+                                "resourceTemplates": [],
+                                "valueConstraint": {
+                                    "valueTemplateRefs": [],
+                                    "useValuesFrom": [
+                                        "http://id.loc.gov/authorities/performanceMediums"
+                                    ],
+                                    "defaults": [],
+                                    "valueDataType": {}
+                                },
+                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/musicMedium",
+                                "propertyLabel": "Music Medium",
+                                "mandatory": "false",
+                                "repeatable": "true"
+                            },
+                            {
+                                "repeatable": "false",
+                                "resourceTemplates": [],
+                                "valueConstraint": {
+                                    "valueTemplateRefs": [],
+                                    "useValuesFrom": [],
+                                    "defaults": [],
+                                    "valueDataType": {}
+                                },
+                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/musicSerialNumber",
+                                "propertyLabel": "Music Serial Number",
+                                "mandatory": "false",
+                                "type": "literal"
+                            },
+                            {
+                                "repeatable": "false",
+                                "resourceTemplates": [],
+                                "valueConstraint": {
+                                    "valueTemplateRefs": [],
+                                    "useValuesFrom": [],
+                                    "defaults": [],
+                                    "valueDataType": {}
+                                },
+                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/musicOpusNumber",
+                                "propertyLabel": "Music Opus Number",
+                                "mandatory": "false",
+                                "type": "literal"
+                            },
+                            {
+                                "mandatory": "false",
+                                "repeatable": "false",
+                                "type": "literal",
+                                "resourceTemplates": [],
+                                "valueConstraint": {
+                                    "valueTemplateRefs": [],
+                                    "useValuesFrom": [],
+                                    "defaults": [],
+                                    "valueDataType": {}
+                                },
+                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/musicKey",
+                                "propertyLabel": "Music Key"
+                            },
+                            {
+                                "resourceTemplates": [],
+                                "valueConstraint": {
+                                    "valueTemplateRefs": [],
+                                    "useValuesFrom": [],
+                                    "defaults": [],
+                                    "valueDataType": {}
+                                },
+                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/musicThematicNumber",
+                                "propertyLabel": "Music Thematic Number",
+                                "mandatory": "false",
+                                "repeatable": "true",
+                                "type": "literal"
+                            },
+                            {
+                                "repeatable": "false",
+                                "type": "resource",
+                                "resourceTemplates": [],
+                                "valueConstraint": {
+                                    "valueTemplateRefs": [],
+                                    "useValuesFrom": [
+                                        "https://id.loc.gov/resources/hubs"
+                                    ],
+                                    "defaults": [
+                                        {
+                                            "defaultURI": "",
+                                            "defaultLiteral": ""
+                                        }
+                                    ],
+                                    "valueDataType": {
+                                        "dataTypeURI": ""
+                                    }
+                                },
+                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/translationOf",
+                                "propertyLabel": "Translation Of",
+                                "remark": "",
+                                "mandatory": "false"
+                            },
+                            {
+                                "repeatable": "false",
+                                "type": "resource",
+                                "resourceTemplates": [],
+                                "valueConstraint": {
+                                    "valueTemplateRefs": [],
+                                    "useValuesFrom": [
+                                        "https://id.loc.gov/resources/hubs"
+                                    ],
+                                    "defaults": [],
+                                    "valueDataType": {
+                                        "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Arrangement"
+                                    }
+                                },
+                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/Arrangement",
+                                "propertyLabel": "Arrangement Of",
+                                "remark": "Only used for music",
+                                "mandatory": "false"
+                            },
+                            {
+                                "type": "resource",
+                                "resourceTemplates": [],
+                                "valueConstraint": {
+                                    "valueTemplateRefs": [],
+                                    "useValuesFrom": [
+                                        "https://id.loc.gov/resources/works"
+                                    ],
+                                    "defaults": [],
+                                    "valueDataType": {}
+                                },
+                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/partOf",
+                                "propertyLabel": "Is Part Of",
+                                "remark": "a.k.a. is Contained In",
+                                "mandatory": "false",
+                                "repeatable": "true"
+                            },
+                            {
+                                "mandatory": "false",
+                                "repeatable": "true",
+                                "type": "resource",
+                                "resourceTemplates": [],
+                                "valueConstraint": {
+                                    "valueTemplateRefs": [
+                                        "lc:RT:bf2:AdminMetadata:BFDB"
+                                    ],
+                                    "useValuesFrom": [],
+                                    "defaults": [],
+                                    "valueDataType": {}
+                                },
+                                "propertyLabel": "Admin Metadata",
+                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/adminMetadata"
+                            }
+                        ],
+                        "id": "lc:RT:bf2:Hub:Hub",
+                        "resourceLabel": "Hub",
+                        "resourceURI": "http://id.loc.gov/ontologies/bflc/Hub",
+                        "author": "NDMSO"
+                    },
+                    {
+                        "propertyTemplates": [
+                            {
+                                "mandatory": "true",
+                                "repeatable": "false",
+                                "type": "lookup",
+                                "resourceTemplates": [],
+                                "valueConstraint": {
+                                    "valueTemplateRefs": [
+                                        "lc:RT:bf2:Agent:bfPerson",
+                                        "lc:RT:bf2:Agent:bfCorp"
+                                    ],
+                                    "useValuesFrom": [],
+                                    "defaults": [],
+                                    "valueDataType": {
+                                        "dataTypeURI": ""
+                                    }
+                                },
+                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/agent",
+                                "propertyLabel": "Contributor"
+                            },
+                            {
+                                "mandatory": "true",
+                                "repeatable": "false",
+                                "type": "resource",
+                                "resourceTemplates": [],
+                                "valueConstraint": {
+                                    "valueTemplateRefs": [],
+                                    "useValuesFrom": [
+                                        "http://id.loc.gov/vocabulary/relators"
+                                    ],
+                                    "defaults": [],
+                                    "valueDataType": {
+                                        "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Role"
+                                    }
+                                },
+                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/role",
+                                "propertyLabel": "Role"
+                            }
+                        ],
+                        "id": "lc:RT:bf2:Hub:Contribution",
+                        "resourceLabel": "Contributor",
+                        "resourceURI": "http://id.loc.gov/ontologies/bibframe/Contribution",
+                        "author": "NDMSO"
+                    }
+                ],
+                "id": "lc:profile:bf2:Hub",
+                "title": "Test BF Hub",
+                "description": "Hub profile",
+                "date": "2019-12-13",
+                "author": "NDMSO",
+                "source": "http://id.loc.gov/resources/hubs"
+            }
+        },
+        "metadata": {
+            "createDate": "2019-12-13T20:26:47.554Z",
+            "updateDate": "2021-09-24T17:06:54.311Z",
+            "createUser": null,
+            "updateUser": null
+        },
+        "created": "2019-12-13T20:26:47.554Z",
+        "modified": "2021-09-24T17:06:54.311Z"
+    },   
+
+
+    {
         "configType": "profile",
         "created": "2018-09-01T00:30:21.062Z",
         "id": "109a265b-f2f3-4257-b340-f5233c92ba69",
@@ -9994,7 +10343,7 @@
                                 "type": "literal",
                                 "valueConstraint": {
                                     "defaults": [],
-                                    "useValuesFrom": [],
+                                    "useValuesFrom": ["http://preprod.id.loc.gov/authorities/names"],
                                     "valueDataType": {},
                                     "valueTemplateRefs": []
                                 }
@@ -32162,329 +32511,7 @@
         "modified": "2020-12-03T18:13:37.729Z",
         "name": "BIBFRAME 2.0 RWO"
     },
-    {
-        "configType": "profile",
-        "created": "2019-12-13T20:26:47.554Z",
-        "id": "9bbae8a5-0143-4e3c-a34b-741f2f67f0d1",
-        "json": {
-            "Profile": {
-                "author": "NDMSO",
-                "date": "2019-12-13",
-                "description": "Hub profile",
-                "id": "lc:profile:bf2:Hub",
-                "resourceTemplates": [
-                    {
-                        "author": "NDMSO",
-                        "id": "lc:RT:bf2:Hub:Hub",
-                        "propertyTemplates": [
-                            {
-                                "mandatory": "false",
-                                "propertyLabel": "Contributor",
-                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/contribution",
-                                "repeatable": "true",
-                                "resourceTemplates": [],
-                                "type": "resource",
-                                "valueConstraint": {
-                                    "defaults": [],
-                                    "useValuesFrom": [],
-                                    "valueDataType": {},
-                                    "valueTemplateRefs": [
-                                        "lc:RT:bf2:Hub:Contribution"
-                                    ]
-                                }
-                            },
-                            {
-                                "mandatory": "false",
-                                "propertyLabel": "Preferred Title",
-                                "propertyURI": "http://id.loc.gov/ontologies/bfsimple/prefTitle",
-                                "repeatable": "false",
-                                "resourceTemplates": [],
-                                "type": "literal",
-                                "valueConstraint": {
-                                    "defaults": [
-                                        {
-                                            "defaultLiteral": "",
-                                            "defaultURI": ""
-                                        }
-                                    ],
-                                    "useValuesFrom": [],
-                                    "valueDataType": {},
-                                    "valueTemplateRefs": []
-                                }
-                            },
-                            {
-                                "mandatory": "false",
-                                "propertyLabel": "Variant Title",
-                                "propertyURI": "http://id.loc.gov/ontologies/bfsimple/variantTitle",
-                                "repeatable": "true",
-                                "resourceTemplates": [],
-                                "type": "literal",
-                                "valueConstraint": {
-                                    "defaults": [],
-                                    "useValuesFrom": [],
-                                    "valueDataType": {},
-                                    "valueTemplateRefs": []
-                                }
-                            },
-                            {
-                                "mandatory": "false",
-                                "propertyLabel": "Transliterated Title",
-                                "propertyURI": "http://id.loc.gov/ontologies/bfsimple/transTitle",
-                                "repeatable": "true",
-                                "resourceTemplates": [],
-                                "type": "literal",
-                                "valueConstraint": {
-                                    "defaults": [],
-                                    "languageURI": "http://id.loc.gov/vocabulary/languages/und",
-                                    "useValuesFrom": [],
-                                    "valueDataType": {},
-                                    "valueLanguage": "",
-                                    "valueTemplateRefs": []
-                                }
-                            },
-                            {
-                                "mandatory": "false",
-                                "propertyLabel": "Date Work Created",
-                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/originDate",
-                                "repeatable": "false",
-                                "resourceTemplates": [],
-                                "type": "literal",
-                                "valueConstraint": {
-                                    "defaults": [],
-                                    "useValuesFrom": [],
-                                    "valueDataType": {},
-                                    "valueTemplateRefs": []
-                                }
-                            },
-                            {
-                                "mandatory": "false",
-                                "propertyLabel": "Type",
-                                "propertyURI": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-                                "repeatable": "true",
-                                "resourceTemplates": [],
-                                "type": "lookup",
-                                "valueConstraint": {
-                                    "defaults": [],
-                                    "useValuesFrom": [
-                                        "http://id.loc.gov/vocabulary/resourceTypes"
-                                    ],
-                                    "valueDataType": {
-                                        "dataTypeLabel": "",
-                                        "dataTypeURI": "",
-                                        "remark": ""
-                                    },
-                                    "valueTemplateRefs": []
-                                }
-                            },
-                            {
-                                "mandatory": "false",
-                                "propertyLabel": "Language",
-                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/language",
-                                "repeatable": "true",
-                                "resourceTemplates": [],
-                                "type": "lookup",
-                                "valueConstraint": {
-                                    "defaults": [],
-                                    "useValuesFrom": [
-                                        "http://id.loc.gov/vocabulary/languages"
-                                    ],
-                                    "valueDataType": {
-                                        "dataTypeLabel": "",
-                                        "dataTypeURI": "",
-                                        "remark": ""
-                                    },
-                                    "valueTemplateRefs": []
-                                }
-                            },
-                            {
-                                "mandatory": "false",
-                                "propertyLabel": "Music Medium",
-                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/musicMedium",
-                                "repeatable": "true",
-                                "resourceTemplates": [],
-                                "type": "lookup",
-                                "valueConstraint": {
-                                    "defaults": [],
-                                    "useValuesFrom": [
-                                        "http://id.loc.gov/authorities/performanceMediums"
-                                    ],
-                                    "valueDataType": {},
-                                    "valueTemplateRefs": []
-                                }
-                            },
-                            {
-                                "mandatory": "false",
-                                "propertyLabel": "Music Serial Number",
-                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/musicSerialNumber",
-                                "repeatable": "false",
-                                "resourceTemplates": [],
-                                "type": "literal",
-                                "valueConstraint": {
-                                    "defaults": [],
-                                    "useValuesFrom": [],
-                                    "valueDataType": {},
-                                    "valueTemplateRefs": []
-                                }
-                            },
-                            {
-                                "mandatory": "false",
-                                "propertyLabel": "Music Opus Number",
-                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/musicOpusNumber",
-                                "repeatable": "false",
-                                "resourceTemplates": [],
-                                "type": "literal",
-                                "valueConstraint": {
-                                    "defaults": [],
-                                    "useValuesFrom": [],
-                                    "valueDataType": {},
-                                    "valueTemplateRefs": []
-                                }
-                            },
-                            {
-                                "mandatory": "false",
-                                "propertyLabel": "Music Key",
-                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/musicKey",
-                                "repeatable": "false",
-                                "resourceTemplates": [],
-                                "type": "literal",
-                                "valueConstraint": {
-                                    "defaults": [],
-                                    "useValuesFrom": [],
-                                    "valueDataType": {},
-                                    "valueTemplateRefs": []
-                                }
-                            },
-                            {
-                                "mandatory": "false",
-                                "propertyLabel": "Music Thematic Number",
-                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/musicThematicNumber",
-                                "repeatable": "true",
-                                "resourceTemplates": [],
-                                "type": "literal",
-                                "valueConstraint": {
-                                    "defaults": [],
-                                    "useValuesFrom": [],
-                                    "valueDataType": {},
-                                    "valueTemplateRefs": []
-                                }
-                            },
-                            {
-                                "mandatory": "false",
-                                "propertyLabel": "Translation Of",
-                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/translationOf",
-                                "remark": "",
-                                "repeatable": "false",
-                                "resourceTemplates": [],
-                                "type": "resource",
-                                "valueConstraint": {
-                                    "defaults": [
-                                        {
-                                            "defaultLiteral": "",
-                                            "defaultURI": ""
-                                        }
-                                    ],
-                                    "useValuesFrom": [
-                                        "http://mlvlp06.loc.gov:8288/resources/hubs"
-                                    ],
-                                    "valueDataType": {
-                                        "dataTypeURI": "http://id.loc.gov/resources/hubs"
-                                    },
-                                    "valueTemplateRefs": []
-                                }
-                            },
-                            {
-                                "mandatory": "false",
-                                "propertyLabel": "Arrangement Of",
-                                "propertyURI": "http://id.loc.gov/ontologies/bflc/arrangementOf",
-                                "remark": "Only used for music",
-                                "repeatable": "false",
-                                "resourceTemplates": [],
-                                "type": "resource",
-                                "valueConstraint": {
-                                    "defaults": [],
-                                    "useValuesFrom": [
-                                        "http://mlvlp06.loc.gov:8288/resources/hubs"
-                                    ],
-                                    "valueDataType": {},
-                                    "valueTemplateRefs": []
-                                }
-                            },
-                            {
-                                "mandatory": "false",
-                                "propertyLabel": "Is Part Of",
-                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/partOf",
-                                "remark": "a.k.a. is Contained In",
-                                "repeatable": "true",
-                                "resourceTemplates": [],
-                                "type": "resource",
-                                "valueConstraint": {
-                                    "defaults": [],
-                                    "useValuesFrom": [
-                                        "http://mlvlp06.loc.gov:8288/resources/works"
-                                    ],
-                                    "valueDataType": {},
-                                    "valueTemplateRefs": []
-                                }
-                            }
-                        ],
-                        "resourceLabel": "Hub",
-                        "resourceURI": "http://id.loc.gov/ontologies/bflc/Hub"
-                    },
-                    {
-                        "author": "NDMSO",
-                        "id": "lc:RT:bf2:Hub:Contribution",
-                        "propertyTemplates": [
-                            {
-                                "mandatory": "true",
-                                "propertyLabel": "Contributor",
-                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/agent",
-                                "repeatable": "false",
-                                "resourceTemplates": [],
-                                "type": "resource",
-                                "valueConstraint": {
-                                    "defaults": [],
-                                    "useValuesFrom": [
-                                        "http://id.loc.gov/rwo/agents"
-                                    ],
-                                    "valueDataType": {},
-                                    "valueTemplateRefs": []
-                                }
-                            },
-                            {
-                                "mandatory": "true",
-                                "propertyLabel": "Role",
-                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/role",
-                                "repeatable": "false",
-                                "resourceTemplates": [],
-                                "type": "resource",
-                                "valueConstraint": {
-                                    "defaults": [],
-                                    "useValuesFrom": [
-                                        "http://id.loc.gov/vocabulary/relators",
-                                        "http://id.loc.gov/entities/roles"
-                                    ],
-                                    "valueDataType": {},
-                                    "valueTemplateRefs": []
-                                }
-                            }
-                        ],
-                        "resourceLabel": "Contributor",
-                        "resourceURI": "http://id.loc.gov/ontologies/bibframe/Contribution"
-                    }
-                ],
-                "source": "http://id.loc.gov/resources/hubs",
-                "title": "Test BF Hub"
-            }
-        },
-        "metadata": {
-            "createDate": "2019-12-13T20:26:47.554Z",
-            "createUser": null,
-            "updateDate": "2019-12-16T22:15:47.145Z",
-            "updateUser": null
-        },
-        "modified": "2019-12-16T22:15:47.145Z",
-        "name": "Test BF Hub"
-    },
+    
     {
         "configType": "profile",
         "created": "2019-09-11T19:07:06.758Z",

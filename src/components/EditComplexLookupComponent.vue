@@ -442,6 +442,7 @@ export default {
 
       let options = []
 
+
       // add in the the defaul search ALL of everything possible
       //options.push({label: 'All', urls:null, processor:null})
       this.structure.valueConstraint.useValuesFrom.forEach((l)=>{
@@ -1512,6 +1513,7 @@ export default {
           this.$store.dispatch("setValueComplex", { self: this, profileComponet: this.profileCompoent, template:this.activeTemplate, structure: this.structure, parentStructure: this.parentStructureObj }).then(() => {
             this.componentKey++
             this.displayModal = false
+            this.$store.dispatch("enableMacroNav", { self: this})
             this.checkForUserData()
 
             this.validated = false
@@ -1549,6 +1551,7 @@ export default {
 
           this.validated = false
           this.validateHeading()
+          this.$store.dispatch("enableMacroNav", { self: this})
 
           // put the focus back on the input
           setTimeout(()=>{
