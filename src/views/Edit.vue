@@ -527,7 +527,8 @@
                     
                     <pre style="white-space:normal">
                       <code style="white-space:normal">
-                        {{JSON.stringify(showPostModalErrorMsg.message.message,null,2)}}
+                        {{cleanUpErrorResponse(showPostModalErrorMsg.message.message)}}
+
                       </code>
                     </pre>
 
@@ -540,7 +541,8 @@
                     
                     <pre style="white-space:normal">
                       <code style="white-space:normal">
-                        {{JSON.stringify(showPostModalErrorMsg.message.error,null,2)}}
+
+                        {{cleanUpErrorResponse(showPostModalErrorMsg.message.error)}}
                       </code>
                     </pre>
 
@@ -852,6 +854,17 @@ export default {
     movePageUp: uiUtils.globalMovePageUp,
 
     dupeProperty: uiUtils.dupeProperty,
+
+
+    cleanUpErrorResponse: function(msg){
+
+        msg = JSON.stringify(msg,null,2)
+
+        msg = msg.replace(/\\n|\\t/g, '').replace(/\\"/g,'"').replace(/&lt;/g,'<').replace(/&gt;/g,'>')
+
+        return msg
+
+    },
 
 
     miniMapAction: function(){
