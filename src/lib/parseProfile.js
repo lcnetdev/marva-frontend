@@ -949,14 +949,11 @@ const parseProfile = {
                             }
                                                     
 
-
-
                             userValue['http://www.w3.org/2000/01/rdf-schema#label'].push(
 
                                 {
                                     '@guid': tmpGuid,
-                                    'http://www.w3.org/2000/01/rdf-schema#label':valueLabel,
-                                    '@id': valueURI
+                                    'http://www.w3.org/2000/01/rdf-schema#label':valueLabel
 
                                 }
 
