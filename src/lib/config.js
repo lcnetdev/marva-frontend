@@ -217,7 +217,7 @@ const config = {
 
 
 
-		"https://preprod-8230.id.loc.gov/resources/instances" : {"name":"Instances", "processor" : 'lcAuthorities', "type":"complex", "modes":[
+		"https://preprod-8080.id.loc.gov/resources/instances" : {"name":"Instances", "processor" : 'lcAuthorities', "type":"complex", "modes":[
 			{
 			"All":{"url":"https://test-8080.id.lctl.gov/resources/instances/suggest2/?q=<QUERY>&count=25", "all":true}, 					
 			}

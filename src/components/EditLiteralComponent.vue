@@ -495,12 +495,18 @@ export default {
         parentURI = this.parentStructureObj.propertyURI
       }
 
+
       this.$store.dispatch("setValueLiteral", { self: this, ptGuid: this.ptGuid, guid: this.guid, parentURI:parentURI, URI: this.structure.propertyURI, value: this.inputValue }).then((newGuid) => {
        
         this.inputValueLast = this.inputValue
         // if this is here then we created a new value, store it for future edits
         if(newGuid){
           this.guid = newGuid
+        }
+
+        // but if it is explictly set to false that means we just unset the value, so reset the guid here
+        if (newGuid===false){
+          this.guid = null
         }
 
 

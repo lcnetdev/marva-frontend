@@ -1064,9 +1064,11 @@ const parseProfile = {
                                             childValue[URI] = value
                                             if (value && value.length==0){
                                                 delete parentValueArray[URI]
+                                                results.newGuid=false
                                             }else if (!value){
                                                 // value is null remove the property
                                                 delete parentValueArray[URI]
+                                                results.newGuid=false
                                             }
 
                                         }
@@ -1083,9 +1085,11 @@ const parseProfile = {
                                         childValue[URI] = value
                                         if (value && value.length==0){
                                             delete userValue[URI]
+                                            results.newGuid=false
                                         }else if (!value){
                                             // value is null remove the property
                                             delete userValue[URI]
+                                            results.newGuid=false
                                         }
 
                                     }
@@ -1102,9 +1106,11 @@ const parseProfile = {
                                     childValue[URI] = value
                                     if (value && value.length==0){
                                         delete userValue[URI]
+                                        results.newGuid=false
                                     }else if (!value){
                                         // value is null remove the property
                                         delete userValue[URI]
+                                        results.newGuid=false
                                     }
 
                                 }
