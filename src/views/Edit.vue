@@ -511,14 +511,49 @@
               <div style="font-weight: bold;">Posting Record...</div>
 
 
-              <div v-if="showPostModalErrorMsg" style="max-height: 500px; overflow-x:auto;">
+              <div v-if="showPostModalErrorMsg" style="max-height: 500px; overflow-x:auto; overflow-y:auto;">
                 <div style="font-weight: bold; color: red">We were unable to post the record. Please report this error.</div>
+                <div>Full Response</div>
                 <pre>
                   <code>
-                    {{showPostModalErrorMsg}}
+                    {{JSON.stringify(showPostModalErrorMsg,null,2)}}
                   </code>
                 </pre>
+                
+                <template v-if="showPostModalErrorMsg && showPostModalErrorMsg.message && showPostModalErrorMsg.message.message">
+                    <hr>
+                    <div>Message</div>
+
+                    
+                    <pre style="white-space:normal">
+                      <code style="white-space:normal">
+                        {{JSON.stringify(showPostModalErrorMsg.message.message,null,2)}}
+                      </code>
+                    </pre>
+
+
+                </template>
+                <template v-if="showPostModalErrorMsg && showPostModalErrorMsg.message && showPostModalErrorMsg.message.error">
+                    <hr>
+                    <div>Error</div>
+
+                    
+                    <pre style="white-space:normal">
+                      <code style="white-space:normal">
+                        {{JSON.stringify(showPostModalErrorMsg.message.error,null,2)}}
+                      </code>
+                    </pre>
+
+
+                </template>
+
+
+
               </div>
+
+
+
+
 
               <div v-if="resourceLinks.length>0" style="margin: 0.5em 0 0.5em 0;background-color: #90ee9052;padding: 0.5em;border-radius: 0.25em;">
                 The record was accepted by the system. To view the record follow these links:
@@ -987,7 +1022,7 @@ export default {
 
       }else{
 
-        this.showPostModalErrorMsg = pubResuts.msg
+        this.showPostModalErrorMsg = JSON.parse(pubResuts.msg)
 
       }
 
