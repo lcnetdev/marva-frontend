@@ -65,22 +65,43 @@ const parseProfile = {
 
         console.log(this.startingPointData)
         // TEMP HACK ADD IN HUBS
-        this.startingPointData[0].json.push(
-            {
-                "menuGroup": "Hub",
-                "menuItems": [
-                    {
-                        "label": "Hub",
-                        "type": [
-                            "http://id.loc.gov/ontologies/bibframe/Hub"
-                        ],
-                        "useResourceTemplates": [
-                            "lc:RT:bf2:Hub:Hub"
-                        ]
-                    }                    
-                ]
-            }
-        )        
+        if (this.startingPointData[0]){
+            this.startingPointData[0].json.push(
+                {
+                    "menuGroup": "Hub",
+                    "menuItems": [
+                        {
+                            "label": "Hub",
+                            "type": [
+                                "http://id.loc.gov/ontologies/bibframe/Hub"
+                            ],
+                            "useResourceTemplates": [
+                                "lc:RT:bf2:Hub:Hub"
+                            ]
+                        }                    
+                    ]
+                }
+            )
+        }else if (this.startingPointData.json){
+            this.startingPointData.json.push(
+                {
+                    "menuGroup": "Hub",
+                    "menuItems": [
+                        {
+                            "label": "Hub",
+                            "type": [
+                                "http://id.loc.gov/ontologies/bibframe/Hub"
+                            ],
+                            "useResourceTemplates": [
+                                "lc:RT:bf2:Hub:Hub"
+                            ]
+                        }                    
+                    ]
+                }
+            )
+
+
+        }
 
 
 

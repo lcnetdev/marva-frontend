@@ -1102,7 +1102,7 @@ const lookupUtil = {
     },
 
 
-    publish: async function(xml){
+    publish: async function(xml,eid){
 
 
 
@@ -1118,7 +1118,7 @@ const lookupUtil = {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({name: uuid, rdfxml:xml})
+        body: JSON.stringify({name: uuid, rdfxml:xml, eid: eid})
       });
       const content = await rawResponse.json();
 
