@@ -143,9 +143,9 @@
 
 import { mapState } from 'vuex'
 // import uiUtils from "@/lib/uiUtils"
-const short = require('short-uuid');
-const translator = short();
-const decimalTranslator = short("0123456789");
+import parseProfile from "@/lib/parseProfile"
+
+
 
 
 export default {
@@ -194,192 +194,7 @@ export default {
     },
 
 
-
-
-
-    loadTemplate(useStartingPoint,addAdmin){
-
-      if (typeof addAdmin === 'undefined'){
-        addAdmin=true
-      } 
-      console.log(useStartingPoint)
-      console.log(this.profiles)
-      console.log(this.profiles[useStartingPoint])
-
-      let useProfile = JSON.parse(JSON.stringify(this.profiles[useStartingPoint]))
-      console.log(useProfile)
-
-
-
-      // some profiles have nested components at the root level used in that component
-      // so if it doesn't end with one of the main type of resources we want to edit 
-      // then we don't want to render it, since it is probably being used in the main RT somewhere
-      let toRemove = []
-      let toKeep = []
-      for (let rt of useProfile.rtOrder){
-        if (!rt.endsWith(':Work')&&!rt.endsWith(':Item')&&!rt.endsWith(':Instance')&&!rt.endsWith(':Hub')){
-          toRemove.push(rt)
-        }else{
-          toKeep.push(rt)
-        }
-      }
-
-      for (let rt of toRemove){
-        delete useProfile.rt[rt]
-      }
-      useProfile.rtOrder = toKeep
-
-
-
-
-      if (!useProfile.log){
-        useProfile.log=[]
-      }
-      useProfile.log.push({action:'createWorkInstance'})
-      useProfile.procInfo= "create work"
-
-
-      // also give it an ID for storage
-      if (!useProfile.eId){
-      let uuid = 'e' + decimalTranslator.new()
-      uuid = uuid.substring(0,8)        
-      useProfile.eId= uuid
-
-      }
-
-      if (!useProfile.user){
-      useProfile.user = this.catInitials
-      }
-
-      if (!useProfile.status){
-      useProfile.status = 'unposted'
-      }
-
-      let workUri = null
-      let workUriId = translator.toUUID(translator.new())
-
-      for (let rt in useProfile.rt){
-
-
-
-
-        let uri = null
-
-        // make a new uri for each one
-        if (rt.endsWith(':Work')){
-          uri = 'http://id.loc.gov/resources/works/' + workUriId
-          workUri = uri
-        }else if (rt.endsWith(':Instance')){
-       
-          // when making a new instance from scratch use the work URI Id peice as the instance ID piece
-          uri = 'http://id.loc.gov/resources/instances/' + workUriId
-
-        }else if (rt.endsWith(':Item')){  
-          uri = 'http://id.loc.gov/resources/items/' + translator.toUUID(translator.new())   
-        }else if (rt.endsWith(':Hub')){  
-          uri = 'http://id.loc.gov/resources/hubs/' + translator.toUUID(translator.new())   
-
-
-        }else{
-
-          // dunno what this is give it a random uri
-          uri = 'http://id.loc.gov/resources/unknown/' + translator.toUUID(translator.new())       
-
-        }        
-
-        console.log(uri)
-        useProfile.rt[rt].URI = uri
-
-        for (let pt in useProfile.rt[rt].pt){
-
-          if (useProfile.rt[rt].pt[pt].propertyURI == "http://id.loc.gov/ontologies/bibframe/Work"){
-            // useProfile.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/Work'] = uri
-
-            useProfile.rt[rt].pt[pt].userValue={
-              '@root': 'http://id.loc.gov/ontologies/bibframe/Work',
-              '@guid': short.generate() ,
-              '@id': uri,
-            }
-
-
-
-          }
-        }
-
-
-      }
-
-
-      // apply the data we gathered / created above
-      for (let rt in useProfile.rt){
-        if (rt.includes(':Work')){
-          // something
-        }else if (rt.includes(':Instance')){
-          //something          
-          useProfile.rt[rt].instanceOf = workUri
-        }else if (rt.includes(':Item')){  
-          //something        
-        }  
-      }
-
-      console.log(useProfile)
-
-      if (addAdmin){
-
-
-        for (let rt in useProfile.rt){
-
-          let adminMetadataProperty = {
-              "mandatory": false,
-              "propertyLabel": "Admin Metadata",
-              "propertyURI": "http://id.loc.gov/ontologies/bibframe/adminMetadata",
-              "repeatable": false,
-              "resourceTemplates": [],
-              '@guid': short.generate(),
-              "type": "resource",
-              "userValue": {
-                "@root":"http://id.loc.gov/ontologies/bibframe/adminMetadata",
-                "@type": "http://id.loc.gov/ontologies/bibframe/AdminMetadata",
-                '@guid': short.generate(),
-                "http://id.loc.gov/ontologies/bflc/catalogerId": [
-                  {
-                  "@guid": short.generate(),
-                  "http://id.loc.gov/ontologies/bflc/catalogerId": this.catInitials
-                  }
-                ]
-
-              },
-              "valueConstraint": {
-                "defaults": [],
-                "useValuesFrom": [],
-                "valueDataType": {},
-                "valueTemplateRefs": ['lc:RT:bf2:AdminMetadata:BFDB']
-              }
-            }
-
-          let adminMetadataPropertyLabel = 'http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'
-
-
-          
-          useProfile.rt[rt].pt[adminMetadataPropertyLabel] = JSON.parse(JSON.stringify(adminMetadataProperty))
-          useProfile.rt[rt].ptOrder.push(adminMetadataPropertyLabel)
-        }
-      }
-
-      console.log(useProfile)
-
-
-
-      // console.log(JSON.stringify(useProfile,null,2))
-
-
-      this.$store.dispatch("setActiveProfile", { self: this, profile: useProfile, useDefaultValues: true }).then(() => {
-        this.$router.push({ name: 'Edit', params: { recordId: useProfile.eId } })
-      })
-
-
-
-    },
+    loadTemplate: parseProfile.loadNewTemplate,
 
 
 
@@ -388,7 +203,14 @@ export default {
 
       let useStartingPoint = this.returnSpByTemplateId(event.target.id)
       
-      this.loadTemplate(useStartingPoint)
+      let useProfile = this.loadTemplate(useStartingPoint, this.catInitials)
+
+      this.$store.dispatch("setActiveProfile", { self: this, profile: useProfile, useDefaultValues: true }).then(() => {
+        this.$router.push({ name: 'Edit', params: { recordId: useProfile.eId } })
+        window.scrollTo(0, 0);
+
+      })
+
 
 
     },

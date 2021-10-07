@@ -185,6 +185,9 @@
     </div>
 
 
+
+
+
     <!-- Always build this interface, the lookup modal -->
 
     <div :id="assignedId"  v-bind:class="['modaloverlay',{'modal-display':displayModal}]">
@@ -257,7 +260,7 @@
 
 
               </div>
-              <div class="modal-content-right">
+              <div class="modal-content-right" style="position: relative;" >
                 <div v-if="contextRequestInProgress" style="font-weight: bold;">Retrieving data...</div>
                 <div class="modal-context" :style="{ 'height' : (displayPreCoordinated) ? '50%' : '75%' }" v-if="Object.keys(contextData).length>0">
                   
@@ -337,10 +340,23 @@
 
                   <!-- Don't allow adding only a literal value -->
                   <button v-if="precoordinated.length == 0 && !contextData.literal" @click="add" style="width: 75%" class="">Add Selected [SHIFT+Enter]</button>
+                  
                   <button v-else-if="precoordinated.length > 0" @click="add" class="simptip-position-left" style="width: 75%;"  :data-tooltip="''">Add Pre-Coordinated [SHIFT+Enter]</button>
-
-             
+                 
                 </div>
+                <button v-if="allowHubCreation" @click="showMiniHubEdit" style=" width: 75%; position: absolute;    top: 85%;    left: 12%;    background-color: white;    border-color: rgb(42, 42, 42);    border: 3px solid rgb(42, 42, 42);    color: rgb(42, 42, 42);" class="">
+                  
+                  <div style="display:flex; width:150px; height: 25px; margin-left:auto; margin-right:auto">
+                    <div style="flex:0; width:50px;">
+                      <svg width="25px" height="25px"  version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                      <path fill="royalblue" d="m62.113 24.66 1.9023-15.238 18.875 32.691-7.5469 20.004 15.238 1.9023-32.691 18.875-20.004-7.5469-1.9023 15.238-18.875-32.691 7.5469-20.004-15.238-1.9023 32.691-18.875zm-17.684 15.695-4.0781 15.215 15.215 4.0781 4.0781-15.215z" fill-rule="evenodd"/>
+                      </svg>                      
+
+                    </div>
+                    <div style="flex:1; text-align:left;">Build New Hub</div>
+                  </div>
+   
+              </button>
 
               </div>
             </div>
@@ -349,13 +365,34 @@
 
 
 
+
           </div> <!--- end modal-content --->
           
-
 
         </div>
       </div>
     </div>
+
+
+
+
+    <div v-if="displayMini" class="modaloverlay modal-display" style="z-index: 1000000;">
+        <div class="modal" style="overflow-y: scroll; overflow-x: hidden;">
+            <div v-if="displayMini" class="modal-content" >
+
+              <EditMini miniProfile="Hub"></EditMini>
+              <div style="text-align: center; padding: 1em;">
+                <button>Post & Use this Hub</button> <button>Cancel</button>
+              </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
   </div>    
 </template>
 
@@ -368,13 +405,15 @@ import validationUtil from "@/lib/validationUtil"
 import config from "@/lib/config"
 import parseProfile from "@/lib/parseProfile"
 import EditSubjectEditor from "@/components/EditSubjectEditor.vue";
+import EditMini from "@/views/EditMini.vue";
 
 
 export default {
   name: "EditComplexLookupComponent",
   components: {    
     Keypress: () => import('vue-keypress'),
-    EditSubjectEditor    
+    EditSubjectEditor,
+    EditMini
   },  
   props: {
     structure: Object,
@@ -417,18 +456,33 @@ export default {
 
       lowResMode:false,
 
+      allowHubCreation: false,
+
+      displayMini: false,
+
       userData: {}
     }
   },
   created: function(){
 
     this.checkForUserData()
+    
+
+    if (this.structure.propertyURI==='http://id.loc.gov/ontologies/bibframe/Work'){
+      this.allowHubCreation=true  
+    }
+
+
 
   },
   computed: mapState({
     lookupLibrary: 'lookupLibrary',
     activeInput: 'activeInput',
     activeProfile: 'activeProfile', 
+    activeProfileMini: 'activeProfileMini',
+    workingOnMiniProfile: 'workingOnMiniProfile',
+
+
     activeProfileName: 'activeProfileName',
     activeComplexSearch: 'activeComplexSearch',
     activeComplexSearchInProgress: 'activeComplexSearchInProgress',
@@ -498,6 +552,13 @@ export default {
     focusCurrentInput: uiUtils.focusCurrentInput,
 
     returnAuthIcon: uiUtils.returnAuthIcon,
+
+    showMiniHubEdit: function(){
+
+      this.displayMini = true
+
+
+    },
 
     showEditLink: function(){
 
@@ -774,9 +835,19 @@ export default {
       this.displayType = null
       this.displayGuid = null
 
-      let userValue = parseProfile.returnUserValues(this.activeProfile, this.profileCompoent,this.structure.propertyURI)
+      let userValue 
+      let rootPropertyURI
+
+      if (this.workingOnMiniProfile){
+        userValue = parseProfile.returnUserValues(this.activeProfileMini, this.profileCompoent,this.structure.propertyURI)
+        rootPropertyURI = parseProfile.returnRootPropertyURI(this.activeProfileMini, this.profileCompoent,this.structure.propertyURI)        
+      }else{
+        userValue = parseProfile.returnUserValues(this.activeProfile, this.profileCompoent,this.structure.propertyURI)
+        rootPropertyURI = parseProfile.returnRootPropertyURI(this.activeProfile, this.profileCompoent,this.structure.propertyURI)        
+      }
+
       console.log(userValue)
-      let rootPropertyURI = parseProfile.returnRootPropertyURI(this.activeProfile, this.profileCompoent,this.structure.propertyURI)
+      
 
       if (userValue['http://www.w3.org/2000/01/rdf-schema#label'] || userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'] || userValue['http://id.loc.gov/ontologies/bibframe/code']){
 
@@ -1151,7 +1222,7 @@ export default {
 
       }else{
 
-        console.log(this.displayLabel)
+
         this.searchValue = this.displayLabel
         this.initalSearchState = true
         this.search()

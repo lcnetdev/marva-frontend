@@ -6,6 +6,9 @@ import Edit from "../views/Edit.vue";
 import TestParseId from "../views/TestParseId.vue";
 import TestParseBfdb from "../views/TestParseBfdb.vue";
 import TestSubject from "../views/TestSubject.vue";
+import TestEditMini from "../views/TestEditMini.vue";
+
+
 
 import Errors from "../views/Errors.vue";
 
@@ -37,6 +40,13 @@ const routes = [
     name: "TestSubject",
     component: TestSubject
   },
+  {
+    path: "/TestEditMini",
+    name: "TestEditMini",
+    component: TestEditMini
+  },
+
+
 
   {
     path: "/errors",

@@ -281,10 +281,6 @@ export default {
           useProfile.status = 'unposted'
         }
 
-
-
-        
-
         
         this.transformResults  = await parseBfdb.transform(useProfile)
 

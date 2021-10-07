@@ -7,6 +7,7 @@ import store from "./store";
 import parseProfile from "./lib/parseProfile"
 import lookupUtil from "./lib/lookupUtil"
 
+import EditMainComponent from "@/components/EditMainComponent.vue";
 
 
 import './assets/main.css';
@@ -17,6 +18,10 @@ var app = new Vue({ // eslint-disable-line
   store,
   render: h => h(App)
 }).$mount("#app"); 
+
+Vue.component('EditMainComponent', EditMainComponent)
+
+
 
 
 parseProfile.buildProfiles()

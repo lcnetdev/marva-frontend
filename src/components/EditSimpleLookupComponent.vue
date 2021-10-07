@@ -110,8 +110,14 @@ export default {
   },
   created: function(){
 
+    let currentUserValue
 
-    let currentUserValue = this.activeProfile.rt[this.profileName].pt[this.profileCompoent].userValue
+    if (this.workingOnMiniProfile){
+      currentUserValue = this.activeProfileMini.rt[this.profileName].pt[this.profileCompoent].userValue
+    }else{
+      currentUserValue = this.activeProfile.rt[this.profileName].pt[this.profileCompoent].userValue  
+    }
+    
 
 
 
@@ -334,6 +340,10 @@ export default {
     lookupLibrary: 'lookupLibrary',
     activeInput: 'activeInput',
     activeProfile: 'activeProfile',
+    activeProfileMini: 'activeProfileMini',
+    workingOnMiniProfile: 'workingOnMiniProfile',
+
+
     assignedId (){
       return uiUtils.assignID(this.structure,this.parentStructure)
     },  

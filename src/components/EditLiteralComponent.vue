@@ -1,4 +1,5 @@
 <template>
+  
   <div v-if="nested == false && hideField == false" class="component-container">
     <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: false}]" @success="openDiacriticSelect" />
     
@@ -22,6 +23,7 @@
     <div v-if="showDiacritics==true" class="diacritic-modal">
       <ul class="diacritic-modal-script-list">
         <li style="font-weight: bold">Custom</li>
+  }
 <!--         <li style="color:lightgrey">Other</li>
         <li style="color:lightgrey">Langs</li>
         <li style="color:lightgrey">Here</li> -->
@@ -86,6 +88,7 @@
             </table>
           </div>
         </div>
+
 
   </div>
 
@@ -522,6 +525,10 @@ export default {
   computed: mapState({
     activeInput: 'activeInput',
     activeProfile: 'activeProfile',
+    activeProfileMini: 'activeProfileMini',
+    workingOnMiniProfile: 'workingOnMiniProfile',
+
+
     settingsDPackVoyager: 'settingsDPackVoyager',
     settingsDPackVoyagerNative: 'settingsDPackVoyagerNative',
     assignedId (){
@@ -550,8 +557,13 @@ export default {
   },
   created: function(){
 
-
-    let data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]
+    let data
+    if (this.workingOnMiniProfile){
+      data = this.activeProfileMini.rt[this.profileName].pt[this.profileCompoent] 
+    }else{
+      data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]  
+    }
+    
 
     this.inputValue = ""
     // let bnodeHasURI = false

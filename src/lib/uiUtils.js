@@ -84,6 +84,9 @@ const uiUtils = {
 
     focusSidebars(){
 
+      if (document.getElementsByClassName('left-menu-list-item-active').length==0){
+        return false
+      }
       // scroll those elements into view, the left and right
       document.getElementsByClassName('left-menu-list-item-active')[0].scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"})
       if (document.getElementsByClassName('opac-field-active').length>0){

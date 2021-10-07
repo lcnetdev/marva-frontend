@@ -66,12 +66,12 @@ const lookupUtil = {
                     if (v['@value']){
                         value.push(v['@value'])
                     }else{
-                        console.error('lookupUtility: lookup parse error, Was expecting a @value in this object:',v)
+                        console.warn('lookupUtility: lookup parse error, Was expecting a @value in this object:',v)
                     }
                 }else if (typeof v === 'string' || typeof v === 'number'){
                     value.push(v)
                 }else{
-                    console.error('lookupUtility: lookup parse error, Was expecting some sort of value here:',v)
+                    console.warn('lookupUtility: lookup parse error, Was expecting some sort of value here:',v)
                 }
 
             })
@@ -204,6 +204,7 @@ const lookupUtil = {
               url = url.replace('http://preprod.id.','https://id.')
               url = url.replace('https://preprod-8230.id.loc.gov','https://id.loc.gov')
               url = url.replace('https://test-8080.id.lctl.gov','https://id.loc.gov')
+              url = url.replace('https://preprod-8080.id.loc.gov','https://id.loc.gov')
 
 
             }

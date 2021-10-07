@@ -32,6 +32,9 @@ export default new Vuex.Store({
     activeProfile: {},
     activeProfileIdCounter: {},
 
+    workingOnMiniProfile: false,
+    activeProfileMini: {},
+
     activeRecordSaved: false,
 
     sartingPoint: 'lc:profile:bf2:Monograph',
@@ -174,12 +177,20 @@ export default new Vuex.Store({
     ACTIVEPROFILE(state,val) {
       state.activeProfile = val
     },
+    ACTIVEPROFILEMINI(state,val) {
+      state.activeProfileMini = val
+    },
+
     ACTIVEPROFILECOUNTER(state,val) {
       state.activeProfileIdCounter = val
     },
     ACTIVEPROFILENAME(state,val) {
       state.activeProfileName = val
     },
+    ACTIVEPROFILEMININAME(state,val) {
+      state.activeProfileMiniName = val
+    },
+
     ACTIVEEDITCOUNTER(state) {
       state.activeEditCounter++
     },    
@@ -207,6 +218,9 @@ export default new Vuex.Store({
     },     
 
 
+    WORKINGONMINIPROFILE(state, val) {
+      state.workingOnMiniProfile = val
+    },
 
     SETTINGSDPACKVOYAGER(state, val) {
       state.settingsDPackVoyager = val
@@ -321,6 +335,11 @@ export default new Vuex.Store({
     },
 
 
+    
+    setWorkingOnMiniProfile({commit}, data){
+      commit('WORKINGONMINIPROFILE', data.value)
+    },
+
 
     clearContext ({ commit }) {   
       commit('CONTEXT', {})    
@@ -331,37 +350,34 @@ export default new Vuex.Store({
       // 
       // 
     },
-    setActiveProfile({ commit}, data){
+    setActiveProfile({ commit, state}, data){
 
       if (data.useDefaultValues){
         data.profile = parseProfile.populateDefaultValuesIntoUserValues(data.profile)
       }
 
-      console.log("before REFORDER",JSON.parse(JSON.stringify(data.profile)))
       data.profile = parseProfile.reorderRTOrder(data.profile)
 
-      console.log("AFTER REFORDER",JSON.parse(JSON.stringify(data.profile)))
-      commit('ACTIVEPROFILE', data.profile)
+      console.log("Working on setActiveProfile", state.workingOnMiniProfile)
+      if (state.workingOnMiniProfile){
+
+        commit('ACTIVEPROFILEMINI', data.profile)
+
+      }else{
+
+        commit('ACTIVEPROFILE', data.profile)
+
+        let mini = parseProfile.returnDiagramMiniMap(data.profile)
+        commit('DIAGRAMMINIMAP', mini)    
+
+
+      }
 
 
 
-      let mini = parseProfile.returnDiagramMiniMap(data.profile)
-      commit('DIAGRAMMINIMAP', mini)    
       
     },
 
-
-
-    // addNewItem({ commit},data){
-    //   // commit('ACTIVEPROFILE', data.profile)
-      
-    //   // 
-    //   // let nap = parseProfile.addNewItem(state.activeProfile)
-
-
-    // },
-
-    
 
     setCatInitials({ commit}, data){
       commit('CATINITALS', data.catInitials)
@@ -370,18 +386,23 @@ export default new Vuex.Store({
 
     async  setValueComplex ({ commit, state }, data) {   
       // we know the value bc it is the active context value in this case
-      // 
-      // 
+      let nap
+      
+      if (state.workingOnMiniProfile){
 
-      //    setValueComplex: async function          (currentState,               component,    key,                       activeProfileName, template, value, structure,parentStructure){
+        nap = await parseProfile.setValueComplex(state.activeProfileMini, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, state.contextData, data.structure, data.parentStructure)
+        commit('ACTIVEPROFILE', nap)
 
-      let nap = await parseProfile.setValueComplex(state.activeProfile, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, state.contextData, data.structure, data.parentStructure)
-      commit('ACTIVEPROFILE', nap)
-      commit('ACTIVEEDITCOUNTER') 
+      }else{
 
+        nap = await parseProfile.setValueComplex(state.activeProfile, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, state.contextData, data.structure, data.parentStructure)
+        commit('ACTIVEPROFILE', nap)
+        commit('ACTIVEEDITCOUNTER') 
+        commit('ACTIVERECORDSAVED', false)      
+        state.saveRecord(state,commit)
 
-      commit('ACTIVERECORDSAVED', false)
-      state.saveRecord(state,commit)
+      }
+
 
     },
 
@@ -433,26 +454,41 @@ export default new Vuex.Store({
 
     async setValueSimple ({ commit, state }, data) {   
 
-      console.log(state.activeProfile, data.ptGuid, data.parentURI, data.URI, data.valueURI, data.valueLabel)
-      let results = await parseProfile.setValueSimple(state.activeProfile, data.ptGuid, data.parentURI, data.URI, data.valueURI, data.valueLabel)
-      console.log(results)
-      commit('ACTIVEPROFILE', results.currentState)
-      commit('ACTIVEEDITCOUNTER')    
-      commit('ACTIVERECORDSAVED', false)
-      state.saveRecord(state,commit)
+      let results
+
+      if (state.workingOnMiniProfile){
+        results = await parseProfile.setValueSimple(state.activeProfileMini, data.ptGuid, data.parentURI, data.URI, data.valueURI, data.valueLabel)
+        commit('ACTIVEPROFILEMINI', results.currentState)
+      }else{
+        results = await parseProfile.setValueSimple(state.activeProfile, data.ptGuid, data.parentURI, data.URI, data.valueURI, data.valueLabel)
+        commit('ACTIVEPROFILE', results.currentState)
+        commit('ACTIVEEDITCOUNTER')    
+        commit('ACTIVERECORDSAVED', false)
+        state.saveRecord(state,commit)
+      }
+
       return results.newData
+
     },
 
     async setValueLiteral ({ commit, state }, data) {   
       console.log('-----------setValueLiteral-----------')
       console.log(data)
       console.log('-----------setValueLiteral-----------')
-      
-      let results = await parseProfile.setValueLiteral(state.activeProfile, data.ptGuid, data.guid, data.parentURI, data.URI, data.value)
-      commit('ACTIVEPROFILE', results.currentState)
-      commit('ACTIVEEDITCOUNTER')    
-      commit('ACTIVERECORDSAVED', false)
-      state.saveRecord(state,commit)
+      let results
+
+      if (state.workingOnMiniProfile){
+        results = await parseProfile.setValueLiteral(state.activeProfileMini, data.ptGuid, data.guid, data.parentURI, data.URI, data.value)
+        commit('ACTIVEPROFILEMINI', results.currentState)
+      }else{
+        results = await parseProfile.setValueLiteral(state.activeProfile, data.ptGuid, data.guid, data.parentURI, data.URI, data.value)
+        commit('ACTIVEPROFILE', results.currentState)
+        commit('ACTIVEEDITCOUNTER')    
+        commit('ACTIVERECORDSAVED', false)
+        state.saveRecord(state,commit)
+      }
+
+
       return results.newGuid
     },
 
@@ -580,16 +616,22 @@ export default new Vuex.Store({
     },
 
 
-
-
-
-
-
     async duplicateProperty ({commit, state}, data) {
-      let newProfile = parseProfile.duplicateProperty(data.id,data.profile,state.activeProfile)
-      commit('ACTIVEPROFILE', newProfile) 
 
-      state.saveRecord(state,commit)
+      if (state.workingOnMiniProfile){
+
+        let newProfile = parseProfile.duplicateProperty(data.id,data.profile,state.activeProfileMini)
+        commit('ACTIVEPROFILEMINI', newProfile) 
+        // state.saveRecord(state,commit)
+
+      }else{
+        let newProfile = parseProfile.duplicateProperty(data.id,data.profile,state.activeProfile)
+        commit('ACTIVEPROFILE', newProfile) 
+
+        state.saveRecord(state,commit)
+
+
+      }
 
     },
 

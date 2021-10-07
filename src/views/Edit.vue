@@ -587,7 +587,7 @@
 
 <script>
 // @ is an alias to /src
-import EditMainComponent from "@/components/EditMainComponent.vue";
+// import EditMainComponent from "@/components/EditMainComponent.vue";
 
 import lookupUtil from "@/lib/lookupUtil"
 import config from "@/lib/config"
@@ -605,7 +605,7 @@ import { mapState } from 'vuex'
 export default {
   name: "Edit",
   components: {
-    EditMainComponent,
+    // EditMainComponent,
     Keypress: () => import('vue-keypress'),
     
   },
