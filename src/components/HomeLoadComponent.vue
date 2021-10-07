@@ -222,6 +222,7 @@ export default {
         }
 
         // we might need to load in a item
+
         if (parseBfdb.hasItem>0){ 
 
 
@@ -232,16 +233,28 @@ export default {
 
             // look for the RT for this item
             let useItemRtLabel = this.instanceSelected.replace(':Instance',':Item')
+            console.log('looking for useItemRtLabel',useItemRtLabel)
+
+            let foundCorrectItemProfile = false
 
             for (let pkey in this.profiles){
               for (let rtkey in this.profiles[pkey].rt){
                 if (rtkey == useItemRtLabel){
                   let useRtLabel =  useItemRtLabel + '-' + (i+1) 
                   let useItem = JSON.parse(JSON.stringify(this.profiles[pkey].rt[rtkey]))
+                  console.log('uysing',this.profiles[pkey].rt[rtkey])
+                  foundCorrectItemProfile = true
                   useProfile.rtOrder.push(useRtLabel)
-                  useProfile.rt[useRtLabel] = useItem                
+                  useProfile.rt[useRtLabel] = useItem     
+                  console.log(JSON.parse(JSON.stringify(useProfile)))           
                 }
               }
+            }
+
+
+            if (!foundCorrectItemProfile){
+              console.log('---------')
+              console.log(this.rtLookup[useItemRtLabel])
             }
 
 
@@ -256,6 +269,8 @@ export default {
 
 
         }
+
+        console.log("USING NWWW",useProfile)
 
         if (!useProfile.log){
           useProfile.log = []
@@ -437,7 +452,12 @@ export default {
 
         // '/bfe2/editor/tests/instances/21923950.editor-pkg.xml', // item test
 
-        '/bfe2/editor/tests/instances/4602142.editor-pkg.xml', // multiple items
+        // '/bfe2/editor/tests/instances/4602142.editor-pkg.xml', // multiple items
+
+        '/bfe2/editor/tests/instances/13392490.editor-pkg.xml', // Sound?
+
+
+        
 
         // '/bfe2/editor/tests/works/loc.natlib.works.e37922655107918597887531234370352861771.rdf', // work only
 

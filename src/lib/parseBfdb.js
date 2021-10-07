@@ -572,7 +572,7 @@ const parseBfdb = {
 		let toRemove = []
 		let toKeep = []
 		for (let rt of profile.rtOrder){
-			if (!rt.endsWith(':Work')&&!rt.endsWith(':Item')&&!rt.endsWith(':Instance')&&!rt.endsWith(':Hub')){
+			if (!rt.includes(':Work')&&!rt.includes(':Item')&&!rt.includes(':Instance')&&!rt.endsWith(':Hub')){
 				toRemove.push(rt)
 			}else{
 				toKeep.push(rt)
@@ -759,7 +759,7 @@ const parseBfdb = {
 		let toDeleteNoData = []
 
 				
-
+		console.log("USING profile",profile)
 		for (const pkey in profile.rt) {
 
 
@@ -914,7 +914,6 @@ const parseBfdb = {
 				// we only want top level elements, not nested things like dupe notes etc.
 				let el = []
 				for (let e of xml.children){
-					console.log(this.UriNamespace(e.tagName), propertyURI)
 					if (this.UriNamespace(e.tagName) == propertyURI){
 						el.push(e)
 					}
@@ -2067,6 +2066,11 @@ const parseBfdb = {
 				if (rtName.includes(":Work")||rtName.includes(":Instance")){
 					if (rtName.includes(":Instance")){
 						instanceID = rtName
+					}
+
+					if (!profiles[pName].rt[rtName]){
+						console.warn('The starting point of ', pName, 'does not have the RT', rtName)
+						continue
 					}
 					for (let pt in profiles[pName].rt[rtName].pt){
 						// pts.push(profiles[pName].rt[rtName].pt[pt].propertyURI)
