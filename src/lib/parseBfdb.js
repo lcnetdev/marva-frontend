@@ -32,7 +32,9 @@ const parseBfdb = {
 		'lclocal':'http://id.loc.gov/ontologies/lclocal/', 		
 		'pmo' :'http://performedmusicontology.org/ontology/',
 		'datatypes': 'http://id.loc.gov/datatypes/',
-		'xsd': 'http://www.w3.org/2001/XMLSchema#'
+		'xsd': 'http://www.w3.org/2001/XMLSchema#',
+		'mstatus': 'https://id.loc.gov/vocabulary/mstatus/'
+
 	},
 
 

@@ -24,6 +24,7 @@ const exportXML = {
 		'datatypes': 'http://id.loc.gov/datatypes/',
 		'xsd': 'http://www.w3.org/2001/XMLSchema#',
 		'void':'http://rdfs.org/ns/void#',
+		'mstatus': 'https://id.loc.gov/vocabulary/mstatus/'
 	},
 
 
@@ -516,6 +517,7 @@ const exportXML = {
 								
 
 								// is it a bnode?
+								console.log('value1',value1)
 								if (this.isBnode(value1)){
 
 									// yes

@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:bf="http://id.loc.gov/ontologies/bibframe/" xmlns:bflc="http://id.loc.gov/ontologies/bflc/" xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pmo="http://performedmusicontology.org/ontology/"><bf:Instance rdf:about="http://id.loc.gov/resources/instances/12393608"><bf:issuance xmlns:streams="info:lc/streams#">
+      <bf:Issuance rdf:about="http://id.loc.gov/vocabulary/issuance/mono"/>
+    </bf:issuance><bf:media xmlns:streams="info:lc/streams#">
+      <bf:Media rdf:about="http://id.loc.gov/vocabulary/mediaTypes/s">
+        <rdfs:label>audio</rdfs:label>
+      </bf:Media>
+    </bf:media><bf:carrier xmlns:streams="info:lc/streams#">
+      <bf:Carrier rdf:about="http://id.loc.gov/vocabulary/carriers/sd">
+        <rdfs:label>audio disc</rdfs:label>
+      </bf:Carrier>
+    </bf:carrier><bf:soundCharacteristic xmlns:streams="info:lc/streams#">
+      <bf:PlaybackChannels rdf:about="http://id.loc.gov/vocabulary/mplayback/ste">
+        <rdfs:label>stereo</rdfs:label>
+      </bf:PlaybackChannels>
+    </bf:soundCharacteristic><bf:baseMaterial xmlns:streams="info:lc/streams#">
+      <bf:BaseMaterial rdf:about="http://id.loc.gov/vocabulary/mmaterial/pla">
+        <rdfs:label>plastic</rdfs:label>
+      </bf:BaseMaterial>
+    </bf:baseMaterial><bf:baseMaterial xmlns:streams="info:lc/streams#">
+      <bf:BaseMaterial rdf:about="http://id.loc.gov/vocabulary/mmaterial/mtl">
+        <rdfs:label>metal</rdfs:label>
+      </bf:BaseMaterial>
+    </bf:baseMaterial><bf:soundCharacteristic xmlns:streams="info:lc/streams#">
+      <bf:RecordingMethod rdf:about="http://id.loc.gov/vocabulary/mrectype/digital">
+        <rdfs:label>digital</rdfs:label>
+      </bf:RecordingMethod>
+    </bf:soundCharacteristic><bf:soundCharacteristic xmlns:streams="info:lc/streams#">
+      <bflc:CaptureStorage rdf:about="http://id.loc.gov/vocabulary/mcapturestorage/dist">
+        <rdfs:label>Electrical capture, digital storage</rdfs:label>
+      </bflc:CaptureStorage>
+    </bf:soundCharacteristic><bf:provisionActivity xmlns:streams="info:lc/streams#">
+      <bf:ProvisionActivity>
+        <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Publication"/>
+        <bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">1999</bf:date>
+        <bf:place>
+          <bf:Place rdf:about="http://id.loc.gov/vocabulary/countries/xxu"/>
+        </bf:place>
+      </bf:ProvisionActivity>
+    </bf:provisionActivity><bf:carrier xmlns:streams="info:lc/streams#">
+      <bf:Carrier rdf:about="http://id.loc.gov/vocabulary/carriers/nc">
+        <rdfs:label>volume</rdfs:label>
+      </bf:Carrier>
+    </bf:carrier><bf:identifiedBy xmlns:streams="info:lc/streams#">
+      <bf:Lccn>
+        <rdf:value>  2001574178</rdf:value>
+      </bf:Lccn>
+    </bf:identifiedBy><bf:identifiedBy xmlns:streams="info:lc/streams#">
+      <bf:Upc>
+        <rdf:value>904992501162</rdf:value>
+      </bf:Upc>
+    </bf:identifiedBy><bf:identifiedBy xmlns:streams="info:lc/streams#">
+      <bf:AudioIssueNumber>
+        <rdf:value>P2 04992-50116-23</rdf:value>
+        <bf:assigner>
+          <bf:Agent>
+            <rdfs:label>Duck Down Records</rdfs:label>
+          </bf:Agent>
+        </bf:assigner>
+      </bf:AudioIssueNumber>
+    </bf:identifiedBy><rdfs:label xmlns:streams="info:lc/streams#">The m-pire shrikez back</rdfs:label><bf:responsibilityStatement xmlns:streams="info:lc/streams#">O.G.C</bf:responsibilityStatement><bf:title>
+                <bf:Title>
+                  <rdfs:label xmlns:streams="info:lc/streams#">The m-pire shrikez back</rdfs:label>
+                  <bf:mainTitle xmlns:streams="info:lc/streams#">The m-pire shrikez back</bf:mainTitle>
+                </bf:Title>
+              </bf:title><bf:provisionActivity xmlns:streams="info:lc/streams#">
+      <bf:ProvisionActivity>
+        <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Publication"/>
+        <bf:place>
+          <bf:Place>
+            <rdfs:label>United States</rdfs:label>
+          </bf:Place>
+        </bf:place>
+        <bf:agent>
+          <bf:Agent>
+            <rdfs:label>Duck Down Records</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:date>p1999</bf:date>
+      </bf:ProvisionActivity>
+    </bf:provisionActivity><bf:provisionActivityStatement xmlns:streams="info:lc/streams#">United States : Duck Down Records, p1999.</bf:provisionActivityStatement><bf:extent xmlns:streams="info:lc/streams#">
+      <bf:Extent>
+        <rdfs:label>1 sound disc</rdfs:label>
+      </bf:Extent>
+    </bf:extent><bf:note xmlns:streams="info:lc/streams#">
+      <bf:Note>
+        <rdf:type rdfs:resource="http://id.loc.gov/vocabulary/mnotetype/physical"/>
+        <rdfs:label>digital</rdfs:label>
+      </bf:Note>
+    </bf:note><bf:dimensions xmlns:streams="info:lc/streams#">4 3/4 in.</bf:dimensions><bf:note xmlns:streams="info:lc/streams#">
+      <bf:Note>
+        <rdfs:label>Compact disc.</rdfs:label>
+      </bf:Note>
+    </bf:note><dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/instances" xmlns:dcterms="http://purl.org/dc/terms/"/><bf:instanceOf rdf:resource="http://id.loc.gov/resources/works/12393608"/><bf:hasItem rdf:resource="http://id.loc.gov/resources/items/12393608-050-13"/><bf:hasItem rdf:resource="http://id.loc.gov/resources/items/12393608-050-13"/><bf:adminMetadata>
+                <bf:AdminMetadata>
+                  <bf:generationProcess xmlns:streams="info:lc/streams#">
+          <bf:GenerationProcess>
+            <rdfs:label>DLC marc2bibframe2 v1.7.0-SNAPSHOT</rdfs:label>
+            <bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-08-09T09:43:34-04:00</bf:generationDate>
+          </bf:GenerationProcess>
+        </bf:generationProcess>
+                  <bf:status xmlns:streams="info:lc/streams#">
+          <bf:Status>
+            <rdfs:label>corrected or revised</rdfs:label>
+            <bf:code>c</bf:code>
+          </bf:Status>
+        </bf:status>
+                  <bflc:encodingLevel xmlns:streams="info:lc/streams#">
+          <bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/5">
+            <rdfs:label>preliminary</rdfs:label>
+          </bflc:EncodingLevel>
+        </bflc:encodingLevel>
+                  <bf:descriptionConventions xmlns:streams="info:lc/streams#">
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/aacr">
+            <rdfs:label>aacr</rdfs:label>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+                  <bf:identifiedBy xmlns:streams="info:lc/streams#">
+          <bf:Local>
+            <rdf:value>12393608</rdf:value>
+            <bf:assigner>
+              <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+                <bf:code>DLC</bf:code>
+              </bf:Agent>
+            </bf:assigner>
+          </bf:Local>
+        </bf:identifiedBy>
+                  <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:streams="info:lc/streams#">2002-06-24T10:33:14</bf:changeDate>
+                  <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date" xmlns:streams="info:lc/streams#">2001-04-27</bf:creationDate>
+                  <lclocal:d906 xmlns:streams="info:lc/streams#">=906     $a 0 $b ibc $c srrepla $d 3 $e ncip $f 20 $g y-genmusic</lclocal:d906>
+                  <lclocal:d925 xmlns:streams="info:lc/streams#">=925  0  $a acquire $b 2 copies $x policy default</lclocal:d925>
+                  <lclocal:d955 xmlns:streams="info:lc/streams#">=955     $a to MBRS/RS vn47 04-27-01</lclocal:d955>
+                  <bf:assigner xmlns:streams="info:lc/streams#">
+          <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+            <bf:code>DLC</bf:code>
+          </bf:Agent>
+        </bf:assigner>
+                  <bf:status xmlns:streams="info:lc/streams#">
+          <bf:Status>
+            <rdf:type rdf:resource="https://id.loc.gov/vocabulary/mstatus/supp"/>
+            <rdfs:label>opac suppressed</rdfs:label>
+          </bf:Status>
+        </bf:status>
+                </bf:AdminMetadata>
+              </bf:adminMetadata></bf:Instance><bf:Work rdf:about="http://id.loc.gov/resources/works/12393608">
+              <bflc:aap>O.G.C. m-pire shrikez back</bflc:aap>
+              <bflc:aap-normalized>ogcmpireshrikezback</bflc:aap-normalized>
+              <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Audio" xmlns:streams="info:lc/streams#"/>
+              <bf:content xmlns:streams="info:lc/streams#">
+      <bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/prm">
+        <rdfs:label>performed music</rdfs:label>
+      </bf:Content>
+    </bf:content>
+              <bf:contribution>
+                <bf:Contribution>
+                  <rdf:type rdf:resource="http://id.loc.gov/ontologies/bflc/PrimaryContribution" xmlns:streams="info:lc/streams#"/>
+                  <bf:agent>
+                    <bf:Agent>
+                      <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Organization" xmlns:streams="info:lc/streams#"/>
+                      <rdfs:label xmlns:streams="info:lc/streams#">O.G.C.</rdfs:label>
+                    </bf:Agent>
+                  </bf:agent>
+                  <bf:role>
+                    <bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/ctb"/>
+                  </bf:role>
+                </bf:Contribution>
+              </bf:contribution>
+              <rdfs:label xmlns:streams="info:lc/streams#">The m-pire shrikez back</rdfs:label>
+              <bf:title>
+                <bf:Title>
+                  <rdfs:label xmlns:streams="info:lc/streams#">m-pire shrikez back</rdfs:label>
+                  <bf:mainTitle xmlns:streams="info:lc/streams#">The m-pire shrikez back</bf:mainTitle>
+                </bf:Title>
+              </bf:title>
+              <dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/works" xmlns:dcterms="http://purl.org/dc/terms/"/>
+              <bf:hasInstance rdf:resource="http://id.loc.gov/resources/instances/12393608"/>
+              <bf:adminMetadata>
+                <bf:AdminMetadata>
+                  <bf:generationProcess xmlns:streams="info:lc/streams#">
+          <bf:GenerationProcess>
+            <rdfs:label>DLC marc2bibframe2 v1.7.0-SNAPSHOT</rdfs:label>
+            <bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-08-09T09:43:34-04:00</bf:generationDate>
+          </bf:GenerationProcess>
+        </bf:generationProcess>
+                  <bf:status xmlns:streams="info:lc/streams#">
+          <bf:Status>
+            <rdfs:label>corrected or revised</rdfs:label>
+            <bf:code>c</bf:code>
+          </bf:Status>
+        </bf:status>
+                  <bflc:encodingLevel xmlns:streams="info:lc/streams#">
+          <bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/5">
+            <rdfs:label>preliminary</rdfs:label>
+          </bflc:EncodingLevel>
+        </bflc:encodingLevel>
+                  <bf:descriptionConventions xmlns:streams="info:lc/streams#">
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/aacr">
+            <rdfs:label>aacr</rdfs:label>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+                  <bf:identifiedBy xmlns:streams="info:lc/streams#">
+          <bf:Local>
+            <rdf:value>12393608</rdf:value>
+            <bf:assigner>
+              <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+                <bf:code>DLC</bf:code>
+              </bf:Agent>
+            </bf:assigner>
+          </bf:Local>
+        </bf:identifiedBy>
+                  <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:streams="info:lc/streams#">2002-06-24T10:33:14</bf:changeDate>
+                  <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date" xmlns:streams="info:lc/streams#">2001-04-27</bf:creationDate>
+                  <lclocal:d906 xmlns:streams="info:lc/streams#">=906     $a 0 $b ibc $c srrepla $d 3 $e ncip $f 20 $g y-genmusic</lclocal:d906>
+                  <lclocal:d925 xmlns:streams="info:lc/streams#">=925  0  $a acquire $b 2 copies $x policy default</lclocal:d925>
+                  <lclocal:d955 xmlns:streams="info:lc/streams#">=955     $a to MBRS/RS vn47 04-27-01</lclocal:d955>
+                  <bf:assigner xmlns:streams="info:lc/streams#">
+          <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+            <bf:code>DLC</bf:code>
+          </bf:Agent>
+        </bf:assigner>
+                  <bf:status xmlns:streams="info:lc/streams#">
+          <bf:Status>
+            <rdf:type rdf:resource="https://id.loc.gov/vocabulary/mstatus/supp"/>
+            <rdfs:label>opac suppressed</rdfs:label>
+          </bf:Status>
+        </bf:status>
+                </bf:AdminMetadata>
+              </bf:adminMetadata>
+            </bf:Work><bf:Item rdf:about="http://id.loc.gov/resources/items/12393608-050-13">
+              <bf:heldBy xmlns:streams="info:lc/streams#">
+          <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+            <bf:code>DLC</bf:code>
+          </bf:Agent>
+        </bf:heldBy>
+              <bf:shelfMark xmlns:streams="info:lc/streams#">
+          <bf:ShelfMark>
+            <rdfs:label>SDA 28307</rdfs:label>
+            <bf:assigner>
+              <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"/>
+            </bf:assigner>
+          </bf:ShelfMark>
+        </bf:shelfMark>
+              <dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/items" xmlns:dcterms="http://purl.org/dc/terms/"/>
+              <bf:itemOf rdf:resource="http://id.loc.gov/resources/instances/12393608"/>
+              <bf:adminMetadata>
+                <bf:AdminMetadata>
+                  <bf:generationProcess xmlns:streams="info:lc/streams#">
+          <bf:GenerationProcess>
+            <rdfs:label>DLC marc2bibframe2 v1.7.0-SNAPSHOT</rdfs:label>
+            <bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-08-09T09:43:34-04:00</bf:generationDate>
+          </bf:GenerationProcess>
+        </bf:generationProcess>
+                  <bf:status xmlns:streams="info:lc/streams#">
+          <bf:Status>
+            <rdfs:label>corrected or revised</rdfs:label>
+            <bf:code>c</bf:code>
+          </bf:Status>
+        </bf:status>
+                  <bflc:encodingLevel xmlns:streams="info:lc/streams#">
+          <bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/5">
+            <rdfs:label>preliminary</rdfs:label>
+          </bflc:EncodingLevel>
+        </bflc:encodingLevel>
+                  <bf:descriptionConventions xmlns:streams="info:lc/streams#">
+          <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/aacr">
+            <rdfs:label>aacr</rdfs:label>
+          </bf:DescriptionConventions>
+        </bf:descriptionConventions>
+                  <bf:identifiedBy xmlns:streams="info:lc/streams#">
+          <bf:Local>
+            <rdf:value>12393608</rdf:value>
+            <bf:assigner>
+              <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+                <bf:code>DLC</bf:code>
+              </bf:Agent>
+            </bf:assigner>
+          </bf:Local>
+        </bf:identifiedBy>
+                  <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:streams="info:lc/streams#">2002-06-24T10:33:14</bf:changeDate>
+                  <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date" xmlns:streams="info:lc/streams#">2001-04-27</bf:creationDate>
+                  <lclocal:d906 xmlns:streams="info:lc/streams#">=906     $a 0 $b ibc $c srrepla $d 3 $e ncip $f 20 $g y-genmusic</lclocal:d906>
+                  <lclocal:d925 xmlns:streams="info:lc/streams#">=925  0  $a acquire $b 2 copies $x policy default</lclocal:d925>
+                  <lclocal:d955 xmlns:streams="info:lc/streams#">=955     $a to MBRS/RS vn47 04-27-01</lclocal:d955>
+                  <bf:assigner xmlns:streams="info:lc/streams#">
+          <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+            <bf:code>DLC</bf:code>
+          </bf:Agent>
+        </bf:assigner>
+                  <bf:status xmlns:streams="info:lc/streams#">
+          <bf:Status>
+            <rdf:type rdf:resource="https://id.loc.gov/vocabulary/mstatus/supp"/>
+            <rdfs:label>opac suppressed</rdfs:label>
+          </bf:Status>
+        </bf:status>
+                </bf:AdminMetadata>
+              </bf:adminMetadata>
+            </bf:Item></rdf:RDF>
