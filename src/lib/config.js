@@ -53,7 +53,6 @@ const config = {
 
 	returnUrls: function(){
 
-
 		if (window.location.href.startsWith('http://localhost')){
 			return this.regionUrls.dev
 		}else if (window.location.href.startsWith('https://preprod-3001')){

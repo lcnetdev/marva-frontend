@@ -682,8 +682,10 @@ export default {
       }
 
       if (uri.includes('/resources/works/') || uri.includes('/resources/instances/') || uri.includes('/resources/items/')){
+        console.log('URL Rewrite before', uri)
         uri = uri.replace('https://id.loc.gov/', config.returnUrls().bfdb )
         uri = uri.replace('http://id.loc.gov/', config.returnUrls().bfdb )
+        console.log('URL Rewrite afrter', uri)
       }
 
 
