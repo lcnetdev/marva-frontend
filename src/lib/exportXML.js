@@ -1074,7 +1074,15 @@ const exportXML = {
 
 		// are we just editing a single HUB?
 		if (Object.keys(tleLookup['Work']).length==0 && Object.keys(tleLookup['Hub']).length == 1){
-			rdf = rdfBasic
+			
+
+			let theHub = (new XMLSerializer()).serializeToString(rdfBasic)
+			theHub = parser.parseFromString(theHub, "text/xml").children[0];
+
+
+
+
+			rdf = theHub
 		}
 		console.log(tleLookup['Work'],Object.keys(tleLookup['Work']).length)
 		console.log(tleLookup['Hub'],Object.keys(tleLookup['Hub']).length)
