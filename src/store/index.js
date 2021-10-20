@@ -387,7 +387,7 @@ export default new Vuex.Store({
     async  setValueComplex ({ commit, state }, data) {   
       // we know the value bc it is the active context value in this case
       let nap
-      
+
       if (state.workingOnMiniProfile){
 
         nap = await parseProfile.setValueComplex(state.activeProfileMini, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, state.contextData, data.structure, data.parentStructure)
@@ -472,16 +472,23 @@ export default new Vuex.Store({
     },
 
     async setValueLiteral ({ commit, state }, data) {   
-      console.log('-----------setValueLiteral-----------')
-      console.log(data)
-      console.log('-----------setValueLiteral-----------')
+      // console.log('-----------setValueLiteral-----------')
+      // console.log(data)
+      // console.log('-----------setValueLiteral-----------')
       let results
 
       if (state.workingOnMiniProfile){
         results = await parseProfile.setValueLiteral(state.activeProfileMini, data.ptGuid, data.guid, data.parentURI, data.URI, data.value)
+        
+        results.currentState = parseProfile.rebuildHubURI(results.currentState)
+
         commit('ACTIVEPROFILEMINI', results.currentState)
       }else{
         results = await parseProfile.setValueLiteral(state.activeProfile, data.ptGuid, data.guid, data.parentURI, data.URI, data.value)
+        
+        console.log('HEREEEEE',results)
+        results.currentState = parseProfile.rebuildHubURI(results.currentState)
+
         commit('ACTIVEPROFILE', results.currentState)
         commit('ACTIVEEDITCOUNTER')    
         commit('ACTIVERECORDSAVED', false)

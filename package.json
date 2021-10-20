@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "md5": "^2.3.0",
     "short-uuid": "^4.1.0",
     "vue": "^2.6.11",
     "vue-json-pretty": "^1.6.7",

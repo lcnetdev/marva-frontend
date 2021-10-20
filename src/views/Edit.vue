@@ -997,7 +997,7 @@ export default {
       this.showPostModal = true
 
       let xml = await exportXML.toBFXML(this.activeProfile)
-      let pubResuts = await lookupUtil.publish(xml.xlmString,this.activeProfile.eId)
+      let pubResuts = await lookupUtil.publish(xml.xlmString,this.activeProfile.eId,this.activeProfile)
 
       this.showPostModalErrorMsg = false
 

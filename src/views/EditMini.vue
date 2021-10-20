@@ -69,7 +69,7 @@
 
 
 
-                        <div v-for="(profileCompoent,idx) in activeProfileMini.rt[profileName].ptOrder" :key="profileCompoent" :id="'container-for-'+profileName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')+idx+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')">
+                        <div v-for="(profileCompoent,idx) in activeProfileMini.rt[profileName].ptOrder" :key="profileCompoent" :id="'container-for-mini'+profileName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')+idx+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')">
                               <EditMainComponent v-if="activeProfileMini.rt[profileName].pt[profileCompoent].deleted != true" class="component" :parentURI="activeProfileMini.rt[profileName].URI" :activeTemplate="activeProfileMini.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :ptGuid="activeProfileMini.rt[profileName].pt[profileCompoent]['@guid']" :parentStructure="activeProfileMini.rtOrder" :structure="activeProfileMini.rt[profileName].pt[profileCompoent]"/>
                         </div>
 
@@ -396,7 +396,7 @@ export default {
       this.showPostModal = true
 
       let xml = await exportXML.toBFXML(this.activeProfile)
-      let pubResuts = await lookupUtil.publish(xml.xlmString,this.activeProfile.eId)
+      let pubResuts = await lookupUtil.publish(xml.xlmString,this.activeProfile.eId,this.activeProfile)
 
       this.showPostModalErrorMsg = false
 

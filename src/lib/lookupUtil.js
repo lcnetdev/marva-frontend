@@ -1103,9 +1103,18 @@ const lookupUtil = {
     },
 
 
-    publish: async function(xml,eid){
+    publish: async function(xml,eid,activeProfile){
 
+      console.log("activeProfile",activeProfile)
+      let postingHub = false
 
+      // check if we are posting a HUB if so set that flag
+      // activeProfile is not required but if it is check
+      if (activeProfile){
+        if (activeProfile.id && activeProfile.id === 'Hub'){
+          postingHub = true
+        }
+      }
 
       let url = config.returnUrls().publish
 
@@ -1119,7 +1128,7 @@ const lookupUtil = {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({name: uuid, rdfxml:xml, eid: eid})
+        body: JSON.stringify({name: uuid, rdfxml:xml, eid: eid, hub:postingHub})
       });
       const content = await rawResponse.json();
 

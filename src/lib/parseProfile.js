@@ -9,6 +9,7 @@ const short = require('short-uuid');
 // const translator = short();
 const translator = short();
 const decimalTranslator = short("0123456789");
+var md5 = require('md5');
 
 // function setCharAt(str,index,chr) {
 //     if(index > str.length-1) return str;
@@ -1041,7 +1042,7 @@ const parseProfile = {
         let results = {newGuid:null}
 
         
-        
+        console.log(currentState, ptGuid, guid, parentURI, URI, value)
         
 
         // find the pt for the value we are editing
@@ -1138,8 +1139,9 @@ const parseProfile = {
 
                         // if there is no type yet and this is not a literal component PT then
                         // it needs to have a type assigned
-
+                        console.log('creating',currentState.rt[rt].pt[pt])
                         if (currentState.rt[rt].pt[pt].type != 'literal' && !currentState.rt[rt].pt[pt].userValue['@type']){
+
                             currentState.rt[rt].pt[pt].userValue['@type'] = await exportXML.suggestType(currentState.rt[rt].pt[pt].propertyURI)
 
                             // it might be that it is a reftemplate though
@@ -1228,6 +1230,10 @@ const parseProfile = {
             }
             
         }        
+
+
+
+
 
         results.currentState = currentState
 
@@ -1807,6 +1813,100 @@ const parseProfile = {
         return currentState
     },
 
+
+    rebuildHubURI: function(currentState){
+
+
+
+
+        // look through to see if any piece of it is a hub profile
+        for (let rt in currentState.rt){
+
+            if (rt.endsWith(':Hub')){
+
+                // console.log('Modify this URI',currentState.rt[rt].URI)
+                let title = null
+                let primaryContribution = null
+
+                // look for the primary contrubitor and the maintitle if we have both 
+                // build the URI as a md5 hash of those normalized strings
+                for (let pt in currentState.rt[rt].pt){
+
+                    if (currentState.rt[rt].pt[pt].propertyURI === 'http://id.loc.gov/ontologies/bfsimple/prefTitle'){
+                        if (currentState.rt[rt].pt[pt].userValue && currentState.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bfsimple/prefTitle'] && currentState.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bfsimple/prefTitle'][0] && currentState.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bfsimple/prefTitle'][0]['http://id.loc.gov/ontologies/bfsimple/prefTitle']){
+                            title = currentState.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bfsimple/prefTitle'][0]['http://id.loc.gov/ontologies/bfsimple/prefTitle']
+                        }
+                    }
+
+                    if (currentState.rt[rt].pt[pt].propertyURI === 'http://id.loc.gov/ontologies/bibframe/contribution'){
+                        if (currentState.rt[rt].pt[pt].valueConstraint.valueDataType.dataTypeURI === 'http://id.loc.gov/ontologies/bflc/PrimaryContribution'){                            
+                            console.log("IN PRIMARY")
+                            console.log(currentState.rt[rt].pt[pt].userValue)
+                            console.log(currentState.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/agent'][0])
+                            if (
+                                currentState.rt[rt].pt[pt].userValue && 
+                                currentState.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/agent'] && 
+                                currentState.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/agent'][0] && 
+                                currentState.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/agent'][0]['http://www.w3.org/2000/01/rdf-schema#label'] && 
+                                currentState.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/agent'][0]['http://www.w3.org/2000/01/rdf-schema#label'][0] && 
+                                currentState.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/agent'][0]['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label'] 
+                                ){
+                                primaryContribution = currentState.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/agent'][0]['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
+                            }
+                        }
+                    }
+
+                    
+                }
+
+                if (title && primaryContribution){
+
+                    // we have the two pieces make a hash based on contrib and title
+                    let aap = this.returnAap(primaryContribution,title)
+                    let hash = md5(aap)
+                    // add hyphen
+                    let uri = `${hash.slice(0, 8)}-${hash.slice(8, 12)}-${hash.slice(12, 16)}-${hash.slice(16, 20)}-${hash.slice(20, 32)}`
+
+
+                    currentState.rt[rt].URI = `http://id.loc.gov/resources/hubs/${uri}`
+                    // console.log('modified this URI',currentState.rt[rt].URI)
+                }
+            }
+        }
+        return currentState
+    },
+
+
+
+    returnAap: function(contributor,title){
+
+        if (!contributor || !title){
+            return false
+        }
+
+        let aap = `${contributor}${title}`
+
+        // remove trailing spaces
+        aap = aap.trim()
+
+        // remove semicolin if it ends in one
+        if (aap.endsWith(';')){
+            aap=aap.slice(0, -1)
+        }
+
+        aap = aap.toLowerCase()
+        //remove all spaces
+        aap = aap.replace(/\s/g, '')
+
+        // remove commas periods hyphens
+        aap = aap.replace(/[.,-]/g, '')
+
+        return aap
+
+
+
+
+    },
 
     returnUserValues: function(currentState, component, propertyURI){
         let results = false

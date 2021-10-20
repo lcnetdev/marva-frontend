@@ -30,14 +30,14 @@
     <div class="component-container-input-container">
 
 
-      <div style="position: relative;" v-bind:class="['component-container-fake-input temp-icon-search']">       
+      <div ref="fakeInputContainer" style="position: relative;" v-bind:class="['component-container-fake-input temp-icon-search']">       
           <div class="component-nested-container-title" style="top: 0; width: 100%">{{structure.propertyLabel}}</div>
 
           <!-- if there is userdata for this type of componet then it is a lookedup entity, make the entity, dont display the inputfield -->
           <div v-if="displayLabel" style="position: absolute; width: 100%">
               <div style="display: flex;">
-                <div class="selected-value-container-nested" style="display: inline-block; position: relative; bottom: 2px;">
-                    <span  @click="toggleSelectedDetails" style="padding-right: 0.3em; font-weight: bold"><span class="selected-value-icon" v-html="returnAuthIcon(this.displayType)"></span>{{displayLabel}}</span>
+                <div ref="displayLabel" class="selected-value-container-nested" style="display: inline-block; position: relative; bottom: 2px;">
+                    <span ref="displayLabelSpan" @click="toggleSelectedDetails" style="padding-right: 0.3em; font-weight: bold"><span class="selected-value-icon" v-html="returnAuthIcon(this.displayType)"></span>{{formatDisplayLabel()}}</span>
                     <span  class="selected-value-icon" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em" v-html="validateHeading()"></span>
                     <span v-if="showEditLink()"  @click="openEditor" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">edit</span>
                     <span v-if="showRemoveLink()" @click="removeValue" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">x</span>
@@ -110,7 +110,7 @@
 
 
       
-      <div style="position: relative;" v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search']">       
+      <div ref="fakeInputContainer" style="position: relative;" v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search']">       
           <div class="component-nested-container-title" style="top: 0; width: 100%">
             <span v-if="parentStructureObj && structure.propertyLabel == 'Lookup'">{{parentStructureObj.propertyLabel}} -- </span>
             <span>{{structure.propertyLabel}}</span>
@@ -119,8 +119,8 @@
           <!-- if there is userdata for this type of componet then it is a lookedup entity, make the entity, dont display the inputfield -->
           <div v-if="displayLabel" style="position: absolute; width: 100%">
               <div style="display: flex;">
-                <div class="selected-value-container-nested" style="display: inline-block; position: relative; bottom: 2px;">
-                    <span  @click="toggleSelectedDetails" style="padding-right: 0.3em; font-weight: bold"><span class="selected-value-icon" v-html="returnAuthIcon(this.displayType)"></span>{{displayLabel}}</span>
+                <div ref="displayLabel" class="selected-value-container-nested" style="display: inline-block; position: relative; bottom: 2px;">
+                    <span ref="displayLabelSpan"  @click="toggleSelectedDetails" style="padding-right: 0.3em; font-weight: bold"><span class="selected-value-icon" v-html="returnAuthIcon(this.displayType)"></span>{{formatDisplayLabel()}}</span>
                     <span  class="selected-value-icon" v-html="validateHeading()" v-bind:title="validationMessage" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em"></span>
                     <span v-if="showEditLink()"  @click="openEditor" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">edit</span>
 
@@ -471,8 +471,8 @@ export default {
     if (this.structure.propertyURI==='http://id.loc.gov/ontologies/bibframe/Work'){
       this.allowHubCreation=true  
     }
-
-
+    // REMOVE THIS
+    this.allowHubCreation=false
 
   },
   computed: mapState({
@@ -556,6 +556,70 @@ export default {
     showMiniHubEdit: function(){
 
       this.displayMini = true
+
+
+    },
+
+    formatDisplayLabel: function(){
+
+
+      // if the display label is a URI it means there is no RDFLabel in the data because that property is just deisgned to be a rdf:resource link with a @id 
+      // not a full bnode with label data. So two options here request the label or if they just added it there might be a @context we can use
+      let useTitle = false
+
+      if (this.displayLabel.startsWith('http:')){
+
+        let userData = parseProfile.returnUserValues(this.activeProfile, this.profileCompoent, this.structure.propertyURI)
+        
+
+        // look for a @context in any of the properties
+        for (let key in userData){
+          for (let d of userData[key]){
+            for (let subKey in d){
+              if (subKey == '@context'){
+                console.log(d[subKey])
+                if (d[subKey].title){
+                  useTitle = d[subKey].title
+                }
+              }
+            }
+          }
+        }
+
+
+
+      }
+
+      if (useTitle){
+
+        // we have a title, but it might BE HUGE like really long, so see how big our container is an modify the displaly a little to make sure it fits
+
+          this.$nextTick(() => {
+
+            // code in here will run after the below return has sent the value back and the UI has been updated
+            // test if the label is now bigger than the container and if so do something about it
+            if (this.$refs.fakeInputContainer.clientWidth - this.$refs.displayLabel.clientWidth < 100){
+              this.$refs.displayLabelSpan.innerHTML = useTitle.substring(0,100) + '...'
+            }
+            // just do it one more time....
+            this.$nextTick(() => {
+              if (this.$refs.fakeInputContainer.clientWidth - this.$refs.displayLabel.clientWidth < 100){
+                this.$refs.displayLabelSpan.innerHTML = useTitle.substring(0,50) + '....'
+              }              
+            })            
+          })
+
+
+        
+
+        return useTitle
+
+
+      }else{
+        return this.displayLabel  
+      }
+
+      
 
 
     },
@@ -681,11 +745,9 @@ export default {
         return false
       }
 
-      if (uri.includes('/resources/works/') || uri.includes('/resources/instances/') || uri.includes('/resources/items/')){
-        console.log('URL Rewrite before', uri)
+      if (uri.includes('/resources/hubs/') || uri.includes('/resources/works/') || uri.includes('/resources/instances/') || uri.includes('/resources/items/')){
         uri = uri.replace('https://id.loc.gov/', config.returnUrls().bfdb )
-        uri = uri.replace('http://id.loc.gov/', config.returnUrls().bfdb )
-        console.log('URL Rewrite afrter', uri)
+        uri = uri.replace('http://id.loc.gov/', config.returnUrls().bfdb )      
       }
 
 
