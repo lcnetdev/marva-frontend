@@ -67,7 +67,7 @@ const config = {
 
 		let urls = this.returnUrls()
 
-		if ((url.includes('/works/') || url.includes('/instances/') || url.includes('/items/') ) && url.includes('http://id.loc.gov') ){
+		if ((url.includes('/works/') || url.includes('/instances/') || url.includes('/items/') || url.includes('/hubs/') ) && url.includes('http://id.loc.gov') ){
 
 			url = url.replace('http://id.loc.gov/',urls.bfdb)
 		}
