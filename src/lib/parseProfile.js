@@ -1824,6 +1824,8 @@ const parseProfile = {
 
             if (rt.endsWith(':Hub')){
 
+                console.log("Rebuilding HUB URI",currentState)
+
                 // console.log('Modify this URI',currentState.rt[rt].URI)
                 let title = null
                 let primaryContribution = null
