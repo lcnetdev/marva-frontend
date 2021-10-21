@@ -296,7 +296,7 @@ export default {
       if (pubResuts.status){
         // if it posted we want to also save the record and mark it as posted
 
-        this.activeProfile.status = 'published'
+        this.activeProfileMini.status = 'published'
 
         this.$store.dispatch("setActiveProfile", { self: this, profile: this.activeProfileMini }).then(async () => {
 
