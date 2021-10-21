@@ -4,8 +4,6 @@
 
   <div >
 
-
-
     <Keypress key-event="keydown" :key-code="27" @success="closeModal" />
     <Keypress key-event="keydown" :multiple-keys="[{keyCode: 66, modifiers: ['ctrlKey', 'shiftKey'],preventDefault: true}]" @success="togglePreCoordinated" />
 
@@ -20,7 +18,7 @@
             <div v-if="userData[structure.propertyURI]">
               Data
             </div>
-            <input v-else bfeType="EditComplexLookupComponent" :id="assignedId"  v-on:focus="focused" type="text"  class="selectable-input input-single" @input="activate($event)"   />
+            <input v-else bfeType="EditComplexLookupComponent"  :id="assignedId"  v-on:focus="focused" type="text"  class="selectable-input input-single" @input="activate($event)"   />
           </div>
       </div>
 
@@ -45,7 +43,7 @@
 
                 <!-- We are displaying the input here to act as a landing pad for when moving through and also to double detel remove lookups -->
                 <form style="display: inline-block; width: 90%" autocomplete="off" v-on:submit.prevent>
-                  <input style="display: inline-block;"  bfeType="EditComplexLookupComponent" type="text" class="selectable-input input-nested" :id="assignedId" @keydown="doubleDeleteCheck"  v-on:focus="focused"   />
+                  <input style="display: inline-block;"  bfeType="EditComplexLookupComponent"  type="text" :class="['input-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]" :id="assignedId" @keydown="doubleDeleteCheck"  v-on:focus="focused"   />
                 </form>
               </div>
 
@@ -95,7 +93,7 @@
 
           <!-- Just display the input, no data populated -->
           <form v-else autocomplete="off" v-on:submit.prevent>
-            <input  bfeType="EditComplexLookupComponent" type="text" class="selectable-input input-nested" :id="assignedId"  v-on:focus="focused" @input="activate($event)"   />
+            <input bfeType="EditComplexLookupComponent"  type="text" :class="['input-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]" :id="assignedId"  v-on:focus="focused" @input="activate($event)"   />
           </form>
       </div>
 
@@ -129,7 +127,7 @@
 
                 <!-- We are displaying the input here to act as a landing pad for when moving through and also to double detel remove lookups -->
                 <form style="display: inline-block; width: 90%" autocomplete="off" v-on:submit.prevent>
-                  <input style="display: inline-block;"  bfeType="EditComplexLookupComponent" type="text" class="selectable-input input-nested" :id="assignedId" @keydown="doubleDeleteCheck"  v-on:focus="focused"   />
+                  <input style="display: inline-block;"  bfeType="EditComplexLookupComponent"  type="text" :class="['input-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]" :id="assignedId" @keydown="doubleDeleteCheck"  v-on:focus="focused"   />
                 </form>
               </div>
 
@@ -179,7 +177,7 @@
 
           <!-- Just display the input, no data populated -->
           <form v-else autocomplete="off" v-on:submit.prevent>
-            <input  bfeType="EditComplexLookupComponent" type="text" class="selectable-input input-nested" :id="assignedId"  v-on:focus="focused" @input="activate($event)"   />
+            <input bfeType="EditComplexLookupComponent"  type="text" :class="['input-nested', { test: (isMini), 'selectable-input': (isMini===false), 'selectable-input-mini':(isMini===true)}]" :id="assignedId"  v-on:focus="focused" @input="activate($event)"   />
           </form>
       </div>
     </div>
@@ -373,26 +371,6 @@
       </div>
     </div>
 
-
-
-
-    <div v-if="displayMini" class="modaloverlay modal-display" style="z-index: 1000000;">
-        <div class="modal" style="overflow-y: scroll; overflow-x: hidden;">
-            <div v-if="displayMini" class="modal-content" >
-
-              <EditMini miniProfile="Hub"></EditMini>
-              <div style="text-align: center; padding: 1em;">
-                <button>Post & Use this Hub</button> <button>Cancel</button>
-              </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
-
-
   </div>    
 </template>
 
@@ -405,7 +383,7 @@ import validationUtil from "@/lib/validationUtil"
 import config from "@/lib/config"
 import parseProfile from "@/lib/parseProfile"
 import EditSubjectEditor from "@/components/EditSubjectEditor.vue";
-import EditMini from "@/views/EditMini.vue";
+
 
 
 export default {
@@ -413,7 +391,7 @@ export default {
   components: {    
     Keypress: () => import('vue-keypress'),
     EditSubjectEditor,
-    EditMini
+
   },  
   props: {
     structure: Object,
@@ -423,7 +401,7 @@ export default {
     profileName: String,
     activeTemplate: Object,
     parentURI: String,
-
+    isMini: Boolean,
     nested: Boolean
 
   },
@@ -456,11 +434,15 @@ export default {
 
       lowResMode:false,
 
-      allowHubCreation: false,
-
       displayMini: false,
 
-      userData: {}
+      allowHubCreation: false,
+
+      userData: {},
+
+
+
+
     }
   },
   created: function(){
@@ -468,11 +450,11 @@ export default {
     this.checkForUserData()
     
 
-    if (this.structure.propertyURI==='http://id.loc.gov/ontologies/bibframe/Work'){
+
+    if (this.structure.propertyURI==='http://id.loc.gov/ontologies/bibframe/Work' || this.structure.propertyURI==='http://id.loc.gov/ontologies/bibframe/expressionOf'){
       this.allowHubCreation=true  
     }
-    // REMOVE THIS
-    this.allowHubCreation=false
+
 
   },
   computed: mapState({
@@ -514,6 +496,7 @@ export default {
           })
         }
       })
+      console.log("optionsoptionsoptionsoptionsoptions",options)
       return options
     },
 
@@ -553,9 +536,27 @@ export default {
 
     returnAuthIcon: uiUtils.returnAuthIcon,
 
+
+
     showMiniHubEdit: function(){
 
-      this.displayMini = true
+
+        this.closeModal()
+
+        let payload = {
+          useProfile: 'Hub',
+          sourceId: this.assignedId,
+          component: this
+        }
+
+        this.$emit('showMiniEditor',payload);
+
+
+        // this.$store.dispatch("setWorkingOnMiniProfile", { self: this, value: true }).then(() => {
+          // this.displayMini = true
+        // })
+
+
 
 
     },
@@ -785,7 +786,7 @@ export default {
 
       console.log(type)
       // if (contextType != type){
-      //   alert(`${label} is not a ${type} type heading`)
+      
       //   return false
       // }
       console.log({uri:uri,label:label,type:contextType,typeFull:this.contextData.typeFull})
@@ -902,16 +903,14 @@ export default {
       let userValue 
       let rootPropertyURI
 
-      if (this.workingOnMiniProfile){
+      if (this.isMini){
         userValue = parseProfile.returnUserValues(this.activeProfileMini, this.profileCompoent,this.structure.propertyURI)
         rootPropertyURI = parseProfile.returnRootPropertyURI(this.activeProfileMini, this.profileCompoent,this.structure.propertyURI)        
       }else{
         userValue = parseProfile.returnUserValues(this.activeProfile, this.profileCompoent,this.structure.propertyURI)
         rootPropertyURI = parseProfile.returnRootPropertyURI(this.activeProfile, this.profileCompoent,this.structure.propertyURI)        
       }
-
-      console.log(userValue)
-      
+    
 
       if (userValue['http://www.w3.org/2000/01/rdf-schema#label'] || userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'] || userValue['http://id.loc.gov/ontologies/bibframe/code']){
 
@@ -1176,13 +1175,12 @@ export default {
         return false
       }
 
-
-
       // turn on the modal
       this.displayModal = true
       this.initalSearchState = true
-
-
+      
+      console.log('here',this.displayModal)
+      window.setTimeout(()=>{console.log('here',this.displayModal)},1000)
       this.searchValue = event.target.value
 
       this.$store.dispatch("clearContext", { self: this})
@@ -1200,6 +1198,7 @@ export default {
       // set the last input, but do it after the modal has been displaed
       setTimeout(()=>{
         if (document.getElementById(this.assignedId+'search')){
+          console.log('focus:',document.getElementById(this.assignedId+'search'))
           document.getElementById(this.assignedId+'search').focus()
         }
       },0)
@@ -1238,7 +1237,10 @@ export default {
 
       if (event && event.target && event.target.classList.contains('close')){
         this.displayModal = false
+        
       }
+
+
 
       // if (event && event.target && !event.target.classList.contains('modaloverlay')){
       //   return false
@@ -1248,6 +1250,7 @@ export default {
       this.$store.dispatch("enableMacroNav", { self: this})
       this.lowResMode =false
       this.displayModal = false
+      
       this.displayPreCoordinated = false
       this.precoordinated = []
       this.prec
@@ -1314,8 +1317,6 @@ export default {
 
     subjectAdded: function(components){
 
-
-      console.log(components)
 
       this.$store.dispatch("setValueSubject", { self: this, profileComponet: this.profileCompoent, subjectComponents: components }).then(() => {
         this.componentKey++
@@ -1566,6 +1567,9 @@ export default {
       }
 
       if (this.searchValue.length<3){
+        // but do just init the search options since they are computed
+        // so they can display
+        this.modalSelectOptions
         return false
       }
       window.clearTimeout(this.searchTimeout)

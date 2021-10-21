@@ -11,7 +11,7 @@
           <div style="display: flex; position: relative;">
             <div style="flex:1">
               <form autocomplete="off">            
-                <input  bfeType="EditLiteralComponent-unnested" :id="assignedId" v-on:keydown.enter.prevent="submitField" :name="assignedId" ref="input" v-on:focus="focused" autocomplete="off" type="text" @keydown="nav" @keyup="change" v-model="inputValue"  :class="['input-single', 'selectable-input', {'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">            
+                <input  bfeType="EditLiteralComponent-unnested" :id="assignedId" v-on:keydown.enter.prevent="submitField" :name="assignedId" ref="input" v-on:focus="focused" autocomplete="off" type="text" @keydown="nav" @keyup="change" v-model="inputValue"  :class="['input-single', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true), 'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">            
               </form>
             </div>
             <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-tooltip="'Diacritics [CTRL-ALT-D]'" @click="openDiacriticSelect"></button>
@@ -60,8 +60,8 @@
 
               <form autocomplete="off" >
                 <div  class="component-nested-container-title">{{structure.propertyLabel}}</div>
-                <input v-if="!isNoteField(structure.propertyLabel)" ref="input"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change" @keydown="nav" v-model="inputValue" :class="['input-nested', 'selectable-input', {'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">
-                <textarea v-if="isNoteField(structure.propertyLabel)"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change" @keydown="nav" v-model="inputValue"  class="input-nested input-textarea-nested selectable-input"></textarea>
+                <input v-if="!isNoteField(structure.propertyLabel)" ref="input"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change" @keydown="nav" v-model="inputValue" :class="['input-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true),'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">
+                <textarea v-if="isNoteField(structure.propertyLabel)"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change" @keydown="nav" v-model="inputValue"  :class="['input-nested', 'input-textarea-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]"></textarea>
 
               </form>
             </div>
@@ -124,6 +124,7 @@ export default {
     activeTemplate: Object,
     parentURI: String,
     nested: Boolean,
+    isMini: Boolean,
     ptGuid: String
 
   },
@@ -139,6 +140,7 @@ export default {
 
     // this stores the active input at the global var level so it knows how to tab forward
     focused: function(event){     
+   
       this.$store.dispatch("setActiveInput", { self: this, id: event.target.id, profileCompoent: this.profileCompoent, profileName: this.profileName }).then(()=>{
 
         // now add the highlights to the side bars for this field
@@ -558,7 +560,7 @@ export default {
   created: function(){
 
     let data
-    if (this.workingOnMiniProfile){
+    if (this.isMini){
       data = this.activeProfileMini.rt[this.profileName].pt[this.profileCompoent] 
     }else{
       data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]  

@@ -5,10 +5,18 @@ import store from "../store";
 const uiUtils = {
 
     globalMoveDown() {
+
       if (store.state.disableMacroKeyNav){
         return false
       }
+
       var list = document.getElementsByClassName('selectable-input')
+
+      if (store.state.workingOnMiniProfile){
+        list = document.getElementsByClassName('selectable-input-mini')
+      }
+
+      
       let activeInputIndex = -1
       for (let i = 0; i < list.length; i++) {
         if (list[i].id == this.activeInput){
@@ -27,6 +35,10 @@ const uiUtils = {
         return false
       }        
       var list = document.getElementsByClassName('selectable-input')
+      if (store.state.workingOnMiniProfile){
+        list = document.getElementsByClassName('selectable-input-mini')
+      }
+
       let activeInputIndex = -1
       for (let i = 0; i < list.length; i++) {
         if (list[i].id == this.activeInput){

@@ -345,7 +345,7 @@
 
 
                         <div v-for="(profileCompoent,idx) in activeProfile.rt[profileName].ptOrder" :key="profileCompoent" :id="'container-for-'+profileName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')+idx+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')">
-                              <EditMainComponent v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" class="component" :parentURI="activeProfile.rt[profileName].URI" :activeTemplate="activeProfile.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :ptGuid="activeProfile.rt[profileName].pt[profileCompoent]['@guid']" :parentStructure="activeProfile.rtOrder" :structure="activeProfile.rt[profileName].pt[profileCompoent]"/>
+                              <EditMainComponent :isMini="false" @showMiniEditor="showMiniEditor" v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" class="component" :parentURI="activeProfile.rt[profileName].URI" :activeTemplate="activeProfile.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :ptGuid="activeProfile.rt[profileName].pt[profileCompoent]['@guid']" :parentStructure="activeProfile.rtOrder" :structure="activeProfile.rt[profileName].pt[profileCompoent]"/>
                         </div>
 
                         <div v-if="activeProfile.rt[profileName].unusedXml" style="background-color: #fde4b7; overflow-x: hidden;">
@@ -575,6 +575,26 @@
         </div>
 
 
+
+
+        <div v-if="displayMiniEditor === true" class="modaloverlay modal-display mini-editor" style="z-index: 1000000;">
+            <div class="modal" style="overflow-y: scroll; overflow-x: hidden;">
+                <div v-if="displayMiniEditor" class="modal-content" >
+
+
+                  <EditMini ref="miniEditorHub" miniProfile="Hub"></EditMini>
+
+
+                  <div style="text-align: center; padding: 1em;">
+                    <button @click="postAndUseMini">Post & Use this Hub</button> <button @click="closeMiniEditor">Cancel</button>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
     </div>
 
 
@@ -598,6 +618,8 @@ import parseProfile from "@/lib/parseProfile"
 import labels from "@/lib/labels"
 import exportXML from "@/lib/exportXML"
 
+import EditMini from "@/views/EditMini"
+
 
 import { mapState } from 'vuex'
 
@@ -605,21 +627,27 @@ import { mapState } from 'vuex'
 export default {
   name: "Edit",
   components: {
-    // EditMainComponent,
+    // EditMainComponent, // this is defined globaly to allow recursivness to work
+    EditMini,
+
     Keypress: () => import('vue-keypress'),
     
   },
     computed: mapState({
-      profilesLoaded: 'profilesLoaded',
-      profiles: 'profiles',
-      sartingPoint: 'sartingPoint',
-      activeInput: 'activeInput',
-      activeProfile: 'activeProfile',
-      activeComponent: 'activeComponent',
-      activeProfileName: 'activeProfileName',
-      activeEditCounter: 'activeEditCounter',
-      activeRecordSaved: 'activeRecordSaved',
-      diagramMiniMap: 'diagramMiniMap',
+        profilesLoaded: 'profilesLoaded',
+        profiles: 'profiles',
+        sartingPoint: 'sartingPoint',
+        activeInput: 'activeInput',
+        activeProfile: 'activeProfile',
+        activeComponent: 'activeComponent',
+        activeProfileName: 'activeProfileName',
+        activeProfileMini: 'activeProfileMini',
+        activeEditCounter: 'activeEditCounter',
+        activeRecordSaved: 'activeRecordSaved',
+        diagramMiniMap: 'diagramMiniMap',
+
+        catInitials: 'catInitials',
+        workingOnMiniProfile: 'workingOnMiniProfile',
 
       // to access local state with `this`, a normal function must be used
       // countPlusLocalState (state) {
@@ -839,7 +867,10 @@ export default {
       headerState: 'inital',
       activeMiniMap: {URI:null},
       miniMapActionValue: 'Actions',
+      displayMiniEditor: false,
       lastMouseY: 10,
+      sourceLaunchId: null,
+      sourceOfMiniComponent: null
     }
   },
 
@@ -854,6 +885,121 @@ export default {
     movePageUp: uiUtils.globalMovePageUp,
 
     dupeProperty: uiUtils.dupeProperty,
+
+
+
+    postAndUseMini: async function(){
+
+        this.$refs.miniEditorHub.triggerSave()
+
+        let useData = await this.$refs.miniEditorHub.publish()
+
+
+
+        // we are going to send this uri to the source component that asked the mini editor to load
+        let tempContext = {
+          "contextValue": true,                  
+          "source": [],
+          "type": "Hub",
+          "variant": [],
+          "uri": useData.useURI,
+          "typeFull": "http://id.loc.gov/ontologies/bibframe/Hub",
+          "title": useData.useCreator + ' ' + useData.useTitle,
+          "contributor": [],
+          "date": null,
+          "genreForm": null,
+          "nodeMap": {},
+          "precoordinated" : false,
+          "literal": false
+        }     
+
+        // turn off the mini editor as active profile
+        this.$store.dispatch("setWorkingOnMiniProfile", { self: this, value: false }).then(() => {
+
+            // set the context with the value to use
+            this.$store.dispatch("setContextManually", { self: this.sourceOfMiniComponent, context: tempContext, }).then(() => {
+                //tell it to set the value
+                this.$store.dispatch("setValueComplex", { self: this.sourceOfMiniComponent, profileComponet: this.sourceOfMiniComponent.profileCompoent, template:this.sourceOfMiniComponent.activeTemplate, structure: this.sourceOfMiniComponent.structure, parentStructure: this.sourceOfMiniComponent.parentStructureObj }).then(() => {
+                    // ask the UI to refresh from store
+                    this.sourceOfMiniComponent.checkForUserData()
+
+                })
+            })
+
+
+        })
+
+
+
+
+
+        this.closeMiniEditor();
+
+        return useData
+
+    },
+
+
+    closeMiniEditor: function(){
+
+        this.displayMiniEditor = false
+
+        this.$store.dispatch("setWorkingOnMiniProfile", { self: this, value: false }).then(() => {
+
+            if (this.sourceLaunchId){
+                document.getElementById(this.sourceLaunchId).focus()
+            }
+
+        })
+
+
+
+    },
+
+    showMiniEditor: function(payload){
+
+        console.log(payload,this.profiles)
+        this.displayMiniEditor = true
+        this.sourceLaunchId = payload.sourceId
+        this.sourceOfMiniComponent = payload.component
+
+
+
+        this.$store.dispatch("setWorkingOnMiniProfile", { self: this, value: true }).then(() => {
+
+            if (this.profiles[payload.useProfile]){
+                let profile = parseProfile.loadNewTemplate(payload.useProfile, this.catInitials)
+                profile.user = this.catInitials
+
+                console.log(profile)
+                this.$store.dispatch("setActiveProfile", { self: this, profile: profile }).then(() => {
+                   
+                    this.$nextTick(()=>{
+                  
+                        document.getElementsByClassName('selectable-input-mini')[0].focus()
+                    })
+
+
+                })
+
+            }else{
+                alert('Cannot find profile:',payload.useProfile)
+            }
+
+
+        })
+
+
+
+
+
+
+
+
+
+        
+
+    },
 
 
     cleanUpErrorResponse: function(msg){

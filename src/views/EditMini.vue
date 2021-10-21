@@ -1,7 +1,7 @@
 <template>
     <div class="">
 
-
+<!-- 
 
           <Keypress key-event="keydown" :key-code="40" @success="moveDown" />
           <Keypress key-event="keydown" :key-code="38" @success="moveUp" />
@@ -17,7 +17,7 @@
           <Keypress key-event="keydown" :key-code="27" @success="escapeKey" />
 
 
-
+ -->
 
 
         <article >
@@ -70,7 +70,7 @@
 
 
                         <div v-for="(profileCompoent,idx) in activeProfileMini.rt[profileName].ptOrder" :key="profileCompoent" :id="'container-for-mini'+profileName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')+idx+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')">
-                              <EditMainComponent v-if="activeProfileMini.rt[profileName].pt[profileCompoent].deleted != true" class="component" :parentURI="activeProfileMini.rt[profileName].URI" :activeTemplate="activeProfileMini.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :ptGuid="activeProfileMini.rt[profileName].pt[profileCompoent]['@guid']" :parentStructure="activeProfileMini.rtOrder" :structure="activeProfileMini.rt[profileName].pt[profileCompoent]"/>
+                              <EditMainComponent v-if="activeProfileMini.rt[profileName].pt[profileCompoent].deleted != true" class="component" :isMini="true" :parentURI="activeProfileMini.rt[profileName].URI" :activeTemplate="activeProfileMini.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :ptGuid="activeProfileMini.rt[profileName].pt[profileCompoent]['@guid']" :parentStructure="activeProfileMini.rtOrder" :structure="activeProfileMini.rt[profileName].pt[profileCompoent]"/>
                         </div>
 
                         <div v-if="activeProfileMini.rt[profileName].unusedXml" style="background-color: #fde4b7; overflow-x: hidden;">
@@ -121,7 +121,7 @@ import lookupUtil from "@/lib/lookupUtil"
 import config from "@/lib/config"
 
 import uiUtils from "@/lib/uiUtils"
-import parseProfile from "@/lib/parseProfile"
+// import parseProfile from "@/lib/parseProfile"
 
 import labels from "@/lib/labels"
 import exportXML from "@/lib/exportXML"
@@ -133,11 +133,11 @@ import { mapState } from 'vuex'
 export default {
   name: "EditMini",
   props:{
-    miniProfile: String
+    // miniProfile: String
   },
   components: {
     // EditMainComponent,
-    Keypress: () => import('vue-keypress'),
+    // Keypress: () => import('vue-keypress'),
     
   },
     computed: mapState({
@@ -151,6 +151,7 @@ export default {
       activeEditCounter: 'activeEditCounter',
       activeRecordSaved: 'activeRecordSaved',
       catInitials: 'catInitials',
+      workingOnMiniProfile: 'workingOnMiniProfile',
 
       // to access local state with `this`, a normal function must be used
       // countPlusLocalState (state) {
@@ -158,146 +159,26 @@ export default {
       // }
     }),
 
+  destroyed: function(){
+
+    console.log("MINI destroyed",this.workingOnMiniProfile, document.getElementsByClassName('mini-editor').length)
+
+  },
 
   created: async function () {
 
-    // load them profiles if they aint  
-    if (!this.profilesLoaded){
-        this.$store.dispatch("fetchProfiles", { self: this }).then(async () => {
-
-            this.$store.dispatch("setWorkingOnMiniProfile", { self: this, value: true }).then(() => {
+    console.log("MINI created", this.workingOnMiniProfile, document.getElementsByClassName('mini-editor').length)
 
 
-
-                if (this.profiles[this.miniProfile]){
-                    let profile = parseProfile.loadNewTemplate(this.miniProfile, this.catInitials)
-                    console.log(profile)
-                    this.$store.dispatch("setActiveProfile", { self: this, profile: profile }).then(() => {
-                       
-                    })
-
-                }else{
-                    alert('Cannot find profile:',this.miniProfile)
-                }
-
-
-            })
-
-
-      })       
-    }else{
-
-
-            this.$store.dispatch("setWorkingOnMiniProfile", { self: this, value: true }).then(() => {
-
-
-
-                if (this.profiles[this.miniProfile]){
-                    let profile = parseProfile.loadNewTemplate(this.miniProfile, this.catInitials)
-                    console.log(profile)
-                    this.$store.dispatch("setActiveProfile", { self: this, profile: profile }).then(() => {
-                       
-                    })
-
-                }else{
-                    alert('Cannot find profile:',this.miniProfile)
-                }
-
-
-            })
-
-
-    }
 
     this.$nextTick(function () {
         uiUtils.renderBorders()
-        window.setTimeout(()=>{document.getElementsByTagName('input')[0].focus()},500)
   
-
-        
-
-        window.addEventListener( 'scroll', () => {         
-
-          // if they clicked it with their mouse at the top don't hide it  
-          if (this.lastMouseY <= 75){
-            this.headerState = 'deployed'
-          }      
-
-          if (this.headerState == 'deployed'){
-
-            if (this.$refs.header){
-              this.$refs.header.classList.remove('retracted')
-              this.$refs.header.classList.remove('inital')
-              this.$refs.header.classList.add('deployed')
-            }
-
-            return false
-          }
-
-
-
-
-          if (window.pageYOffset>5){
-            this.headerState='retracted'
-            if (this.$refs.header){
-              this.$refs.header.classList.remove('inital')
-              this.$refs.header.classList.remove('deployed')
-              this.$refs.header.classList.add('retracted')
-            }
-
-          }else if (window.pageYOffset<=5){
-
-            if (this.$refs.header){
-              this.$refs.header.classList.remove('retracted')
-              this.$refs.header.classList.remove('deployed')
-
-              this.$refs.header.classList.add('inital')
-            }
-            this.headerState='inital'
-
-          }
-
-
-        } );
-
-        window.addEventListener('mousemove', (e) => {
-
-          this.lastMouseY = e.y
-
-          if (e.y < 75){
-
-            if (this.headerState == 'retracted'){
-              if (this.$refs.header){              
-                this.$refs.header.classList.remove('retracted')
-                this.$refs.header.classList.remove('inital')
-                this.$refs.header.classList.add('deployed')
-              }
-              this.headerState = 'deployed'
-            }
-          }else if (e.y > 75 && this.headerState == 'deployed'){
-
-            this.headerState='retracted'
-            if (this.$refs.header){
-              this.$refs.header.classList.remove('inital')
-              this.$refs.header.classList.remove('deployed')
-
-              this.$refs.header.classList.add('retracted')
-            }
-
-          }
-
-
-
-        });
 
     })
   },
 
-  mounted: function(){
 
-
-
-  },
 
   beforeRouteLeave (to, from , next) {
     const answer = window.confirm('Do you really want to leave the edit screen?')
@@ -369,7 +250,7 @@ export default {
 
       }else{
 
-        let xml = await exportXML.toBFXML(this.activeProfile)
+        let xml = await exportXML.toBFXML(this.activeProfileMini)
         this.xmlPreview = xml.xmlStringFormatted
         
         this.displayPreview = true
@@ -395,29 +276,42 @@ export default {
 
       this.showPostModal = true
 
-      let xml = await exportXML.toBFXML(this.activeProfile)
-      let pubResuts = await lookupUtil.publish(xml.xlmString,this.activeProfile.eId,this.activeProfile)
+      let xml = await exportXML.toBFXML(this.activeProfileMini)
+      let pubResuts = await lookupUtil.publish(xml.xlmString,this.activeProfileMini.eId,this.activeProfileMini)
 
       this.showPostModalErrorMsg = false
+
+      let useURI = null
+      let useTitle = xml.voidTitle
+      let useCreator = xml.voidContributor
+      
+
+
+      for (let rt in this.activeProfileMini.rt){
+        useURI = this.activeProfileMini.rt[rt].URI
+      }
+
+      
 
       if (pubResuts.status){
         // if it posted we want to also save the record and mark it as posted
 
         this.activeProfile.status = 'published'
 
-        this.$store.dispatch("setActiveProfile", { self: this, profile: this.activeProfile }).then(async () => {
+        this.$store.dispatch("setActiveProfile", { self: this, profile: this.activeProfileMini }).then(async () => {
 
           this.resourceLinks=[]
 
           // build it again for the new status
-          xml = await exportXML.toBFXML(this.activeProfile)
-          lookupUtil.saveRecord(xml.xlmStringBasic, this.activeProfile.eId)
+          xml = await exportXML.toBFXML(this.activeProfileMini)
+          lookupUtil.saveRecord(xml.xlmStringBasic, this.activeProfileMini.eId)
 
+          
 
-
-          for (let rt in this.activeProfile.rt){
+          for (let rt in this.activeProfileMini.rt){
             let type = rt.split(':').slice(-1)[0]
-            let url = config.convertToRegionUrl(this.activeProfile.rt[rt].URI)
+            let url = config.convertToRegionUrl(this.activeProfileMini.rt[rt].URI)
+            useURI = this.activeProfileMini.rt[rt].URI
             let env = config.returnUrls().env
             this.resourceLinks.push({
               'type':type,
@@ -425,6 +319,7 @@ export default {
               'env': env
             })
           }
+
 
 
 
@@ -437,6 +332,10 @@ export default {
         this.showPostModalErrorMsg = JSON.parse(pubResuts.msg)
 
       }
+
+
+      return {useURI: useURI, useTitle: useTitle, useCreator: useCreator}
+
 
     },
 
@@ -469,7 +368,7 @@ export default {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({eId: this.activeProfile.eId, desc:desc, contact:contact, activeProfile: this.activeProfile})
+          body: JSON.stringify({eId: this.activeProfileMini.eId, desc:desc, contact:contact, activeProfileMini: this.activeProfileMini})
         });
         const content = await rawResponse.json();
         if (content.result){
@@ -488,12 +387,11 @@ export default {
 
     triggerSave: async function(){
 
-      let xml = await exportXML.toBFXML(this.activeProfile)
-      lookupUtil.saveRecord(xml.xlmStringBasic, this.activeProfile.eId)
+      let xml = await exportXML.toBFXML(this.activeProfileMini)
+      lookupUtil.saveRecord(xml.xlmStringBasic, this.activeProfileMini.eId)
 
-      this.$store.dispatch("setActiveRecordSaved", { self: this}, true).then(() => {
+    
 
-      })
 
     },
 

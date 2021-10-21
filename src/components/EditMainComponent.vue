@@ -11,21 +11,21 @@
 
               <!--  -->
             
-             <EditTemplateRefComponent  :ptGuid="ptGuid" :parentURI="parentURI" :key="useKey" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditTemplateRefComponent>
+             <EditTemplateRefComponent v-on="$listeners"  :ptGuid="ptGuid" :parentURI="parentURI" :key="useKey" :isMini="isMini" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditTemplateRefComponent>
 
 
           </template>
           <template v-else>
 
 
-           <EditMetaComponent v-if="returnLookupType(structure) == 'meta'" :ptGuid="ptGuid" :parentURI="parentURI" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditMetaComponent>
+           <EditMetaComponent v-if="returnLookupType(structure) == 'meta'" :isMini="isMini" :ptGuid="ptGuid" :parentURI="parentURI" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditMetaComponent>
            
            <!-- <EditAdminComponent v-else-if="returnLookupType(structure) == 'admin'" :ptGuid="ptGuid" :parentURI="parentURI" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditAdminComponent> -->
           
-           <EditLiteralComponent v-else-if="structure.type == 'literal' || structure.type == 'literal-lang'" :key="useKey" :ptGuid="ptGuid" :parentURI="parentURI"  :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditLiteralComponent>
-           <EditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" :ptGuid="ptGuid" :key="useKey" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested"  :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate" ></EditSimpleLookupComponent>
-           <EditComplexLookupComponent v-else-if="returnLookupType(structure) == 'complex'" :key="useKey" @updated="forceUpdate" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditComplexLookupComponent>          
-           <EditTemplateRefComponent v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" :key="useKey" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditTemplateRefComponent>
+           <EditLiteralComponent v-else-if="structure.type == 'literal' || structure.type == 'literal-lang'" :key="useKey" :isMini="isMini" :ptGuid="ptGuid" :parentURI="parentURI"  :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditLiteralComponent>
+           <EditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" :ptGuid="ptGuid" :key="useKey" :isMini="isMini" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested"  :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate" ></EditSimpleLookupComponent>
+           <EditComplexLookupComponent v-on="$listeners" v-else-if="returnLookupType(structure) == 'complex'" :key="useKey" :isMini="isMini" @updated="forceUpdate" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditComplexLookupComponent>          
+           <EditTemplateRefComponent v-on="$listeners" v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" :isMini="isMini" :key="useKey" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditTemplateRefComponent>
         
 
 
@@ -57,10 +57,10 @@
 
 
 
-        <EditLiteralComponent v-if="structure.type == 'literal' || structure.type == 'literal-lang'" :key="useKey" :ptGuid="ptGuid"  :parentURI="parentURI" :activeTemplate="activeTemplate" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" ></EditLiteralComponent>
-        <EditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" :key="useKey" :ptGuid="ptGuid" :parentURI="parentURI" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested"  :profileName="profileName" :profileCompoent="profileCompoent"  ></EditSimpleLookupComponent>
-        <EditComplexLookupComponent v-else-if="returnLookupType(structure) == 'complex'" :key="useKey" @updated="forceUpdate" :ptGuid="ptGuid" :parentURI="parentURI" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent"   ></EditComplexLookupComponent>          
-        <EditTemplateRefComponent v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" :key="useKey" :ptGuid="ptGuid" :parentURI="parentURI" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :profileName="profileName" :profileCompoent="profileCompoent" :nested="nested"></EditTemplateRefComponent>
+        <EditLiteralComponent v-if="structure.type == 'literal' || structure.type == 'literal-lang'" :key="useKey" :isMini="isMini" :ptGuid="ptGuid"  :parentURI="parentURI" :activeTemplate="activeTemplate" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" ></EditLiteralComponent>
+        <EditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" :key="useKey" :ptGuid="ptGuid" :isMini="isMini" :parentURI="parentURI" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested"  :profileName="profileName" :profileCompoent="profileCompoent"  ></EditSimpleLookupComponent>
+        <EditComplexLookupComponent v-on="$listeners" v-else-if="returnLookupType(structure) == 'complex'" :key="useKey" :isMini="isMini" @updated="forceUpdate" :ptGuid="ptGuid" :parentURI="parentURI" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent"   ></EditComplexLookupComponent>          
+        <EditTemplateRefComponent v-on="$listeners" v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" :isMini="isMini" :key="useKey" :ptGuid="ptGuid" :parentURI="parentURI" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :profileName="profileName" :profileCompoent="profileCompoent" :nested="nested"></EditTemplateRefComponent>
 
 
 
@@ -137,6 +137,7 @@ export default {
     parentStructure: Array,
     parentStructureObj: Object,
     nested: Boolean,
+    isMini: Boolean,
     profileCompoent: String,
     profileName: String,
     activeTemplate: Object,

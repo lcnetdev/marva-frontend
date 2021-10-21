@@ -1079,9 +1079,6 @@ const exportXML = {
 			let theHub = (new XMLSerializer()).serializeToString(rdfBasic)
 			theHub = parser.parseFromString(theHub, "text/xml").children[0];
 
-
-
-
 			rdf = theHub
 		}
 		console.log(tleLookup['Work'],Object.keys(tleLookup['Work']).length)
@@ -1236,7 +1233,9 @@ const exportXML = {
 			xmlDom: rdf,
 			xmlStringFormatted: strXmlFormatted,
 			xlmString: strXml,
-			xlmStringBasic: strXmlBasic
+			xlmStringBasic: strXmlBasic,
+			voidTitle: xmlVoidDataTitle,
+			voidContributor:xmlVoidDataContributor
 		}
 
 

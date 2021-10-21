@@ -13,7 +13,7 @@
                   <span style="padding-right: 0.3em; font-weight: bold">{{avl['http://www.w3.org/2000/01/rdf-schema#label']}}<span class="uncontrolled" v-if="!avl.uri">(uncontrolled)</span></span>
                   <span @click="removeValue(idx)" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em; cursor: pointer;">x</span>
               </div>
-              <input bfeType="EditSimpleLookupComponent-unnested" ref="lookupInput"  :id="assignedId" autocomplete="off" v-on:blur="blur" v-bind:value="activeValue"  type="text" @focus="autoFocus($event)" @keydown="keyDownEvent($event)" @keyup="keyUpEvent($event)" class="input-single selectable-input">
+              <input bfeType="EditSimpleLookupComponent-unnested" ref="lookupInput"  :id="assignedId" autocomplete="off" v-on:blur="blur" v-bind:value="activeValue"  type="text" @focus="autoFocus($event)" @keydown="keyDownEvent($event)" @keyup="keyUpEvent($event)" :class="['input-single',{'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]">
             </div>
           </form>
         </div>
@@ -49,7 +49,7 @@
 
 
 
-              <input bfeType="EditSimpleLookupComponent-nested" ref="lookupInput"  :id="assignedId" autocomplete="off" v-on:blur="blur" v-bind:value="activeValue"  type="text" @focus="autoFocus($event)" @keydown="keyDownEvent($event)"  @keyup="keyUpEvent($event)"  class="input-nested selectable-input">
+              <input bfeType="EditSimpleLookupComponent-nested" ref="lookupInput"  :id="assignedId" autocomplete="off" v-on:blur="blur" v-bind:value="activeValue"  type="text" @focus="autoFocus($event)" @keydown="keyDownEvent($event)"  @keyup="keyUpEvent($event)"  :class="['input-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]">
             </div>              
 
           </div>
@@ -87,6 +87,7 @@ export default {
     structure: Object,
     parentStructure: Array,
     nested: Boolean,
+    isMini: Boolean,
     profileName: String,
     activeTemplate: Object,
     ptGuid: String,
@@ -112,7 +113,7 @@ export default {
 
     let currentUserValue
 
-    if (this.workingOnMiniProfile){
+    if (this.isMini){
       currentUserValue = this.activeProfileMini.rt[this.profileName].pt[this.profileCompoent].userValue
     }else{
       currentUserValue = this.activeProfile.rt[this.profileName].pt[this.profileCompoent].userValue  

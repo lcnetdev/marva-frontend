@@ -391,11 +391,15 @@ export default new Vuex.Store({
       if (state.workingOnMiniProfile){
 
         nap = await parseProfile.setValueComplex(state.activeProfileMini, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, state.contextData, data.structure, data.parentStructure)
-        commit('ACTIVEPROFILE', nap)
+        nap = parseProfile.rebuildHubURI(nap)
+
+        commit('ACTIVEPROFILEMINI', nap)
 
       }else{
 
         nap = await parseProfile.setValueComplex(state.activeProfile, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, state.contextData, data.structure, data.parentStructure)
+        nap = parseProfile.rebuildHubURI(nap)
+
         commit('ACTIVEPROFILE', nap)
         commit('ACTIVEEDITCOUNTER') 
         commit('ACTIVERECORDSAVED', false)      
@@ -592,7 +596,7 @@ export default new Vuex.Store({
       commit('MACNAV', false)
     },
 
-    setActiveInput: ({commit}, data) => {      
+    setActiveInput: ({commit}, data) => {    
       commit('ACTIVEINPUT', data.id)
       commit('ACTIVECOMPONET', data.profileCompoent)
       commit('ACTIVEPROFILENAME', data.profileName)
