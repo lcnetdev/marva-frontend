@@ -79,7 +79,7 @@ const exportXML = {
 		}
 
 		for (let ns of Object.keys(this.namespace)){
-				
+
 			if (elStr.startsWith(this.namespace[ns])){
 				
 				// console.log(elStr)

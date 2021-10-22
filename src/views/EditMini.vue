@@ -70,7 +70,7 @@
 
 
                         <div v-for="(profileCompoent,idx) in activeProfileMini.rt[profileName].ptOrder" :key="profileCompoent" :id="'container-for-mini'+profileName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')+idx+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')">
-                              <EditMainComponent v-if="activeProfileMini.rt[profileName].pt[profileCompoent].deleted != true" class="component" :isMini="true" :parentURI="activeProfileMini.rt[profileName].URI" :activeTemplate="activeProfileMini.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :ptGuid="activeProfileMini.rt[profileName].pt[profileCompoent]['@guid']" :parentStructure="activeProfileMini.rtOrder" :structure="activeProfileMini.rt[profileName].pt[profileCompoent]"/>
+                              <EditMainComponent v-if="activeProfileMini.rt[profileName].pt[profileCompoent].deleted != true" class="component" :key="miniEdiorKey+'c'+idx" :isMini="true" :parentURI="activeProfileMini.rt[profileName].URI" :activeTemplate="activeProfileMini.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :ptGuid="activeProfileMini.rt[profileName].pt[profileCompoent]['@guid']" :parentStructure="activeProfileMini.rtOrder" :structure="activeProfileMini.rt[profileName].pt[profileCompoent]"/>
                         </div>
 
                         <div v-if="activeProfileMini.rt[profileName].unusedXml" style="background-color: #fde4b7; overflow-x: hidden;">
@@ -134,6 +134,7 @@ export default {
   name: "EditMini",
   props:{
     // miniProfile: String
+    miniEdiorKey: String,
   },
   components: {
     // EditMainComponent,

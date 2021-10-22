@@ -6,7 +6,7 @@ const validationUtil = {
     headingNotChecked: '&#xe823;',
     
     validateHeading: async function(userData, suppliedScheme = "") {
-
+        console.log('userData',userData)
         // What will a bnode be here?
         if (userData["http://id.loc.gov/ontologies/bibframe/agent"] !== undefined) {
             // We have a contribution resource.
@@ -15,6 +15,12 @@ const validationUtil = {
         }
         
         let uri = userData["@id"];
+
+        if (!uri && userData.hintUri && userData[userData.hintUri]){
+            userData = userData[userData.hintUri][0]; 
+            uri = userData["@id"];          
+        }
+        console.log('uri=',uri)
         if (uri === undefined || uri === null || (uri && uri.indexOf('example.org/') > 0) || (uri && uri.indexOf('/REPLACE/') > 0)) {
                 
                 
@@ -162,6 +168,19 @@ const validationUtil = {
                 return userData[p][0][p];
             }
         }
+
+        // if we got here it is a slightly more complicated component, with multiple complex lookups
+        // we need to use the hint to get what we want
+        if (userData.hintUri && userData[userData.hintUri] && userData[userData.hintUri][0]){
+            userData = userData[userData.hintUri][0]
+            for (var p2 of labelProps) {
+                if (userData[p2] !== undefined) {
+                    return userData[p2][0][p2];
+                }
+            }
+
+        }
+
         return false;
     },
     

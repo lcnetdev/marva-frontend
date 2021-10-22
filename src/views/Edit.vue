@@ -345,7 +345,7 @@
 
 
                         <div v-for="(profileCompoent,idx) in activeProfile.rt[profileName].ptOrder" :key="profileCompoent" :id="'container-for-'+profileName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')+idx+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')">
-                              <EditMainComponent :isMini="false" @showMiniEditor="showMiniEditor" v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" class="component" :parentURI="activeProfile.rt[profileName].URI" :activeTemplate="activeProfile.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :ptGuid="activeProfile.rt[profileName].pt[profileCompoent]['@guid']" :parentStructure="activeProfile.rtOrder" :structure="activeProfile.rt[profileName].pt[profileCompoent]"/>
+                              <EditMainComponent :isMini="false" @showMiniEditor="showMiniEditorClick" v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" class="component" :parentURI="activeProfile.rt[profileName].URI" :activeTemplate="activeProfile.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :ptGuid="activeProfile.rt[profileName].pt[profileCompoent]['@guid']" :parentStructure="activeProfile.rtOrder" :structure="activeProfile.rt[profileName].pt[profileCompoent]"/>
                         </div>
 
                         <div v-if="activeProfile.rt[profileName].unusedXml" style="background-color: #fde4b7; overflow-x: hidden;">
@@ -581,8 +581,7 @@
             <div class="modal" style="overflow-y: scroll; overflow-x: hidden;">
                 <div v-if="displayMiniEditor" class="modal-content" >
 
-
-                  <EditMini ref="miniEditorHub" miniProfile="Hub"></EditMini>
+                  <EditMini :key="displayMiniEditorKey" :miniEdiorKey="displayMiniEditorKey"  ref="miniEditorHub" miniProfile="Hub"></EditMini>
 
 
                   <div style="text-align: center; padding: 1em;">
@@ -868,6 +867,7 @@ export default {
       activeMiniMap: {URI:null},
       miniMapActionValue: 'Actions',
       displayMiniEditor: false,
+      displayMiniEditorKey: 12345,
       lastMouseY: 10,
       sourceLaunchId: null,
       sourceOfMiniComponent: null
@@ -944,6 +944,7 @@ export default {
 
         this.displayMiniEditor = false
 
+
         this.$store.dispatch("setWorkingOnMiniProfile", { self: this, value: false }).then(() => {
 
             if (this.sourceLaunchId){
@@ -954,11 +955,27 @@ export default {
 
 
 
+
+
     },
 
-    showMiniEditor: function(payload){
 
-        console.log(payload,this.profiles)
+    showMiniEditorClick: function(payload){
+
+        this.showMiniEditor(payload, ()=>{
+            this.closeMiniEditor(payload)
+            this.showMiniEditor(payload)
+        })
+        
+        
+
+    },
+
+    showMiniEditor: function(payload, callback){
+
+        // make a new key for each time it is loaded
+        this.displayMiniEditorKey = `miniEditor-${Date.now()}`
+
         this.displayMiniEditor = true
         this.sourceLaunchId = payload.sourceId
         this.sourceOfMiniComponent = payload.component
@@ -969,14 +986,18 @@ export default {
 
             if (this.profiles[payload.useProfile]){
                 let profile = parseProfile.loadNewTemplate(payload.useProfile, this.catInitials)
-                profile.user = this.catInitials
 
+                profile.user = this.catInitials
+                console.log('-------')
                 console.log(profile)
+                console.log('-------')
                 this.$store.dispatch("setActiveProfile", { self: this, profile: profile }).then(() => {
                    
                     this.$nextTick(()=>{
                   
                         document.getElementsByClassName('selectable-input-mini')[0].focus()
+                        if (callback) callback()
+                            
                     })
 
 

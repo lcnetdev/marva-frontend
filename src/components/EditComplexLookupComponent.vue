@@ -72,7 +72,7 @@
                   <div v-for="key in Object.keys(displayContext.nodeMap)" :key="key">
                     <div class="modal-context-data-title">{{key}}:</div>
                       <ul>
-                        <li class="modal-context-data-li" v-for="v in displayContext.nodeMap[key]" v-bind:key="v">{{v}}</li>
+                        <li class="modal-context-data-li" v-for="(v,idx) in displayContext.nodeMap[key]" v-bind:key="key+idx">{{v}}</li>
                       </ul>
                   </div>
 
@@ -80,7 +80,7 @@
                   <div v-if="displayContext.source && displayContext.source.length>0">
                     <div class="modal-context-data-title">Sources:</div>
                     <ul>
-                      <li class="modal-context-data-li" v-for="v in displayContext.source" v-bind:key="v">{{v}}</li>
+                      <li class="modal-context-data-li" v-for="(v,idx) in displayContext.source" v-bind:key="'sources'+idx">{{v}}</li>
                     </ul>
 
 
@@ -281,7 +281,7 @@
                   <div v-for="key in Object.keys(contextData.nodeMap)" :key="key">
                     <div class="modal-context-data-title">{{key}}:</div>
                       <ul>
-                        <li class="modal-context-data-li" v-for="v in contextData.nodeMap[key]" v-bind:key="v">{{v}}</li>
+                        <li class="modal-context-data-li" v-for="(v,idx) in contextData.nodeMap[key]" v-bind:key="key+idx">{{v}}</li>
                       </ul>
                   </div>
 
@@ -289,7 +289,7 @@
                   <div v-if="contextData.source && contextData.source.length>0">
                     <div class="modal-context-data-title">Sources:</div>
                     <ul>
-                      <li class="modal-context-data-li" v-for="v in contextData.source" v-bind:key="v">{{v}}</li>
+                      <li class="modal-context-data-li" v-for="(v,idx) in contextData.source" v-bind:key="'sources-'+idx">{{v}}</li>
                     </ul>
 
 
@@ -687,11 +687,21 @@ export default {
             //console.log("the this")
             //console.log(this)
             let userData = parseProfile.returnUserValues(this.activeProfile, this.profileCompoent, this.structure.propertyURI)
+
+            // dis connect it from the source so it doesnt update the value, read only
+            userData = JSON.parse(JSON.stringify(userData))
+
+            // pass some more info to this process to help it
+            userData.hintUri = this.parentStructureObj.propertyURI
+
+            
+
             if (userData !== false) {
                 validationUtil.validateHeading(userData)
                 .then((validationStatus) => {
+                    
 
-                    console.log('validationStatus',validationStatus)
+                    
                 
                     this.validated = validationStatus;
                     this.validationMessage = validationUtil.getValidationMessage(validationStatus);
@@ -712,9 +722,15 @@ export default {
                     if (this.displayLabel != label) {
                         this.displayLabel = label;
                     }
+                    
+
+
                     if (this.displayContext.title != label) {
                         this.displayContext.title = label;
                     }
+                    
+
+
                     
                 });
             }
@@ -950,11 +966,13 @@ export default {
 
       }else if (this.parentStructureObj && this.parentStructureObj.propertyURI && userValue[this.parentStructureObj.propertyURI]){
         
-
         // the data is stored in the sub graph named under the parent
         if (Array.isArray(userValue[this.parentStructureObj.propertyURI])){
 
           if (userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/2000/01/rdf-schema#label']){
+
+
+
             this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
             this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
             if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
@@ -969,6 +987,11 @@ export default {
               }
 
             }
+
+
+            console.log("!!!!!!!!!!!!!!!!!!!!!! CHECK1",this.parentStructureObj.propertyURI,userValue[this.parentStructureObj.propertyURI])
+            console.log(this.displayLabel,this.displayGuid, this.displayContext )
+
 
           }else if (userValue[this.parentStructureObj.propertyURI][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
             this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
@@ -1022,6 +1045,7 @@ export default {
           
         }
 
+        console.log("!!!!!!",this.displayLabel)
         if (userValue[this.parentStructureObj.propertyURI] && userValue[this.parentStructureObj.propertyURI].length>0){
           this.displayType = userValue[this.parentStructureObj.propertyURI][0]['@type']
         }
@@ -1043,6 +1067,7 @@ export default {
 
         }
 
+        console.log("!!!!!!",this.displayLabel)
 
       }else if (userValue['@root'] && userValue['@root'] == rootPropertyURI){
 
@@ -1104,7 +1129,7 @@ export default {
       //   this.displayLabel = "yeet"
       // }
 
-      
+      console.log("!!!!!!",this.displayLabel)
 
     },
 

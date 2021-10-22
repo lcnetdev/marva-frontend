@@ -1824,7 +1824,7 @@ const parseProfile = {
 
             if (rt.endsWith(':Hub')){
 
-                console.log("Rebuilding HUB URI",currentState)
+
 
                 // console.log('Modify this URI',currentState.rt[rt].URI)
                 let title = null
@@ -1842,9 +1842,7 @@ const parseProfile = {
 
                     if (currentState.rt[rt].pt[pt].propertyURI === 'http://id.loc.gov/ontologies/bibframe/contribution'){
                         if (currentState.rt[rt].pt[pt].valueConstraint.valueDataType.dataTypeURI === 'http://id.loc.gov/ontologies/bflc/PrimaryContribution'){                            
-                            console.log("IN PRIMARY")
-                            console.log(currentState.rt[rt].pt[pt].userValue)
-                            console.log(currentState.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/agent'][0])
+
                             if (
                                 currentState.rt[rt].pt[pt].userValue && 
                                 currentState.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/agent'] && 
