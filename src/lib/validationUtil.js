@@ -6,7 +6,7 @@ const validationUtil = {
     headingNotChecked: '&#xe823;',
     
     validateHeading: async function(userData, suppliedScheme = "") {
-        console.log('userData',userData)
+
         // What will a bnode be here?
         if (userData["http://id.loc.gov/ontologies/bibframe/agent"] !== undefined) {
             // We have a contribution resource.
@@ -20,7 +20,7 @@ const validationUtil = {
             userData = userData[userData.hintUri][0]; 
             uri = userData["@id"];          
         }
-        console.log('uri=',uri)
+
         if (uri === undefined || uri === null || (uri && uri.indexOf('example.org/') > 0) || (uri && uri.indexOf('/REPLACE/') > 0)) {
                 
                 

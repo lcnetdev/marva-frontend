@@ -692,7 +692,7 @@ export default {
             userData = JSON.parse(JSON.stringify(userData))
 
             
-            if (userData){
+            if (userData && this.parentStructureObj && this.parentStructureObj.propertyURI){
               // pass some more info to this process to help it
               userData.hintUri = this.parentStructureObj.propertyURI
             }
