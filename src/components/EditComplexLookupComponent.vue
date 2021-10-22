@@ -691,8 +691,11 @@ export default {
             // dis connect it from the source so it doesnt update the value, read only
             userData = JSON.parse(JSON.stringify(userData))
 
-            // pass some more info to this process to help it
-            userData.hintUri = this.parentStructureObj.propertyURI
+            
+            if (userData){
+              // pass some more info to this process to help it
+              userData.hintUri = this.parentStructureObj.propertyURI
+            }
 
             
 
