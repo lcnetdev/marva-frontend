@@ -454,9 +454,9 @@ export default {
 
         // '/bfe2/editor/tests/instances/4602142.editor-pkg.xml', // multiple items
 
-        // '/bfe2/editor/tests/instances/13392490.editor-pkg.xml', // Sound?
+        '/bfe2/editor/tests/instances/13392490.editor-pkg.xml', // Sound?
 
-        '/bfe2/editor/tests/instances/12393608.editor-pkg.xml', // Supressed
+        // '/bfe2/editor/tests/instances/12393608.editor-pkg.xml', // Supressed
 
 
 

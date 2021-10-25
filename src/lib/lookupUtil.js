@@ -361,9 +361,9 @@ const lookupUtil = {
             var jsonuri = uri + '.madsrdf_raw.jsonld';
 
             //if we are in production use preprod
-            if (config.returnUrls().env == 'production'){
-              jsonuri = jsonuri.replace('http://id.', 'https://preprod.id.')
-              jsonuri = jsonuri.replace('https://id.', 'https://preprod.id.')
+            if (config.returnUrls().env == 'production' || config.returnUrls().env == 'staging'){
+              jsonuri = jsonuri.replace('http://id.', 'https://preprod-8080.id.')
+              jsonuri = jsonuri.replace('https://id.', 'https://preprod-8080.id.')
               
             }
           }else if (uri.includes('resources/works/') || uri.includes('resources/hubs/')){
