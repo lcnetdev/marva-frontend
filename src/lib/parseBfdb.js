@@ -33,7 +33,8 @@ const parseBfdb = {
 		'pmo' :'http://performedmusicontology.org/ontology/',
 		'datatypes': 'http://id.loc.gov/datatypes/',
 		'xsd': 'http://www.w3.org/2001/XMLSchema#',
-		'mstatus': 'https://id.loc.gov/vocabulary/mstatus/'
+		'mstatus': 'https://id.loc.gov/vocabulary/mstatus/',
+		'mnotetype': 'http://id.loc.gov/vocabulary/mnotetype/'
 
 	},
 

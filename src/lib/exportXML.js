@@ -24,7 +24,9 @@ const exportXML = {
 		'datatypes': 'http://id.loc.gov/datatypes/',
 		'xsd': 'http://www.w3.org/2001/XMLSchema#',
 		'void':'http://rdfs.org/ns/void#',
-		'mstatus': 'https://id.loc.gov/vocabulary/mstatus/'
+		'mstatus': 'https://id.loc.gov/vocabulary/mstatus/',
+		'mnotetype': 'http://id.loc.gov/vocabulary/mnotetype/'
+
 	},
 
 
