@@ -276,6 +276,8 @@ const exportXML = {
 
 	createBnode: function(userValue,property){
 
+		console.log(property,userValue)
+
 		// some special cases here
 		if (property == 'http://id.loc.gov/ontologies/bibframe/agent'){
 
@@ -295,8 +297,28 @@ const exportXML = {
 				bnode.setAttribute('rdf:parseType', userValue['@parseType'])
 			}
 
+			console.log(bnode)
+
 			return bnode
 
+
+		}else if (userValue['@type'] && userValue['@type'].includes('id.loc.gov/vocabulary/mnotetype')){
+
+
+			// if it is this specific note vocabulary type then create a bf:Note with a RDF type in it
+
+			let bnode = this.createElByBestNS('bf:Note')
+			let rdftype = this.createElByBestNS('rdf:type')
+
+			rdftype.setAttributeNS(this.namespace.rdf, 'rdf:resource', userValue['@type'])						
+			
+			bnode.appendChild(rdftype)
+
+		
+			console.log(bnode)
+
+
+			return bnode
 
 		}else{
 
@@ -311,6 +333,7 @@ const exportXML = {
 				bnode.setAttribute('rdf:parseType', userValue['@parseType'])
 
 			}
+			
 
 			return bnode
 
