@@ -460,9 +460,14 @@ export default {
 
 
         // '/bfe2/editor/tests/instances/22255785.editor-pkg', // error?
-        '/bfe2/editor/tests/instances/22255785.editor-pkg (1).xml', // error?
+
+        // '/bfe2/editor/tests/instances/22255785.editor-pkg (1).xml', // error?
+
+        '/bfe2/editor/tests/instances/22295832.editor-pkg.xml', // OTHER PHYSICAL THING
 
         
+
+
         
 
         

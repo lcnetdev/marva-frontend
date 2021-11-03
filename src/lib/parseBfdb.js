@@ -119,11 +119,12 @@ const parseBfdb = {
 	returnOneWhereParentIs: function(selection, requiredParent){
 
 		
-		
-
-
 		if (selection.length == 1){
-			return selection[0]
+			if (selection[0].parentNode.tagName === requiredParent){
+				return selection[0]
+			}else{
+				return false
+			}			
 		}
 		
 		for (let el of selection){
@@ -749,7 +750,7 @@ const parseBfdb = {
 
 		// console.log(results)
 
-		
+		console.log('-------------------DONE WITH TEST PARSE---------------------')
 
 		let results = await this.transformRts(profile)
 
@@ -798,6 +799,13 @@ const parseBfdb = {
 			xml = this.returnOneWhereParentIs(xml, "rdf:RDF")
 			console.log('selecting to process:',xml)
 
+			if (xml===false){
+				console.warn(tle,'was not processed because it failed the top level test, must be a nested resource?')
+				toDeleteNoData.push(pkey)
+				continue
+			}
+
+			// for whatever reason
 			if (!xml){
 				console.warn('Could not find the requested XML fragment, looking for ', tle)
 				toDeleteNoData.push(pkey)
@@ -1966,7 +1974,7 @@ const parseBfdb = {
 			
 			// remove it for the next item if there is one
 			if (tle == 'bf:Item' || tle == 'bf:Instance'){
-				console.log('removing',xml)
+				console.log('Done processing XML fragment, removing',xml)
 				xml.remove()
 			}
 

@@ -84,9 +84,9 @@ const exportXML = {
 
 			if (elStr.startsWith(this.namespace[ns])){
 				
-				// console.log(elStr)
-				// console.log(this.namespace[ns])
-				// console.log(this.namespaceUri(elStr))
+
+
+
 				return document.createElementNS(this.namespace[ns],this.namespaceUri(elStr))
 			}
 
@@ -236,38 +236,40 @@ const exportXML = {
 
 	debug: function(uri, msg, userValue, other1, other2, other3){
 
-		let print = false
+		let print = true
 
-		if (print) console.log('-----------------START-------------------')
+		if(print){
+			console.log(uri, msg, userValue, other1, other2, other3)
+		}
 
 		let info = []
 		if (uri){
 			info.push(uri)
-			if (print) console.log(uri)
+
 		}
 
 		if (msg){
 			info.push(msg)
-			if (print) console.log(msg)
+
 		}
 		if (userValue){
 			info.push(userValue)
-			if (print) console.log(JSON.stringify(userValue,null,2))
+
 		}
 		if (other1){
 			info.push(other1)
-			if (print) console.log(other1)
+
 		}
 		if (other2){
 			info.push(other2)
-			if (print) console.log(other2)
+
 		}
 		if (other3){
 			info.push(other3)
-			if (print) console.log(other3)
+
 		}
 
-		if (print) console.log('------------------END-------------------')
+
 
 		this.debugHistory.push(info)
 
@@ -276,7 +278,7 @@ const exportXML = {
 
 	createBnode: function(userValue,property){
 
-		console.log(property,userValue)
+
 
 		// some special cases here
 		if (property == 'http://id.loc.gov/ontologies/bibframe/agent'){
@@ -297,7 +299,7 @@ const exportXML = {
 				bnode.setAttribute('rdf:parseType', userValue['@parseType'])
 			}
 
-			console.log(bnode)
+
 
 			return bnode
 
@@ -315,7 +317,7 @@ const exportXML = {
 			bnode.appendChild(rdftype)
 
 		
-			console.log(bnode)
+
 
 
 			return bnode
@@ -347,10 +349,10 @@ const exportXML = {
 
 	createLiteral: function(property,userValue){
 
-		console.log(property)
+
 		let p = this.createElByBestNS(property)
-		console.log(p)
-		console.log(userValue)
+
+
 		// it should be stored under the same key
 		if (userValue[property]){
 			p.innerHTML = userValue[property]
@@ -463,7 +465,7 @@ const exportXML = {
 
 
 			// rdf.appendChild(rootEl,tleArray)
-			// console.log(tleArray)
+
 			
 			if (profile.rt[rt].URI){
 				rootEl.setAttributeNS(this.namespace.rdf, 'rdf:about', profile.rt[rt].URI)
@@ -486,7 +488,7 @@ const exportXML = {
 					continue
 				}
 
-				console.log('--->',pt)
+
 				// does it even have any userValues?
 				if (this.hasUserValue(userValue)){
 
@@ -500,12 +502,12 @@ const exportXML = {
 						xmlVoidDataType.push(rootElName)
 					}
 
-					if (rootElName == 'Item' && pt =='http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'){
-						console.log('here')
-						console.log(userValue)
-					}
+					// if (rootElName == 'Item' && pt =='http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'){
 
-					console.log(userValue)
+
+					// }
+
+
 
 					// is it a BNODEEEEE
 					if (this.isBnode(userValue)){
@@ -542,7 +544,7 @@ const exportXML = {
 								
 
 								// is it a bnode?
-								console.log('value1',value1)
+
 								if (this.isBnode(value1)){
 
 									// yes
@@ -551,7 +553,7 @@ const exportXML = {
 									pLvl2.appendChild(bnodeLvl2)
 									bnodeLvl1.appendChild(pLvl2)
 
-									// console.log('bnodeLvl2',bnodeLvl2)
+
 
 									// now loop through its properties and see whats nested
 									for (let key2 of Object.keys(value1).filter(k => (!k.includes('@') ? true : false ) )){
@@ -560,9 +562,9 @@ const exportXML = {
 
 										for (let value2 of value1[key2]){
 
-											// console.log('key2',key2)
 
-											// console.log('value2',value2)
+
+
 
 
 											if (this.isBnode(value2)){
@@ -591,7 +593,7 @@ const exportXML = {
 																	// its a label or some other literal
 																	let p4 = this.createLiteral(key4, value3)
 																	bnodeLvl3.appendChild(p4)
-																	// console.log('key4',key4, bnodeLvl3)
+
 																}else{
 																	console.error('key4', key4, value3[key4], 'not a literal, should not happen')
 																}
@@ -614,7 +616,7 @@ const exportXML = {
 														// its a label or some other literal
 														let p3 = this.createLiteral(key3, value2)
 														bnodeLvl2.appendChild(p3)
-														// console.log('key3',key3, bnodeLvl2)
+
 													}else{
 														console.error('key3', key3, value2[key3], 'not a literal, should not happen')
 													}
@@ -681,7 +683,7 @@ const exportXML = {
 						this.debug(ptObj.propertyURI, 'root level element does not look like a bnode', userValue)
 
 						// but it might be a bnode, but with only a URI
-						console.log(await this.suggestType(ptObj.propertyURI))
+
 
 						if (userValue['@flags'] && userValue['@flags'].indexOf('simpleLookupTopLevelMulti') > -1){
 
@@ -787,8 +789,8 @@ const exportXML = {
 					// build the predicate
 					// //
 					// if (rootElName ==='Item'){
-					// 	console.log(pt)
-					// 	console.log(rootEl)
+
+
 					// }
 
 
@@ -880,7 +882,7 @@ const exportXML = {
 			
 
 			// build the lookup
-			console.log(orginalProfile.rt[rt])
+
 			tleLookup[rootElName][orginalProfile.rt[rt].URI] = rootEl
 
 
@@ -938,7 +940,7 @@ const exportXML = {
 				}	
 
 				if (uri){
-					console.log('making has item')
+
 					let hasItem = this.createElByBestNS('bf:hasItem')
 					hasItem.setAttributeNS(this.namespace.rdf, 'rdf:resource', uri)
 					instance.appendChild(hasItem)
@@ -1078,7 +1080,7 @@ const exportXML = {
 
 					p.appendChild(work)
 					instance.appendChild(p)
-					// console.log(instance,'instance')
+
 
 				}
 
@@ -1106,11 +1108,11 @@ const exportXML = {
 
 			rdf = theHub
 		}
-		console.log(tleLookup['Work'],Object.keys(tleLookup['Work']).length)
-		console.log(tleLookup['Hub'],Object.keys(tleLookup['Hub']).length)
 
-		console.log(rdfBasic)
-		console.log(rdf)
+
+
+
+
 
 		
 		
@@ -1244,10 +1246,10 @@ const exportXML = {
             The below line fixes this in FF for me.
         */
         //strXmlFormatted = uiUtils.prettifyXmlJS(strXmlBasic, ' ')
-        //console.log("XML vars")
-        //console.log(strXmlFormatted)
-        //console.log(strXml)
-        //console.log(strXmlBasic)
+
+
+
+
 
 
 		
@@ -1279,8 +1281,8 @@ const exportXML = {
 
 			if (profile.rt[rt].itemOf && profile.rt[rt].itemOf == URI){
 
-				console.log("ITEM ALERT")
-				console.log(tleLookup['Item'][profile.rt[rt].URI])
+
+
 
 
 				if (tleLookup['Item'][profile.rt[rt].URI].getElementsByTagName('bf:itemOf').length==0){
