@@ -108,7 +108,8 @@ const exportXML = {
 
 	suggestType: async function(propertyURI){
 
-		
+
+		let result = false
 
 		// at this point we have a well cached lookup of the whole onotlogy in localstorage
 		// ask for this one, if it idoesnt have it, it will relookup (or if it is expired)
@@ -120,13 +121,13 @@ const exportXML = {
 		if (range.length>0){
 			range=range[0]
 			if (range.attributes['rdf:resource']){
-				return range.attributes['rdf:resource'].value
+				result = range.attributes['rdf:resource'].value
 			}
 		}
 
 		let profileLookup = parseProfile.suggestType(propertyURI)
 		if (profileLookup != false){
-			return profileLookup
+			result = profileLookup
 		}
 
 		// some try something else
@@ -135,22 +136,38 @@ const exportXML = {
 
 		// some properties being used are not available yet....
 		if (propertyURI==='http://id.loc.gov/ontologies/bfsimple/prefTitle'){
-			return 'http://www.w3.org/2000/01/rdf-schema#Literal'
+			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
 		}
 		if (propertyURI==='http://id.loc.gov/ontologies/bfsimple/variantTitle'){
-			return 'http://www.w3.org/2000/01/rdf-schema#Literal'
+			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
 		}
 		if (propertyURI==='http://id.loc.gov/ontologies/bfsimple/transTitle'){
-			return 'http://www.w3.org/2000/01/rdf-schema#Literal'
+			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
 		}
 
+		if (propertyURI==='http://id.loc.gov/ontologies/bflc/date'){
+			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
+		}
+		if (propertyURI==='http://id.loc.gov/ontologies/bflc/aap-normalized'){
+			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
+		}
+		if (propertyURI==='http://id.loc.gov/ontologies/bflc/aap'){
+			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
+		}
+
+
+
+		
+		if (result==='http://id.loc.gov/ontologies/bflc/date'){
+			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
+		}
 
 
 
 
 
 		// if fails
-		return false
+		return result
 
 
 
@@ -236,7 +253,7 @@ const exportXML = {
 
 	debug: function(uri, msg, userValue, other1, other2, other3){
 
-		let print = true
+		let print = false
 
 		if(print){
 			console.log(uri, msg, userValue, other1, other2, other3)
@@ -775,6 +792,7 @@ const exportXML = {
 
 						}else{
 							this.debug(ptObj.propertyURI, 'Does not have @type, something is wrong here', userValue)
+							console.log("suggest type is:",await this.suggestType(ptObj.propertyURI))
 							console.warn("Should not be here")
 							// alert("Not everything entered was serialized into XML, please report this record and check the output.")
 						}
