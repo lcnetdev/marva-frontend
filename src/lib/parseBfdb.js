@@ -607,8 +607,19 @@ const parseBfdb = {
 
 
 		// see how many instances and items we have
-		let instanceCount = this.activeDom.getElementsByTagName('bf:Instance').length
-		console.log('profile',profile)
+		// loop theough the top level and see how many instances we got
+		// so looop through the children of rdf:RDF
+		let instanceCount = 0
+		for (let el of this.activeDom.children[0].children){
+			console.log('-->',el.tagName)
+			if (el.tagName=='bf:Instance'){
+				instanceCount++
+			}
+		}
+
+		// let instanceCount = this.activeDom.getElementsByTagName('bf:Instance').length
+
+		
 		if (instanceCount>1){
 
 			// there is one instance in the profile, but need to add more to match the xml

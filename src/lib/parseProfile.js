@@ -2960,7 +2960,6 @@ const parseProfile = {
           uri = 'http://id.loc.gov/resources/unknown/' + translator.toUUID(translator.new())       
         }        
 
-        console.log(uri)
         useProfile.rt[rt].URI = uri
 
         for (let pt in useProfile.rt[rt].pt){
@@ -2995,6 +2994,7 @@ const parseProfile = {
         }  
       }
 
+      console.log('------useProfile-------')
       console.log(useProfile)
 
       if (addAdmin){

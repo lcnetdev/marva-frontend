@@ -221,6 +221,8 @@ export default {
           }
         }
 
+        // console.log("==========loadInstance")
+        // console.log(JSON.parse(JSON.stringify(useProfile)))
         // we might need to load in a item
 
         if (parseBfdb.hasItem>0){ 
@@ -296,8 +298,14 @@ export default {
           useProfile.status = 'unposted'
         }
 
+        // console.log("==========loadInstance2")
+        // console.log(JSON.parse(JSON.stringify(useProfile)))
         
         this.transformResults  = await parseBfdb.transform(useProfile)
+
+
+        console.log("==========loadInstance3")
+        console.log(JSON.parse(JSON.stringify(this.transformResults)))
 
         // let workkey = this.transformResults.rtOrder.filter((k)=> k.endsWith(":Instance"))[0]
         // this.transformResultsDisplay = this.transformResults.rt[workkey]
@@ -462,6 +470,9 @@ export default {
         // '/bfe2/editor/tests/instances/22255785.editor-pkg', // error?
 
         // '/bfe2/editor/tests/instances/22255785.editor-pkg (1).xml', // error?
+
+
+
 
         '/bfe2/editor/tests/instances/22295832.editor-pkg.xml', // OTHER PHYSICAL THING
 

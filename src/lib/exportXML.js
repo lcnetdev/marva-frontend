@@ -413,8 +413,8 @@ const exportXML = {
 		// cut the ref to the orginal
 		profile = JSON.parse(JSON.stringify(profile))
 
-
-
+		console.log("EXPROT PROFILE-------------------")
+		console.log(profile)
 
 		let tleWork = []
 		let tleInstance = []
@@ -881,13 +881,27 @@ const exportXML = {
 				
 				let parser = new DOMParser();
 
+
+
+
+
 				let unusedXmlNode = parser.parseFromString(orginalProfile.rt[rt].unusedXml, "text/xml")
+
 				unusedXmlNode = unusedXmlNode.children[0]
 
 				for (let el of unusedXmlNode.children){
 					
+					// console.log("Looking at",el.tagName)
 					if (el.tagName != 'rdfs:label'){
-						rootEl.appendChild(el)
+
+						// there is some strange behavior adding the element directly
+						// so make a copy of it and insert the copy parsed from the string xml
+						let newEl = (new XMLSerializer()).serializeToString(el)
+						newEl = parser.parseFromString(newEl, "text/xml")
+						newEl = newEl.children[0]
+
+						rootEl.appendChild(newEl)
+
 					}
 
 				}
