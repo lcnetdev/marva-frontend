@@ -480,7 +480,7 @@ export default {
 
         // '/bfe2/editor/tests/instances/5823055.editor-pkg.xml', // Map, contributor not loading
         
-        '/bfe2/editor/tests/instances/5823055_real.editor-pkg.xml', // Map, contributor not loading
+        // '/bfe2/editor/tests/instances/5823055_real.editor-pkg.xml', // Map, contributor not loading
 
 
 
@@ -501,7 +501,7 @@ export default {
         // '/bfe2/editor/tests/instances/c0056343030001.editor-pkg.xml', // ??? - is wild
 
 
-        // '/bfe2/editor/tests/instances/c0202249350001.editor-pkg.xml', // ???
+        '/bfe2/editor/tests/instances/c0202249350001.editor-pkg.xml', // ???
 
       ] 
 

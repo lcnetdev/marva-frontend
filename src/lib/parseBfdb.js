@@ -2,6 +2,7 @@
 // const jsdom = require("jsdom");
 import store from "../store";
 const short = require('short-uuid');
+import config from "./config"
 
 const hashCode = s => s.split('').reduce((a,b) => (((a << 5) - a) + b.charCodeAt(0))|0, 0)
 
@@ -1004,6 +1005,25 @@ const parseBfdb = {
 							console.log("Found contributor")
 							let isPrimaryContribXML = false
 
+							console.log(e)
+
+							if (config.profileHacks.removeExtraFieldsInContributor.enabled){
+								for (let aEl of e.getElementsByTagName('bflc:name00MatchKey')){
+									aEl.remove()
+								}
+								for (let aEl of e.getElementsByTagName('bflc:primaryContributorName00MatchKey')){
+									aEl.remove()
+								}
+								for (let aEl of e.getElementsByTagName('bflc:name00MarcKey')){
+									aEl.remove()
+								}
+								
+							}
+
+
+							console.log(e)
+
+
 							// does it have a rdf type of that 
 							for (let typeEl of e.getElementsByTagName('rdf:type')){
 								if (typeEl.attributes['rdf:resource'] && typeEl.attributes['rdf:resource'].value == 'http://id.loc.gov/ontologies/bflc/PrimaryContribution'){
@@ -1029,7 +1049,7 @@ const parseBfdb = {
 							}else{
 								// the ptk says no, if the xml says yesh jump to next
 								if (isPrimaryContribXML){
-									console.log("Skipping the ptk says no, if the xml says yesh jump to next")
+									console.log("Skipping the ptk says no, if the xml says yesh jump to next",ptk.valueConstraint.valueDataType.dataTypeURI)
 									continue
 								}
 							}
