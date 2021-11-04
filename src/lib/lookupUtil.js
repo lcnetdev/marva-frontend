@@ -357,15 +357,17 @@ const lookupUtil = {
     fetchContextData: async function(uri){
 
 
-          if (uri.startsWith('http://id.loc.gov') && uri.match(/(authorities|vocabularies)/)) {
+          if ((uri.startsWith('http://id.loc.gov') || uri.startsWith('https://id.loc.gov')) && uri.match(/(authorities|vocabularies)/)) {
             var jsonuri = uri + '.madsrdf_raw.jsonld';
 
             //if we are in production use preprod
+
             if (config.returnUrls().env == 'production' || config.returnUrls().env == 'staging'){
               jsonuri = jsonuri.replace('http://id.', 'https://preprod-8080.id.')
               jsonuri = jsonuri.replace('https://id.', 'https://preprod-8080.id.')
               
             }
+
           }else if (uri.includes('resources/works/') || uri.includes('resources/hubs/')){
 
             jsonuri = uri + '.bibframe.json';
