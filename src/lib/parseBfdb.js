@@ -796,7 +796,9 @@ const parseBfdb = {
 
 			// select the right part of the profile
 			let pt = profile.rt[pkey].pt
-			
+			console.log('tle',tle)
+			console.log(this.activeDom)
+			console.log(this.activeDom.getElementsByTagName(tle))
 			// select the right part of the XML
 			let xml
 			if (testRun){
@@ -2161,6 +2163,9 @@ const parseBfdb = {
 		// use the browser if we can, should be faster, fall back to the library if not running in the browser
 		if (window.DOMParser){
 			let parser = new DOMParser();
+			console.log("XML:",xml)
+			console.log("XML:",this.activeDom)
+
 			this.activeDom = parser.parseFromString(xml, "text/xml");
 			this.testDom = parser.parseFromString(xml, "text/xml");
 

@@ -31,7 +31,7 @@ const lookupUtil = {
         let response = await fetch(url,options);
         let data = null
 
-        if (url.endsWith('.rdf') || url.endsWith('.xml')){
+        if (url.includes('.rdf') || url.includes('.xml')){
           data =  await response.text()
         }else{
           data =  await response.json()
@@ -970,7 +970,7 @@ const lookupUtil = {
         if (!url.includes('?')){
           url = url + '?nocache='+Date.now()
         }
-        
+
         let r = await this.fetchSimpleLookup(url)
         return r
     },

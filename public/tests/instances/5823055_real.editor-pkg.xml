@@ -1,2 +1,224 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:lcc="http://id.loc.gov/ontologies/lcc#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><bf:Work rdf:about="http://id.loc.gov/resources/works/5823055" xmlns:bf="http://id.loc.gov/ontologies/bibframe/"><bflc:aap xmlns:bflc="http://id.loc.gov/ontologies/bflc/">W.S. McAlpine Map Co McAlpine's Wayne County farm atlas, Michigan : also Ypsilanti township, Washtenaw County, adjoining on the west</bflc:aap><bflc:aap-normalized xmlns:bflc="http://id.loc.gov/ontologies/bflc/">wsmcalpinemapcomcalpine'swaynecountyfarmatlasmichigan:alsoypsilantitownshipwashtenawcountyadjoiningonthewest</bflc:aap-normalized><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Cartography"/><bf:content><bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/cri"><rdfs:label>cartographic image</rdfs:label></bf:Content></bf:content><bf:genreForm><bf:GenreForm rdf:about="http://id.loc.gov/authorities/genreForms/gf2011026058"><rdfs:label>atlases</rdfs:label></bf:GenreForm></bf:genreForm><bf:colorContent><bf:ColorContent rdf:about="http://id.loc.gov/vocabulary/mcolor/mul"><rdfs:label>color</rdfs:label></bf:ColorContent></bf:colorContent><bf:language><bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/></bf:language><bf:scale><bf:Scale><rdfs:label>linear scale</rdfs:label></bf:Scale></bf:scale><bf:geographicCoverage rdf:resource="http://id.loc.gov/vocabulary/geographicAreas/n-us-mi"/><bf:classification><bf:ClassificationLcc><bf:assigner><bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"/></bf:assigner><bf:classificationPortion>G1413.W3</bf:classificationPortion><bf:itemPortion>M35 1942</bf:itemPortion></bf:ClassificationLcc></bf:classification><bf:geographicCoverage rdf:resource="http://id.loc.gov/authorities/classification/G4113.W3"/><bf:contribution><bf:Contribution><rdf:type rdf:resource="http://id.loc.gov/ontologies/bflc/PrimaryContribution"/><bf:agent><bf:Agent><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Organization"/><rdfs:label>W.S. McAlpine Map Co</rdfs:label></bf:Agent></bf:agent><bf:role><bf:Role><rdfs:label>cartographer</rdfs:label></bf:Role></bf:role></bf:Contribution></bf:contribution><bf:title><bf:Title><bf:mainTitle>McAlpine's Wayne County farm atlas, Michigan : also Ypsilanti township, Washtenaw County, adjoining on the west</bf:mainTitle></bf:Title></bf:title><bf:scale><bf:Scale><rdfs:label>Scales differ</rdfs:label></bf:Scale></bf:scale><bf:content><bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/cri"><rdfs:label>cartographic image</rdfs:label><bf:source><bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacontent"/></bf:source></bf:Content></bf:content><bf:references><bf:Work><bf:title><bf:Title><bf:mainTitle>Phillips</bf:mainTitle></bf:Title></bf:title><bf:note><bf:Note><rdf:type rdf:resource="http://id.loc.gov/vocabulary/mnotetype/loc"/><rdfs:label>14832</rdfs:label></bf:Note></bf:note></bf:Work></bf:references><bf:subject><bf:Place><rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/><rdfs:label>Wayne County (Mich.)--Maps.</rdfs:label><madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Wayne County (Mich.)--Maps.</madsrdf:authoritativeLabel><madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"/><madsrdf:componentList rdf:parseType="Collection" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"><madsrdf:Geographic><madsrdf:authoritativeLabel>Wayne County (Mich.)</madsrdf:authoritativeLabel></madsrdf:Geographic><madsrdf:GenreForm><madsrdf:authoritativeLabel>Maps</madsrdf:authoritativeLabel></madsrdf:GenreForm></madsrdf:componentList><bflc:aap-normalized xmlns:bflc="http://id.loc.gov/ontologies/bflc/">waynecounty(mich)maps</bflc:aap-normalized><bf:source rdf:resource="http://id.loc.gov/authorities/subjects"/></bf:Place></bf:subject><bf:subject><bf:Topic><rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/><rdfs:label>Real property--Michigan--Wayne County--Maps.</rdfs:label><madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Real property--Michigan--Wayne County--Maps.</madsrdf:authoritativeLabel><madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"/><madsrdf:componentList rdf:parseType="Collection" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"><madsrdf:Topic><madsrdf:authoritativeLabel>Real property</madsrdf:authoritativeLabel></madsrdf:Topic><madsrdf:Geographic><madsrdf:authoritativeLabel>Michigan</madsrdf:authoritativeLabel></madsrdf:Geographic><madsrdf:Geographic><madsrdf:authoritativeLabel>Wayne County</madsrdf:authoritativeLabel></madsrdf:Geographic><madsrdf:GenreForm><madsrdf:authoritativeLabel>Maps</madsrdf:authoritativeLabel></madsrdf:GenreForm></madsrdf:componentList><bflc:aap-normalized xmlns:bflc="http://id.loc.gov/ontologies/bflc/">realpropertymichiganwaynecountymaps</bflc:aap-normalized><bf:source rdf:resource="http://id.loc.gov/authorities/subjects"/></bf:Topic></bf:subject><bf:subject><bf:Topic><rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/><rdfs:label>Landowners--Michigan--Wayne County--Maps.</rdfs:label><madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Landowners--Michigan--Wayne County--Maps.</madsrdf:authoritativeLabel><madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"/><madsrdf:componentList rdf:parseType="Collection" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"><madsrdf:Topic><madsrdf:authoritativeLabel>Landowners</madsrdf:authoritativeLabel></madsrdf:Topic><madsrdf:Geographic><madsrdf:authoritativeLabel>Michigan</madsrdf:authoritativeLabel></madsrdf:Geographic><madsrdf:Geographic><madsrdf:authoritativeLabel>Wayne County</madsrdf:authoritativeLabel></madsrdf:Geographic><madsrdf:GenreForm><madsrdf:authoritativeLabel>Maps</madsrdf:authoritativeLabel></madsrdf:GenreForm></madsrdf:componentList><bflc:aap-normalized xmlns:bflc="http://id.loc.gov/ontologies/bflc/">landownersmichiganwaynecountymaps</bflc:aap-normalized><bf:source rdf:resource="http://id.loc.gov/authorities/subjects"/></bf:Topic></bf:subject><bf:genreForm><bf:GenreForm><rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/><madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Atlases.</madsrdf:authoritativeLabel><bf:source><bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/lcgft"><bf:code>lcgft</bf:code></bf:Source></bf:source><rdfs:label>Atlases.</rdfs:label></bf:GenreForm></bf:genreForm><dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/works" xmlns:dcterms="http://purl.org/dc/terms/"/><bf:hasInstance rdf:resource="http://id.loc.gov/resources/instances/5823055"/><bf:adminMetadata><bf:AdminMetadata><bf:generationProcess><bf:GenerationProcess><rdfs:label>DLC marc2bibframe2 v1.7.0</rdfs:label><bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-11-04T01:30:08.706658-04:00</bf:generationDate></bf:GenerationProcess></bf:generationProcess><bf:status><bf:Status rdf:about="http://id.loc.gov/vocabulary/mstatus/c"><rdfs:label>changed</rdfs:label></bf:Status></bf:status><bflc:encodingLevel xmlns:bflc="http://id.loc.gov/ontologies/bflc/"><bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/1"><rdfs:label>full not examined</rdfs:label></bflc:EncodingLevel></bflc:encodingLevel><bf:descriptionConventions><bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd"><bf:code>isbd</bf:code></bf:DescriptionConventions></bf:descriptionConventions><bf:identifiedBy><bf:Local><rdf:value>5823055</rdf:value><bf:assigner><bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"><bf:code>DLC</bf:code></bf:Agent></bf:assigner></bf:Local></bf:identifiedBy><bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-11-03T09:29:41</bf:changeDate><bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1982-12-08</bf:creationDate><lclocal:d906 xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/">=906     $a 7 $b cbc $c premver $d u $e ncip $f 19 $g y-geogmaps</lclocal:d906><lclocal:d925 xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/">=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925><lclocal:d955 xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/">=955     $i ga45 2020-12-16 NEW INPUT; $r ga45 2021-10-01</lclocal:d955><bf:assigner><bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"><bf:code>DLC</bf:code></bf:Agent></bf:assigner><bf:descriptionLanguage><bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/></bf:descriptionLanguage><bf:descriptionConventions><bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda"><bf:code>rda</bf:code></bf:DescriptionConventions></bf:descriptionConventions></bf:AdminMetadata></bf:adminMetadata></bf:Work></rdf:RDF>
+<rdf:RDF xmlns:lcc="http://id.loc.gov/ontologies/lcc#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+	<bf:Work rdf:about="http://id.loc.gov/resources/works/5823055" xmlns:bf="http://id.loc.gov/ontologies/bibframe/">
+		<bflc:aap xmlns:bflc="http://id.loc.gov/ontologies/bflc/">W.S. McAlpine Map Co McAlpine's Wayne County farm atlas, Michigan : also Ypsilanti township, Washtenaw County, adjoining on the west</bflc:aap>
+		<bflc:aap-normalized xmlns:bflc="http://id.loc.gov/ontologies/bflc/">wsmcalpinemapcomcalpine'swaynecountyfarmatlasmichigan:alsoypsilantitownshipwashtenawcountyadjoiningonthewest</bflc:aap-normalized>
+		<rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Cartography"/>
+		<bf:content>
+			<bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/cri">
+				<rdfs:label>cartographic image</rdfs:label>
+			</bf:Content>
+		</bf:content>
+		<bf:genreForm>
+			<bf:GenreForm rdf:about="http://id.loc.gov/authorities/genreForms/gf2011026058">
+				<rdfs:label>atlases</rdfs:label>
+			</bf:GenreForm>
+		</bf:genreForm>
+		<bf:colorContent>
+			<bf:ColorContent rdf:about="http://id.loc.gov/vocabulary/mcolor/mul">
+				<rdfs:label>color</rdfs:label>
+			</bf:ColorContent>
+		</bf:colorContent>
+		<bf:language>
+			<bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/>
+		</bf:language>
+		<bf:scale>
+			<bf:Scale>
+				<rdfs:label>linear scale</rdfs:label>
+			</bf:Scale>
+		</bf:scale>
+		<bf:geographicCoverage rdf:resource="http://id.loc.gov/vocabulary/geographicAreas/n-us-mi"/>
+		<bf:classification>
+			<bf:ClassificationLcc>
+				<bf:assigner>
+					<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"/>
+				</bf:assigner>
+				<bf:classificationPortion>G1413.W3</bf:classificationPortion>
+				<bf:itemPortion>M35 1942</bf:itemPortion>
+			</bf:ClassificationLcc>
+		</bf:classification>
+		<bf:geographicCoverage rdf:resource="http://id.loc.gov/authorities/classification/G4113.W3"/>
+		<bf:contribution>
+			<bf:Contribution>
+				<rdf:type rdf:resource="http://id.loc.gov/ontologies/bflc/PrimaryContribution"/>
+				<bf:agent>
+					<bf:Agent>
+						<rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Organization"/>
+						<rdfs:label>W.S. McAlpine Map Co</rdfs:label>
+					</bf:Agent>
+				</bf:agent>
+				<bf:role>
+					<bf:Role>
+						<rdfs:label>cartographer</rdfs:label>
+					</bf:Role>
+				</bf:role>
+			</bf:Contribution>
+		</bf:contribution>
+		<bf:title>
+			<bf:Title>
+				<bf:mainTitle>McAlpine's Wayne County farm atlas, Michigan : also Ypsilanti township, Washtenaw County, adjoining on the west</bf:mainTitle>
+			</bf:Title>
+		</bf:title>
+		<bf:scale>
+			<bf:Scale>
+				<rdfs:label>Scales differ</rdfs:label>
+			</bf:Scale>
+		</bf:scale>
+		<bf:content>
+			<bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/cri">
+				<rdfs:label>cartographic image</rdfs:label>
+				<bf:source>
+					<bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacontent"/>
+				</bf:source>
+			</bf:Content>
+		</bf:content>
+		<bf:references>
+			<bf:Work>
+				<bf:title>
+					<bf:Title>
+						<bf:mainTitle>Phillips</bf:mainTitle>
+					</bf:Title>
+				</bf:title>
+				<bf:note>
+					<bf:Note>
+						<rdf:type rdf:resource="http://id.loc.gov/vocabulary/mnotetype/loc"/>
+						<rdfs:label>14832</rdfs:label>
+					</bf:Note>
+				</bf:note>
+			</bf:Work>
+		</bf:references>
+		<bf:subject>
+			<bf:Place>
+				<rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
+				<rdfs:label>Wayne County (Mich.)--Maps.</rdfs:label>
+				<madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Wayne County (Mich.)--Maps.</madsrdf:authoritativeLabel>
+				<madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"/>
+				<madsrdf:componentList rdf:parseType="Collection" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">
+					<madsrdf:Geographic>
+						<madsrdf:authoritativeLabel>Wayne County (Mich.)</madsrdf:authoritativeLabel>
+					</madsrdf:Geographic>
+					<madsrdf:GenreForm>
+						<madsrdf:authoritativeLabel>Maps</madsrdf:authoritativeLabel>
+					</madsrdf:GenreForm>
+				</madsrdf:componentList>
+				<bflc:aap-normalized xmlns:bflc="http://id.loc.gov/ontologies/bflc/">waynecounty(mich)maps</bflc:aap-normalized>
+				<bf:source rdf:resource="http://id.loc.gov/authorities/subjects"/>
+			</bf:Place>
+		</bf:subject>
+		<bf:subject>
+			<bf:Topic>
+				<rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
+				<rdfs:label>Real property--Michigan--Wayne County--Maps.</rdfs:label>
+				<madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Real property--Michigan--Wayne County--Maps.</madsrdf:authoritativeLabel>
+				<madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"/>
+				<madsrdf:componentList rdf:parseType="Collection" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">
+					<madsrdf:Topic>
+						<madsrdf:authoritativeLabel>Real property</madsrdf:authoritativeLabel>
+					</madsrdf:Topic>
+					<madsrdf:Geographic>
+						<madsrdf:authoritativeLabel>Michigan</madsrdf:authoritativeLabel>
+					</madsrdf:Geographic>
+					<madsrdf:Geographic>
+						<madsrdf:authoritativeLabel>Wayne County</madsrdf:authoritativeLabel>
+					</madsrdf:Geographic>
+					<madsrdf:GenreForm>
+						<madsrdf:authoritativeLabel>Maps</madsrdf:authoritativeLabel>
+					</madsrdf:GenreForm>
+				</madsrdf:componentList>
+				<bflc:aap-normalized xmlns:bflc="http://id.loc.gov/ontologies/bflc/">realpropertymichiganwaynecountymaps</bflc:aap-normalized>
+				<bf:source rdf:resource="http://id.loc.gov/authorities/subjects"/>
+			</bf:Topic>
+		</bf:subject>
+		<bf:subject>
+			<bf:Topic>
+				<rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
+				<rdfs:label>Landowners--Michigan--Wayne County--Maps.</rdfs:label>
+				<madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Landowners--Michigan--Wayne County--Maps.</madsrdf:authoritativeLabel>
+				<madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"/>
+				<madsrdf:componentList rdf:parseType="Collection" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">
+					<madsrdf:Topic>
+						<madsrdf:authoritativeLabel>Landowners</madsrdf:authoritativeLabel>
+					</madsrdf:Topic>
+					<madsrdf:Geographic>
+						<madsrdf:authoritativeLabel>Michigan</madsrdf:authoritativeLabel>
+					</madsrdf:Geographic>
+					<madsrdf:Geographic>
+						<madsrdf:authoritativeLabel>Wayne County</madsrdf:authoritativeLabel>
+					</madsrdf:Geographic>
+					<madsrdf:GenreForm>
+						<madsrdf:authoritativeLabel>Maps</madsrdf:authoritativeLabel>
+					</madsrdf:GenreForm>
+				</madsrdf:componentList>
+				<bflc:aap-normalized xmlns:bflc="http://id.loc.gov/ontologies/bflc/">landownersmichiganwaynecountymaps</bflc:aap-normalized>
+				<bf:source rdf:resource="http://id.loc.gov/authorities/subjects"/>
+			</bf:Topic>
+		</bf:subject>
+		<bf:genreForm>
+			<bf:GenreForm>
+				<rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+				<madsrdf:authoritativeLabel xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#">Atlases.</madsrdf:authoritativeLabel>
+				<bf:source>
+					<bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/lcgft">
+						<bf:code>lcgft</bf:code>
+					</bf:Source>
+				</bf:source>
+				<rdfs:label>Atlases.</rdfs:label>
+			</bf:GenreForm>
+		</bf:genreForm>
+		<dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/works" xmlns:dcterms="http://purl.org/dc/terms/"/>
+		<bf:hasInstance rdf:resource="http://id.loc.gov/resources/instances/5823055"/>
+		<bf:adminMetadata>
+			<bf:AdminMetadata>
+				<bf:generationProcess>
+					<bf:GenerationProcess>
+						<rdfs:label>DLC marc2bibframe2 v1.7.0</rdfs:label>
+						<bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-11-04T01:30:08.706658-04:00</bf:generationDate>
+					</bf:GenerationProcess>
+				</bf:generationProcess>
+				<bf:status>
+					<bf:Status rdf:about="http://id.loc.gov/vocabulary/mstatus/c">
+						<rdfs:label>changed</rdfs:label>
+					</bf:Status>
+				</bf:status>
+				<bflc:encodingLevel xmlns:bflc="http://id.loc.gov/ontologies/bflc/">
+					<bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/1">
+						<rdfs:label>full not examined</rdfs:label>
+					</bflc:EncodingLevel>
+				</bflc:encodingLevel>
+				<bf:descriptionConventions>
+					<bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd">
+						<bf:code>isbd</bf:code>
+					</bf:DescriptionConventions>
+				</bf:descriptionConventions>
+				<bf:identifiedBy>
+					<bf:Local>
+						<rdf:value>5823055</rdf:value>
+						<bf:assigner>
+							<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+								<bf:code>DLC</bf:code>
+							</bf:Agent>
+						</bf:assigner>
+					</bf:Local>
+				</bf:identifiedBy>
+				<bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-11-03T09:29:41</bf:changeDate>
+				<bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1982-12-08</bf:creationDate>
+				<lclocal:d906 xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/">=906     $a 7 $b cbc $c premver $d u $e ncip $f 19 $g y-geogmaps</lclocal:d906>
+				<lclocal:d925 xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/">=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925>
+				<lclocal:d955 xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/">=955     $i ga45 2020-12-16 NEW INPUT; $r ga45 2021-10-01</lclocal:d955>
+				<bf:assigner>
+					<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+						<bf:code>DLC</bf:code>
+					</bf:Agent>
+				</bf:assigner>
+				<bf:descriptionLanguage>
+					<bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/>
+				</bf:descriptionLanguage>
+				<bf:descriptionConventions>
+					<bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda">
+						<bf:code>rda</bf:code>
+					</bf:DescriptionConventions>
+				</bf:descriptionConventions>
+			</bf:AdminMetadata>
+		</bf:adminMetadata>
+	</bf:Work>
+</rdf:RDF>
