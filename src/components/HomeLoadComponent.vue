@@ -478,11 +478,11 @@ export default {
 
 
 
-        '/bfe2/editor/tests/instances/5823055.editor-pkg.xml', // Map, contributor not loading
+        // '/bfe2/editor/tests/instances/5823055.editor-pkg.xml', // Map, contributor not loading
         
+        '/bfe2/editor/tests/instances/5823055_real.editor-pkg.xml', // Map, contributor not loading
 
 
-        
 
         // '/bfe2/editor/tests/works/loc.natlib.works.e37922655107918597887531234370352861771.rdf', // work only
 

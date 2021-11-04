@@ -967,6 +967,10 @@ const lookupUtil = {
 
         url = url.replace(/\.jsonld/,'.xml')
 
+        if (!url.includes('?')){
+          url = url + '?nocache='+Date.now()
+        }
+        
         let r = await this.fetchSimpleLookup(url)
         return r
     },
