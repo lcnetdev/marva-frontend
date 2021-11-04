@@ -999,11 +999,13 @@ const parseBfdb = {
 
 						// differentiate between creator and contributor
 						if (ptk.propertyURI == 'http://id.loc.gov/ontologies/bibframe/contribution'){
+							console.log("Found contributor")
 							let isPrimaryContribXML = false
 
 							// does it have a rdf type of that 
 							for (let typeEl of e.getElementsByTagName('rdf:type')){
 								if (typeEl.attributes['rdf:resource'] && typeEl.attributes['rdf:resource'].value == 'http://id.loc.gov/ontologies/bflc/PrimaryContribution'){
+
 									isPrimaryContribXML = true
 								}
 							}
@@ -1013,18 +1015,19 @@ const parseBfdb = {
 								isPrimaryContribXML = true
 							}
 
+							console.log("isPrimaryContribXML",isPrimaryContribXML)
 
 
 							if (ptk.valueConstraint.valueDataType.dataTypeURI && ptk.valueConstraint.valueDataType.dataTypeURI == "http://id.loc.gov/ontologies/bflc/PrimaryContribution"){
 								// the ptk says yes, if the xml doesn't jump to next
 								if (!isPrimaryContribXML){
-									
+									console.log("Skipping the ptk says yes, if the xml doesn't jump to next")
 									continue
 								}
 							}else{
 								// the ptk says no, if the xml says yesh jump to next
 								if (isPrimaryContribXML){
-									
+									console.log("Skipping the ptk says no, if the xml says yesh jump to next")
 									continue
 								}
 							}

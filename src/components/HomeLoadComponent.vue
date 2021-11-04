@@ -474,12 +474,13 @@ export default {
 
 
 
-        '/bfe2/editor/tests/instances/22295832.editor-pkg.xml', // OTHER PHYSICAL THING
+        // '/bfe2/editor/tests/instances/22295832.editor-pkg.xml', // OTHER PHYSICAL THING
 
+
+
+        '/bfe2/editor/tests/instances/5823055.editor-pkg.xml', // Map, contributor not loading
         
 
-
-        
 
         
 
