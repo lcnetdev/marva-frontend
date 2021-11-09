@@ -180,6 +180,21 @@ const config = {
 				}
 			]
 		},
+
+
+		"HierarchicalGeographic": {
+			"name":"names", 
+			"type":"complex", 
+			"processor" : 'lcAuthorities',			
+
+			"modes":[
+				{
+					'All':{"url":"https://id.loc.gov/authorities/names/suggest2/?q=<QUERY>&count=25&rdftype=HierarchicalGeographic", "all":true}, 					
+				}
+			]
+		},
+
+
 		"http://id.loc.gov/entities/providers" : {"name":"providers", "type":"complex", "modes":[]},
 		"http://id.loc.gov/entities/relationships" : {"name":"relationships", "processor" : 'lcAuthorities', "type":"complex", "modes":[
 			{

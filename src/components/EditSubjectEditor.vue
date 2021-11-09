@@ -498,15 +498,33 @@ export default {
         s.label = s.label.replaceAll('-','‑')
       }
 
+
+      for (let s of that.searchResults.hierarchicalGeographic){
+        s.labelOrginal = s.label
+        s.complex=true
+        s.label = s.label.replaceAll('-','‑')
+      }
+
+
       
       that.pickLookup = {}
 
       that.pickPostion = that.searchResults.subjectsSimple.length + that.searchResults.subjectsComplex.length -1
       
-      for (let x in that.searchResults.subjectsComplex){
-        that.pickLookup[x] = that.searchResults.subjectsComplex[x]
-      }
+      if (that.searchResults.hierarchicalGeographic.length>0){
 
+        // if we have hits on the hierarchicalGeographic use those instead of the complex hits
+        for (let x in that.searchResults.hierarchicalGeographic){
+          that.pickLookup[x] = that.searchResults.hierarchicalGeographic[x]
+        }
+
+      }else{
+
+        for (let x in that.searchResults.subjectsComplex){
+          that.pickLookup[x] = that.searchResults.subjectsComplex[x]
+        }
+
+      }
 
       for (let x in that.searchResults.subjectsSimple){
         that.pickLookup[parseInt(x)+parseInt(that.searchResults.subjectsComplex.length)] = that.searchResults.subjectsSimple[x]

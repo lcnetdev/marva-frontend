@@ -283,10 +283,16 @@ const lookupUtil = {
 
     // a special subject method to do sepcial subject things
     subjectSearch: async function(searchVal,complexVal){
-
+      console.log('searchVal',searchVal,'complexVal',complexVal)
       let namesUrl = config.lookupConfig['http://preprod.id.loc.gov/authorities/names'].modes[0]['NAF All'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=4')
       let subjectUrlComplex = config.lookupConfig['http://id.loc.gov/authorities/subjects'].modes[0]['LCSH All'].url.replace('<QUERY>',complexVal).replace('&count=25','&count=5')+'&rdftype=ComplexType'
       let subjectUrlSimple = config.lookupConfig['http://id.loc.gov/authorities/subjects'].modes[0]['LCSH All'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=4')+'&rdftype=SimpleType'
+
+
+      let searchValHierarchicalGeographic = searchVal.split(' ').join('--')
+
+
+      let subjectUrlHierarchicalGeographic = config.lookupConfig['HierarchicalGeographic'].modes[0]['All'].url.replace('<QUERY>',searchValHierarchicalGeographic).replace('&count=25','&count=4')
 
 
 
@@ -307,10 +313,21 @@ const lookupUtil = {
         searchValue: searchVal
       }
 
-      let [resultsNames, resultsSubjectsSimple, resultsSubjectsComplex] = await Promise.all([
+
+      let searchPayloadHierarchicalGeographic = {
+        processor: 'lcAuthorities',
+        url: [subjectUrlHierarchicalGeographic],
+        searchValue: searchValHierarchicalGeographic
+      }
+
+
+
+      let [resultsNames, resultsSubjectsSimple, resultsSubjectsComplex, resultsHierarchicalGeographic] = await Promise.all([
           this.searchComplex(searchPayloadNames),
           this.searchComplex(searchPayloadSubjectsSimple),
-          this.searchComplex(searchPayloadSubjectsComplex)
+          this.searchComplex(searchPayloadSubjectsComplex),
+          this.searchComplex(searchPayloadHierarchicalGeographic)
+
       ]);
 
       // drop the litearl value from names and complex
@@ -325,11 +342,11 @@ const lookupUtil = {
       resultsSubjectsComplex.reverse()
 
 
-
       let results = {
         'subjectsSimple': resultsSubjectsSimple,
         'subjectsComplex': resultsSubjectsComplex,
-        'names':resultsNames
+        'names':resultsNames,
+        'hierarchicalGeographic': resultsHierarchicalGeographic
       }
 
 
