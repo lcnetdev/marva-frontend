@@ -189,7 +189,7 @@ const config = {
 
 			"modes":[
 				{
-					'All':{"url":"https://preprod-8288.loc.gov/authorities/names/suggest2/?q=<QUERY>&count=25&rdftype=HierarchicalGeographic", "all":true}, 					
+					'All':{"url":"https://preprod-8288.id.loc.gov/authorities/names/suggest2/?q=<QUERY>&count=25&rdftype=HierarchicalGeographic", "all":true}, 					
 				}
 			]
 		},
