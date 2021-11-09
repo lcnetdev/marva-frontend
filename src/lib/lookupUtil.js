@@ -205,6 +205,7 @@ const lookupUtil = {
               url = url.replace('https://preprod-8230.id.loc.gov','https://id.loc.gov')
               url = url.replace('https://test-8080.id.lctl.gov','https://id.loc.gov')
               url = url.replace('https://preprod-8080.id.loc.gov','https://id.loc.gov')
+              url = url.replace('https://preprod-8288.id.loc.gov','https://id.loc.gov')
 
 
             }
@@ -330,6 +331,8 @@ const lookupUtil = {
 
       ]);
 
+      console.log('resultsNames',resultsNames)
+
       // drop the litearl value from names and complex
       resultsNames.pop()
       resultsSubjectsComplex.pop()
@@ -342,6 +345,26 @@ const lookupUtil = {
       resultsSubjectsComplex.reverse()
 
 
+      // don't do literals
+
+      let newresultsHierarchicalGeographic = []
+      for (let x of resultsHierarchicalGeographic){
+        if (!x.literal){
+          newresultsHierarchicalGeographic.push(x)
+        }
+      }
+      resultsHierarchicalGeographic = newresultsHierarchicalGeographic
+      // resultsHierarchicalGeographic = [{
+      //     "label": "Ohio--Cleveland",
+      //     "suggestLabel": "Ohio--Cleveland",
+      //     "uri": "http://id.loc.gov/authorities/names/n79086863",
+      //     "literal": false,
+      //     "extra": "",
+      //     "labelOrginal": "Ohio--Cleveland",
+      //     "picked": false
+      // }]
+
+
       let results = {
         'subjectsSimple': resultsSubjectsSimple,
         'subjectsComplex': resultsSubjectsComplex,
@@ -349,7 +372,7 @@ const lookupUtil = {
         'hierarchicalGeographic': resultsHierarchicalGeographic
       }
 
-
+      console.log('results',results)
       return results
 
     },

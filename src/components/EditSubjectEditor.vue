@@ -501,8 +501,13 @@ export default {
 
       for (let s of that.searchResults.hierarchicalGeographic){
         s.labelOrginal = s.label
-        s.complex=true
+        s.hierarchicalGeographic=true
         s.label = s.label.replaceAll('-','‑')
+      }
+
+
+      if (that.searchResults.hierarchicalGeographic.length>0 && that.searchResults.subjectsComplex.length==0){
+        that.searchResults.subjectsComplex = that.searchResults.hierarchicalGeographic
       }
 
 
@@ -511,19 +516,11 @@ export default {
 
       that.pickPostion = that.searchResults.subjectsSimple.length + that.searchResults.subjectsComplex.length -1
       
-      if (that.searchResults.hierarchicalGeographic.length>0){
 
-        // if we have hits on the hierarchicalGeographic use those instead of the complex hits
-        for (let x in that.searchResults.hierarchicalGeographic){
-          that.pickLookup[x] = that.searchResults.hierarchicalGeographic[x]
-        }
 
-      }else{
 
-        for (let x in that.searchResults.subjectsComplex){
-          that.pickLookup[x] = that.searchResults.subjectsComplex[x]
-        }
-
+      for (let x in that.searchResults.subjectsComplex){
+        that.pickLookup[x] = that.searchResults.subjectsComplex[x]
       }
 
       for (let x in that.searchResults.subjectsSimple){
@@ -531,10 +528,14 @@ export default {
       }
 
 
+      console.log(JSON.stringify(that.pickLookup))
+
+      console.log(JSON.stringify(that.pickLookup))
+
       for (let x in that.searchResults.names){
         that.pickLookup[(that.searchResults.names.length - x)*-1] = that.searchResults.names[x]
       }
-
+      console.log(JSON.stringify(that.pickLookup))
       for (let k in that.pickLookup){
 
         that.pickLookup[k].picked = false
@@ -545,7 +546,7 @@ export default {
           // if the labels are the same for the current one selected don't overide it
           if (that.pickLookup[k].label == that.activeComponent.label && that.activeComponent.uri){
 
-
+            console.log("{icking",that.pickLookup[k])
             if (that.activeComponent.uri == that.pickLookup[k].uri){
 
               that.pickPostion=k
@@ -567,7 +568,9 @@ export default {
 
         }
       }
-
+      console.log(JSON.stringify(that.pickLookup))
+      console.log(that.pickLookup)
+      console.log(that.pickPostion)
 
       that.$store.dispatch("clearContext", { self: that})
       if (!that.pickLookup[that.pickPostion].literal){
