@@ -453,6 +453,7 @@ const exportXML = {
 
 			if (profile.rt[rt].noData) continue
 
+			console.log("rt is",rt)
 				
 
 			let tleArray // eslint-disable-line
@@ -1061,8 +1062,11 @@ const exportXML = {
 
 
 				let work = tleLookup['Work'][workKey]
-
+				if (work){
+				console.log("Work is",work)
+				console.log(tleLookup)
 				rdf.appendChild(work)
+				}
 
 
 

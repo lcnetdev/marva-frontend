@@ -813,6 +813,21 @@ const parseBfdb = {
 			xml = this.returnOneWhereParentIs(xml, "rdf:RDF")
 			console.log('selecting to process:',xml)
 
+			if (xml === false && tle == 'bf:Hub'){
+				tle = "bf:Work"
+				console.warn('No bf:Hub found, looking for bf:Work')
+				if (testRun){
+					xml = this.testDom.getElementsByTagName(tle)
+				}else{
+					xml = this.activeDom.getElementsByTagName(tle)
+				}
+
+				xml = this.returnOneWhereParentIs(xml, "rdf:RDF")
+				console.log('selecting to process:',xml)
+
+			}
+
+
 			if (xml===false){
 				console.warn(tle,'was not processed because it failed the top level test, must be a nested resource?')
 				toDeleteNoData.push(pkey)
@@ -1005,7 +1020,6 @@ const parseBfdb = {
 							console.log("Found contributor")
 							let isPrimaryContribXML = false
 
-							console.log(e)
 
 							if (config.profileHacks.removeExtraFieldsInContributor.enabled){
 								for (let aEl of e.getElementsByTagName('bflc:name00MatchKey')){
@@ -1017,11 +1031,8 @@ const parseBfdb = {
 								for (let aEl of e.getElementsByTagName('bflc:name00MarcKey')){
 									aEl.remove()
 								}
-								
+
 							}
-
-
-							console.log(e)
 
 
 							// does it have a rdf type of that 
@@ -2062,6 +2073,48 @@ const parseBfdb = {
 		let workEl = this.activeDom.getElementsByTagName('bf:Work')
 		let instanceEl = this.activeDom.getElementsByTagName('bf:Instance')
 
+
+		// before we do all that test to see if it is a hub
+		if (workEl.length==1){
+			for (let c of workEl[0].children){
+				if (c.tagName === 'rdf:type'){
+
+					if (c.attributes['rdf:resource']){
+						if (c.attributes['rdf:resource'].value === 'http://id.loc.gov/ontologies/bibframe/Hub'){
+
+							let results = {
+								hardCoded: false,
+								scoreResults: []
+							}
+
+							let already = []
+							for (let rtName in profiles){
+
+
+								let rts = Object.keys(profiles[rtName].rt)
+								console.log(rts)
+								if (rts[0] && rts[0].endsWith(':Hub')){
+									if (already.indexOf(rts[0])==-1){
+										results.scoreResults.push({score: 100, id: rts[0], profile: `Hub (${rts[0]})`})
+										already.push(rts[0])
+									}
+								}
+								
+
+							}
+							return results
+						}
+					}
+				}
+			}
+		} 
+
+
+// hardCoded: false
+// scoreResults: Array(52)
+// 0: {score: -5, id: null, profile: 'lc:profile:bf2:Hub'}
+
+
 		let toWork = []
 
 		if (workEl.length>0){
@@ -2162,6 +2215,12 @@ const parseBfdb = {
 		if (suggestedProfileNameByTag.length==0){
 			suggestedProfileNameByTag=false
 		}
+console.log({
+			hardCoded: suggestedProfileNameByTag,
+			scoreResults: scoreResults
+
+		})
+
 
 		return {
 			hardCoded: suggestedProfileNameByTag,
@@ -2183,8 +2242,6 @@ const parseBfdb = {
 		// use the browser if we can, should be faster, fall back to the library if not running in the browser
 		if (window.DOMParser){
 			let parser = new DOMParser();
-			console.log("XML:",xml)
-			console.log("XML:",this.activeDom)
 
 			this.activeDom = parser.parseFromString(xml, "text/xml");
 			this.testDom = parser.parseFromString(xml, "text/xml");

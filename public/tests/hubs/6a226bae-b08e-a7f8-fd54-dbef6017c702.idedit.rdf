@@ -1,0 +1,31 @@
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <bf:Work rdf:about="http://id.loc.gov/resources/hubs/6a226bae-b08e-a7f8-fd54-dbef6017c702" xmlns:bf="http://id.loc.gov/ontologies/bibframe/">
+    <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Hub"/>
+    <dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/hubs" xmlns:dcterms="http://purl.org/dc/terms/"/>
+    <bf:contribution>
+      <bf:Contribution>
+	<rdf:type rdf:resource="http://id.loc.gov/ontologies/bflc/PrimaryContribution"/>
+	<bf:agent>
+	  <bf:Agent rdf:about="http://id.loc.gov/rwo/agents/n82028048">
+	    <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+	    <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Heller, Yom Tov Lipmann ben Nathan ha-Levi ben Wallerstein,‏ ‎ 1579-1654</rdfs:label>
+	    <madsrdf:isIdentifiedByAuthority rdf:resource="http://id.loc.gov/authorities/names/n82028048" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"/>
+	  </bf:Agent>
+	</bf:agent>
+	<bf:role>
+	  <bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/ctb">
+	    <rdfs:label xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">Contributor</rdfs:label>
+	  </bf:Role>
+	</bf:role>
+      </bf:Contribution>
+    </bf:contribution>
+    <bfsimple:prefTitle xmlns:bfsimple="http://id.loc.gov/ontologies/bfsimple/"/>
+    <bf:adminMetadata>
+      <bf:AdminMetadata>
+	<bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-11-01T00:00:00</bf:creationDate>
+	<bf:status rdf:resource="http://id.loc.gov/vocabulary/mstatus/n"/>
+	<bf:derivedFrom rdf:resource="https://lccn.loc.gov/2020480912/marcxml"/>
+      </bf:AdminMetadata>
+    </bf:adminMetadata>
+  </bf:Work>
+</rdf:RDF>
