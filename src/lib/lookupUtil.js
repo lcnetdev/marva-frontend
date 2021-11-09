@@ -375,6 +375,7 @@ const lookupUtil = {
           }
 
 
+
           //if we are in production use preprod
           if (config.returnUrls().env == 'production' || config.returnUrls().env == 'staging'){
             jsonuri = jsonuri.replace('http://id.', 'https://preprod-8080.id.')
@@ -382,6 +383,11 @@ const lookupUtil = {
             
           }
 
+
+          // if were local host then undo it
+          if (config.returnUrls().dev){
+            jsonuri = jsonuri.replace('https://preprod-8080.id.','https://id.')
+          }
 
 
           jsonuri = jsonuri.replace('http://id.loc.gov','https://id.loc.gov')

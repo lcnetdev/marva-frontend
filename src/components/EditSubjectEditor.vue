@@ -485,6 +485,11 @@ export default {
       that.searchResults = await lookupUtil.subjectSearch(searchString,searchStringFull) 
 
 
+      // replace the true keyboard hypen with the werid hypen to prevent spliting on open lifedates
+      for (let s of that.searchResults.names){
+        s.labelOrginal = s.label
+        s.label = s.label.replaceAll('-','‑')
+      }
 
 
       for (let s of that.searchResults.subjectsComplex){
