@@ -1,2 +1,258 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:bf="http://id.loc.gov/ontologies/bibframe/" xmlns:bflc="http://id.loc.gov/ontologies/bflc/" xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pmo="http://performedmusicontology.org/ontology/"><bf:Instance rdf:about="http://id.loc.gov/resources/instances/22255785"><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Print"/><bf:issuance><bf:Issuance rdf:about="http://id.loc.gov/vocabulary/issuance/mono"/></bf:issuance><bf:provisionActivity><bf:ProvisionActivity><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Publication"/><bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">2021</bf:date><bf:place><bf:Place rdf:about="http://id.loc.gov/vocabulary/countries/ko"/></bf:place></bf:ProvisionActivity></bf:provisionActivity><bf:identifiedBy><bf:Lccn><rdf:value>  2021422817</rdf:value></bf:Lccn></bf:identifiedBy><bf:identifiedBy><bf:Isbn><rdf:value>9791167420091</rdf:value></bf:Isbn></bf:identifiedBy><bf:responsibilityStatement>O Chong-gap</bf:responsibilityStatement><bf:responsibilityStatement xml:lang="ko-hang">오 종갑</bf:responsibilityStatement><bf:title><bf:Title><bf:mainTitle>Kugŏ pangŏn e panyŏng toen ŭmunnonjŏk pyŏnhwa</bf:mainTitle><bf:mainTitle xml:lang="ko-hang">국어 방언 에 반영 된 음운론적 변화</bf:mainTitle></bf:Title></bf:title><bf:editionStatement>Ch'op'an</bf:editionStatement><bf:editionStatement xml:lang="ko-hang">초판</bf:editionStatement><bf:provisionActivity><bf:ProvisionActivity><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Publication"/><bf:place><bf:Place><rdfs:label>Sŏul-si</rdfs:label><rdfs:label xml:lang="ko-hang">서울시</rdfs:label></bf:Place></bf:place><bf:agent><bf:Agent><rdfs:label>Yŏngnak</rdfs:label><rdfs:label xml:lang="ko-hang">역락</rdfs:label></bf:Agent></bf:agent><bf:date>2021</bf:date><bf:date xml:lang="ko-hang">2021</bf:date></bf:ProvisionActivity></bf:provisionActivity><bf:extent><bf:Extent><rdfs:label>837 pages</rdfs:label></bf:Extent></bf:extent><bf:note><bf:Note><rdf:type rdf:resource="http://id.loc.gov/vocabulary/mnotetype/physical"/><rdfs:label>maps</rdfs:label></bf:Note></bf:note><bf:dimensions>23 cm</bf:dimensions><bf:media><bf:Media><rdfs:label>unmediated</rdfs:label><bf:source><bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdamedia"/></bf:source></bf:Media></bf:media><bf:carrier><bf:Carrier><rdfs:label>volume</rdfs:label><bf:source><bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacarrier"/></bf:source></bf:Carrier></bf:carrier><bf:supplementaryContent><bf:SupplementaryContent><rdfs:label>Includes bibliographical references (pages 787-789) and index.</rdfs:label></bf:SupplementaryContent></bf:supplementaryContent><dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/instances" xmlns:dcterms="http://purl.org/dc/terms/"/><bf:instanceOf rdf:resource="http://id.loc.gov/resources/works/22255785"/><bf:adminMetadata><bf:AdminMetadata><bf:generationProcess><bf:GenerationProcess><rdfs:label>DLC marc2bibframe2 v1.7.0</rdfs:label><bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-10-27T07:02:06.915113-04:00</bf:generationDate></bf:GenerationProcess></bf:generationProcess><bf:status><bf:Status rdf:about="http://id.loc.gov/vocabulary/mstatus/c"><rdfs:label>changed</rdfs:label></bf:Status></bf:status><bflc:encodingLevel><bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/5"><rdfs:label>preliminary</rdfs:label></bflc:EncodingLevel></bflc:encodingLevel><bf:descriptionConventions><bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd"><bf:code>isbd</bf:code></bf:DescriptionConventions></bf:descriptionConventions><bf:identifiedBy><bf:Local><rdf:value>22255785</rdf:value><bf:assigner><bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"><bf:code>DLC</bf:code></bf:Agent></bf:assigner></bf:Local></bf:identifiedBy><bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-10-27T07:01:17</bf:changeDate><bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-09-28</bf:creationDate><lclocal:d906>=906     $a 0 $b ibc $c orignew $d 3 $e ncip $f 20 $g y-nonroman</lclocal:d906><lclocal:d925>=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925><lclocal:d955>=955     $a ve18 2021-09-28 TW Situational $b cf21 2021-10-05 TW Situational</lclocal:d955><bf:assigner><bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"><bf:code>DLC</bf:code></bf:Agent></bf:assigner><bf:descriptionLanguage><bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/></bf:descriptionLanguage><bf:descriptionConventions><bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda"><bf:code>rda</bf:code></bf:DescriptionConventions></bf:descriptionConventions><bf:descriptionAuthentication><bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/pcc"><bf:code>pcc</bf:code></bf:DescriptionAuthentication></bf:descriptionAuthentication></bf:AdminMetadata></bf:adminMetadata></bf:Instance><bf:Work rdf:about="http://id.loc.gov/resources/works/22255785"><bflc:aap>O, Chong-gap, 1946- Kugŏ pangŏn e panyŏng toen ŭmunnonjŏk pyŏnhwa 국어 방언 에 반영 된 음운론적 변화</bflc:aap><bflc:aap-normalized>ochonggap1946kugŏpangŏnepanyŏngtoenŭmunnonjŏkpyŏnhwa국어방언에반영된음운론적변화</bflc:aap-normalized><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Text"/><bf:content><bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/txt"><rdfs:label>text</rdfs:label></bf:Content></bf:content><bf:language><bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/kor"/></bf:language><bf:illustrativeContent><bf:Illustration rdf:about="http://id.loc.gov/vocabulary/millus/map"><rdfs:label>maps</rdfs:label></bf:Illustration></bf:illustrativeContent><bf:contribution><bf:Contribution><rdf:type rdf:resource="http://id.loc.gov/ontologies/bflc/PrimaryContribution"/><bf:agent><bf:Agent><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/><rdfs:label>O, Chong-gap, 1946-</rdfs:label></bf:Agent></bf:agent><bf:role><bf:Role><rdfs:label>author</rdfs:label></bf:Role></bf:role></bf:Contribution></bf:contribution><bf:title><bf:Title><bf:mainTitle>Kugŏ pangŏn e panyŏng toen ŭmunnonjŏk pyŏnhwa</bf:mainTitle><bf:mainTitle xml:lang="ko-hang">국어 방언 에 반영 된 음운론적 변화</bf:mainTitle></bf:Title></bf:title><bf:content><bf:Content><rdfs:label>text</rdfs:label><bf:source><bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacontent"/></bf:source></bf:Content></bf:content><dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/works" xmlns:dcterms="http://purl.org/dc/terms/"/><bf:hasInstance rdf:resource="http://id.loc.gov/resources/instances/22255785"/><bf:adminMetadata><bf:AdminMetadata><bf:generationProcess><bf:GenerationProcess><rdfs:label>DLC marc2bibframe2 v1.7.0</rdfs:label><bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-10-27T07:02:06.915113-04:00</bf:generationDate></bf:GenerationProcess></bf:generationProcess><bf:status><bf:Status rdf:about="http://id.loc.gov/vocabulary/mstatus/c"><rdfs:label>changed</rdfs:label></bf:Status></bf:status><bflc:encodingLevel><bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/5"><rdfs:label>preliminary</rdfs:label></bflc:EncodingLevel></bflc:encodingLevel><bf:descriptionConventions><bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd"><bf:code>isbd</bf:code></bf:DescriptionConventions></bf:descriptionConventions><bf:identifiedBy><bf:Local><rdf:value>22255785</rdf:value><bf:assigner><bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"><bf:code>DLC</bf:code></bf:Agent></bf:assigner></bf:Local></bf:identifiedBy><bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-10-27T07:01:17</bf:changeDate><bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-09-28</bf:creationDate><lclocal:d906>=906     $a 0 $b ibc $c orignew $d 3 $e ncip $f 20 $g y-nonroman</lclocal:d906><lclocal:d925>=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925><lclocal:d955>=955     $a ve18 2021-09-28 TW Situational $b cf21 2021-10-05 TW Situational</lclocal:d955><bf:assigner><bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"><bf:code>DLC</bf:code></bf:Agent></bf:assigner><bf:descriptionLanguage><bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/></bf:descriptionLanguage><bf:descriptionConventions><bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda"><bf:code>rda</bf:code></bf:DescriptionConventions></bf:descriptionConventions><bf:descriptionAuthentication><bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/pcc"><bf:code>pcc</bf:code></bf:DescriptionAuthentication></bf:descriptionAuthentication></bf:AdminMetadata></bf:adminMetadata></bf:Work></rdf:RDF>
+<rdf:RDF xmlns:bf="http://id.loc.gov/ontologies/bibframe/" xmlns:bflc="http://id.loc.gov/ontologies/bflc/" xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" xmlns:pmo="http://performedmusicontology.org/ontology/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<bf:Instance rdf:about="http://id.loc.gov/resources/instances/22255785">
+		<rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Print"/>
+		<bf:issuance>
+			<bf:Issuance rdf:about="http://id.loc.gov/vocabulary/issuance/mono"/>
+		</bf:issuance>
+		<bf:provisionActivity>
+			<bf:ProvisionActivity>
+				<rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Publication"/>
+				<bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">2021</bf:date>
+				<bf:place>
+					<bf:Place rdf:about="http://id.loc.gov/vocabulary/countries/ko"/>
+				</bf:place>
+			</bf:ProvisionActivity>
+		</bf:provisionActivity>
+		<bf:identifiedBy>
+			<bf:Lccn>
+				<rdf:value>2021422817</rdf:value>
+			</bf:Lccn>
+		</bf:identifiedBy>
+		<bf:identifiedBy>
+			<bf:Isbn>
+				<rdf:value>9791167420091</rdf:value>
+			</bf:Isbn>
+		</bf:identifiedBy>
+		<bf:responsibilityStatement>O Chong-gap</bf:responsibilityStatement>
+		<bf:responsibilityStatement xml:lang="ko-hang">오 종갑</bf:responsibilityStatement>
+		<bf:title>
+			<bf:Title>
+				<bf:mainTitle>Kugŏ pangŏn e panyŏng toen ŭmunnonjŏk pyŏnhwa</bf:mainTitle>
+				<bf:mainTitle xml:lang="ko-hang">국어 방언 에 반영 된 음운론적 변화</bf:mainTitle>
+			</bf:Title>
+		</bf:title>
+		<bf:editionStatement>Ch'op'an</bf:editionStatement>
+		<bf:editionStatement xml:lang="ko-hang">초판</bf:editionStatement>
+		<bf:provisionActivity>
+			<bf:ProvisionActivity>
+				<rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Publication"/>
+				<bf:place>
+					<bf:Place>
+						<rdfs:label>Sŏul-si</rdfs:label>
+						<rdfs:label xml:lang="ko-hang">서울시</rdfs:label>
+					</bf:Place>
+				</bf:place>
+				<bf:agent>
+					<bf:Agent>
+						<rdfs:label>Yŏngnak</rdfs:label>
+						<rdfs:label xml:lang="ko-hang">역락</rdfs:label>
+					</bf:Agent>
+				</bf:agent>
+				<bf:date>2021</bf:date>
+				<bf:date xml:lang="ko-hang">2021</bf:date>
+			</bf:ProvisionActivity>
+		</bf:provisionActivity>
+		<bf:extent>
+			<bf:Extent>
+				<rdfs:label>837 pages</rdfs:label>
+			</bf:Extent>
+		</bf:extent>
+		<bf:note>
+			<bf:Note>
+				<rdf:type rdf:resource="http://id.loc.gov/vocabulary/mnotetype/physical"/>
+				<rdfs:label>maps</rdfs:label>
+			</bf:Note>
+		</bf:note>
+		<bf:dimensions>23 cm</bf:dimensions>
+		<bf:media>
+			<bf:Media>
+				<rdfs:label>unmediated</rdfs:label>
+				<bf:source>
+					<bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdamedia"/>
+				</bf:source>
+			</bf:Media>
+		</bf:media>
+		<bf:carrier>
+			<bf:Carrier>
+				<rdfs:label>volume</rdfs:label>
+				<bf:source>
+					<bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacarrier"/>
+				</bf:source>
+			</bf:Carrier>
+		</bf:carrier>
+		<bf:supplementaryContent>
+			<bf:SupplementaryContent>
+				<rdfs:label>Includes bibliographical references (pages 787-789) and index.</rdfs:label>
+			</bf:SupplementaryContent>
+		</bf:supplementaryContent>
+		<dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/instances" xmlns:dcterms="http://purl.org/dc/terms/"/>
+		<bf:instanceOf rdf:resource="http://id.loc.gov/resources/works/22255785"/>
+		<bf:adminMetadata>
+			<bf:AdminMetadata>
+				<bf:generationProcess>
+					<bf:GenerationProcess>
+						<rdfs:label>DLC marc2bibframe2 v1.7.0</rdfs:label>
+						<bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-10-27T07:02:06.915113-04:00</bf:generationDate>
+					</bf:GenerationProcess>
+				</bf:generationProcess>
+				<bf:status>
+					<bf:Status rdf:about="http://id.loc.gov/vocabulary/mstatus/c">
+						<rdfs:label>changed</rdfs:label>
+					</bf:Status>
+				</bf:status>
+				<bflc:encodingLevel>
+					<bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/5">
+						<rdfs:label>preliminary</rdfs:label>
+					</bflc:EncodingLevel>
+				</bflc:encodingLevel>
+				<bf:descriptionConventions>
+					<bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd">
+						<bf:code>isbd</bf:code>
+					</bf:DescriptionConventions>
+				</bf:descriptionConventions>
+				<bf:identifiedBy>
+					<bf:Local>
+						<rdf:value>22255785</rdf:value>
+						<bf:assigner>
+							<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+								<bf:code>DLC</bf:code>
+							</bf:Agent>
+						</bf:assigner>
+					</bf:Local>
+				</bf:identifiedBy>
+				<bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-10-27T07:01:17</bf:changeDate>
+				<bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-09-28</bf:creationDate>
+				<lclocal:d906>=906     $a 0 $b ibc $c orignew $d 3 $e ncip $f 20 $g y-nonroman</lclocal:d906>
+				<lclocal:d925>=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925>
+				<lclocal:d955>=955     $a ve18 2021-09-28 TW Situational $b cf21 2021-10-05 TW Situational</lclocal:d955>
+				<bf:assigner>
+					<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+						<bf:code>DLC</bf:code>
+					</bf:Agent>
+				</bf:assigner>
+				<bf:descriptionLanguage>
+					<bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/>
+				</bf:descriptionLanguage>
+				<bf:descriptionConventions>
+					<bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda">
+						<bf:code>rda</bf:code>
+					</bf:DescriptionConventions>
+				</bf:descriptionConventions>
+				<bf:descriptionAuthentication>
+					<bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/pcc">
+						<bf:code>pcc</bf:code>
+					</bf:DescriptionAuthentication>
+				</bf:descriptionAuthentication>
+			</bf:AdminMetadata>
+		</bf:adminMetadata>
+	</bf:Instance>
+	<bf:Work rdf:about="http://id.loc.gov/resources/works/22255785">
+		<bflc:aap>O, Chong-gap, 1946- Kugŏ pangŏn e panyŏng toen ŭmunnonjŏk pyŏnhwa 국어 방언 에 반영 된 음운론적 변화</bflc:aap>
+		<bflc:aap-normalized>ochonggap1946kugŏpangŏnepanyŏngtoenŭmunnonjŏkpyŏnhwa국어방언에반영된음운론적변화</bflc:aap-normalized>
+		<rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Text"/>
+		<bf:content>
+			<bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/txt">
+				<rdfs:label>text</rdfs:label>
+			</bf:Content>
+		</bf:content>
+		<bf:language>
+			<bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/kor"/>
+		</bf:language>
+		<bf:illustrativeContent>
+			<bf:Illustration rdf:about="http://id.loc.gov/vocabulary/millus/map">
+				<rdfs:label>maps</rdfs:label>
+			</bf:Illustration>
+		</bf:illustrativeContent>
+		<bf:contribution>
+			<bf:Contribution>
+				<rdf:type rdf:resource="http://id.loc.gov/ontologies/bflc/PrimaryContribution"/>
+				<bf:agent>
+					<bf:Agent>
+						<rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+						<rdfs:label>O, Chong-gap, 1946-</rdfs:label>
+					</bf:Agent>
+				</bf:agent>
+				<bf:role>
+					<bf:Role>
+						<rdfs:label>author</rdfs:label>
+					</bf:Role>
+				</bf:role>
+			</bf:Contribution>
+		</bf:contribution>
+		<bf:title>
+			<bf:Title>
+				<bf:mainTitle>Kugŏ pangŏn e panyŏng toen ŭmunnonjŏk pyŏnhwa</bf:mainTitle>
+				<bf:mainTitle xml:lang="ko-hang">국어 방언 에 반영 된 음운론적 변화</bf:mainTitle>
+			</bf:Title>
+		</bf:title>
+		<bf:content>
+			<bf:Content>
+				<rdfs:label>text</rdfs:label>
+				<bf:source>
+					<bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacontent"/>
+				</bf:source>
+			</bf:Content>
+		</bf:content>
+		<dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/works" xmlns:dcterms="http://purl.org/dc/terms/"/>
+		<bf:hasInstance rdf:resource="http://id.loc.gov/resources/instances/22255785"/>
+		<bf:adminMetadata>
+			<bf:AdminMetadata>
+				<bf:generationProcess>
+					<bf:GenerationProcess>
+						<rdfs:label>DLC marc2bibframe2 v1.7.0</rdfs:label>
+						<bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-10-27T07:02:06.915113-04:00</bf:generationDate>
+					</bf:GenerationProcess>
+				</bf:generationProcess>
+				<bf:status>
+					<bf:Status rdf:about="http://id.loc.gov/vocabulary/mstatus/c">
+						<rdfs:label>changed</rdfs:label>
+					</bf:Status>
+				</bf:status>
+				<bflc:encodingLevel>
+					<bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/5">
+						<rdfs:label>preliminary</rdfs:label>
+					</bflc:EncodingLevel>
+				</bflc:encodingLevel>
+				<bf:descriptionConventions>
+					<bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd">
+						<bf:code>isbd</bf:code>
+					</bf:DescriptionConventions>
+				</bf:descriptionConventions>
+				<bf:identifiedBy>
+					<bf:Local>
+						<rdf:value>22255785</rdf:value>
+						<bf:assigner>
+							<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+								<bf:code>DLC</bf:code>
+							</bf:Agent>
+						</bf:assigner>
+					</bf:Local>
+				</bf:identifiedBy>
+				<bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-10-27T07:01:17</bf:changeDate>
+				<bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2021-09-28</bf:creationDate>
+				<lclocal:d906>=906     $a 0 $b ibc $c orignew $d 3 $e ncip $f 20 $g y-nonroman</lclocal:d906>
+				<lclocal:d925>=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925>
+				<lclocal:d955>=955     $a ve18 2021-09-28 TW Situational $b cf21 2021-10-05 TW Situational</lclocal:d955>
+				<bf:assigner>
+					<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+						<bf:code>DLC</bf:code>
+					</bf:Agent>
+				</bf:assigner>
+				<bf:descriptionLanguage>
+					<bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/>
+				</bf:descriptionLanguage>
+				<bf:descriptionConventions>
+					<bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda">
+						<bf:code>rda</bf:code>
+					</bf:DescriptionConventions>
+				</bf:descriptionConventions>
+				<bf:descriptionAuthentication>
+					<bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/pcc">
+						<bf:code>pcc</bf:code>
+					</bf:DescriptionAuthentication>
+				</bf:descriptionAuthentication>
+			</bf:AdminMetadata>
+		</bf:adminMetadata>
+	</bf:Work>
+</rdf:RDF>

@@ -1876,6 +1876,93 @@ const parseProfile = {
         return currentState
     },
 
+    returnLiterals: function(activeProfile){
+
+
+        let literals = {}
+
+
+        for (let rtKey in activeProfile.rt){
+
+            if (!literals[rtKey]){
+                literals[rtKey] = []
+            }
+
+            for (let ptKey in activeProfile.rt[rtKey].pt){
+
+                let pt = activeProfile.rt[rtKey].pt[ptKey]
+
+                // if the whole component is a literal
+                // if (pt.type === '')
+
+
+                // see if there are any literals here
+                // let foundLiterals = []
+
+                if (pt.userValue['@id']){
+                    // if there is an URI then it is controlled, so skipp this one
+                    continue
+                }
+
+                for (let k in pt.userValue){
+
+                    if (!k.startsWith('@')){
+                        for (let val of pt.userValue[k]){
+
+                            // if this one has a URI then skipp it as well (might not happen?)
+                            if (val['@id']){
+                                // if there is an URI then it is controlled, so skipp this one
+                                continue
+                            }
+
+                            // some things we don't want to keep track of
+                            if (['http://id.loc.gov/ontologies/bibframe/adminMetadata'].indexOf(pt.propertyURI)>-1){
+                                continue
+                            }
+
+
+                            console.log('doing',val,pt)
+
+                            let stringValue = ''
+
+                            for (let kk in val){
+                                if (!kk.startsWith('@')){
+                                    stringValue=stringValue+val[kk]
+                                }
+                            }
+
+
+
+                            literals[rtKey].push({
+                                rt: rtKey,
+                                ptGuid: pt['@guid'],
+                                ptLabel: pt.propertyLabel,
+                                userValueGuid: pt.userValue['@guid'],
+                                guid: val['@guid'],
+                                language: (val['@language']) ? val['@language'] : null,
+                                value: stringValue,
+                            })
+
+
+
+                        }
+                    }
+
+                }
+
+
+            }
+
+
+        }
+
+
+
+
+
+        return literals
+
+    },
 
 
     returnAap: function(contributor,title){
