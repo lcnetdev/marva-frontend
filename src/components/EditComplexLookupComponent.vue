@@ -575,12 +575,13 @@ export default {
 
         // look for a @context in any of the properties
         for (let key in userData){
-          for (let d of userData[key]){
-            for (let subKey in d){
-              if (subKey == '@context'){
-                console.log(d[subKey])
-                if (d[subKey].title){
-                  useTitle = d[subKey].title
+          if (key == this.parentStructureObj.propertyURI){
+            for (let d of userData[key]){
+              for (let subKey in d){
+                if (subKey == '@context'){                
+                  if (d[subKey].title){
+                    useTitle = d[subKey].title
+                  }
                 }
               }
             }
@@ -676,10 +677,16 @@ export default {
     validateHeading: function() {
 
         // dont validate some ID lookups until we can get reource lookups working correctly
-        if (this.structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/Work' || this.structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/Instance' || this.structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/Item'){
+        if (
+          this.structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/Work' || 
+          this.structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/Instance' || 
+          this.structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/Item' ||
+          // also don't validate relation properties
+          this.structure.propertyURI == 'http://id.loc.gov/ontologies/bflc/relation'
+        ){
+
           this.validated = validationUtil.headingNotChecked;
           this.validationMessage = validationUtil.getValidationMessage(this.validated)
-
         }
 
 
@@ -691,7 +698,7 @@ export default {
             // dis connect it from the source so it doesnt update the value, read only
             userData = JSON.parse(JSON.stringify(userData))
 
-            
+            console.log("We are validTING THIS",userData)
             if (userData && this.parentStructureObj && this.parentStructureObj.propertyURI){
               // pass some more info to this process to help it
               userData.hintUri = this.parentStructureObj.propertyURI
@@ -703,9 +710,6 @@ export default {
                 validationUtil.validateHeading(userData)
                 .then((validationStatus) => {
                     
-
-                    
-                
                     this.validated = validationStatus;
                     this.validationMessage = validationUtil.getValidationMessage(validationStatus);
                     
@@ -714,6 +718,7 @@ export default {
                         // What we need is the agent.
                         userData = userData["http://id.loc.gov/ontologies/bibframe/agent"][0];
                     }
+                    console.log("this.displayContext",this.displayContext)
 
                     // Do we need to set the display URI because the userData ID changed?
                     if (userData["@id"] !== this.displayContext.uri) {
@@ -930,21 +935,23 @@ export default {
         rootPropertyURI = parseProfile.returnRootPropertyURI(this.activeProfile, this.profileCompoent,this.structure.propertyURI)        
       }
     
-
       if (userValue['http://www.w3.org/2000/01/rdf-schema#label'] || userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'] || userValue['http://id.loc.gov/ontologies/bibframe/code']){
 
         if (userValue['http://www.w3.org/2000/01/rdf-schema#label']){
           this.displayLabel = userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
-
+          
 
         }else if (userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
           this.displayLabel = userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
+          
 
         }else if (userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']){
           this.displayLabel = userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']
+          
 
         }else if (userValue['http://id.loc.gov/ontologies/bibframe/code']){
           this.displayLabel = userValue['http://id.loc.gov/ontologies/bibframe/code'][0]['http://id.loc.gov/ontologies/bibframe/code']
+          
 
         }
 
@@ -977,6 +984,7 @@ export default {
 
 
             this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
+            
             this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
             if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
               this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
@@ -992,12 +1000,11 @@ export default {
             }
 
 
-            console.log("!!!!!!!!!!!!!!!!!!!!!! CHECK1",this.parentStructureObj.propertyURI,userValue[this.parentStructureObj.propertyURI])
-            console.log(this.displayLabel,this.displayGuid, this.displayContext )
-
+            
 
           }else if (userValue[this.parentStructureObj.propertyURI][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
             this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
+            
             this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
             if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
               this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
@@ -1014,6 +1021,7 @@ export default {
 
           }else if (userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']){
             this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']
+            
             this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
             if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
               this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
@@ -1030,6 +1038,7 @@ export default {
 
           }else if (userValue[this.parentStructureObj.propertyURI][0]['http://id.loc.gov/ontologies/bibframe/code']){
             this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://id.loc.gov/ontologies/bibframe/code'][0]['http://id.loc.gov/ontologies/bibframe/code']
+            
             this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
             if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
               this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
@@ -1048,7 +1057,7 @@ export default {
           
         }
 
-        console.log("!!!!!!",this.displayLabel)
+        
         if (userValue[this.parentStructureObj.propertyURI] && userValue[this.parentStructureObj.propertyURI].length>0){
           this.displayType = userValue[this.parentStructureObj.propertyURI][0]['@type']
         }
@@ -1056,7 +1065,9 @@ export default {
         if (!this.displayLabel){
 
           if (userValue[this.parentStructureObj.propertyURI][0] && userValue[this.parentStructureObj.propertyURI][0]['@id']){
+            
             this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['@id']
+            
 
             this.displayContext = {
               contextValue: true,
@@ -1070,21 +1081,23 @@ export default {
 
         }
 
-        console.log("!!!!!!",this.displayLabel)
+        
 
       }else if (userValue['@root'] && userValue['@root'] == rootPropertyURI){
 
         
         if (userValue['http://www.w3.org/2000/01/rdf-schema#label']){
           this.displayLabel = userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']      
+          
         }else if (userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
           this.displayLabel = userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
-
+          
         }else if (userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']){
           this.displayLabel = userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']
-
+          
         }else if (userValue['http://id.loc.gov/ontologies/bibframe/code']){
           this.displayLabel = userValue['http://id.loc.gov/ontologies/bibframe/code'][0]['http://id.loc.gov/ontologies/bibframe/code']
+          
         }
         
         if (userValue['@type']){
@@ -1095,7 +1108,7 @@ export default {
         if (!this.displayLabel){
           if (userValue['@id']){
             this.displayLabel = userValue['@id']
-
+            
           }
         }
         
@@ -1132,7 +1145,7 @@ export default {
       //   this.displayLabel = "yeet"
       // }
 
-      console.log("!!!!!!",this.displayLabel)
+
 
     },
 

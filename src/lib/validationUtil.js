@@ -159,12 +159,14 @@ const validationUtil = {
     },
     
     getLabel: function(userData) {
+        console.log("looking for label:",userData)
         const labelProps = [
                 "http://www.loc.gov/mads/rdf/v1#authoritativeLabel",
                 "http://www.w3.org/2000/01/rdf-schema#label"
             ];
         for (var p of labelProps) {
             if (userData[p] !== undefined) {
+                console.log('found it:',userData[p][0][p])
                 return userData[p][0][p];
             }
         }
@@ -175,6 +177,7 @@ const validationUtil = {
             userData = userData[userData.hintUri][0]
             for (var p2 of labelProps) {
                 if (userData[p2] !== undefined) {
+                    console.log('found it 2:',userData[p2][0][p2])
                     return userData[p2][0][p2];
                 }
             }
