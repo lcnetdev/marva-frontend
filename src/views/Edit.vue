@@ -201,35 +201,23 @@
 
 
 
-             <button class="simptip-position-left" @click="togglePreview" data-tooltip="Preview XML ([CTRL+SHIFT+X])" style="background-color:whitesmoke; cursor:pointer; margin-right: 1em;">
+                <button class="simptip-position-left" @click="togglePreview" data-tooltip="Preview XML ([CTRL+SHIFT+X])" style="background-color:whitesmoke; cursor:pointer; margin-right: 1em;">
+                    <svg width="50px" height="34px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                     <path d="m60.199 12.367c2.1836 0.58984 3.4766 2.8281 2.8906 5.0156l-18.273 67.949c-0.48828 1.8281-2.1406 3.0312-3.9492 3.0312-0.35156 0-0.71484-0.042969-1.0664-0.14453-2.1836-0.58984-3.4766-2.8281-2.8906-5.0156l18.273-67.949c0.58984-2.1875 2.8555-3.4844 5.0156-2.8867zm-30.332 17.617c1.5977 1.5977 1.5977 4.1914 0 5.7891l-14.445 14.445 14.461 14.617c1.5938 1.6094 1.5742 4.2031-0.03125 5.793-0.80078 0.78125-1.8359 1.1758-2.8789 1.1758-1.0547 0-2.1055-0.40234-2.9141-1.2109l-17.32-17.508c-0.84375-0.84766-1.2344-1.9766-1.1758-3.0859 0.046875-0.98047 0.44531-1.9453 1.1914-2.6953l17.324-17.32c1.5977-1.5898 4.1914-1.5898 5.7891 0zm45.855-0.027344 17.504 17.324c0.67188 0.66016 1.0625 1.5 1.1797 2.3633 0.16797 1.2266-0.21875 2.5156-1.1602 3.4609l-17.508 17.508c-0.80078 0.78906-1.8516 1.1914-2.8945 1.1914s-2.0977-0.40234-2.8945-1.1914c-1.6016-1.6016-1.6016-4.1953 0-5.793l14.602-14.605-14.586-14.434c-1.6094-1.5898-1.6172-4.1797-0.035156-5.7891 1.582-1.6055 4.1758-1.625 5.793-0.035157z"/>
+                    </svg>
+                </button>
 
-<svg width="50px" height="34px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
- <path d="m60.199 12.367c2.1836 0.58984 3.4766 2.8281 2.8906 5.0156l-18.273 67.949c-0.48828 1.8281-2.1406 3.0312-3.9492 3.0312-0.35156 0-0.71484-0.042969-1.0664-0.14453-2.1836-0.58984-3.4766-2.8281-2.8906-5.0156l18.273-67.949c0.58984-2.1875 2.8555-3.4844 5.0156-2.8867zm-30.332 17.617c1.5977 1.5977 1.5977 4.1914 0 5.7891l-14.445 14.445 14.461 14.617c1.5938 1.6094 1.5742 4.2031-0.03125 5.793-0.80078 0.78125-1.8359 1.1758-2.8789 1.1758-1.0547 0-2.1055-0.40234-2.9141-1.2109l-17.32-17.508c-0.84375-0.84766-1.2344-1.9766-1.1758-3.0859 0.046875-0.98047 0.44531-1.9453 1.1914-2.6953l17.324-17.32c1.5977-1.5898 4.1914-1.5898 5.7891 0zm45.855-0.027344 17.504 17.324c0.67188 0.66016 1.0625 1.5 1.1797 2.3633 0.16797 1.2266-0.21875 2.5156-1.1602 3.4609l-17.508 17.508c-0.80078 0.78906-1.8516 1.1914-2.8945 1.1914s-2.0977-0.40234-2.8945-1.1914c-1.6016-1.6016-1.6016-4.1953 0-5.793l14.602-14.605-14.586-14.434c-1.6094-1.5898-1.6172-4.1797-0.035156-5.7891 1.582-1.6055 4.1758-1.625 5.793-0.035157z"/>
-</svg>
+ <!--                <button class="simptip-position-left" @click="toggleLiteralLanguage" data-tooltip="Select Language" style="background-color:whitesmoke; cursor:pointer; margin-right: 1em;">
+                    <svg width="50px" height="34px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                     <path d="m93.75 6.25v68.75h-37.5l-25 18.75v-18.75h-25v-68.75zm-21.875 15.625v-6.25h-6.25v6.25h-9.375v6.25h15.488c-0.16016 1.9023-0.46094 3.7891-0.91016 5.6484-0.66406 2.7422-1.6484 5.3984-2.9062 7.918-0.39453-0.46875-0.77344-0.94922-1.1484-1.4297-1.6836-2.1914-3.1641-4.5312-4.4453-6.9766-0.054687-0.11328-0.11719-0.22656-0.17578-0.33984l-5.5547 2.8594 0.18359 0.35937 0.19531 0.375c2.0625 3.8555 4.5625 7.5117 7.5273 10.734-0.62109 0.84375-1.2734 1.6641-1.957 2.4531-1.3164 1.5234-2.7461 2.9414-4.2773 4.2461-0.66797 0.56641-1.3555 1.1016-2.0586 1.6289-0.41406 0.29688-0.41406 0.29688-0.83203 0.59375-0.42578 0.28906-0.42578 0.28906-0.85547 0.57422l3.4531 5.2109c2.2031-1.4609 4.2812-3.0977 6.1992-4.918 1.7852-1.6953 3.4258-3.5312 4.9141-5.4883 1.5664 1.2422 3.2383 2.3438 5.0234 3.2461 0.96484 0.48438 1.957 0.89453 2.9766 1.2539l2.0703-5.8984c-0.65625-0.23047-1.2969-0.48438-1.9219-0.78516-1.6914-0.8125-3.2578-1.8711-4.7031-3.0703 1.8281-3.2539 3.2461-6.7383 4.1914-10.359 0.66797-2.5742 1.0859-5.1914 1.2773-7.8359h3.2461v-6.25zm-40.625 3.125h-4.1211l-13.395 31.25h6.8008l2.6797-6.25h16.07l2.6797 6.25h6.8008l-13.395-31.25zm-5.3555 18.75h10.711l-5.3555-12.5z" fill-rule="evenodd"/>
+                    </svg>
+                </button> -->
 
-
-
-              </button>
-
-
-            <button class="simptip-position-left" @click="toggleLiteralLanguage" data-tooltip="Select Language" style="background-color:whitesmoke; cursor:pointer; margin-right: 1em;">
-                <svg width="50px" height="34px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                 <path d="m93.75 6.25v68.75h-37.5l-25 18.75v-18.75h-25v-68.75zm-21.875 15.625v-6.25h-6.25v6.25h-9.375v6.25h15.488c-0.16016 1.9023-0.46094 3.7891-0.91016 5.6484-0.66406 2.7422-1.6484 5.3984-2.9062 7.918-0.39453-0.46875-0.77344-0.94922-1.1484-1.4297-1.6836-2.1914-3.1641-4.5312-4.4453-6.9766-0.054687-0.11328-0.11719-0.22656-0.17578-0.33984l-5.5547 2.8594 0.18359 0.35937 0.19531 0.375c2.0625 3.8555 4.5625 7.5117 7.5273 10.734-0.62109 0.84375-1.2734 1.6641-1.957 2.4531-1.3164 1.5234-2.7461 2.9414-4.2773 4.2461-0.66797 0.56641-1.3555 1.1016-2.0586 1.6289-0.41406 0.29688-0.41406 0.29688-0.83203 0.59375-0.42578 0.28906-0.42578 0.28906-0.85547 0.57422l3.4531 5.2109c2.2031-1.4609 4.2812-3.0977 6.1992-4.918 1.7852-1.6953 3.4258-3.5312 4.9141-5.4883 1.5664 1.2422 3.2383 2.3438 5.0234 3.2461 0.96484 0.48438 1.957 0.89453 2.9766 1.2539l2.0703-5.8984c-0.65625-0.23047-1.2969-0.48438-1.9219-0.78516-1.6914-0.8125-3.2578-1.8711-4.7031-3.0703 1.8281-3.2539 3.2461-6.7383 4.1914-10.359 0.66797-2.5742 1.0859-5.1914 1.2773-7.8359h3.2461v-6.25zm-40.625 3.125h-4.1211l-13.395 31.25h6.8008l2.6797-6.25h16.07l2.6797 6.25h6.8008l-13.395-31.25zm-5.3555 18.75h10.711l-5.3555-12.5z" fill-rule="evenodd"/>
-                </svg>
-            </button>
-
-
-
-              <button class="simptip-position-left" @click="publish" data-tooltip="Post record ([CTRL+SHIFT+P])" style="background-color:whitesmoke; cursor:pointer; margin-right:1em">
-
-<svg width="50px" height="34px" version="1.1" viewBox="25 20 55 55" xmlns="http://www.w3.org/2000/svg">
- <path d="m19.805 59.453s-1.2109 1.6445 5.0625 4.3242c1.8203 0.77734 4.6055-1.5 7.6328-0.875 2.6367 0.54297 6.7695 2.5664 10.359 2.5664s7.8203-2.5664 11.785-2.5664c6.2227 0 8.7891 3.6406 12.918 3.0938 2.7695-0.36328 5.6055-2.8203 7.3516-3.2188 1.7422-0.40234 3.7227 0.66016 5.1328 0 5.668-2.6602 5.8906-9.9258 5.8906-9.9258zm33.434-20.445c-0.24609-6.0273-4.6172-20.863-4.6172-20.863s10.688 9.1953 16.551 16.535c5.8672 7.3359 10.711 16.473 10.711 16.473l-22.645 1.7656s0.24609-7.793 0-13.91zm-3.8984-8.6523s-2.0781 10.699-5.5547 16.309c-3.4727 5.6133-8.8867 8.7227-8.8867 8.7227l15.836-1.9531zm28.012 35.406c-4.3516 0-7.5117 3.1172-11.363 2.7188-3.1055-0.32031-8.1875-2.6523-11.32-2.7188-3.6523-0.078125-8.5977 2.2812-11.719 2.043-4.9883-0.37891-9.5859-2.043-11.32-2.043-7.3086 0-11.629 5.7656-11.629 5.7656s8.1016-3.0469 11.629-3.0469c4.3828 0 5.5664 2.5508 11.32 3.0469 3.7656 0.32031 7.7109-2.6758 11.719-2.5742 4.793 0.11719 6.8906 2.5078 11.32 3.1758 3.9062 0.58594 7.6289-3.2109 11.363-3.1758 5.7734 0.050781 8.3633 3.5508 8.3633 3.5508s-4.0078-6.7422-8.3633-6.7422z" fill-rule="evenodd"/>
-</svg>
-
-
-              </button>
-
-
+                <button class="simptip-position-left" @click="publish" data-tooltip="Post record ([CTRL+SHIFT+P])" style="background-color:whitesmoke; cursor:pointer; margin-right:1em">
+                    <svg width="50px" height="34px" version="1.1" viewBox="25 20 55 55" xmlns="http://www.w3.org/2000/svg">
+                     <path d="m19.805 59.453s-1.2109 1.6445 5.0625 4.3242c1.8203 0.77734 4.6055-1.5 7.6328-0.875 2.6367 0.54297 6.7695 2.5664 10.359 2.5664s7.8203-2.5664 11.785-2.5664c6.2227 0 8.7891 3.6406 12.918 3.0938 2.7695-0.36328 5.6055-2.8203 7.3516-3.2188 1.7422-0.40234 3.7227 0.66016 5.1328 0 5.668-2.6602 5.8906-9.9258 5.8906-9.9258zm33.434-20.445c-0.24609-6.0273-4.6172-20.863-4.6172-20.863s10.688 9.1953 16.551 16.535c5.8672 7.3359 10.711 16.473 10.711 16.473l-22.645 1.7656s0.24609-7.793 0-13.91zm-3.8984-8.6523s-2.0781 10.699-5.5547 16.309c-3.4727 5.6133-8.8867 8.7227-8.8867 8.7227l15.836-1.9531zm28.012 35.406c-4.3516 0-7.5117 3.1172-11.363 2.7188-3.1055-0.32031-8.1875-2.6523-11.32-2.7188-3.6523-0.078125-8.5977 2.2812-11.719 2.043-4.9883-0.37891-9.5859-2.043-11.32-2.043-7.3086 0-11.629 5.7656-11.629 5.7656s8.1016-3.0469 11.629-3.0469c4.3828 0 5.5664 2.5508 11.32 3.0469 3.7656 0.32031 7.7109-2.6758 11.719-2.5742 4.793 0.11719 6.8906 2.5078 11.32 3.1758 3.9062 0.58594 7.6289-3.2109 11.363-3.1758 5.7734 0.050781 8.3633 3.5508 8.3633 3.5508s-4.0078-6.7422-8.3633-6.7422z" fill-rule="evenodd"/>
+                    </svg>
+                </button>
 
 
             </div>
@@ -360,7 +348,7 @@
 
 
                         <div v-for="(profileCompoent,idx) in activeProfile.rt[profileName].ptOrder" :key="profileCompoent" :id="'container-for-'+profileName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')+idx+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')">
-                              <EditMainComponent :isMini="false" @showMiniEditor="showMiniEditorClick" v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" class="component" :parentURI="activeProfile.rt[profileName].URI" :activeTemplate="activeProfile.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :ptGuid="activeProfile.rt[profileName].pt[profileCompoent]['@guid']" :parentStructure="activeProfile.rtOrder" :structure="activeProfile.rt[profileName].pt[profileCompoent]"/>
+                              <EditMainComponent :isMini="false" @showMiniEditorEdit="showMiniEditorClick" v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" class="component" :parentURI="activeProfile.rt[profileName].URI" :activeTemplate="activeProfile.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :ptGuid="activeProfile.rt[profileName].pt[profileCompoent]['@guid']" :parentStructure="activeProfile.rtOrder" :structure="activeProfile.rt[profileName].pt[profileCompoent]"/>
                         </div>
 
                         <div v-if="activeProfile.rt[profileName].unusedXml" style="background-color: #fde4b7; overflow-x: hidden;">
@@ -922,24 +910,13 @@ export default {
     toggleLiteralLanguage: function(){
 
         if (this.displayLiteralLanguage){
-
             this.displayLiteralLanguage=false
-
         }else{
-
-            
             this.displayLiteralLanguage=true
-            
-            this.$nextTick(()=>{
-          
-                console.log(this.$refs.literalLanguageModal)
+            // refresh once it is open            
+            this.$nextTick(()=>{          
                 this.$refs.literalLanguageModal.refreshDisplay()
-
             })
-
-
-            
-
         }
 
 
@@ -1021,8 +998,10 @@ export default {
 
         // TEMP hack, the children components aren't refreshing
         // need to figure out why, but two cycles clear the problem
+        console.log("showMiniEditorClick")
         this.showMiniEditor(payload, ()=>{
             this.closeMiniEditor(payload)
+            console.log("showMiniEditorClick 2")
             this.showMiniEditor(payload)
         })
         

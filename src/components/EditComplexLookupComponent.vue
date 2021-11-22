@@ -548,8 +548,8 @@ export default {
           sourceId: this.assignedId,
           component: this
         }
-
-        this.$emit('showMiniEditor',payload);
+        console.log("Emit",payload,this.$parent)
+        this.$emit('showMiniEditorEdit',payload);
 
 
         // this.$store.dispatch("setWorkingOnMiniProfile", { self: this, value: true }).then(() => {
