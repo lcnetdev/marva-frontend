@@ -550,6 +550,10 @@ export default {
         }
         console.log("Emit",payload,this.$parent)
         this.$emit('showMiniEditorEdit',payload);
+        this.$parent.$emit('showMiniEditorEdit',payload);
+        this.$parent.$parent.$emit('showMiniEditorEdit',payload);
+        this.$parent.$parent.$parent.$emit('showMiniEditorEdit',payload);
+        this.$parent.$parent.$parent.$parent.$emit('showMiniEditorEdit',payload);
 
 
         // this.$store.dispatch("setWorkingOnMiniProfile", { self: this, value: true }).then(() => {
