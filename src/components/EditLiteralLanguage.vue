@@ -39,6 +39,10 @@
 
     </details>
 
+    <div v-if="Object.keys(literals).length==0" style="text-align: center;">
+      <h3>No literals found on this record.</h3>
+    </div>
+
     <div v-for="rtKey in Object.keys(literals)" :key="rtKey" >
 
       <div v-if="literals[rtKey].length>0" style="padding-left:1em">
@@ -71,7 +75,9 @@
 
     </div>
 
-
+    <div style="text-align: center; margin-top: 2em;">
+      <button @click="closeLitLang">Close</button>
+    </div>
   </div>
 
 </template>
@@ -248,6 +254,13 @@ export default {
 
 
       }
+
+
+    },
+
+    closeLitLang: function(){
+
+      console.log(this.$parent.toggleLiteralLanguage())
 
 
     }
