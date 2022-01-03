@@ -419,6 +419,7 @@ export default {
       oldActiveComponentIndex: 99,
       contextRequestInProgress: false,
       componetLookup: {},
+      localContextCache: {},
       nextInputIsTypeSelection:false,
       typeLookup:{},
       okayToAdd: false,
@@ -528,14 +529,14 @@ export default {
       }
 
 
-      console.log(JSON.stringify(that.pickLookup))
+      // console.log(JSON.stringify(that.pickLookup))
 
-      console.log(JSON.stringify(that.pickLookup))
+      // console.log(JSON.stringify(that.pickLookup))
 
       for (let x in that.searchResults.names){
         that.pickLookup[(that.searchResults.names.length - x)*-1] = that.searchResults.names[x]
       }
-      console.log(JSON.stringify(that.pickLookup))
+      // console.log(JSON.stringify(that.pickLookup))
       for (let k in that.pickLookup){
 
         that.pickLookup[k].picked = false
@@ -546,7 +547,6 @@ export default {
           // if the labels are the same for the current one selected don't overide it
           if (that.pickLookup[k].label == that.activeComponent.label && that.activeComponent.uri){
 
-            console.log("{icking",that.pickLookup[k])
             if (that.activeComponent.uri == that.pickLookup[k].uri){
 
               that.pickPostion=k
@@ -568,15 +568,20 @@ export default {
 
         }
       }
-      console.log(JSON.stringify(that.pickLookup))
-      console.log(that.pickLookup)
-      console.log(that.pickPostion)
+      // console.log(JSON.stringify(that.pickLookup))
+      // console.log(that.pickLookup)
+      // console.log(that.pickPostion)
 
       that.$store.dispatch("clearContext", { self: that})
       if (!that.pickLookup[that.pickPostion].literal){
         that.contextRequestInProgress = true
         that.$store.dispatch("fetchContext", { self: that, searchPayload: that.pickLookup[that.pickPostion].uri }).then(() => {
           that.contextRequestInProgress = false
+          // keep a local copy of it for looking up subject type
+          if (that.contextData){
+            that.localContextCache[that.contextData.uri] = JSON.parse(JSON.stringify(that.contextData))
+          }
+
         })         
       }
 
@@ -646,7 +651,14 @@ export default {
 
         this.contextRequestInProgress = true
         this.$store.dispatch("fetchContext", { self: this, searchPayload: this.pickLookup[this.pickPostion].uri }).then(() => {
+          
+          // keep a local copy of it for looking up subject type
+          if (this.contextData){
+            this.localContextCache[this.contextData.uri] = JSON.parse(JSON.stringify(this.contextData))
+          }
+
           this.contextRequestInProgress = false
+
         })  
 
 
@@ -671,7 +683,8 @@ export default {
         for (let k in this.pickLookup){
           this.pickLookup[k].picked=false
         }
-
+        // complex headings are all topics (...probably)
+        this.typeLookup[this.activeComponentIndex] = 'madsrdf:Topic'
         this.pickLookup[this.pickPostion].picked=true
         this.subjectStringChanged()
         this.$refs.subjectInput.focus()
@@ -704,7 +717,7 @@ export default {
 
 
         this.subjectStringChanged()
-        console.log(this.componetLookup)
+
 
       }
 
@@ -765,6 +778,8 @@ export default {
 
 
     },
+
+
 
     setTypeClick: function(event,type){
 
@@ -871,6 +886,8 @@ export default {
           type = this.typeLookup[id]
         }
 
+        console.log("URIL:",uri,"TYPE:",type)
+        console.log(this.localContextCache)
 
         this.components.push({
 
@@ -896,7 +913,7 @@ export default {
         id++
       }
 
-      console.log(this.components)
+      
 
 
 
@@ -945,7 +962,6 @@ export default {
 
       }
 
-      console.log(this.components)
 
       this.okayToAdd = false
       let allHaveURI = true
@@ -971,7 +987,29 @@ export default {
 
       this.$nextTick(() => {
         this.checkToolBarHeight()
+
+
+        // there are some senarios where we can safly assume the type, this is invoked when
+        // we want to try that, often delayed after something has been selected
+        // for (let x of this.componetLookup){
+        //   console.log(x,this.componetLookup[x])
+        // }
+
+        window.setTimeout(()=>{
+          for (let x of this.components){
+            if (this.localContextCache[x.uri]){
+              if (this.localContextCache[x.uri].type === 'GenreForm'){
+                x.type = 'madsrdf:GenreForm'
+              }
+            }         
+          }
+          this.updateAvctiveTypeSelected()
+        },100)
+        
       })
+
+
+
 
 
 
