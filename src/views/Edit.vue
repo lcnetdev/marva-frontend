@@ -1532,7 +1532,7 @@ export default {
 
 
         r = [...new Set(r)];
-        console.log('r,',r)
+
       }catch{
         return "error"
       }

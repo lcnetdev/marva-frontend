@@ -1111,6 +1111,7 @@ const parseBfdb = {
 							// could be a first level bnode with no children
 
 							if (this.isClass(e.tagName)){
+								
 								populateData.userValue['@type'] = this.UriNamespace(e.tagName)
 
 								// check for URI
@@ -1122,8 +1123,9 @@ const parseBfdb = {
 									// console.log('No URI for this child property')
 								}
 
-							}else if (this.UriNamespace(e.tagName) == 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'){
 
+							}else if (this.UriNamespace(e.tagName) == 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'){
+								
 								// if there is a RDF type node here it is the parent's type
 								// overwrite the basic type that was set via the bnode type
 								if (e.attributes && e.attributes['rdf:about']){
@@ -1140,11 +1142,21 @@ const parseBfdb = {
 
 
 							}else if (e.attributes['rdf:resource'] && e.innerHTML.trim() == ''){
+								
 								// it is a property pointing to another resource with no label or anything
 								populateData.userValue['@guid'] = short.generate()
 								populateData.userValue['@id'] = this.extractURI(e.attributes['rdf:resource'].value)
 
+								// for now since there is no label make a basic lable for it with the URI slug
+								populateData.userValue['http://www.w3.org/2000/01/rdf-schema#label'] = [
+									{
+									"http://www.w3.org/2000/01/rdf-schema#label": populateData.userValue['@id'].split('/').slice(-1)[0],
+									"@guid": short.generate()
+									}								
+								]
+
 							}else{
+								
 
 
 								if (!populateData.userValue[eProperty]){
@@ -1181,6 +1193,8 @@ const parseBfdb = {
 
 
 								}
+
+								console.log(populateData.userValue)
 
 								populateData.userValue[eProperty].push(eData)
 
