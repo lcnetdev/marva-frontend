@@ -175,7 +175,7 @@ const lookupUtil = {
 
 
     searchComplex: async function(searchPayload){
-        console.log(searchPayload)
+        
         let urlTemplate = searchPayload.url
         if (!Array.isArray(urlTemplate)){
             urlTemplate=[urlTemplate]
@@ -284,7 +284,7 @@ const lookupUtil = {
 
     // a special subject method to do sepcial subject things
     subjectSearch: async function(searchVal,complexVal){
-      console.log('searchVal',searchVal,'complexVal',complexVal)
+      
       let namesUrl = config.lookupConfig['http://preprod.id.loc.gov/authorities/names'].modes[0]['NAF All'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=4')
       let subjectUrlComplex = config.lookupConfig['http://id.loc.gov/authorities/subjects'].modes[0]['LCSH All'].url.replace('<QUERY>',complexVal).replace('&count=25','&count=5')+'&rdftype=ComplexType'
       let subjectUrlSimple = config.lookupConfig['http://id.loc.gov/authorities/subjects'].modes[0]['LCSH All'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=4')+'&rdftype=SimpleType'
@@ -331,7 +331,7 @@ const lookupUtil = {
 
       ]);
 
-      console.log('resultsNames',resultsNames)
+      
 
       // drop the litearl value from names and complex
       resultsNames.pop()
@@ -372,7 +372,7 @@ const lookupUtil = {
         'hierarchicalGeographic': resultsHierarchicalGeographic
       }
 
-      console.log('results',results)
+      
       return results
 
     },
@@ -476,7 +476,7 @@ const lookupUtil = {
 
         if (val['@id']){
 
-          console.log(val['@id'])
+          
 
           if (val['@id'] == data.uri){
             // this is the main graph
@@ -505,7 +505,7 @@ const lookupUtil = {
                   counter++
 
 
-                  console.log(i['@id'])
+                  
 
                   let response = await fetch(i['@id'].replace('http://','https://')+'.nt');
                   let text  = await response.text()
@@ -535,7 +535,7 @@ const lookupUtil = {
                   instances.push(instanceText)
 
 
-                  console.log(instances)
+                  
                   // https://id.loc.gov/resources/instances/18109312.nt
 
                 }
@@ -623,7 +623,7 @@ const lookupUtil = {
                 if (data.entities[qid].claims.P31[0].mainsnak){
                   if (data.entities[qid].claims.P31[0].mainsnak.datavalue){
                     if (data.entities[qid].claims.P31[0].mainsnak.datavalue.value){                      
-                      console.log(data.entities[qid].claims.P31[0].mainsnak.datavalue.value.id)
+                      
                       results.type = this.rdfType(data.entities[qid].claims.P31[0].mainsnak.datavalue.value.id)
                     } 
                   }                  
@@ -741,7 +741,7 @@ const lookupUtil = {
                 nodeMap['MADS Collection'] = n['http://www.loc.gov/mads/rdf/v1#isMemberOfMADSCollection'].map(function(d){ return d['@id']})
               } 
               if (n['http://www.loc.gov/mads/rdf/v1#classification']){
-                console.log("n['http://www.loc.gov/mads/rdf/v1#classification']",n['http://www.loc.gov/mads/rdf/v1#classification'])
+                
 
                 nodeMap['Classification'] = n['http://www.loc.gov/mads/rdf/v1#classification'].map(function(d){ return d['@value']})
 
@@ -755,46 +755,62 @@ const lookupUtil = {
 
             
             data.forEach(function(n){
-              
+
               // loop through all the possible types of row
               Object.keys(nodeMap).forEach(function(k){
                 if (!results.nodeMap[k]) { results.nodeMap[k] = [] }
                 // loop through each uri we have for this type
                 nodeMap[k].forEach(function(uri){
 
-
                   if (k == 'MADS Collection'){
                     if (results.nodeMap[k].indexOf(uri.split('/').slice(-1)[0].replace('collection_',''))==-1){
                       results.nodeMap[k].push(uri.split('/').slice(-1)[0].replace('collection_',''))
                     }
-                  }
-
-                  if (k == 'Classification'){
+                  }else if (k == 'Classification'){
                     if (nodeMap[k].length>0){
                       results.nodeMap[k]=nodeMap[k]
-                    }
-
-                  }
-
-                  if (n['@id'] && n['@id'] == uri){
+                    }                  
+                  }else if (n['@id'] && n['@id'] == uri){
                    
                     if (n['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
                       n['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'].forEach(function(val){ 
                         if (val['@value']){
                           results.nodeMap[k].push(val['@value']);
                         }
-                      })
-                    }
-                    if (n['http://www.w3.org/2000/01/rdf-schema#label']){
+                      })                    
+                    }else if (n['http://www.w3.org/2000/01/rdf-schema#label']){
                       n['http://www.w3.org/2000/01/rdf-schema#label'].forEach(function(val){ 
                         if (val['@value']){
                           results.nodeMap[k].push(val['@value']);
                         }
                       })
+                    }else{
+                      console.log("NO label found for ",n)
+
                     }
+
+                  }else if (uri.includes('id.loc.gov')){
+
+                    // just add the uri slug if it is a ID uri, we don't want to look up in real time
+                    let slug = uri.split('/').slice(-1)[0]
+                    if (results.nodeMap[k].indexOf(slug)==-1){
+                      results.nodeMap[k].push(slug)
+                    }
+                    
+
                   }
+
+
                 })        
               })
+
+
+
+
+
+
+
+
             })
 
             data.forEach((n)=>{
@@ -883,6 +899,7 @@ const lookupUtil = {
 
           }
           
+
           
           return results;
         },
