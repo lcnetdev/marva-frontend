@@ -560,9 +560,14 @@ export default {
             
 
             // if they started typing the next word already then stop this
-            if (that.subjectString.endsWith('--')){
-              break              
+            // if (that.subjectString.endsWith('--')){
+            //   break              
+            // }
+            if (that.subjectString!=searchStringFull){
+              break
+
             }
+
             that.pickPostion=k
             that.pickLookup[k].picked=true          
             that.selectContext()
