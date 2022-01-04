@@ -482,7 +482,7 @@ export default {
 
       
 
-
+      
       that.searchResults = await lookupUtil.subjectSearch(searchString,searchStringFull) 
 
 
@@ -529,26 +529,27 @@ export default {
       }
 
 
-      // console.log(JSON.stringify(that.pickLookup))
+      
 
-      // console.log(JSON.stringify(that.pickLookup))
+      
 
       for (let x in that.searchResults.names){
         that.pickLookup[(that.searchResults.names.length - x)*-1] = that.searchResults.names[x]
       }
-      // console.log(JSON.stringify(that.pickLookup))
+      
       for (let k in that.pickLookup){
 
         that.pickLookup[k].picked = false
 
         if (searchString.toLowerCase() == that.pickLookup[k].label.toLowerCase() && !that.pickLookup[k].literal ){
 
+          
 
           // if the labels are the same for the current one selected don't overide it
           if (that.pickLookup[k].label == that.activeComponent.label && that.activeComponent.uri){
 
             if (that.activeComponent.uri == that.pickLookup[k].uri){
-
+              
               that.pickPostion=k
               that.pickLookup[k].picked=true          
               that.selectContext()
@@ -556,6 +557,12 @@ export default {
             }
 
           }else{
+            
+
+            // if they started typing the next word already then stop this
+            if (that.subjectString.endsWith('--')){
+              break              
+            }
             that.pickPostion=k
             that.pickLookup[k].picked=true          
             that.selectContext()
@@ -568,10 +575,7 @@ export default {
 
         }
       }
-      // console.log(JSON.stringify(that.pickLookup))
-      // console.log(that.pickLookup)
-      // console.log(that.pickPostion)
-
+      
       that.$store.dispatch("clearContext", { self: that})
       if (!that.pickLookup[that.pickPostion].literal){
         that.contextRequestInProgress = true
@@ -610,15 +614,21 @@ export default {
 
       if (event.key == 'ArrowLeft' || event.key == 'ArrowRight' ){
 
+        // don't let them leave a trailing -- when they are clicking around like wild
+        if (this.subjectString.endsWith('--')){
+          this.subjectString = this.subjectString.slice(0,this.subjectString.length-2)
+        }
+
 
         if (!event.target){
           event = {target:this.$refs.subjectInput}
         }
-
+        
+        
         for (let c of this.components){
           if (event.target.selectionStart >= c.posStart && event.target.selectionStart <= c.posEnd+1){
             this.activeComponent = c
-            this.activeComponentIndex = c.id            
+            this.activeComponentIndex = c.id        
             break
           }
         }
@@ -629,6 +639,10 @@ export default {
           this.updateAvctiveTypeSelected()
           this.subjectStringChanged(event)
           this.oldActiveComponentIndex = this.activeComponentIndex
+        }else if (this.activeComponent.uri === null){
+
+          this.updateAvctiveTypeSelected()
+          this.subjectStringChanged(event)
         }
 
 
@@ -736,7 +750,7 @@ export default {
         event.preventDefault()
         return false
       }else if (event.key == 'ArrowDown'){
-        console.log("HERE")
+        
         if (parseInt(this.pickPostion) >= this.searchResults.subjectsSimple.length - 1 + this.searchResults.subjectsComplex.length){
           return false
         }
@@ -886,8 +900,8 @@ export default {
           type = this.typeLookup[id]
         }
 
-        console.log("URIL:",uri,"TYPE:",type)
-        console.log(this.localContextCache)
+        
+        
 
         this.components.push({
 
@@ -1049,7 +1063,7 @@ export default {
         this.$emit('lowResModeActivate', true)
       }
 
-      console.log("Setting this.lowResMode",this.lowResMode)
+      
     },
 
 
@@ -1074,7 +1088,7 @@ export default {
       this.showTypes= false
 
 
-      console.log(userValue)
+      
 
       if (!userValue){
         return
@@ -1083,7 +1097,7 @@ export default {
 
       if (typeof userValue == "string"){
 
-        console.log('userValue',userValue,userValue.slice(-1),userValue.slice(0,-1))
+        
         // they sometimes come in with '.' at the end of the authorized form
         if (userValue.slice(-1)=='.'){
           userValue=userValue.slice(0,-1)
@@ -1185,7 +1199,7 @@ export default {
 
 
             if (label == '' && authLabels[id]){
-              console.log('missing label',authLabels[id])
+              
               label = authLabels[id]
             }
 
@@ -1228,7 +1242,7 @@ export default {
 
 
 
-          console.log(this.components)
+          
 
         }else{
 
