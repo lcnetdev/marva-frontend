@@ -5,17 +5,26 @@
 
     <div :class="['subject-editor-container-left', {'subject-editor-container-left-lowres':lowResMode}]">
 
+      <div id="search-in-holder" style="position: absolute; top:0">
+        <span>Search In:</span>
+
+
+        <button @click="searchModeSwitch('LCSHNAF')" :data-tooltip="'Shortcut: CTRL+1'" :class="['simptip-position-bottom',{'active':(searchMode==='LCSHNAF')}]">LCSH/NAF</button>
+        <button @click="searchModeSwitch('GEO')" :data-tooltip="'Shortcut: CTRL+2'" :class="['simptip-position-bottom',{'active':(searchMode==='GEO')}]">Indirect Geo</button>
+        <button @click="searchModeSwitch('WORKS')" :data-tooltip="'Shortcut: CTRL+3'" :class="['simptip-position-bottom',{'active':(searchMode==='WORKS')}]">Works</button>
+      </div>
+
+
       <div style="flex:1; align-self: flex-end;">
+
         <div v-if="activeSearch!==false">{{activeSearch}}</div>
         <div v-if="searchResults !== null">
-
           <div v-if="searchResults.names.length>0">
+
             <div v-for="(name,idx) in searchResults.names" @click="selectContext((searchResults.names.length - idx)*-1)" @mouseover="loadContext((searchResults.names.length - idx)*-1)" :data-id="(searchResults.names.length - idx)*-1" :key="name.uri" :class="['fake-option', {'unselected':(pickPostion != (searchResults.names.length - idx)*-1 ), 'selected':(pickPostion == (searchResults.names.length - idx)*-1 ),'picked': (pickLookup[(searchResults.names.length - idx)*-1] && pickLookup[(searchResults.names.length - idx)*-1].picked)}]">
-                
                 <span v-if="name.suggestLabel.length>41">{{name.suggestLabel.substring(0,41)}}...</span>
                 <span v-else>{{name.suggestLabel}}</span>
                 <span> [LCNAF]</span>
-
               </div>
             <hr>
           </div>
@@ -28,6 +37,9 @@
           <div v-if="searchResults.subjectsSimple.length>0">
             <div v-for="(subject,idx) in searchResults.subjectsSimple" @click="selectContext(searchResults.subjectsComplex.length + idx)" @mouseover="loadContext(searchResults.subjectsComplex.length + idx)" :data-id="searchResults.subjectsComplex.length + idx" :key="subject.uri" :class="['fake-option', {'unselected':(pickPostion != searchResults.subjectsComplex.length + idx ), 'selected':(pickPostion == searchResults.subjectsComplex.length + idx ), 'picked': (pickLookup[searchResults.subjectsComplex.length + idx] && pickLookup[searchResults.subjectsComplex.length + idx].picked), 'literal-option':(subject.literal)}]" >{{subject.suggestLabel}}<span  v-if="subject.literal">{{subject.label}}</span> <span  v-if="subject.literal">[Literal]</span></div>
           </div>
+
+
+
 
         </div>
       </div>
@@ -67,9 +79,11 @@
             <ul>
               <li class="modal-context-data-li" v-for="v in contextData.source" v-bind:key="v">{{v}}</li>
             </ul>
-
-
           </div>
+
+
+
+
 
 
         </div>  
@@ -155,12 +169,10 @@
       margin-top: 0 !important;
     }
 
-
-
-
     .subject-editor-container-left{
       display: flex; 
       height: 468px;
+      position: relative;
     }
 
     .subject-editor-container-left .modal-context-data-li{
@@ -357,6 +369,23 @@
 
 
 
+  #search-in-holder button{
+    font-size: 0.85em;
+    background-color: white;
+    color: black;
+    border: solid 1px #c1c1c1;
+  }
+
+  #search-in-holder .active{
+  background-color: whitesmoke;
+  -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+  -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+  box-shadow: inset 0px 0px 5px #c1c1c1;
+
+  }
+
+
+
 /*
 .left-menu-list-item-has-data::before {
     content: "✓ " !important;
@@ -425,6 +454,8 @@ export default {
       okayToAdd: false,
       lowResMode: false,
 
+      searchMode: "LCSHNAF",
+
       showTypes: false,
 
       activeTypes: {
@@ -456,6 +487,13 @@ export default {
     returnAuthIcon: uiUtils.returnAuthIcon,
 
 
+    searchModeSwitch: function(mode){
+
+      this.searchMode = mode
+
+    },
+
+
     // some context messing here, pass the debounce func a ref to the vue "this" as that to ref in the function callback
     searchApis: debounce(async (searchString,searchStringFull,that) => {
       that.searchResults=null
@@ -483,7 +521,11 @@ export default {
       
 
       
-      that.searchResults = await lookupUtil.subjectSearch(searchString,searchStringFull) 
+      that.searchResults = await lookupUtil.subjectSearch(searchString,searchStringFull,that.searchMode) 
+
+
+
+
 
 
       // replace the true keyboard hypen with the werid hypen to prevent spliting on open lifedates
@@ -498,6 +540,18 @@ export default {
         s.complex=true
         s.label = s.label.replaceAll('-','‑')
       }
+
+      for (let s of that.searchResults.subjectsSimple){
+
+
+        if (s.suggestLabel && s.suggestLabel.includes('(DEPRECATED')){
+
+          s.suggestLabel = s.suggestLabel.split('(DEPRECATED')[0] + "(DEPRECATED)"
+        }
+
+
+      }
+
 
 
       for (let s of that.searchResults.hierarchicalGeographic){
@@ -560,9 +614,6 @@ export default {
             
 
             // if they started typing the next word already then stop this
-            // if (that.subjectString.endsWith('--')){
-            //   break              
-            // }
             if (that.subjectString!=searchStringFull){
               break
 
@@ -582,7 +633,7 @@ export default {
       }
       
       that.$store.dispatch("clearContext", { self: that})
-      if (!that.pickLookup[that.pickPostion].literal){
+      if (that.pickLookup[that.pickPostion] && !that.pickLookup[that.pickPostion].literal){
         that.contextRequestInProgress = true
         that.$store.dispatch("fetchContext", { self: that, searchPayload: that.pickLookup[that.pickPostion].uri }).then(() => {
           that.contextRequestInProgress = false
@@ -603,6 +654,32 @@ export default {
 
       that.$nextTick(() => {
         that.checkToolBarHeight()
+
+        // find out how small the smallest one is and then loop through and try to make all of them
+        // that size so they fit on one line of the display
+        let smallest_size = 1000;
+        for (let el of document.getElementsByClassName("fake-option")){
+          if (el.offsetHeight < smallest_size){
+            smallest_size=el.offsetHeight
+          }
+        }
+
+        for (let el of document.getElementsByClassName("fake-option")){
+          if (el.offsetHeight > smallest_size){
+            let startFontSize = 1.25
+            while (el.offsetHeight >smallest_size){
+              startFontSize=startFontSize-0.01
+              el.style.fontSize = startFontSize + 'em';
+              if (startFontSize<=0.01){
+                el.style.fontSize = "1.25em"
+                break
+              }
+            }
+          }
+        }
+
+
+
       })
 
 
@@ -778,7 +855,21 @@ export default {
 
         this.selectContext()
 
-      }      
+      }else if (event.ctrlKey && event.key == "1"){
+
+        this.searchModeSwitch("LCSHNAF")
+
+      }else if (event.ctrlKey && event.key == "2"){
+
+        this.searchModeSwitch("GEO")
+
+      }else if (event.ctrlKey && event.key == "3"){
+
+        this.searchModeSwitch("WORKS")
+
+      }
+
+          
 
     },
 
@@ -825,6 +916,33 @@ export default {
 
     },
 
+    validateOkayToAdd: function(){
+
+      this.okayToAdd = false
+      let allHaveURI = true
+      let allHaveType = true
+
+      for (let c of this.components){
+
+        if (!c.uri && !c.literal){
+          allHaveURI = false
+        }
+        if (!c.type){
+          allHaveType = false
+        }
+
+      }
+
+      if (allHaveURI && allHaveType){
+        this.okayToAdd = true
+      }
+      if (allHaveURI && !allHaveType && this.components.length==1){
+        this.okayToAdd = true
+      }
+
+
+
+    },
 
     subjectStringChanged: async function(event){
 
@@ -982,27 +1100,7 @@ export default {
       }
 
 
-      this.okayToAdd = false
-      let allHaveURI = true
-      let allHaveType = true
-
-      for (let c of this.components){
-
-        if (!c.uri && !c.literal){
-          allHaveURI = false
-        }
-        if (!c.type){
-          allHaveType = false
-        }
-
-      }
-
-      if (allHaveURI && allHaveType){
-        this.okayToAdd = true
-      }
-      if (allHaveURI && !allHaveType && this.components.length==1){
-        this.okayToAdd = true
-      }
+      this.validateOkayToAdd()
 
       this.$nextTick(() => {
         this.checkToolBarHeight()
@@ -1010,9 +1108,6 @@ export default {
 
         // there are some senarios where we can safly assume the type, this is invoked when
         // we want to try that, often delayed after something has been selected
-        // for (let x of this.componetLookup){
-        //   console.log(x,this.componetLookup[x])
-        // }
 
         window.setTimeout(()=>{
           for (let x of this.components){
@@ -1023,6 +1118,7 @@ export default {
             }         
           }
           this.updateAvctiveTypeSelected()
+          this.validateOkayToAdd()
         },100)
         
       })

@@ -283,17 +283,27 @@ const lookupUtil = {
 
 
     // a special subject method to do sepcial subject things
-    subjectSearch: async function(searchVal,complexVal){
+    subjectSearch: async function(searchVal,complexVal,mode){
       
       let namesUrl = config.lookupConfig['http://preprod.id.loc.gov/authorities/names'].modes[0]['NAF All'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=4')
       let subjectUrlComplex = config.lookupConfig['http://id.loc.gov/authorities/subjects'].modes[0]['LCSH All'].url.replace('<QUERY>',complexVal).replace('&count=25','&count=5')+'&rdftype=ComplexType'
       let subjectUrlSimple = config.lookupConfig['http://id.loc.gov/authorities/subjects'].modes[0]['LCSH All'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=4')+'&rdftype=SimpleType'
+
+      let worksUrl = config.lookupConfig['https://preprod-8080.id.loc.gov/resources/works'].modes[0]['Works - Left Anchored'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=12')
+
+
 
 
       let searchValHierarchicalGeographic = searchVal.split(' ').join('--')
 
 
       let subjectUrlHierarchicalGeographic = config.lookupConfig['HierarchicalGeographic'].modes[0]['All'].url.replace('<QUERY>',searchValHierarchicalGeographic).replace('&count=25','&count=4')
+
+
+      if (mode == 'GEO'){
+        subjectUrlHierarchicalGeographic = subjectUrlHierarchicalGeographic.replace('&count=4','&count=12')
+      }
+
 
 
 
@@ -322,24 +332,58 @@ const lookupUtil = {
       }
 
 
+      let searchPayloadWorks = {
+        processor: 'lcAuthorities',
+        url: [worksUrl],
+        searchValue: searchVal
+      }
 
-      let [resultsNames, resultsSubjectsSimple, resultsSubjectsComplex, resultsHierarchicalGeographic] = await Promise.all([
-          this.searchComplex(searchPayloadNames),
-          this.searchComplex(searchPayloadSubjectsSimple),
-          this.searchComplex(searchPayloadSubjectsComplex),
-          this.searchComplex(searchPayloadHierarchicalGeographic)
 
-      ]);
 
-      
+      let resultsNames =[]
+      let resultsSubjectsSimple=[]
+      let resultsSubjectsComplex=[]
+      let resultsHierarchicalGeographic=[]
+      let resultsWorks=[]
+
+
+      if (mode == "LCSHNAF"){
+        [resultsNames, resultsSubjectsSimple, resultsSubjectsComplex, resultsHierarchicalGeographic] = await Promise.all([
+            this.searchComplex(searchPayloadNames),
+            this.searchComplex(searchPayloadSubjectsSimple),
+            this.searchComplex(searchPayloadSubjectsComplex),
+            this.searchComplex(searchPayloadHierarchicalGeographic)
+        ]);
+
+      }else if (mode == "GEO"){
+
+        [resultsHierarchicalGeographic] = await Promise.all([
+            this.searchComplex(searchPayloadHierarchicalGeographic)
+        ]);
+
+      }else if (mode == "WORKS"){
+
+        [resultsWorks] = await Promise.all([
+            this.searchComplex(searchPayloadWorks)
+        ]);
+
+      }
+
+
 
       // drop the litearl value from names and complex
-      resultsNames.pop()
-      resultsSubjectsComplex.pop()
+      if (resultsNames.length>0){
+        resultsNames.pop()
+      }
+      if (resultsSubjectsComplex.length>0){
+        resultsSubjectsComplex.pop()
+      }
 
-      
-      resultsSubjectsSimple.push(resultsSubjectsSimple.pop())
-      resultsSubjectsSimple.reverse()
+
+      if (resultsSubjectsSimple.length>0){
+        resultsSubjectsSimple.push(resultsSubjectsSimple.pop())
+        resultsSubjectsSimple.reverse()
+      }
 
 
       resultsSubjectsComplex.reverse()
@@ -365,6 +409,11 @@ const lookupUtil = {
       // }]
 
 
+      if (mode == "WORKS"){
+        // over write the subjects if we are doing a work search
+        resultsSubjectsSimple = resultsWorks
+      }
+
       let results = {
         'subjectsSimple': resultsSubjectsSimple,
         'subjectsComplex': resultsSubjectsComplex,
@@ -372,7 +421,7 @@ const lookupUtil = {
         'hierarchicalGeographic': resultsHierarchicalGeographic
       }
 
-      
+
       return results
 
     },
