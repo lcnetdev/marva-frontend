@@ -12,6 +12,8 @@
         <button @click="searchModeSwitch('LCSHNAF')" :data-tooltip="'Shortcut: CTRL+1'" :class="['simptip-position-bottom',{'active':(searchMode==='LCSHNAF')}]">LCSH/NAF</button>
         <button @click="searchModeSwitch('GEO')" :data-tooltip="'Shortcut: CTRL+2'" :class="['simptip-position-bottom',{'active':(searchMode==='GEO')}]">Indirect Geo</button>
         <button @click="searchModeSwitch('WORKS')" :data-tooltip="'Shortcut: CTRL+3'" :class="['simptip-position-bottom',{'active':(searchMode==='WORKS')}]">Works</button>
+        <button @click="searchModeSwitch('HUBS')" :data-tooltip="'Shortcut: CTRL+4'" :class="['simptip-position-bottom',{'active':(searchMode==='HUBS')}]">Hubs</button>
+
       </div>
 
 
@@ -489,7 +491,11 @@ export default {
 
     searchModeSwitch: function(mode){
 
-      this.searchMode = mode
+      this.searchMode = mode      
+      if (this.activeComponent && this.activeComponent.label){        
+        this.searchApis(this.activeComponent.label,this.subjectString,this)
+      }
+      
 
     },
 
@@ -551,6 +557,28 @@ export default {
 
 
       }
+
+
+
+      for (let s of that.searchResults.hierarchicalGeographic){
+        if (s.suggestLabel && s.suggestLabel.includes(' (USE ')){
+          s.suggestLabel = s.label
+        }
+      }
+      if (that.searchMode == 'WORKS' || that.searchMode == 'HUBS'){
+        for (let s of that.searchResults.subjectsSimple){
+          if (s.suggestLabel && s.suggestLabel.includes(' (USE ')){
+            s.suggestLabel = s.label
+          }
+        }
+        for (let s of that.searchResults.subjectsComplex){
+          if (s.suggestLabel && s.suggestLabel.includes(' (USE ')){
+            s.suggestLabel = s.label
+          }
+        }
+
+      }
+
 
 
 

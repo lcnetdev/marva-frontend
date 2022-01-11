@@ -289,15 +289,19 @@ const lookupUtil = {
       let subjectUrlComplex = config.lookupConfig['http://id.loc.gov/authorities/subjects'].modes[0]['LCSH All'].url.replace('<QUERY>',complexVal).replace('&count=25','&count=5')+'&rdftype=ComplexType'
       let subjectUrlSimple = config.lookupConfig['http://id.loc.gov/authorities/subjects'].modes[0]['LCSH All'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=4')+'&rdftype=SimpleType'
 
-      let worksUrl = config.lookupConfig['https://preprod-8080.id.loc.gov/resources/works'].modes[0]['Works - Left Anchored'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=12')
+      let worksUrlKeyword = config.lookupConfig['https://preprod-8080.id.loc.gov/resources/works'].modes[0]['Works - Keyword'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=5')
+      let worksUrlAnchored = config.lookupConfig['https://preprod-8080.id.loc.gov/resources/works'].modes[0]['Works - Left Anchored'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=5')
 
+
+      let hubsUrlKeyword = config.lookupConfig['https://preprod-8080.id.loc.gov/resources/works'].modes[0]['Hubs - Keyword'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=5')
+      let hubsUrlAnchored = config.lookupConfig['https://preprod-8080.id.loc.gov/resources/works'].modes[0]['Hubs - Left Anchored'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=5')
 
 
 
       let searchValHierarchicalGeographic = searchVal.split(' ').join('--')
 
 
-      let subjectUrlHierarchicalGeographic = config.lookupConfig['HierarchicalGeographic'].modes[0]['All'].url.replace('<QUERY>',searchValHierarchicalGeographic).replace('&count=25','&count=4')
+      let subjectUrlHierarchicalGeographic = config.lookupConfig['HierarchicalGeographic'].modes[0]['All'].url.replace('<QUERY>',searchValHierarchicalGeographic).replace('&count=25','&count=4') + '&searchtype=keyword'
 
 
       if (mode == 'GEO'){
@@ -332,9 +336,27 @@ const lookupUtil = {
       }
 
 
-      let searchPayloadWorks = {
+      let searchPayloadWorksAnchored = {
         processor: 'lcAuthorities',
-        url: [worksUrl],
+        url: [worksUrlAnchored],
+        searchValue: searchVal
+      }
+
+      let searchPayloadWorksKeyword = {
+        processor: 'lcAuthorities',
+        url: [worksUrlKeyword],
+        searchValue: searchVal
+      }
+
+      let searchPayloadHubsAnchored = {
+        processor: 'lcAuthorities',
+        url: [hubsUrlAnchored],
+        searchValue: searchVal
+      }
+      
+      let searchPayloadHubsKeyword = {
+        processor: 'lcAuthorities',
+        url: [hubsUrlKeyword],
         searchValue: searchVal
       }
 
@@ -344,8 +366,10 @@ const lookupUtil = {
       let resultsSubjectsSimple=[]
       let resultsSubjectsComplex=[]
       let resultsHierarchicalGeographic=[]
-      let resultsWorks=[]
-
+      let resultsWorksAnchored=[]
+      let resultsWorksKeyword=[]
+      let resultsHubsAnchored=[]
+      let resultsHubsKeyword=[]
 
       if (mode == "LCSHNAF"){
         [resultsNames, resultsSubjectsSimple, resultsSubjectsComplex, resultsHierarchicalGeographic] = await Promise.all([
@@ -363,11 +387,20 @@ const lookupUtil = {
 
       }else if (mode == "WORKS"){
 
-        [resultsWorks] = await Promise.all([
-            this.searchComplex(searchPayloadWorks)
+        [resultsWorksAnchored,resultsWorksKeyword ] = await Promise.all([
+            this.searchComplex(searchPayloadWorksAnchored),
+            this.searchComplex(searchPayloadWorksKeyword)
+        ]);
+
+      }else if (mode == "HUBS"){
+
+        [resultsHubsAnchored,resultsHubsKeyword ] = await Promise.all([
+            this.searchComplex(searchPayloadHubsAnchored),
+            this.searchComplex(searchPayloadHubsKeyword)
         ]);
 
       }
+
 
 
 
@@ -411,9 +444,14 @@ const lookupUtil = {
 
       if (mode == "WORKS"){
         // over write the subjects if we are doing a work search
-        resultsSubjectsSimple = resultsWorks
+        resultsSubjectsSimple = resultsWorksAnchored
+        resultsSubjectsComplex = resultsWorksKeyword
       }
-
+      if (mode == "HUBS"){
+        // over write the subjects if we are doing a work search
+        resultsSubjectsSimple = resultsHubsAnchored
+        resultsSubjectsComplex = resultsHubsKeyword
+      }
       let results = {
         'subjectsSimple': resultsSubjectsSimple,
         'subjectsComplex': resultsSubjectsComplex,
