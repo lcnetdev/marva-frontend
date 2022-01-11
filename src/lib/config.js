@@ -247,6 +247,18 @@ const config = {
 			
 			}
 		]},
+		"https://preprod-8080.id.loc.gov/resources/works/" : {"name":"Works", "processor" : 'lcAuthorities', "type":"complex", "modes":[
+			{
+			"Works - Keyword":{"url":"https://preprod-8080.id.loc.gov/resources/works/suggest2/?q=?<QUERY>&count=25", "all":true}, 					
+			"Works - Left Anchored":{"url":"https://preprod-8080.id.loc.gov/resources/works/suggest2/?q=<QUERY>&count=25"}, 					
+
+			"Hubs - Keyword":{"url":"https://preprod-8080.id.loc.gov/resources/hubs/suggest2/?q=?<QUERY>&count=25"}, 					
+
+			"Hubs - Left Anchored":{"url":"https://preprod-8080.id.loc.gov/resources/hubs/suggest2/?q=<QUERY>&count=25"}, 				
+			
+			}
+		]},
+
 
 
 		"https://id.loc.gov/resources/hubs" : {"name":"Works", "processor" : 'lcAuthorities', "type":"complex", "modes":[
