@@ -410,6 +410,20 @@ export default new Vuex.Store({
 
     },
 
+
+    
+    setLangLiterals({ commit, state }, data) { 
+
+      let nap = parseProfile.setLangLiterals(state.activeProfile, data.guid, data.lang)
+
+      commit('ACTIVEPROFILE', nap)
+      commit('ACTIVEEDITCOUNTER') 
+
+      commit('ACTIVERECORDSAVED', false)
+      state.saveRecord(state,commit)
+
+    }, 
+
     async setValueSubject({ commit, state }, data) { 
 
       let nap = await parseProfile.setValueSubject(state.activeProfile, data.profileComponet, state.activeProfileName, data.subjectComponents)

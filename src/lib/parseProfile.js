@@ -1921,7 +1921,6 @@ const parseProfile = {
                             }
 
 
-                            console.log('doing',val,pt)
 
                             let stringValue = ''
 
@@ -1931,12 +1930,28 @@ const parseProfile = {
                                 }
                             }
 
+                            if (isNaN(stringValue)==false){
+                                continue
+                            }
 
+                            if (stringValue==='[object Object]'){
+                                continue
+                            }
+
+                            console.log('doing',val,pt)
+
+                            console.log(config.literalLangOptions.ignorePtURIs.indexOf(pt.propertyURI))
+                            if (config.literalLangOptions.ignorePtURIs.indexOf(pt.propertyURI)>-1){
+                                continue
+                            }
+
+        
 
                             literals[rtKey].push({
                                 rt: rtKey,
                                 ptGuid: pt['@guid'],
                                 ptLabel: pt.propertyLabel,
+                                ptURI: pt.propertyURI,
                                 userValueGuid: pt.userValue['@guid'],
                                 guid: val['@guid'],
                                 language: (val['@language']) ? val['@language'] : null,
@@ -1961,6 +1976,59 @@ const parseProfile = {
 
 
         return literals
+
+    },
+
+
+
+    setLangLiterals: function(activeProfile, guid, lang){
+
+
+
+        for (let rtKey in activeProfile.rt){
+            for (let ptKey in activeProfile.rt[rtKey].pt){
+                let pt = activeProfile.rt[rtKey].pt[ptKey]
+
+                if (pt.userValue['@id']){
+                    // if there is an URI then it is controlled, so skipp this one
+                    continue
+                }
+
+                for (let k in pt.userValue){
+
+                    if (!k.startsWith('@')){
+                        for (let val of pt.userValue[k]){
+
+                            
+                            if (val['@guid'] === guid['guid']){
+                                
+
+                                // if it already that undo it
+                                if (val['@language'] === lang){
+                                    delete val['@language']
+                                }else{
+                                    //set it otherwise
+                                    val['@language'] = lang
+                                }
+                            }
+                            
+
+                        }
+                    }
+
+                }
+
+
+            }
+
+
+        }
+
+
+
+
+
+        return activeProfile
 
     },
 

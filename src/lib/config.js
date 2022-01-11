@@ -95,6 +95,23 @@ const config = {
 	},
 
 
+	literalLangOptions:{
+		ignorePtURIs: [
+			'http://id.loc.gov/ontologies/bibframe/provisionActivity',
+			'http://id.loc.gov/ontologies/bibframe/responsibilityStatement',
+			'http://id.loc.gov/ontologies/bibframe/supplementaryContent',
+			'http://id.loc.gov/ontologies/bibframe/subject',
+			'http://id.loc.gov/ontologies/bflc/aap-normalized',
+			'http://id.loc.gov/ontologies/bflc/aap',
+			'http://id.loc.gov/ontologies/bibframe/shelfMark',
+			'http://id.loc.gov/ontologies/bibframe/classification',
+			'http://id.loc.gov/ontologies/bibframe/dimensions',
+			'http://id.loc.gov/ontologies/bibframe/extent',
+			'http://id.loc.gov/ontologies/bibframe/notation',
+
+			]
+	},
+
 
 
 	lookupConfig: {

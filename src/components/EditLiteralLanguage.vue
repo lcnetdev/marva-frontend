@@ -39,6 +39,9 @@
 
     </details>
 
+    <div style="text-align:right; padding-right: 10px;">
+      <button @click="closeLitLang">Close</button>
+    </div>
     <div v-if="Object.keys(literals).length==0" style="text-align: center;">
       <h3>No literals found on this record.</h3>
     </div>
@@ -56,10 +59,9 @@
               <div style="font-size:1.25em; font-weight:bold">{{val.value}}</div>
               <div>
                   
-                  <span class="lang-option">Eng / Latin (Default)</span>
+                  <!-- <span class="lang-option">Eng / Latin (Default)</span> -->
 
-                  <span class="lang-option" v-for="opt in Object.keys(availableOptionsCodes)" :key="opt">
-                    
+                  <span @click="selectLang(val,opt)"  :class="['lang-option',{'selected': (val.language===opt)}]" v-for="opt in Object.keys(availableOptionsCodes)" :key="opt">
                     {{availableOptionsCodes[opt].l.name}} / {{availableOptionsCodes[opt].s.name}}
                   </span>
 
@@ -75,7 +77,7 @@
 
     </div>
 
-    <div style="text-align: center; margin-top: 2em;">
+    <div style="text-align: center; margin-top: 2em; margin-bottom:2em">
       <button @click="closeLitLang">Close</button>
     </div>
   </div>
@@ -101,6 +103,13 @@
 
     .lang-option:hover{
       background-color: lightblue;
+    }
+
+    .lang-option.selected{
+      background-color: lightblue;
+      -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+      -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+      box-shadow: inset 0px 0px 5px #c1c1c1;      
     }
 
 </style>
@@ -171,9 +180,19 @@ export default {
 
         // merge the two arrays of lang codes togther, if 15924 has a 2 char code that was already included ignore it
         let results = this.iso639_1.map((d)=>{return {code:d.code,name:d.name}})
-        results = results.concat(this.iso639_2.map((d)=>{ return {code: (d.alpha_3) ? d.alpha_3 : d.alpha_2 , name:d.name}}))
-        // remove ones not included
-        results = results.filter((d)=>{ return d})
+        let iso639_1_names = this.iso639_1.map((d)=>{return d.name})
+
+        let iso639_2Array = this.iso639_2.map((d)=>{ return {code: (d.alpha_3) ? d.alpha_3 : d.alpha_2 , name:d.name}})
+
+        iso639_2Array.forEach((c)=>{
+          if (iso639_1_names.indexOf(c.name)===-1){
+            results.push(c)
+          }
+
+        })
+
+
+        // results = results.filter((d)=>{ return d})
 
         // sort by label 
         results = results.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
@@ -206,6 +225,22 @@ export default {
   methods: {
 
 
+    selectLang: function(guid,lang){
+
+
+
+      
+      this.$store.dispatch("setLangLiterals", { self: this, guid:guid, lang:lang }).then(() => {
+
+        this.refreshDisplay()
+
+      })
+
+
+
+
+    },
+
     refreshDisplay: function(){
 
 
@@ -220,7 +255,7 @@ export default {
 
 
       console.log('this.availableOptions',this.availableOptions)
-
+      console.log('this.literals',this.literals)
     },
 
     removeLangOption: function(idx){
