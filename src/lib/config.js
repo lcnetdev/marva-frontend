@@ -98,7 +98,6 @@ const config = {
 	literalLangOptions:{
 		ignorePtURIs: [
 			'http://id.loc.gov/ontologies/bibframe/provisionActivity',
-			'http://id.loc.gov/ontologies/bibframe/responsibilityStatement',
 			'http://id.loc.gov/ontologies/bibframe/supplementaryContent',
 			'http://id.loc.gov/ontologies/bibframe/subject',
 			'http://id.loc.gov/ontologies/bflc/aap-normalized',
