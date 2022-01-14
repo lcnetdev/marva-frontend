@@ -21,7 +21,6 @@
            <EditMetaComponent v-if="returnLookupType(structure) == 'meta'" :isMini="isMini" :ptGuid="ptGuid" :parentURI="parentURI" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditMetaComponent>
            
            <!-- <EditAdminComponent v-else-if="returnLookupType(structure) == 'admin'" :ptGuid="ptGuid" :parentURI="parentURI" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditAdminComponent> -->
-          
            <EditLiteralComponent v-else-if="structure.type == 'literal' || structure.type == 'literal-lang'" :key="useKey" :isMini="isMini" :ptGuid="ptGuid" :parentURI="parentURI"  :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditLiteralComponent>
            <EditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" :ptGuid="ptGuid" :key="useKey" :isMini="isMini" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested"  :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate" ></EditSimpleLookupComponent>
            <EditComplexLookupComponent v-on="$listeners" v-else-if="returnLookupType(structure) == 'complex'" :key="useKey" :isMini="isMini" @updated="forceUpdate" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditComplexLookupComponent>          
@@ -256,7 +255,7 @@ export default {
       // we handle this structural thing elsewhere
       if (cStructure.propertyURI == "http://id.loc.gov/ontologies/bibframe/hasItem"){
 
-        return "meta"
+        return "hide"
       }
 
     

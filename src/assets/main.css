@@ -205,6 +205,9 @@ li::before {
 	font-size: 1.1em;
 
 }
+.left-menu-list-item-hide{
+	display: none;
+}
 
 .grid {
   display: grid;
