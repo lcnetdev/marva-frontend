@@ -778,6 +778,33 @@ const exportXML = {
 
 							}
 						
+
+						}else if (await this.suggestType(ptObj.propertyURI) == 'http://www.w3.org/2000/01/rdf-schema#Resource'){
+
+							// if it is a marked in the profile as a literal and has expected value of rdf:Resource flatten it to a string literal
+
+							for (let key1 of Object.keys(userValue).filter(k => (!k.includes('@') ? true : false ) )){
+
+								for (let value1 of userValue[key1]){
+
+									for (let key2 of Object.keys(value1).filter(k => (!k.includes('@') ? true : false ) )){
+
+										if (typeof value1[key2] == 'string' || typeof value1[key2] == 'number'){
+											// its a label or some other literal
+											let p1 = this.createLiteral(key2, value1)
+											rootEl.appendChild(p1)
+										}else{
+											console.error('key2', key2, value1[key2], 'not a literal, should not happen')
+										}
+
+									}
+								}
+
+							}
+
+
+
+
 						}else if (userValue['@id']){
 							// it has a URI at least, so make that
 							let p = this.createElByBestNS(ptObj.propertyURI)
