@@ -244,6 +244,13 @@ export default {
                 if (rtkey == useItemRtLabel){
                   let useRtLabel =  useItemRtLabel + '-' + (i+1) 
                   let useItem = JSON.parse(JSON.stringify(this.profiles[pkey].rt[rtkey]))
+
+                  // make the guids for all the properties unique
+                  for (let ptk in useItem.pt){
+                    useItem.pt[ptk]['@guid'] = short.generate()
+                  }
+
+
                   console.log('uysing',this.profiles[pkey].rt[rtkey])
                   foundCorrectItemProfile = true
                   useProfile.rtOrder.push(useRtLabel)

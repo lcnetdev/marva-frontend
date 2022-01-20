@@ -1051,7 +1051,7 @@ const parseProfile = {
             for (let pt in currentState.rt[rt].pt){
                 if (currentState.rt[rt].pt[pt]['@guid'] == ptGuid){
 
-                    
+                    console.log("found the existing PTguid",currentState.rt[rt].pt[pt])
                     let userValue = currentState.rt[rt].pt[pt].userValue
 
                     if (guid){

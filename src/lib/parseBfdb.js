@@ -938,8 +938,7 @@ const parseBfdb = {
 			for (let k in pt){
 
 				let ptk = JSON.parse(JSON.stringify(pt[k]))
-
-				
+			
 
 				// remove any default values since we will be populating from the record
 				ptk.valueConstraint.defaults=[]
