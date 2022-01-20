@@ -1478,6 +1478,9 @@ const parseProfile = {
 
                     if (value.contextValue){
 
+                        // testing just making sure there is only one value in there
+                        userValue = []
+
                         userValue.push({
                             '@guid': short.generate(),
                             '@type': value.typeFull,
@@ -1492,6 +1495,8 @@ const parseProfile = {
                         })
 
                     }
+
+                    currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI] = userValue
 
                     if (currentState.rt[activeProfileName].pt[component].valueConstraint 
                         && currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType 
