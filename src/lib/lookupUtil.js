@@ -298,10 +298,10 @@ const lookupUtil = {
 
 
 
-      let searchValHierarchicalGeographic = searchVal.split(' ').join('--')
+      let searchValHierarchicalGeographic = searchVal.replaceAll('‑','-') //.split(' ').join('--')
 
 
-      let subjectUrlHierarchicalGeographic = config.lookupConfig['HierarchicalGeographic'].modes[0]['All'].url.replace('<QUERY>',searchValHierarchicalGeographic).replace('&count=25','&count=4') + '&searchtype=keyword'
+      let subjectUrlHierarchicalGeographic = config.lookupConfig['HierarchicalGeographic'].modes[0]['All'].url.replace('<QUERY>',searchValHierarchicalGeographic).replace('&count=25','&count=4')
 
 
       if (mode == 'GEO'){

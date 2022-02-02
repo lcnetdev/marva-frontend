@@ -495,7 +495,7 @@ export default {
       if (this.activeComponent && this.activeComponent.label){        
         this.searchApis(this.activeComponent.label,this.subjectString,this)
       }
-      
+      this.$refs.subjectInput.focus()
 
     },
 
@@ -623,13 +623,16 @@ export default {
 
         that.pickLookup[k].picked = false
 
+        console.log("Comparing",searchString.toLowerCase(),that.pickLookup[k].label.toLowerCase())
         if (searchString.toLowerCase() == that.pickLookup[k].label.toLowerCase() && !that.pickLookup[k].literal ){
 
-          
+          console.log('found match')
 
           // if the labels are the same for the current one selected don't overide it
-          if (that.pickLookup[k].label == that.activeComponent.label && that.activeComponent.uri){
-
+          console.log(that.pickLookup[k].label.replaceAll('‑','-'),that.activeComponent.label.replaceAll('‑','-'))
+          console.log(that.activeComponent)
+          if (that.pickLookup[k].label.replaceAll('‑','-') == that.activeComponent.label.replaceAll('‑','-') && that.activeComponent.uri){
+            console.log('here')
             if (that.activeComponent.uri == that.pickLookup[k].uri){
               
               that.pickPostion=k
@@ -642,7 +645,7 @@ export default {
             
 
             // if they started typing the next word already then stop this
-            if (that.subjectString!=searchStringFull){
+            if (that.subjectString.replaceAll('‑','-')!=searchStringFull.replaceAll('‑','-')){
               break
 
             }
@@ -683,28 +686,39 @@ export default {
       that.$nextTick(() => {
         that.checkToolBarHeight()
 
-        // find out how small the smallest one is and then loop through and try to make all of them
-        // that size so they fit on one line of the display
-        let smallest_size = 1000;
-        for (let el of document.getElementsByClassName("fake-option")){
-          if (el.offsetHeight < smallest_size){
-            smallest_size=el.offsetHeight
-          }
-        }
 
-        for (let el of document.getElementsByClassName("fake-option")){
-          if (el.offsetHeight > smallest_size){
-            let startFontSize = 1.25
-            while (el.offsetHeight >smallest_size){
-              startFontSize=startFontSize-0.01
-              el.style.fontSize = startFontSize + 'em';
-              if (startFontSize<=0.01){
-                el.style.fontSize = "1.25em"
-                break
+
+        // window.setTimeout(()=> {
+
+          // find out how small the smallest one is and then loop through and try to make all of them
+          // that size so they fit on one line of the display
+          let smallest_size = 1000;
+          for (let el of document.getElementsByClassName("fake-option")){
+
+            if (el.offsetHeight < smallest_size && el.offsetHeight!=0){
+              smallest_size=el.offsetHeight
+            }
+          }
+          // alert(smallest_size)
+          for (let el of document.getElementsByClassName("fake-option")){
+            if (el.offsetHeight > smallest_size){
+              let startFontSize = 1.25
+              while (el.offsetHeight >smallest_size){
+                startFontSize=startFontSize-0.01
+                el.style.fontSize = startFontSize + 'em';
+                if (startFontSize<=0.01){
+                  el.style.fontSize = "1.25em"
+                  break
+                }
               }
             }
           }
-        }
+
+
+
+
+        // },100)
+        
 
 
 
@@ -725,9 +739,9 @@ export default {
       if (event.key == 'ArrowLeft' || event.key == 'ArrowRight' ){
 
         // don't let them leave a trailing -- when they are clicking around like wild
-        if (this.subjectString.endsWith('--')){
-          this.subjectString = this.subjectString.slice(0,this.subjectString.length-2)
-        }
+        // if (this.subjectString.endsWith('--')){
+        //   this.subjectString = this.subjectString.slice(0,this.subjectString.length-2)
+        // }
 
 
         if (!event.target){
@@ -815,14 +829,14 @@ export default {
 
       }else{
 
-
+        console.log('1',JSON.parse(JSON.stringify(this.componetLookup)))
 
         // take the subject string and split
         let splitString = this.subjectString.split('--')
 
         // replace the string with what we selected
 
-        splitString[this.activeComponentIndex] = this.pickLookup[this.pickPostion].label
+        splitString[this.activeComponentIndex] = this.pickLookup[this.pickPostion].label.replaceAll('-','‑')
 
         this.subjectString = splitString.join('--')
 
@@ -831,7 +845,8 @@ export default {
           this.componetLookup[this.activeComponentIndex]= {}
         }
 
-        this.componetLookup[this.activeComponentIndex][this.pickLookup[this.pickPostion].label] = this.pickLookup[this.pickPostion]
+
+        this.componetLookup[this.activeComponentIndex][this.pickLookup[this.pickPostion].label.replaceAll('-','‑')] = this.pickLookup[this.pickPostion]
 
         for (let k in this.pickLookup){
           this.pickLookup[k].picked=false
@@ -840,6 +855,7 @@ export default {
         this.pickLookup[this.pickPostion].picked=true
 
 
+        console.log('2',JSON.parse(JSON.stringify(this.componetLookup)))
         this.subjectStringChanged()
 
 
@@ -851,6 +867,8 @@ export default {
 
 
     navInput: function(event){
+
+
 
       if (event.key == 'ArrowUp'){
         if (parseInt(this.pickPostion) <= this.searchResults.names.length*-1){
@@ -894,6 +912,48 @@ export default {
       }else if (event.ctrlKey && event.key == "3"){
 
         this.searchModeSwitch("WORKS")
+
+      }else if (this.searchMode == 'GEO' && event.key == "-"){
+
+
+        if (this.components.length>0){
+          let lastC = this.components[this.components.length-1]
+          console.log(lastC)
+          // if the last component has a URI then it was just selected
+          // so we are not in the middle of a indirect heading, we are about to type it
+          // so let them put in normal --
+          if (lastC.uri){
+            return true
+          }
+
+          // if the last string is a normal "-" then make this one normal too
+          if (this.subjectString.slice(-1) == '-'){
+            return true
+          }
+
+        }
+
+
+        let start = event.target.selectionStart
+        let end = event.target.selectionEnd
+        console.log(this.subjectString.substring(0,start),'|',this.subjectString.substring(end,this.subjectString.length))
+        
+        this.subjectString = this.subjectString.substring(0,start) + '‑' + this.subjectString.substring(end,this.subjectString.length)
+        this.subjectString=this.subjectString.trim()
+
+        
+        this.$nextTick(() => {
+
+            console.log(start,end)
+            event.target.setSelectionRange(start+1,end+1)
+
+
+        })
+
+        this.subjectStringChanged()
+
+        event.preventDefault()
+        return false
 
       }
 
@@ -1097,6 +1157,11 @@ export default {
             // BUT if it ends with a number and - then it is a name with open life dates
             // so do look that one up
             }else if (/[0-9]{4}\??-/.test(c.label)){
+              this.searchApis(c.label,event.target.value,this)
+
+
+
+            }else if (/,\s[0-9]{4}-/.test(c.label)){
               this.searchApis(c.label,event.target.value,this)
 
 
