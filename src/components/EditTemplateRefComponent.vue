@@ -341,7 +341,7 @@ export default {
         this.$store.dispatch("refTemplateChange", { self: this, profileName:this.profileName, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, parentId: this.structure.parentId, nextRef:this.rtLookup[nextRefID], thisRef: this.rtLookup[currentRefID] }).then(() => {
          
           let nextRef = JSON.parse(JSON.stringify(this.rtLookup[nextRefID]))
-
+          console.log(nextRef)
           this.multiTemplateSelect = nextRef.resourceLabel
           this.multiTemplateSelectURI = nextRefID
           this.activeTemplate = nextRef

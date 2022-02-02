@@ -405,6 +405,9 @@ export default {
 
       this.displayList = []
       this.activeSelect = ''
+      console.log(this.uri)
+      console.log(this.lookupLibrary)
+
       Object.keys(this.lookupLibrary[this.uri]).forEach((v)=>{
 
         // the list has a special key metdata that contains more info
@@ -445,7 +448,7 @@ export default {
 
       })
 
-
+      console.log(this.displayList)
 
       this.displayList.sort()
 
@@ -472,6 +475,8 @@ export default {
     },
     autoFocus: function(event){
 
+      console.log(this.structure.valueConstraint.useValuesFrom)
+
       // let the rest of the app know what is the active input right now
       this.$store.dispatch("setActiveInput", { self: this, id: event.target.id, profileCompoent: this.profileCompoent, profileName: this.profileName }).then(()=>{
 
@@ -485,6 +490,7 @@ export default {
       // tell the store to load this specific lookup table into memory
       this.$store.dispatch("fetchLookupValues", { self: this, url: this.structure.valueConstraint.useValuesFrom[0] }).then(() => {
         
+        this.uri = this.structure.valueConstraint.useValuesFrom[0]
         // if there is already a value don't open up the full list, they can type ahead but dont open everything
         // if (this.activeLookupValue.length==0){
           // this.filter()

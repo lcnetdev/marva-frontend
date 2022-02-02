@@ -720,7 +720,14 @@ const parseProfile = {
 
             // keep track at the top level what is the active type for this template
             currentState.rt[activeProfileName].pt[component].activeType = nextRef.resourceURI
-            
+                
+
+            // always remove the @id
+            if (currentState.rt[activeProfileName].pt[component].userValue['@id']){
+                delete currentState.rt[activeProfileName].pt[component].userValue['@id']
+            }
+
+
             // if the @type is stored at the root level change it otherwise it lives in the /agent or /subject or whatever
             // change it there
             if (key == currentState.rt[activeProfileName].pt[component].propertyURI){
