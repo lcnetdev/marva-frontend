@@ -667,7 +667,34 @@ const exportXML = {
 												// its a label or some other literal
 												let p2 = this.createLiteral(key2, value1)
 												bnodeLvl1.appendChild(p2)
+											}else if (Array.isArray(value1[key2])){
+
+												for (let arrayValue of value1[key2]){
+
+													let keysLevel2 = Object.keys(arrayValue).filter(k => (!k.includes('@') ? true : false ) )
+													if (keysLevel2.length>0){
+
+														for (let key22 of keysLevel2){
+															if (typeof arrayValue[key22] == 'string' || typeof arrayValue[key22] == 'number'){
+																// its a label or some other literal
+																let p2 = this.createLiteral(key22, arrayValue)
+																bnodeLvl1.appendChild(p2)
+															}else{
+																console.error('key22', key22, arrayValue[key22], 'not a literal, should not happen')
+
+
+															}
+
+
+														}
+													}
+												}
+
+
+
+
 											}else{
+												console.log( )
 												console.error('key2', key2, value1[key2], 'not a literal, should not happen')
 											}
 

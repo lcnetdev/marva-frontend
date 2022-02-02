@@ -337,7 +337,7 @@
 
 
                   <!-- Don't allow adding only a literal value -->
-                  <button v-if="precoordinated.length == 0 && !contextData.literal" @click="add" style="width: 75%" class="">Add Selected [SHIFT+Enter]</button>
+                  <button v-if="precoordinated.length == 0" @click="add" style="width: 75%" class="">Add Selected [SHIFT+Enter]</button>
                   
                   <button v-else-if="precoordinated.length > 0" @click="add" class="simptip-position-left" style="width: 75%;"  :data-tooltip="''">Add Pre-Coordinated [SHIFT+Enter]</button>
                  
@@ -1722,10 +1722,10 @@ export default {
           // there is no context to add, so dont try
         }
 
-        if (this.contextData && this.contextData.literal){
-          return false
-          // they were tring to add only a literal value
-        }
+        // if (this.contextData && this.contextData.literal){
+        //   return false
+        //   // they were tring to add only a literal value
+        // }
 
 
         this.$store.dispatch("setValueComplex", { self: this, profileComponet: this.profileCompoent, template:this.activeTemplate, structure: this.structure, parentStructure: this.parentStructureObj }).then(() => {
