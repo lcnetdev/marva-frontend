@@ -154,14 +154,16 @@ const exportXML = {
 		if (propertyURI==='http://id.loc.gov/ontologies/bflc/aap'){
 			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
 		}
-
-
-
 		
 		if (result==='http://id.loc.gov/ontologies/bflc/date'){
 			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
 		}
 
+		// EDTF Switch here
+
+		if (result=='http://www.loc.gov/standards/datetime/pre-submission.html'){
+			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
+		}
 
 
 
@@ -413,8 +415,8 @@ const exportXML = {
 		// cut the ref to the orginal
 		profile = JSON.parse(JSON.stringify(profile))
 
-		console.log("EXPROT PROFILE-------------------")
-		console.log(profile)
+		// console.log("EXPROT PROFILE-------------------")
+		// console.log(profile)
 
 		let tleWork = []
 		let tleInstance = []
@@ -453,7 +455,7 @@ const exportXML = {
 
 			if (profile.rt[rt].noData) continue
 
-			console.log("rt is",rt)
+			// console.log("rt is",rt)
 				
 
 			let tleArray // eslint-disable-line
@@ -820,7 +822,8 @@ const exportXML = {
 
 						}else{
 							this.debug(ptObj.propertyURI, 'Does not have @type, something is wrong here', userValue)
-							console.log("suggest type is:",await this.suggestType(ptObj.propertyURI))
+							// console.log(ptObj.propertyURI, 'Does not have @type, something is wrong here', userValue)
+							// console.log("suggest type is:",await this.suggestType(ptObj.propertyURI))
 							console.warn("Should not be here")
 							// alert("Not everything entered was serialized into XML, please report this record and check the output.")
 						}
@@ -1090,8 +1093,8 @@ const exportXML = {
 
 				let work = tleLookup['Work'][workKey]
 				if (work){
-				console.log("Work is",work)
-				console.log(tleLookup)
+				
+				
 				rdf.appendChild(work)
 				}
 
