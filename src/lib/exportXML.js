@@ -75,6 +75,12 @@ const exportXML = {
 
 
 
+		// HACK - bad marc2bf conversion
+		if (elStr == 'http://www.loc.gov/mads/rdf/v1#'){
+			elStr = 'http://www.loc.gov/mads/rdf/v1#Authority'
+		} 
+
+
 		// if the elString is not a expanded URI
 		if (!elStr.startsWith('http')){
 			elStr = this.UriNamespace(elStr)

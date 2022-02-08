@@ -456,7 +456,12 @@ export default {
       instanceTests:[
         // '/bfe2/editor/tests/instances/c0010058400001.editor-pkg.xml', //book
         
-        '/bfe2/editor/tests/instances/c0214680420001.editor-pkg.xml', // russian book
+        // '/bfe2/editor/tests/instances/c0214680420001.editor-pkg.xml', // russian book
+
+
+        '/bfe2/editor/tests/instances/21210374.editor-pkg.xml', // xml error
+
+
 
         // '/bfe2/editor/tests/instances/22205817.editor-pkg.xml', // korean
 
