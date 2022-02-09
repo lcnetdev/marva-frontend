@@ -770,16 +770,12 @@ const parseBfdb = {
 
 
 
-		console.log('-------------------HERE---------------------xxx')
+		// console.log('-------------------HERE---------------------xxx')
 
 		// We can do some hacky stuff here to clean up things coming out of BFDB
-		console.log(results)
 		for (let rt in results.rt){
-			console.log(rt)
 			for (let pt in results.rt[rt].pt){
 				if (results.rt[rt].pt[pt].propertyURI === 'http://id.loc.gov/ontologies/bibframe/title'){
-					console.log(results.rt[rt].pt[pt])
-
 					if (results.rt[rt].pt[pt].userValue && results.rt[rt].pt[pt].userValue['http://www.w3.org/2000/01/rdf-schema#label']){
 						delete results.rt[rt].pt[pt].userValue['http://www.w3.org/2000/01/rdf-schema#label']
 					} 
