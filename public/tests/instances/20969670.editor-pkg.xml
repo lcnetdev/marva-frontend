@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:bf="http://id.loc.gov/ontologies/bibframe/" xmlns:bflc="http://id.loc.gov/ontologies/bflc/" xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" xmlns:pmo="http://performedmusicontology.org/ontology/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:streams="info:lc/streams#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<bf:Instance rdf:about="http://id.loc.gov/resources/instances/20969670">
+		<rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Print"/>
+		<bf:title>
+			<bf:Title>
+				<rdfs:label>Sefer Poḳeaḥ ʻivrim : li-feḳoaḥ ʻenayim ha-ʻivrim be-ʻinyan kashrut ha-ʻofot</rdfs:label>
+				<rdfs:label>ספר פוקח עורים : לפקוח עינים העורים בענין כשרות העופות ...</rdfs:label>
+				<bf:mainTitle>Sefer Poḳeaḥ ʻivrim</bf:mainTitle>
+				<bf:mainTitle>ספר פוקח עורים</bf:mainTitle>
+				<bf:subtitle>לפקוח עינים העורים בענין כשרות העופות ...</bf:subtitle>
+			</bf:Title>
+		</bf:title>
+		<bf:title>
+			<bf:VariantTitle>
+				<rdfs:label>פוקח עורים</rdfs:label>
+				<bf:variantType>Portion title</bf:variantType>
+				<bf:mainTitle>פוקח עורים</bf:mainTitle>
+			</bf:VariantTitle>
+		</bf:title>
+		<bf:responsibilityStatement>חברתי בעזהשי&quot;ת בזכות אבותי ורבותי הק' מאיר יודא טענענבוים, אבדק&quot;ק טשאטה, יצ&quot;ו</bf:responsibilityStatement>
+		<bf:provisionActivity>
+			<bf:Publication>
+				<bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">2018-08</bf:date>
+				<bf:place>
+					<bf:Place rdf:about="http://id.loc.gov/vocabulary/countries/nyu">
+						<rdfs:label>New York (State)</rdfs:label>
+					</bf:Place>
+				</bf:place>
+			</bf:Publication>
+		</bf:provisionActivity>
+		<bf:provisionActivity>
+			<bf:Publication>
+				<bf:place>
+					<bf:Place>
+						<rdfs:label>קרית יואל</rdfs:label>
+					</bf:Place>
+				</bf:place>
+				<bf:agent>
+					<bf:Agent>
+						<rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+						<rdfs:label>[מאיר יודא טענענבוים]</rdfs:label>
+					</bf:Agent>
+				</bf:agent>
+				<bf:date>חודש אלול תשע&quot;ח</bf:date>
+			</bf:Publication>
+		</bf:provisionActivity>
+		<bf:issuance>
+			<bf:Issuance rdf:about="http://id.loc.gov/vocabulary/issuance/mono"/>
+		</bf:issuance>
+		<bf:identifiedBy>
+			<bf:Lccn>
+				<rdf:value>2018465891</rdf:value>
+			</bf:Lccn>
+		</bf:identifiedBy>
+		<bf:supplementaryContent>
+			<bf:SupplementaryContent>
+				<rdfs:label>Includes bibliographical references.</rdfs:label>
+			</bf:SupplementaryContent>
+		</bf:supplementaryContent>
+		<bf:media>
+			<bf:Media rdf:about="http://id.loc.gov/vocabulary/mediaTypes/n">
+				<rdfs:label>unmediated</rdfs:label>
+				<bf:source>
+					<bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdamedia"/>
+				</bf:source>
+			</bf:Media>
+		</bf:media>
+		<bf:extent>
+			<bf:Extent>
+				<rdfs:label>131 pages</rdfs:label>
+			</bf:Extent>
+		</bf:extent>
+		<bf:dimensions>24 cm</bf:dimensions>
+		<bf:carrier>
+			<bf:Carrier rdf:about="http://id.loc.gov/vocabulary/carriers/nc">
+				<rdfs:label>volume</rdfs:label>
+				<bf:source>
+					<bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacarrier"/>
+				</bf:source>
+			</bf:Carrier>
+		</bf:carrier>
+		<rdfs:label>Sefer Poḳeaḥ ʻivrim : li-feḳoaḥ ʻenayim ha-ʻivrim be-ʻinyan kashrut ha-ʻofot</rdfs:label>
+		<rdfs:label>ספר פוקח עורים : לפקוח עינים העורים בענין כשרות העופות ...</rdfs:label>
+		<bf:provisionActivityStatement>קרית יואל : מאיר יודא טענענבוים, אלול תשע&quot;ח.</bf:provisionActivityStatement>
+		<dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/instances" xmlns:dcterms="http://purl.org/dc/terms/"/>
+		<bf:instanceOf rdf:resource="http://id.loc.gov/resources/works/20969670"/>
+		<bf:hasItem rdf:resource="http://id.loc.gov/resources/items/20969670-0001"/>
+		<bf:hasItem rdf:resource="http://id.loc.gov/resources/items/20969670-0001"/>
+		<bf:adminMetadata>
+			<bf:AdminMetadata>
+				<bf:generationProcess>
+					<bf:GenerationProcess>
+						<rdfs:label>DLC marc2bibframe2 v1.7.0-SNAPSHOT</rdfs:label>
+						<bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-08-04T21:35:59-04:00</bf:generationDate>
+					</bf:GenerationProcess>
+				</bf:generationProcess>
+				<bf:status>
+					<bf:Status>
+						<rdfs:label>corrected or revised</rdfs:label>
+						<bf:code>c</bf:code>
+					</bf:Status>
+				</bf:status>
+				<bflc:encodingLevel>
+					<bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/5">
+						<rdfs:label>preliminary</rdfs:label>
+					</bflc:EncodingLevel>
+				</bflc:encodingLevel>
+				<bf:descriptionConventions>
+					<bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd">
+						<rdfs:label>isbd</rdfs:label>
+					</bf:DescriptionConventions>
+				</bf:descriptionConventions>
+				<bf:identifiedBy>
+					<bf:Local>
+						<rdf:value>20969670</rdf:value>
+						<bf:assigner>
+							<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+								<bf:code>DLC</bf:code>
+							</bf:Agent>
+						</bf:assigner>
+					</bf:Local>
+				</bf:identifiedBy>
+				<bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-05-10T17:50:13</bf:changeDate>
+				<bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-05-10</bf:creationDate>
+				<lclocal:d906>=906     $a 0 $b ibc $c origres $d 3 $e ncip $f 20 $g y-nonroman</lclocal:d906>
+				<lclocal:d925>=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925>
+				<lclocal:d955>=955     $b cd01 2019-05-10 z-processor JACKPHY; $b cd01 2019-05-10 added lccn and holding and item records; $a cd00 2019-05-10 to ASME/IJ</lclocal:d955>
+				<bf:assigner>
+					<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+						<bf:code>DLC</bf:code>
+					</bf:Agent>
+				</bf:assigner>
+				<bf:descriptionAuthentication>
+					<bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/pcc">
+						<bf:code>pcc</bf:code>
+					</bf:DescriptionAuthentication>
+				</bf:descriptionAuthentication>
+				<bflc:catalogerId>atau</bflc:catalogerId>
+				<bflc:procInfo>update instance</bflc:procInfo>
+			</bf:AdminMetadata>
+		</bf:adminMetadata>
+	</bf:Instance>
+	<bf:Work rdf:about="http://id.loc.gov/resources/works/20969670">
+		<bflc:aap>Ṭenenboim, Meʼir Yehudah. Sefer Poḳeaḥ ʻivrim : li-feḳoaḥ ʻenayim ha-ʻivrim be-ʻinyan kashrut ha-ʻofot Sefer Poḳeaḥ ʻivrim</bflc:aap>
+		<bflc:aap-normalized>ṭenenboimmeʼiryehudahseferpoḳeaḥʻivrim:lifeḳoaḥʻenayimhaʻivrimbeʻinyankashruthaʻofotseferpoḳeaḥʻivrim</bflc:aap-normalized>
+		<rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Text"/>
+		<bf:contribution>
+			<bflc:PrimaryContribution>
+				<bf:agent>
+					<bf:Agent>
+						<rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+						<rdfs:label>Ṭenenboim, Meʼir Yehudah.</rdfs:label>
+					</bf:Agent>
+				</bf:agent>
+				<bf:role>
+					<bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/aut">
+						<rdfs:label>Author</rdfs:label>
+					</bf:Role>
+				</bf:role>
+			</bflc:PrimaryContribution>
+		</bf:contribution>
+		<bf:title>
+			<bf:Title>
+				<rdfs:label>Sefer Poḳeaḥ ʻivrim : li-feḳoaḥ ʻenayim ha-ʻivrim be-ʻinyan kashrut ha-ʻofot</rdfs:label>
+				<rdfs:label>ספר פוקח עורים : לפקוח עינים העורים בענין כשרות העופות ...</rdfs:label>
+				<bf:mainTitle>Sefer Poḳeaḥ ʻivrim : li-feḳoaḥ  ʻenayim ha-ʻivrim be-ʻinyan kashrut ha-ʻofot</bf:mainTitle>
+				<bf:mainTitle>Sefer Poḳeaḥ ʻivrim </bf:mainTitle>
+			</bf:Title>
+		</bf:title>
+		<bf:subject>
+			<madsrdf:ComplexSubject>
+				<rdfs:label>Jews--Dietary laws.</rdfs:label>
+				<madsrdf:authoritativeLabel>Jews--Dietary laws.</madsrdf:authoritativeLabel>
+				<madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+				<madsrdf:componentList rdf:parseType="Collection">
+					<madsrdf:Topic>
+						<madsrdf:authoritativeLabel>Jews</madsrdf:authoritativeLabel>
+					</madsrdf:Topic>
+					<madsrdf:Topic>
+						<madsrdf:authoritativeLabel>Dietary laws</madsrdf:authoritativeLabel>
+					</madsrdf:Topic>
+				</madsrdf:componentList>
+				<bflc:aap-normalized>jewsdietarylaws</bflc:aap-normalized>
+			</madsrdf:ComplexSubject>
+		</bf:subject>
+		<bf:subject>
+			<madsrdf:Topic>
+				<rdfs:label>Meat inspection (Jewish law)</rdfs:label>
+				<madsrdf:authoritativeLabel>Meat inspection (Jewish law)</madsrdf:authoritativeLabel>
+				<madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+				<bflc:aap-normalized>meatinspection(jewishlaw)</bflc:aap-normalized>
+			</madsrdf:Topic>
+		</bf:subject>
+		<bf:subject>
+			<madsrdf:ComplexSubject>
+				<rdfs:label>Poultry as food--Religious aspects--Judaism.</rdfs:label>
+				<madsrdf:authoritativeLabel>Poultry as food--Religious aspects--Judaism.</madsrdf:authoritativeLabel>
+				<madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+				<madsrdf:componentList rdf:parseType="Collection">
+					<madsrdf:Topic>
+						<madsrdf:authoritativeLabel>Poultry as food</madsrdf:authoritativeLabel>
+					</madsrdf:Topic>
+					<madsrdf:Topic>
+						<madsrdf:authoritativeLabel>Religious aspects</madsrdf:authoritativeLabel>
+					</madsrdf:Topic>
+					<madsrdf:Topic>
+						<madsrdf:authoritativeLabel>Judaism</madsrdf:authoritativeLabel>
+					</madsrdf:Topic>
+				</madsrdf:componentList>
+				<bflc:aap-normalized>poultryasfoodreligiousaspectsjudaism</bflc:aap-normalized>
+			</madsrdf:ComplexSubject>
+		</bf:subject>
+		<bf:classification>
+			<bf:ClassificationLcc>
+				<bf:classificationPortion>BM710</bf:classificationPortion>
+			</bf:ClassificationLcc>
+		</bf:classification>
+		<bf:content>
+			<bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/txt">
+				<rdfs:label>text</rdfs:label>
+				<bf:source>
+					<bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacontent"/>
+				</bf:source>
+			</bf:Content>
+		</bf:content>
+		<bf:language>
+			<bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/heb"/>
+		</bf:language>
+		<bf:supplementaryContent>
+			<bf:SupplementaryContent rdf:about="http://id.loc.gov/vocabulary/msupplcont/bibliography">
+				<rdfs:label>bibliography</rdfs:label>
+			</bf:SupplementaryContent>
+		</bf:supplementaryContent>
+		<rdfs:label>Sefer Poḳeaḥ ʻivrim : li-feḳoaḥ ʻenayim ha-ʻivrim be-ʻinyan kashrut ha-ʻofot</rdfs:label>
+		<rdfs:label>ספר פוקח עורים : לפקוח עינים העורים בענין כשרות העופות ...</rdfs:label>
+		<bf:expressionOf>
+			<bf:Work>
+				<bflc:aap>Ṭenenboim, Meʼir Yehudah. Poḳeaḥ ʻivrim</bflc:aap>
+				<bflc:aap-normalized>ṭenenboimmeʼiryehudahpoḳeaḥʻivrim</bflc:aap-normalized>
+				<rdfs:label>Poḳeaḥ ʻivrim</rdfs:label>
+				<bf:contribution>
+					<bf:Contribution>
+						<rdf:type rdf:resource="http://id.loc.gov/ontologies/bflc/PrimaryContribution"/>
+						<bf:agent>
+							<bf:Agent>
+								<rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+								<rdfs:label>Ṭenenboim, Meʼir Yehudah.</rdfs:label>
+							</bf:Agent>
+						</bf:agent>
+						<bf:role>
+							<bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/ctb"/>
+						</bf:role>
+					</bf:Contribution>
+				</bf:contribution>
+				<bf:title>
+					<bf:Title>
+						<rdfs:label>Poḳeaḥ ʻivrim</rdfs:label>
+						<bf:mainTitle>Poḳeaḥ ʻivrim</bf:mainTitle>
+					</bf:Title>
+				</bf:title>
+			</bf:Work>
+		</bf:expressionOf>
+		<dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/works" xmlns:dcterms="http://purl.org/dc/terms/"/>
+		<bf:adminMetadata>
+			<bf:AdminMetadata>
+				<bf:generationProcess>
+					<bf:GenerationProcess>
+						<rdfs:label>DLC marc2bibframe2 v1.7.0-SNAPSHOT</rdfs:label>
+						<bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-08-04T21:35:59-04:00</bf:generationDate>
+					</bf:GenerationProcess>
+				</bf:generationProcess>
+				<bf:status>
+					<bf:Status>
+						<rdfs:label>corrected or revised</rdfs:label>
+						<bf:code>c</bf:code>
+					</bf:Status>
+				</bf:status>
+				<bf:descriptionConventions>
+					<bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd">
+						<rdfs:label>isbd</rdfs:label>
+					</bf:DescriptionConventions>
+				</bf:descriptionConventions>
+				<bf:identifiedBy>
+					<bf:Local>
+						<rdf:value>20969670</rdf:value>
+						<bf:assigner>
+							<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+								<bf:code>DLC</bf:code>
+							</bf:Agent>
+						</bf:assigner>
+					</bf:Local>
+				</bf:identifiedBy>
+				<bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-05-10T17:50:13</bf:changeDate>
+				<bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-05-10</bf:creationDate>
+				<lclocal:d906>=906     $a 0 $b ibc $c origres $d 3 $e ncip $f 20 $g y-nonroman</lclocal:d906>
+				<lclocal:d925>=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925>
+				<lclocal:d955>=955     $b cd01 2019-05-10 z-processor JACKPHY; $b cd01 2019-05-10 added lccn and holding and item records; $a cd00 2019-05-10 to ASME/IJ</lclocal:d955>
+				<bf:assigner>
+					<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+						<bf:code>DLC</bf:code>
+					</bf:Agent>
+				</bf:assigner>
+				<bf:descriptionAuthentication>
+					<bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/pcc">
+						<bf:code>pcc</bf:code>
+					</bf:DescriptionAuthentication>
+				</bf:descriptionAuthentication>
+				<bflc:catalogerId>atau</bflc:catalogerId>
+				<bflc:procInfo>update instance</bflc:procInfo>
+				<bflc:encodingLevel>
+					<bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/f">
+						<rdfs:label>full</rdfs:label>
+					</bflc:EncodingLevel>
+				</bflc:encodingLevel>
+			</bf:AdminMetadata>
+		</bf:adminMetadata>
+	</bf:Work>
+	<bf:Item rdf:about="http://id.loc.gov/resources/items/20969670-0001">
+		<bf:heldBy rdf:resource="http://id.loc.gov/vocabulary/organizations/dlc"/>
+		<bf:shelfMark>
+			<bf:ShelfMarkLcc>
+				<rdfs:label>BM710.T45 2018</rdfs:label>
+			</bf:ShelfMarkLcc>
+		</bf:shelfMark>
+		<bf:identifiedBy>
+			<bf:Barcode>
+				<rdf:value>00504498906</rdf:value>
+			</bf:Barcode>
+		</bf:identifiedBy>
+		<bf:note>
+			<bf:Note>
+				<rdfs:label>c. 1</rdfs:label>
+			</bf:Note>
+		</bf:note>
+		<dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/items" xmlns:dcterms="http://purl.org/dc/terms/"/>
+		<bf:itemOf rdf:resource="http://id.loc.gov/resources/instances/20969670"/>
+		<bf:adminMetadata>
+			<bf:AdminMetadata>
+				<bflc:catalogerId>atau</bflc:catalogerId>
+				<bf:assigner>
+					<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+						<rdfs:label>DLC</rdfs:label>
+					</bf:Agent>
+				</bf:assigner>
+				<bf:descriptionAuthentication>
+					<bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/pcc">
+						<rdfs:label>pcc</rdfs:label>
+					</bf:DescriptionAuthentication>
+				</bf:descriptionAuthentication>
+				<bf:descriptionConventions>
+					<bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda">
+						<rdfs:label>rda</rdfs:label>
+					</bf:DescriptionConventions>
+				</bf:descriptionConventions>
+				<bf:descriptionLanguage>
+					<bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng">
+						<rdfs:label>English</rdfs:label>
+					</bf:Language>
+				</bf:descriptionLanguage>
+				<bf:descriptionModifier>
+					<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+						<rdfs:label>DLC</rdfs:label>
+					</bf:Agent>
+				</bf:descriptionModifier>
+				<bflc:procInfo>update instance</bflc:procInfo>
+				<bflc:encodingLevel>
+					<bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/f">
+						<rdfs:label>full</rdfs:label>
+					</bflc:EncodingLevel>
+				</bflc:encodingLevel>
+			</bf:AdminMetadata>
+		</bf:adminMetadata>
+	</bf:Item>
+</rdf:RDF>

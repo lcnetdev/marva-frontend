@@ -3,6 +3,9 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 
 import Edit from "../views/Edit.vue";
+import CompactEdit from "../views/CompactEdit.vue";
+
+
 import TestParseId from "../views/TestParseId.vue";
 import TestParseBfdb from "../views/TestParseBfdb.vue";
 import TestSubject from "../views/TestSubject.vue";
@@ -65,7 +68,17 @@ const routes = [
     //component: () =>
     //  import(/* webpackChunkName: "about" */ "../views/About.vue")
   },
+  {
+    path: "/compactedit/:recordId",
+    name: "CompactEdit",
+    component: CompactEdit
 
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    //component: () =>
+    //  import(/* webpackChunkName: "about" */ "../views/About.vue")
+  },
 
   // {
   //   path: "/edit",
