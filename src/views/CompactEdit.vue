@@ -24,7 +24,7 @@
             
             <template v-if="profilesLoaded">
 
-                <div v-for="(profileName, resourceIdx) in activeProfile.rtOrder" :key="profileName">
+                <div v-for="(profileName, resourceIdx) in activeProfile.rtOrder.filter((p)=>{return (!p.includes(':Item'))})"  :key="profileName">
 
                     
                     <div v-if="activeProfile.rt[profileName].noData != true" :class="['container-' + profileName.split(':').slice(-1)[0].split('-')[0]]">
