@@ -35,9 +35,14 @@
           <div v-if="displayLabel" style="position: absolute; width: 100%">
               <div style="display: flex;">
                 <div ref="displayLabel" class="selected-value-container-nested" style="display: inline-block; position: relative; bottom: 2px;">
-                    <span ref="displayLabelSpan" @click="toggleSelectedDetails" style="padding-right: 0.3em; font-weight: bold"><span class="selected-value-icon" v-html="returnAuthIcon(this.displayType)"></span>{{formatDisplayLabel()}}</span>
+                    <span ref="displayLabelSpan" @click="toggleSelectedDetails" style="padding-right: 0.3em; font-weight: bold">
+                      <span class="selected-value-icon" v-html="returnAuthIcon(this.displayType)"></span>
+                      <span ref="labelSpan" :key="editLabelDereferenceKey" v-if="!formatDisplayLabel().startsWith('http')">{{formatDisplayLabel()}}</span>
+                      <span ref="labelSpan" v-else><EditLabelDereference :key="editLabelDereferenceKey" :URI="formatDisplayLabel()"/></span>
+
+                    </span>
                     <span  class="selected-value-icon" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em" v-html="validateHeading()"></span>
-                    <span v-if="showEditLink()"  @click="openEditor" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">edit</span>
+                    <span v-if="showEditLink()"  @click="openEditor" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">change</span>
                     <span v-if="showRemoveLink()" @click="removeValue" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">x</span>
                 </div>
 
@@ -52,7 +57,7 @@
               <div v-if="displaySelectedDetails==true" class="selected-value-details">
                 
                 <button class="selected-value-details-close" @click="toggleSelectedDetails">Close</button>
-                <button class="selected-value-details-edit" @click="openEditor">Edit</button>
+                <button class="selected-value-details-edit" @click="openEditor">Change</button>
 
                 <a v-if="rewriteURI(displayContext.uri)" style="color:white; text-decoration: none;" target="_blank"  :href="rewriteURI(displayContext.uri)">View Entity</a>
                 
@@ -118,9 +123,13 @@
           <div v-if="displayLabel" style="position: absolute; width: 100%">
               <div style="display: flex;">
                 <div ref="displayLabel" class="selected-value-container-nested" style="display: inline-block; position: relative; bottom: 2px;">
-                    <span ref="displayLabelSpan"  @click="toggleSelectedDetails" style="padding-right: 0.3em; font-weight: bold"><span class="selected-value-icon" v-html="returnAuthIcon(this.displayType)"></span>{{formatDisplayLabel()}}</span>
+                    <span ref="displayLabelSpan"  @click="toggleSelectedDetails" style="padding-right: 0.3em; font-weight: bold">
+                      <span class="selected-value-icon" v-html="returnAuthIcon(this.displayType)"></span>
+                      <span ref="labelSpan" :key="editLabelDereferenceKey" v-if="!formatDisplayLabel().startsWith('http')">{{formatDisplayLabel()}}</span>
+                      <span ref="labelSpan" v-else><EditLabelDereference :key="editLabelDereferenceKey" :URI="formatDisplayLabel()"/></span>
+                    </span>
                     <span  class="selected-value-icon" v-html="validateHeading()" v-bind:title="validationMessage" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em"></span>
-                    <span v-if="showEditLink()"  @click="openEditor" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">edit</span>
+                    <span v-if="showEditLink()"  @click="openEditor" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">change</span>
 
                     <span v-if="showRemoveLink()" @click="removeValue" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em">x</span>
                 </div>
@@ -136,14 +145,19 @@
               <!-- This is the detail drop down that can be click to show context of the entitiy -->
               
               <div v-if="displaySelectedDetails==true" class="selected-value-details">
-                
-                <button class="selected-value-details-close" @click="toggleSelectedDetails">Close</button>
-                <button class="selected-value-details-edit" @click="openEditor">Edit</button>
+                  
+                <div style="min-height: 50px;">                
+                  <button class="selected-value-details-close" @click="toggleSelectedDetails">Close</button>
+                  <button class="selected-value-details-edit" @click="openEditor">Change</button>
+                  <a v-if="rewriteURI(displayContext.uri)" style="color:white; text-decoration: none;" target="_blank" :href="rewriteURI(displayContext.uri)">View Entity</a>
+                </div>
 
-                <a v-if="rewriteURI(displayContext.uri)" style="color:white; text-decoration: none;" target="_blank" :href="rewriteURI(displayContext.uri)">View Entity</a>
+                <EditLabelDereference :URI="formatDisplayLabel()"/>
+
                 <div class="modal-context-data-title">{{userData['@type']}}</div>
 
                 <div v-if="displayContext">
+
                   <div v-if="displayContext.variant && displayContext.variant.length>0">
                     <div class="modal-context-data-title">Variants:</div>
                     <ul>
@@ -383,6 +397,8 @@ import validationUtil from "@/lib/validationUtil"
 import config from "@/lib/config"
 import parseProfile from "@/lib/parseProfile"
 import EditSubjectEditor from "@/components/EditSubjectEditor.vue";
+import EditLabelDereference from "@/components/EditLabelDereference.vue";
+
 
 
 
@@ -391,6 +407,7 @@ export default {
   components: {    
     Keypress: () => import('vue-keypress'),
     EditSubjectEditor,
+    EditLabelDereference
 
   },  
   props: {
@@ -424,9 +441,12 @@ export default {
       displayPreCoordinated: false,
 
       displayLabel: null,
+      displayLabelDreferenced: null,
       displayType: null,
       displayGuid: null,
       displayContext: {},
+
+      editLabelDereferenceKey: Date.now(),
 
       contextRequestInProgress: false,
       validated: false,
@@ -556,6 +576,7 @@ export default {
         this.$parent.$parent.$parent.$parent.$emit('showMiniEditorEdit',payload);
 
 
+
         // this.$store.dispatch("setWorkingOnMiniProfile", { self: this, value: true }).then(() => {
           // this.displayMini = true
         // })
@@ -596,24 +617,45 @@ export default {
 
       }
 
+
+
+
+          window.setTimeout(()=>{
+            let keepLooping = 0
+            let orginalVal = this.$refs.labelSpan.innerHTML
+
+            if (!this.displayLabelDreferenced){
+              this.displayLabelDreferenced = this.$refs.labelSpan.innerText
+            }
+            while (this.$refs.labelSpan.parentNode.parentNode.clientWidth>this.$refs.fakeInputContainer.clientWidth - 60 && keepLooping < 100){
+              orginalVal = orginalVal.slice(0, -1)
+              this.$refs.labelSpan.innerHTML = orginalVal + '...'
+              // protect against infinite
+              keepLooping++
+            }
+          },2000)
+
+
+
       if (useTitle){
 
         // we have a title, but it might BE HUGE like really long, so see how big our container is an modify the displaly a little to make sure it fits
+          // this.$nextTick(() => {
 
-          this.$nextTick(() => {
+          //   // code in here will run after the below return has sent the value back and the UI has been updated
+          //   // test if the label is now bigger than the container and if so do something about it
+          //   if (this.$refs.fakeInputContainer.clientWidth - this.$refs.displayLabel.clientWidth < 100){
+          //     console.log("HERE")
+          //     this.$refs.displayLabelSpan.innerHTML = useTitle.substring(0,100) + '...'
+          //   }
+          //   // just do it one more time....
+          //   this.$nextTick(() => {
+          //     if (this.$refs.fakeInputContainer.clientWidth - this.$refs.displayLabel.clientWidth < 100){
+          //       this.$refs.displayLabelSpan.innerHTML = useTitle.substring(0,50) + '....'
+          //     }              
+          //   })            
+          // })
 
-            // code in here will run after the below return has sent the value back and the UI has been updated
-            // test if the label is now bigger than the container and if so do something about it
-            if (this.$refs.fakeInputContainer.clientWidth - this.$refs.displayLabel.clientWidth < 100){
-              this.$refs.displayLabelSpan.innerHTML = useTitle.substring(0,100) + '...'
-            }
-            // just do it one more time....
-            this.$nextTick(() => {
-              if (this.$refs.fakeInputContainer.clientWidth - this.$refs.displayLabel.clientWidth < 100){
-                this.$refs.displayLabelSpan.innerHTML = useTitle.substring(0,50) + '....'
-              }              
-            })            
-          })
 
 
         
@@ -1310,6 +1352,8 @@ export default {
     openEditor: function(){
 
 
+      // close the little details pane if open
+      this.displaySelectedDetails = false      
 
 
       this.$store.dispatch("setActiveInput", { self: this, id: this.assignedId, profileCompoent: this.profileCompoent, profileName: this.profileName }).then(()=>{
@@ -1335,7 +1379,13 @@ export default {
       }else{
 
 
-        this.searchValue = this.displayLabel
+
+        if (this.displayLabelDreferenced && this.displayLabel.startsWith('http')){
+          this.searchValue = this.displayLabelDreferenced
+        }else{
+          this.searchValue = this.displayLabel
+        }
+        
         this.initalSearchState = true
         this.search()
         this.$nextTick(() => {
@@ -1345,7 +1395,7 @@ export default {
 
       }
 
-
+      this.displayLabelDreferenced = null
 
     },
 
@@ -1736,6 +1786,9 @@ export default {
           this.validated = false
           this.validateHeading()
           this.$store.dispatch("enableMacroNav", { self: this})
+          
+          // change the key on this element so it rerenderes
+          this.editLabelDereferenceKey = Date.now()
 
           // put the focus back on the input
           setTimeout(()=>{

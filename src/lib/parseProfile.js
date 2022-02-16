@@ -1593,6 +1593,9 @@ const parseProfile = {
                         currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI] = []
                     }
 
+                    // we dont want multiple values here
+                    currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI] = []
+
                     if (!currentState.rt[activeProfileName].pt[component].userValue['@type']){
                         currentState.rt[activeProfileName].pt[component].userValue['@type'] = await exportXML.suggestType(currentState.rt[activeProfileName].pt[component].propertyURI)
                     }
