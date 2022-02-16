@@ -696,7 +696,7 @@ export default {
             this.$store.dispatch("setActiveProfile", { self: this, profile: ap }).then(() => {
 
 
-              this.sideBarGrabDragInit()
+              // this.sideBarGrabDragInit()
 
               // load the ontology lookups if they arnt
               this.loadProfileOntologyLookupsBuild()
@@ -707,7 +707,7 @@ export default {
 
           }else{
 
-            this.sideBarGrabDragInit()
+            // this.sideBarGrabDragInit()
 
             // load the ontology lookups if they arnt
             this.loadProfileOntologyLookupsBuild()
@@ -741,7 +741,7 @@ export default {
 
 
             this.$nextTick(()=>{
-              this.sideBarGrabDragInit()
+              // this.sideBarGrabDragInit()
               this.loadProfileOntologyLookupsBuild()
 
             })
@@ -754,7 +754,7 @@ export default {
         }else{
 
           this.$nextTick(()=>{
-            this.sideBarGrabDragInit()
+            // this.sideBarGrabDragInit()
             this.loadProfileOntologyLookupsBuild()
 
           })
