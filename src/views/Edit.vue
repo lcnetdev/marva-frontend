@@ -142,6 +142,7 @@
                     <select v-else v-model="miniMapActionValue" @change="miniMapAction"  style="position:absolute; top:15px; font-size: larger;    border-radius: 0.25em; width:100px">
                       <option selected disabled value="Actions">Actions</option>
                       <option value="addInstance">Add Instance</option>
+                      <option value="addItem">Add Item to First Instance</option>
 
                     </select>
 
@@ -1093,10 +1094,31 @@ export default {
 
       if (this.miniMapActionValue == 'addItem'){
 
-        console.log(this.activeMiniMap.parent)
-        this.$store.dispatch("addItem",{uri:this.activeMiniMap.URI}).then(() => {        
-          console.log(this.activeProfile)
-        })
+        // console.log(this.activeMiniMap.parent)
+        // console.log(this.activeMiniMap)
+
+        if (!this.activeMiniMap.URI || (this.activeMiniMap.type && this.activeMiniMap.type == 'Work')){
+            // console.log('no instance selected')
+            // find the first instance            
+            for (let rt in this.activeProfile.rt){
+                if (rt.endsWith(':Instance')){
+                    this.$store.dispatch("addItem",{uri:this.activeProfile.rt[rt].URI}).then(() => {        
+                      console.log(this.activeProfile)
+                    })
+                    break
+                }
+            }
+            
+
+        }else{
+            // console.log('normal')
+            this.$store.dispatch("addItem",{uri:this.activeMiniMap.URI}).then(() => {        
+              console.log(this.activeProfile)
+            })
+
+        }
+
+
 
       }
       if (this.miniMapActionValue == 'deleteItem'){
