@@ -110,6 +110,9 @@ export default new Vuex.Store({
     diagramMiniMap: false,
 
 
+    editDisplayMode: 'default',
+
+
     saveRecord : debounce((state,commit) => {
 
       console.log(state, commit,exportXML)
@@ -242,8 +245,11 @@ export default new Vuex.Store({
       state.diagramMiniMap = val
     }, 
 
+    EDITDISPLAYMODE(state, val) {
+      state.editDisplayMode = val
+    }, 
 
-
+    
     
 
     
@@ -536,6 +542,12 @@ export default new Vuex.Store({
     },
 
 
+ 
+
+
+
+
+
 
     cloneInstance ({ commit, state }, data) {    
       let nap = parseProfile.cloneInstance(state.activeProfile, data.uri)
@@ -545,6 +557,13 @@ export default new Vuex.Store({
       commit('DIAGRAMMINIMAP', mini)    
 
     },
+
+
+   setEditDisplayMode ({ commit }, data) {   
+      commit('EDITDISPLAYMODE', data.value)    
+    },
+
+
 
     addInstance ({ commit, state }) {    
       let nap = parseProfile.addInstance(state.activeProfile)

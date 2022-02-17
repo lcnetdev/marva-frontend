@@ -43,7 +43,7 @@
 
       </div>
 
-      <div class="debug-toggle" style="position: relative; visibility: hidden; color:red; left: -26%;font-size: 0.85em;font-family: monospace;top: 8px; cursor: pointer; height: 0.85em;" @click="toggleDebug">debug</div>
+      <div v-if="editDisplayMode!='compact'" class="debug-toggle" style="position: relative; visibility: hidden; color:red; left: -26%;font-size: 0.85em;font-family: monospace;top: 8px; cursor: pointer; height: 0.85em;" @click="toggleDebug">debug</div>
 
 
 
@@ -111,6 +111,7 @@ import EditMetaComponent from "@/components/EditMetaComponent.vue";
 import labels from "@/lib/labels"
 import config from "@/lib/config"
 import uiUtils from "@/lib/uiUtils"
+import { mapState } from 'vuex'
 
 // 
 import VueJsonPretty from 'vue-json-pretty'
@@ -156,6 +157,13 @@ export default {
       lookupType:config.lookupConfig
     }
   },
+  computed: mapState({
+
+    editDisplayMode: 'editDisplayMode',
+
+  }),
+
+
   methods: {
 
     prettifyXml: uiUtils.prettifyXml,

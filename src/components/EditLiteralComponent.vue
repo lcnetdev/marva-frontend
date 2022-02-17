@@ -1,16 +1,25 @@
 <template>
   
-  <div v-if="nested == false && hideField == false" class="component-container">
+  <div v-if="nested == false && hideField == false" :class="'component-container' + ' component-container-' + editDisplayMode">
     <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: false}]" @success="openDiacriticSelect" />
     
 
 
-    <div class="component-container-title">{{structure.propertyLabel}}</div>
-    <div class="component-container-input-container">
+    <div :class="'component-container-title' + ' component-container-title-' + editDisplayMode ">{{structure.propertyLabel}}</div>
+    <div :class="'component-container-input-container' + ' component-container-input-container-' + editDisplayMode">
+
+
         <div v-bind:class="'component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border'">
           <div style="display: flex; position: relative;">
             <div style="flex:1">
-              <form autocomplete="off">            
+              <form autocomplete="off">    
+
+
+                <div style="position: absolute;" v-if="editDisplayMode=='compact'" class="component-nested-container-title">
+                  <span>{{structure.propertyLabel}}</span>                  
+                </div>
+
+
                 <input  bfeType="EditLiteralComponent-unnested" :id="assignedId" v-on:keydown.enter.prevent="submitField" :name="assignedId" ref="input" v-on:focus="focused" autocomplete="off" type="text" @keydown="nav" @keyup="change" v-model="inputValue"  :class="['input-single', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true), 'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">            
               </form>
             </div>
@@ -59,7 +68,14 @@
             <div style="flex:1">
 
               <form autocomplete="off" >
-                <div  class="component-nested-container-title">{{structure.propertyLabel}}</div>
+
+                <div  class="component-nested-container-title">
+                  <span v-if="editDisplayMode=='compact'">{{parentStructureObj.propertyLabel}} -- </span>
+                  <span>{{structure.propertyLabel}}</span>
+                  
+                </div>
+
+
                 <input v-if="!isNoteField(structure.propertyLabel)" ref="input"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change" @keydown="nav" v-model="inputValue" :class="['input-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true),'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">
                 <textarea v-if="isNoteField(structure.propertyLabel)"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change" @keydown="nav" v-model="inputValue"  :class="['input-nested', 'input-textarea-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]"></textarea>
 
@@ -529,6 +545,7 @@ export default {
     activeProfile: 'activeProfile',
     activeProfileMini: 'activeProfileMini',
     workingOnMiniProfile: 'workingOnMiniProfile',
+    editDisplayMode: 'editDisplayMode',
 
 
     settingsDPackVoyager: 'settingsDPackVoyager',

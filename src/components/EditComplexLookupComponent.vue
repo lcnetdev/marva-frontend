@@ -115,7 +115,7 @@
       
       <div ref="fakeInputContainer" style="position: relative;" v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search']">       
           <div class="component-nested-container-title" style="top: 0; width: 100%">
-            <span v-if="parentStructureObj && structure.propertyLabel == 'Lookup'">{{parentStructureObj.propertyLabel}} -- </span>
+            <span v-if="parentStructureObj && (structure.propertyLabel == 'Lookup' || editDisplayMode=='compact')">{{parentStructureObj.propertyLabel}} -- </span>
             <span>{{structure.propertyLabel}}</span>
           </div>
 
@@ -483,7 +483,7 @@ export default {
     activeProfile: 'activeProfile', 
     activeProfileMini: 'activeProfileMini',
     workingOnMiniProfile: 'workingOnMiniProfile',
-
+    editDisplayMode: 'editDisplayMode',
 
     activeProfileName: 'activeProfileName',
     activeComplexSearch: 'activeComplexSearch',
@@ -618,22 +618,35 @@ export default {
       }
 
 
-
+        [100,500,1000,2000].forEach((ts)=>{
 
           window.setTimeout(()=>{
             let keepLooping = 0
-            let orginalVal = this.$refs.labelSpan.innerHTML
-
+            let orginalVal
+            try{
+              orginalVal = this.$refs.labelSpan.innerHTML
+            }catch{
+              return null
+            }
             if (!this.displayLabelDreferenced){
               this.displayLabelDreferenced = this.$refs.labelSpan.innerText
             }
-            while (this.$refs.labelSpan.parentNode.parentNode.clientWidth>this.$refs.fakeInputContainer.clientWidth - 60 && keepLooping < 100){
+            while (this.$refs.labelSpan.parentNode.parentNode.clientWidth>this.$refs.fakeInputContainer.clientWidth - 60 && keepLooping < 1000){
               orginalVal = orginalVal.slice(0, -1)
               this.$refs.labelSpan.innerHTML = orginalVal + '...'
               // protect against infinite
               keepLooping++
             }
-          },2000)
+          },ts)
+
+
+
+
+        })
+
+
+
+
 
 
 

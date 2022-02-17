@@ -1,11 +1,20 @@
 <template>
-  <div v-if="nested == false" class="component-container">
+  <div v-if="nested == false" :class="'component-container' + ' component-container-' + editDisplayMode">
 
 
-    <div class="component-container-title">{{structure.propertyLabel}}</div>
-    <div class="component-container-input-container">
+    <div :class="'component-container-title' + ' component-container-title-' + editDisplayMode ">{{structure.propertyLabel}}</div>
+    <div :class="'component-container-input-container' + ' component-container-input-container-' + editDisplayMode">
+
+
+
         <div class="component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search">          
           <form autocomplete="off" v-on:submit.prevent>
+
+                <div style="position: absolute;" v-if="editDisplayMode=='compact'" class="component-nested-container-title">
+                  <span>{{structure.propertyLabel}}</span>                  
+                </div>
+
+
             <div style=" display: flex; height: 100%">
             <!-- <input autocomplete="off" v-bind:value="activeSelect"  type="text" disabled style="width: 95%; border:none; height: 90%; font-size: 1.5em; padding: 0.1em; position: relative; background: none; color: lightgray"> -->
               
@@ -39,7 +48,14 @@
         <form autocomplete="off" v-on:submit.prevent style="">
           <div style="">
           <!-- <input autocomplete="off" v-bind:value="activeSelect"  type="text" disabled style="width: 95%; border:none; height: 90%; font-size: 1.5em; padding: 0.1em; position: relative; background: none; color: lightgray"> -->
-            <div class="component-nested-container-title component-nested-container-title-simple-lookup" >{{structure.propertyLabel}}</div>            
+            <div class="component-nested-container-title component-nested-container-title-simple-lookup" >
+              <span v-if="editDisplayMode=='compact'">{{parentStructureObj.propertyLabel}} -- </span>
+
+              <span>{{structure.propertyLabel}}</span>
+
+            </div>            
+
+
             <div style="display: flex">
               <div v-for="(avl,idx) in activeLookupValue" :key="idx" class="selected-value-container-nested">
                   <span style="padding-right: 0.3em; font-weight: bold">{{avl['http://www.w3.org/2000/01/rdf-schema#label']}}<span class="uncontrolled" v-if="!avl.uri">(uncontrolled)</span></span>
@@ -343,6 +359,7 @@ export default {
     activeProfile: 'activeProfile',
     activeProfileMini: 'activeProfileMini',
     workingOnMiniProfile: 'workingOnMiniProfile',
+    editDisplayMode: 'editDisplayMode',
 
 
     assignedId (){

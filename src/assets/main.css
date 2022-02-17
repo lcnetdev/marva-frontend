@@ -16,21 +16,26 @@ button{
     font-size: 1em;
     padding: 0.3em;
 }
-.component{
-	margin: 1em 0 1em 0;
-	padding: 1em 0 1em 0;
-	transition: background-color 400ms;
-}
+
+
 .component-container{
 	width: 90%;
 	margin: auto;
-	
+}
+
+.component-container-compact{
+	width: 99%;
 }
 
 .component-container-title{
 	font-size: 0.8em;
 	font-weight: bold;
 	margin-bottom: 0.5em;
+}
+
+
+.component-container-title-compact{
+	display: none;
 }
 
 .component-nested-container-title{
@@ -52,7 +57,10 @@ button{
 	padding-left: 1em;
 	border-left: solid 1px #2a2a2a;
 }
-
+.component-container-input-container-compact{
+	padding-left: 0;
+	border-left: none;
+}
 
 .component:focus-within{
 	background-color: #c8d3d3;
