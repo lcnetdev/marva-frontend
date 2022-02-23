@@ -32,7 +32,13 @@ export default {
       if (this.URI.includes('id.loc.gov')){
 
         // if its a instance/work/hub getthe x-pref label from the head request
-        if (this.URI.includes('/resources/instances/') || this.URI.includes('/resources/works/') || this.URI.includes('/resources/hubs/')){
+        if (
+            this.URI.includes('/resources/instances/') || 
+            this.URI.includes('/resources/works/') || 
+            this.URI.includes('/resources/hubs/') ||
+
+            this.URI.includes('/vocabulary/') 
+          ){
 
           if (this.URI.endsWith('/')){
             this.URI = this.URI.slice(0, -1)

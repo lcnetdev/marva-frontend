@@ -607,7 +607,10 @@
                               <div style="margin-bottom: 1em;" v-bind:class="[ {'opac-field-active':(activeComponent==profileCompoent &&activeProfileName==profileName)}]" v-if="Object.keys(activeProfile.rt[profileName].pt[profileCompoent].userValue).length>0 && returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue).length != 0 && activeProfile.rt[profileName].pt[profileCompoent].deleted != true">
                                 <span class="opac-field-title">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}}</span>
                                 <div class="opac-field-value">
-                                  <div v-bind:key="index" v-for="(val, index) in returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue)">{{val}}</div>
+                                  <div v-bind:key="index" v-for="(val, index) in returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue)">
+                                    <span v-if="!val.startsWith('http')">{{val}}</span>
+                                    <EditLabelDereference v-else :URI="val"/>
+                                  </div>
                                 </div>
                               </div>
 
@@ -790,6 +793,10 @@ import exportXML from "@/lib/exportXML"
 import EditMini from "@/views/EditMini"
 import EditLiteralLanguage from "@/components/EditLiteralLanguage"
 
+import EditLabelDereference from "@/components/EditLabelDereference.vue";
+
+
+
 
 import { mapState } from 'vuex'
 
@@ -800,6 +807,8 @@ export default {
     // EditMainComponent, // this is defined globaly to allow recursivness to work
     EditMini,
     EditLiteralLanguage,
+    EditLabelDereference,
+
 
     Keypress: () => import('vue-keypress'),
     
@@ -1708,13 +1717,18 @@ export default {
           // console.log(k)    
           // console.log(userValue[k])    
           if (!k.startsWith('@')){
-            // console.log(userValue[k],"<----")
+            // console.log(k,userValue[k],"<----")
             for (let objVal of userValue[k]){
               // console.log(objVal)
+              let addedValue = false
               Object.keys(objVal).forEach((kk)=>{
+
+                
+
                 if (!kk.startsWith('@')){
                   if (typeof objVal[kk] == 'string'){
-                    r.push(objVal[kk])                  
+                    r.push(objVal[kk])   
+                    addedValue = true               
                   }else if (Array.isArray(objVal[kk])){
 
                     for (let objVal2 of objVal[kk]){
@@ -1722,9 +1736,12 @@ export default {
                         if (!kkk.includes('@')){
                           if (typeof objVal2[kkk] == 'string'){
                             r.push(objVal2[kkk])
+                            addedValue = true  
                           }                      
                         }
                       })
+
+
                     }
                   }
                 }else if (kk=='@context'){
@@ -1732,11 +1749,25 @@ export default {
                     if (objVal[kk].title){
                         if (r.indexOf(objVal[kk].title)==-1){
                             r.push(objVal[kk].title)
+                            addedValue = true  
                         }
                     }
 
                 }
               })
+
+                // if it went through all that and did not a it because it did not have a label, but it did have 
+                // a URI add in the URI and the dereference component will look it up
+                if (!addedValue){
+
+                    if (objVal['@id']){
+                        r.push(objVal['@id'])
+                    }
+
+
+                }
+
+
             }
           }
 
@@ -1747,6 +1778,9 @@ export default {
         if (r.length == 0 && userValue['@id']){
           r.push(userValue['@id'])
         }
+        // console.log('--------')
+        // console.log(r)
+        // console.log(userValue)
 
 
         r = [...new Set(r)];

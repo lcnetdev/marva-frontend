@@ -19,7 +19,10 @@
             <!-- <input autocomplete="off" v-bind:value="activeSelect"  type="text" disabled style="width: 95%; border:none; height: 90%; font-size: 1.5em; padding: 0.1em; position: relative; background: none; color: lightgray"> -->
               
               <div v-for="(avl,idx) in activeLookupValue" :key="idx" class="selected-value-container">
-                  <span style="padding-right: 0.3em; font-weight: bold">{{avl['http://www.w3.org/2000/01/rdf-schema#label']}}<span class="uncontrolled" v-if="!avl.uri">(uncontrolled)</span></span>
+                  
+                  <span v-if="!avl['http://www.w3.org/2000/01/rdf-schema#label'].startsWith('http')" style="padding-right: 0.3em; font-weight: bold">{{avl['http://www.w3.org/2000/01/rdf-schema#label']}}<span class="uncontrolled" v-if="!avl.uri">(uncontrolled)</span></span>
+                  <span v-else style="padding-right: 0.3em; font-weight: bold"><EditLabelDereference :URI="avl['http://www.w3.org/2000/01/rdf-schema#label']"/></span>
+
                   <span @click="removeValue(idx)" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em; cursor: pointer;">x</span>
               </div>
               <input bfeType="EditSimpleLookupComponent-unnested" ref="lookupInput"  :id="assignedId" autocomplete="off" v-on:blur="blur" v-bind:value="activeValue"  type="text" @focus="autoFocus($event)" @keydown="keyDownEvent($event)" @keyup="keyUpEvent($event)" :class="['input-single',{'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]">
@@ -58,8 +61,16 @@
 
             <div style="display: flex">
               <div v-for="(avl,idx) in activeLookupValue" :key="idx" class="selected-value-container-nested">
-                  <span style="padding-right: 0.3em; font-weight: bold">{{avl['http://www.w3.org/2000/01/rdf-schema#label']}}<span class="uncontrolled" v-if="!avl.uri">(uncontrolled)</span></span>
+                  
+
+
+                  <span v-if="!avl['http://www.w3.org/2000/01/rdf-schema#label'].startsWith('http')" style="padding-right: 0.3em; font-weight: bold">{{avl['http://www.w3.org/2000/01/rdf-schema#label']}}<span class="uncontrolled" v-if="!avl.uri">(uncontrolled)</span></span>
+                  <span v-else style="padding-right: 0.3em; font-weight: bold"><EditLabelDereference :URI="avl['http://www.w3.org/2000/01/rdf-schema#label']"/></span>
+
+
                   <span @click="removeValue(idx)" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em; cursor: pointer;">x</span>
+
+
               </div>
 
 
@@ -95,6 +106,7 @@
 
 import { mapState } from 'vuex'
 import uiUtils from "@/lib/uiUtils"
+import EditLabelDereference from "@/components/EditLabelDereference.vue";
 
 
 export default {
@@ -111,6 +123,12 @@ export default {
     profileCompoent: String
 
   },
+  components: {    
+    EditLabelDereference
+  }, 
+
+
+
   data: function() {
     return {
       displayAutocomplete: false,
@@ -199,9 +217,9 @@ export default {
 
         if (!label){
 
-          // no label was found, try to make one from the URI
+          // no label was found, just use the URI and it will get dereferenced by the componet
           if (uri){
-            label = uri.split('/').slice(-1)[0]
+            label = uri
           }
 
         }
@@ -260,11 +278,12 @@ export default {
             }
           }
 
+
           if (!label){
 
-            // no label was found, try to make one from the URI
+            // no label was found, just use the URI and it will get dereferenced by the componet
             if (uri){
-              label = uri.split('/').slice(-1)[0]
+              label = uri
             }
 
           }
@@ -319,11 +338,12 @@ export default {
           }
         }
 
+
         if (!label){
 
-          // no label was found, try to make one from the URI
+          // no label was found, just use the URI and it will get dereferenced by the componet
           if (uri){
-            label = uri.split('/').slice(-1)[0]
+            label = uri
           }
 
         }
