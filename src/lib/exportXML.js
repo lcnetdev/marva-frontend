@@ -25,7 +25,8 @@ const exportXML = {
 		'xsd': 'http://www.w3.org/2001/XMLSchema#',
 		'void':'http://rdfs.org/ns/void#',
 		'mstatus': 'https://id.loc.gov/vocabulary/mstatus/',
-		'mnotetype': 'http://id.loc.gov/vocabulary/mnotetype/'
+		'mnotetype': 'http://id.loc.gov/vocabulary/mnotetype/',
+		'owl': 'http://www.w3.org/2002/07/owl#'
 
 	},
 

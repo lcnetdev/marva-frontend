@@ -73,15 +73,15 @@ button{
 	border: solid 1px #9aa4a4;
 	background: #bec8c8;
 	width: 1.5em; 
-	border-radius: 2em;	;
-	opacity: 0;
+	border-radius: 2em;	
+	visibility: hidden;
 	transition: opacity 400ms;
 	margin-right: 0.5em;
 	
 	cursor: pointer;
 	font-size: 0.9em;
 	outline:none;
-	/*display: none;*/
+	
 }
 
 .property-button-container{
@@ -94,7 +94,8 @@ button{
 }
 
 .component:focus-within .property-button{
-	opacity: 1;
+	
+	visibility: visible;
 }
 
 
