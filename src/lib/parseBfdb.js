@@ -570,7 +570,8 @@ const parseBfdb = {
 
 
 	transform: async function(profile){ 
-
+		console.log("********")
+		console.log(JSON.parse(JSON.stringify(profile)))
 
 		// remove any non top level entities from the profile, this can be if they are defined and used in the same profile,
 		// we don't want to parse anything ecept HUB WORK INSTANCE ITEM
@@ -699,8 +700,12 @@ const parseBfdb = {
 
 			}
 
+			console.log('-------\\/')
+			console.log(store.state.rtLookup['lc:RT:bf2:WorkTitle'])
 			for (const pt in resultsTest.rt[rtKey].pt){
 
+				console.log(pt)
+				console.log(resultsTest.rt[rtKey].pt[pt])
 
 				if (resultsTest.rt[rtKey].pt[pt].missingProfile && resultsTest.rt[rtKey].pt[pt].missingProfile.length>0){
 					
@@ -747,6 +752,55 @@ const parseBfdb = {
 					}
 				}
 
+
+
+				// here we are cheking to see if some of the literals have multiple values
+				// if it does then we need to modify the profile template to add another copy of it
+				// so that it shows both values
+				for (let checkProperty of config.checkForRepeatedLiterals){
+
+					if (resultsTest.rt[rtKey].pt[pt].userValue[checkProperty] && resultsTest.rt[rtKey].pt[pt].userValue[checkProperty].length > 1){
+
+						// console.log("&&&&&&&&&&&&&& HERE")
+						// console.log(checkProperty)
+						// console.log(resultsTest.rt[rtKey].pt[pt].userValue[checkProperty])
+
+
+						// we found one, look through the linked templates and modify as needed
+						for (let vtr of resultsTest.rt[rtKey].pt[pt].valueConstraint.valueTemplateRefs){
+							// keep track of how many there are and save a copy so we can insert it again
+							let pcount = 0
+							let ppos = 0
+							let pvalue = null
+							for (let [index, p] of store.state.rtLookup[vtr].propertyTemplates.entries()){
+								if (p.propertyURI === checkProperty){
+									pcount++
+									pvalue = JSON.parse(JSON.stringify(p))
+									ppos = index
+								}
+							}
+
+							// if we found one, but there are not enough based on how many userValues we have for it
+							if (pcount>0&&pcount<resultsTest.rt[rtKey].pt[pt].userValue[checkProperty].length){
+								let diff = resultsTest.rt[rtKey].pt[pt].userValue[checkProperty].length - pcount;								
+								[...Array(diff)].forEach((_, i) => { // eslint-disable-line
+									pvalue['@guid'] = short.generate();
+									// insert after the old one
+									store.state.rtLookup[vtr].propertyTemplates.splice(ppos+1, 0, pvalue);
+								});
+							}
+
+						}
+
+
+					}
+
+
+				}
+
+
+
+
 			}
 
 
@@ -761,7 +815,7 @@ const parseBfdb = {
 		}
 
 		// console.log(results)
-
+		console.log(profile)
 		console.log('-------------------DONE WITH TEST PARSE---------------------xxx')
 
 		let results = await this.transformRts(profile)

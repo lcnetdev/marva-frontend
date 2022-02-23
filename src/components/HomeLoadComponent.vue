@@ -464,8 +464,9 @@ export default {
 
         '/bfe2/editor/tests/instances/20969670.editor-pkg.xml', // non-latin souble title
 
+        // '/bfe2/editor/tests/instances/20898769.editor-pkg.xml', // non-latin souble title
 
-        
+
 
         // '/bfe2/editor/tests/instances/22205817.editor-pkg.xml', // korean
 

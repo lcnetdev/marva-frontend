@@ -94,7 +94,7 @@ const config = {
 
 	},
 
-
+	// this is a list of properties that will be ignored in the literal language model box
 	literalLangOptions:{
 		ignorePtURIs: [
 			'http://id.loc.gov/ontologies/bibframe/provisionActivity',
@@ -107,9 +107,13 @@ const config = {
 			'http://id.loc.gov/ontologies/bibframe/dimensions',
 			'http://id.loc.gov/ontologies/bibframe/extent',
 			'http://id.loc.gov/ontologies/bibframe/notation',
-
 			]
 	},
+
+
+	checkForRepeatedLiterals: [
+		'http://id.loc.gov/ontologies/bibframe/mainTitle'
+	],
 
 
 
