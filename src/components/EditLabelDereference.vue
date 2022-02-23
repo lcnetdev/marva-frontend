@@ -48,7 +48,7 @@ export default {
 
           let self = this
 
-          fetch(URL, {method: 'HEAD', redirect: "follow" }).then(
+          fetch(URL.replace('http://','https://'), {method: 'HEAD', redirect: "follow" }).then(
             function(response)
               {
               let preflabel = response.headers.get("x-preflabel");
