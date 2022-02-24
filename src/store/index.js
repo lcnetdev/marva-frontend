@@ -78,6 +78,10 @@ export default new Vuex.Store({
     settingsDPackVoyagerNative: false,
     settingsLookupsUseTextSubjectEditor: true,
 
+    settingsDisplayMode: 'default',
+
+    settingsHideEmptyFields: false,
+
 
     // used for auto complete lookups 
     lookupLibrary: {},
@@ -110,7 +114,6 @@ export default new Vuex.Store({
     diagramMiniMap: false,
 
 
-    editDisplayMode: 'default',
 
 
     saveRecord : debounce((state,commit) => {
@@ -234,7 +237,19 @@ export default new Vuex.Store({
     SETTINGSLOOKUPSUSETEXTSUBJECTEDITOR(state, val) {
       state.settingsLookupsUseTextSubjectEditor = val
     },   
+    SETTINGSDISPLAYMODE(state, val) {
+      state.settingsDisplayMode = val
+    },   
+
+    SETTINGSHIDEEMPTYFIELDS(state, val) {
+      state.settingsHideEmptyFields = val
+    },   
+
+
+
     
+
+
 
     ACTIVERECORDSAVED(state, val) {
       state.activeRecordSaved = val
@@ -245,9 +260,7 @@ export default new Vuex.Store({
       state.diagramMiniMap = val
     }, 
 
-    EDITDISPLAYMODE(state, val) {
-      state.editDisplayMode = val
-    }, 
+ 
 
     
     
@@ -463,6 +476,24 @@ export default new Vuex.Store({
     },
 
 
+    // use which layout
+    settingsDisplayMode({ commit}, data){
+      commit('SETTINGSDISPLAYMODE', data.settingsDisplayMode)
+      localStorage.setItem('bfeSettingsDisplayMode',data.settingsDisplayMode)
+    },
+
+    settingsHideEmptyFields({ commit}, data){
+      console.log("data.settingsHideEmptyFields = ",data.settingsHideEmptyFields)
+      commit('SETTINGSHIDEEMPTYFIELDS', data.settingsHideEmptyFields)
+      localStorage.setItem('bfeSettingsHideEmptyFields',data.settingsHideEmptyFields)
+    },
+
+    
+
+
+
+    
+    
 
 
 
@@ -559,9 +590,7 @@ export default new Vuex.Store({
     },
 
 
-   setEditDisplayMode ({ commit }, data) {   
-      commit('EDITDISPLAYMODE', data.value)    
-    },
+
 
 
 

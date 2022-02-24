@@ -115,7 +115,7 @@
       
       <div ref="fakeInputContainer" style="position: relative;" v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search']">       
           <div class="component-nested-container-title" style="top: 0; width: 100%">
-            <span v-if="parentStructureObj && (structure.propertyLabel == 'Lookup' || editDisplayMode=='compact')">{{parentStructureObj.propertyLabel}} -- </span>
+            <span v-if="parentStructureObj && (structure.propertyLabel == 'Lookup' || settingsDisplayMode=='compact')">{{parentStructureObj.propertyLabel}} -- </span>
             <span>{{structure.propertyLabel}}</span>
           </div>
 
@@ -483,7 +483,7 @@ export default {
     activeProfile: 'activeProfile', 
     activeProfileMini: 'activeProfileMini',
     workingOnMiniProfile: 'workingOnMiniProfile',
-    editDisplayMode: 'editDisplayMode',
+    settingsDisplayMode: 'settingsDisplayMode',
 
     activeProfileName: 'activeProfileName',
     activeComplexSearch: 'activeComplexSearch',

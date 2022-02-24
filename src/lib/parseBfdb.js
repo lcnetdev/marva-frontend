@@ -1228,12 +1228,12 @@ const parseBfdb = {
 								populateData.userValue['@id'] = this.extractURI(e.attributes['rdf:resource'].value)
 
 								// for now since there is no label make a basic lable for it with the URI slug
-								populateData.userValue['http://www.w3.org/2000/01/rdf-schema#label'] = [
-									{
-									"http://www.w3.org/2000/01/rdf-schema#label": populateData.userValue['@id'].split('/').slice(-1)[0],
-									"@guid": short.generate()
-									}								
-								]
+								// populateData.userValue['http://www.w3.org/2000/01/rdf-schema#label'] = [
+								// 	{
+								// 	"http://www.w3.org/2000/01/rdf-schema#label": populateData.userValue['@id'].split('/').slice(-1)[0],
+								// 	"@guid": short.generate()
+								// 	}								
+								// ]
 
 							}else{
 								
@@ -1990,10 +1990,11 @@ const parseBfdb = {
 					uniquePropertyURIs[profile.rt[pkey].pt[key].propertyURI] = {status:false,data:[],resourceTemplates:{},unAssingedProperties:[]}
 				}
 				// mark if we have loaded data from the source for this properity
-				if (Object.keys(profile.rt[pkey].pt[key].userValue).length==0){
-					profile.rt[pkey].pt[key].dataLoaded=false
-				}else{
+				if (Object.keys(profile.rt[pkey].pt[key].userValue).length>1){
+					// there could be one property for all components, the @root id
 					profile.rt[pkey].pt[key].dataLoaded=true
+				}else{
+					profile.rt[pkey].pt[key].dataLoaded=false
 					// totalHasDataLoaded++
 
 

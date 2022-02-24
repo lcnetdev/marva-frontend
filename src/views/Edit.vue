@@ -99,7 +99,9 @@
   }
 
 
-
+.is-hidden-li::before{
+    content: "";
+}
 
 </style>
 
@@ -282,17 +284,17 @@
                         </div>
                         <div style="flex:1; background-color: whitesmoke;">
                             <div>
-                                <input type="radio" name="radio" @change="updateLayout('default')" id="display-select-default" :checked="(editDisplayMode=='default')">
+                                <input type="radio" name="radio" @change="updateLayout('default')" id="display-select-default" :checked="(settingsDisplayMode=='default')">
                                 <label for="display-select-default">Extra Space</label>
                             </div>
 
                             <div>
-                                <input type="radio" name="radio" @change="updateLayout('compact')" id="display-select-compact" :checked="(editDisplayMode=='compact')">
+                                <input type="radio" name="radio" @change="updateLayout('compact')" id="display-select-compact" :checked="(settingsDisplayMode=='compact')">
                                 <label for="display-select-compact">Compact</label>                                
                             </div>
 
                             <div>
-                                <input type="radio" name="radio" @change="updateLayout('spreadsheet')" id="display-select-spreadsheet" :checked="(editDisplayMode=='spreadsheet')">
+                                <input type="radio" name="radio" @change="updateLayout('spreadsheet')" id="display-select-spreadsheet" :checked="(settingsDisplayMode=='spreadsheet')">
                                 <label for="display-select-spreadsheet">Spreadsheet</label>   
                             </div>                                                      
                         </div>                    
@@ -303,10 +305,18 @@
                             Hide Empty Fields
                         </div>
                         <div style="flex:1; background-color: whitesmoke; align-self: center; text-align: center;">
-                            <input  type="checkbox" id="switch" /><label for="switch">Toggle</label>
+                            <input  type="checkbox" id="switch" v-model="hideFields" @change="updateHideEmptyFields()"  /><label for="switch">Toggle</label>
                         </div>
                     </div>
-                    
+                    <div style="display:flex; border: solid 2px whitesmoke;" class="slider">
+
+                        <div style="flex:1; align-self: center; text-align: center; margin-right: 5px; ">
+                            Left Menu Controls
+                        </div>
+                        <div style="flex:1; background-color: whitesmoke; align-self: center; text-align: center;">
+                            <input  type="checkbox" id="switch" v-model="leftMenuControls" /><label for="switch">Toggle</label>
+                        </div>
+                    </div>                    
                     
 
 
@@ -433,10 +443,32 @@
                         </div>
 
                         <ul style="padding-left: 0;" :key="'leftmenu' + activeEditCounter">
-                            <li v-bind:class="['left-menu-list-item', { 'left-menu-list-item-has-data' :  liHasData(activeProfile.rt[profileName].pt[profileCompoent]) && returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue).length != 0, 'left-menu-list-item-active':(activeComponent==profileCompoent &&activeProfileName==profileName), 'left-menu-list-item-hide':(!displayComponentCheck(activeProfile.rt[profileName].pt[profileCompoent]))}]" :id="'menu'+profileName+profileCompoent"  v-for="(profileCompoent,idx) in activeProfile.rt[profileName].ptOrder" :key="profileCompoent">
+                            <li v-bind:class="['left-menu-list-item', { 'left-menu-list-item-has-data' :  liHasData(activeProfile.rt[profileName].pt[profileCompoent]) && returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue).length != 0, 'left-menu-list-item-active':(activeComponent==profileCompoent &&activeProfileName==profileName), 'left-menu-list-item-hide':(!displayComponentCheck(activeProfile.rt[profileName].pt[profileCompoent])), 'is-hidden-li': (hideFields === true && activeProfile.rt[profileName].pt[profileCompoent].canBeHidden) }]"  :id="'menu'+profileName+profileCompoent"  v-for="(profileCompoent,idx) in activeProfile.rt[profileName].ptOrder" :key="profileCompoent">
                               
-                                <a v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" @click="scrollFieldContainerIntoView($event,profileName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')+idx+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_'))" href="#">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}}</a>
-                                <a v-else-if="activeProfile.rt[profileName].pt[profileCompoent].deleted === true" href="#" style="color: rgba(255,255,255,0.75) !important;" @click="restoreDelete($event, profileName, profileCompoent)" class="simptip-position-right" data-tooltip="Click to restore">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}} [Deleted]</a>
+                                <template v-if="!hideFields">
+                                    <a :key="'left_li_'+idx+'_'+keyCounter" v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" @click="scrollFieldContainerIntoView($event,profileName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')+idx+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_'))" href="#">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}}</a>
+                                    <a :key="'left_li_'+idx+'_'+keyCounter" v-else-if="activeProfile.rt[profileName].pt[profileCompoent].deleted === true" href="#" style="color: rgba(255,255,255,0.75) !important;" @click="restoreDelete($event, profileName, profileCompoent)" class="simptip-position-right" data-tooltip="Click to restore">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}} [Deleted]</a>
+                                </template>
+                                <template v-else>                                    
+                                    <a :key="'left_li_'+idx+'_'+keyCounter" v-if="activeProfile.rt[profileName].pt[profileCompoent].canBeHidden && !activeProfile.rt[profileName].pt[profileCompoent].deleted" href="#" @click="makeVisible($event,profileCompoent,profileName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')+idx+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_'))">
+
+                                        <svg width="25px" height="25px" version="1.1" viewBox="0 -25 100 100" xmlns="http://www.w3.org/2000/svg">
+                                         <g>
+                                          <path style="fill:rgba(255,255,255,0.75)" d="m94.199 48.398c-6.7969-4.9766-13.879-9.543-21.211-13.684-0.78125-0.42969-1.7539-0.29297-2.3828 0.33594l-32.574 32.574c-0.48047 0.48047-0.68359 1.1641-0.54297 1.8281 0.13672 0.66016 0.60156 1.207 1.2305 1.4531 3.5742 1.5391 7.3945 2.4297 11.281 2.6211 14.695 0 43-21.031 44.199-21.926 0.50391-0.37891 0.80078-0.97266 0.80078-1.6016s-0.29688-1.2227-0.80078-1.6016z"/>
+                                          <path style="fill:rgba(255,255,255,0.75)" d="m27.98 65.535c0.53125 0 1.0391-0.21094 1.4141-0.58594l32.574-32.574c0.48047-0.48047 0.68359-1.1641 0.54297-1.8281-0.13672-0.66016-0.60156-1.207-1.2305-1.4531-4.5312-1.7617-8.2227-2.6211-11.281-2.6211-14.695 0-43 21.031-44.199 21.926-0.50391 0.37891-0.80078 0.97266-0.80078 1.6016s0.29688 1.2227 0.80078 1.6016c6.7969 4.9766 13.879 9.543 21.211 13.684 0.29688 0.16406 0.62891 0.25 0.96875 0.25z"/>
+                                          <path style="fill:rgba(255,255,255,0.75)" d="m86.414 13.586c-0.78125-0.78125-2.0469-0.78125-2.8281 0l-70 70c-0.38281 0.375-0.60156 0.88281-0.60547 1.418 0 0.53516 0.21094 1.0508 0.58594 1.4297 0.37891 0.375 0.89453 0.58594 1.4297 0.58594 0.53516-0.003906 1.043-0.22266 1.418-0.60547l70-70c0.78125-0.78125 0.78125-2.0469 0-2.8281z"/>
+                                         </g>
+                                        </svg>
+                                        
+
+                                        <span style="color: rgba(255,255,255,0.75) !important;">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}}</span>
+                                    </a>
+                                    <a :key="'left_li_'+idx+'_'+keyCounter" v-else-if="activeProfile.rt[profileName].pt[profileCompoent].canBeHidden === false" href="#" @click="scrollFieldContainerIntoView($event,profileName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')+idx+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_'))" style="font-weight: bold;">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}}</a>
+                                    <a :key="'left_li_'+idx+'_'+keyCounter" v-else-if="activeProfile.rt[profileName].pt[profileCompoent].deleted === true" href="#" style="color: rgba(255,255,255,0.75) !important;" @click="restoreDelete($event, profileName, profileCompoent)" class="simptip-position-right" data-tooltip="Click to restore">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}} [Deleted]</a>
+
+
+
+                                </template>
 
                             </li>
                         </ul>
@@ -501,7 +533,13 @@
 
 
                         <div v-for="(profileCompoent,idx) in activeProfile.rt[profileName].ptOrder" :key="profileCompoent" :id="'container-for-'+profileName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')+idx+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')">
-                              <EditMainComponent v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true && displayComponentCheck(activeProfile.rt[profileName].pt[profileCompoent]) === true" :isMini="false" @showMiniEditorEdit="showMiniEditorClick"  :class="'component component-'+editDisplayMode" :parentURI="activeProfile.rt[profileName].URI" :activeTemplate="activeProfile.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :ptGuid="activeProfile.rt[profileName].pt[profileCompoent]['@guid']" :parentStructure="activeProfile.rtOrder" :structure="activeProfile.rt[profileName].pt[profileCompoent]"/>
+                            
+                            <template v-if="!hideFields">      
+                              <EditMainComponent v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true && displayComponentCheck(activeProfile.rt[profileName].pt[profileCompoent]) === true" :isMini="false" @showMiniEditorEdit="showMiniEditorClick"  :class="'component component-'+settingsDisplayMode" :parentURI="activeProfile.rt[profileName].URI" :activeTemplate="activeProfile.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :ptGuid="activeProfile.rt[profileName].pt[profileCompoent]['@guid']" :parentStructure="activeProfile.rtOrder" :structure="activeProfile.rt[profileName].pt[profileCompoent]"/>
+                            </template>
+                            <template v-else>
+                              <EditMainComponent v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true && displayComponentCheck(activeProfile.rt[profileName].pt[profileCompoent]) === true && activeProfile.rt[profileName].pt[profileCompoent].canBeHidden === false" :isMini="false" @showMiniEditorEdit="showMiniEditorClick"  :class="'component component-'+settingsDisplayMode" :parentURI="activeProfile.rt[profileName].URI" :activeTemplate="activeProfile.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :ptGuid="activeProfile.rt[profileName].pt[profileCompoent]['@guid']" :parentStructure="activeProfile.rtOrder" :structure="activeProfile.rt[profileName].pt[profileCompoent]"/>
+                            </template>
                         </div>
 
                         <div v-if="activeProfile.rt[profileName].unusedXml" style="background-color: #fde4b7; overflow-x: hidden;">
@@ -826,7 +864,11 @@ export default {
         activeRecordSaved: 'activeRecordSaved',
         diagramMiniMap: 'diagramMiniMap',
 
-        editDisplayMode: 'editDisplayMode',
+
+        
+
+        settingsHideEmptyFields: 'settingsHideEmptyFields',
+        settingsDisplayMode: 'settingsDisplayMode',
 
 
         catInitials: 'catInitials',
@@ -840,6 +882,10 @@ export default {
 
 
   created: async function () {
+
+
+
+
 
     // load them profiles if they aint  
     if (!this.profilesLoaded){
@@ -860,12 +906,16 @@ export default {
             this.$store.dispatch("setActiveProfile", { self: this, profile: ap }).then(() => {
 
 
-              // this.sideBarGrabDragInit()
+                // this.sideBarGrabDragInit()
 
-              // load the ontology lookups if they arnt
-              this.loadProfileOntologyLookupsBuild()
+                // load the ontology lookups if they arnt
+                this.loadProfileOntologyLookupsBuild()
 
-              console.log('-----diagramMiniMap:',this.diagramMiniMap)
+                console.log('-----diagramMiniMap:',this.diagramMiniMap)
+
+                this.hideFields  = this.settingsHideEmptyFields
+                this.updateHideEmptyFieldsReDraw()
+
 
             })
 
@@ -911,6 +961,8 @@ export default {
             })
 
             console.log('-----diagramMiniMap:',this.diagramMiniMap)
+            this.hideFields  = this.settingsHideEmptyFields
+            this.updateHideEmptyFieldsReDraw()
 
 
           })
@@ -920,6 +972,9 @@ export default {
           this.$nextTick(()=>{
             // this.sideBarGrabDragInit()
             this.loadProfileOntologyLookupsBuild()
+            this.hideFields  = this.settingsHideEmptyFields
+            this.updateHideEmptyFieldsReDraw()
+
 
           })
 
@@ -1058,8 +1113,13 @@ export default {
       sourceOfMiniComponent: null,
       displayLiteralLanguage: false,
 
+      keyCounter: 0,
+
 
       optionDisplay: false,
+      hideFields: false,
+
+      leftMenuControls: false,      
 
     }
   },
@@ -1076,9 +1136,56 @@ export default {
 
     dupeProperty: uiUtils.dupeProperty,
 
+
+    
+
+    updateHideEmptyFields: async function(){
+
+
+        this.$store.dispatch("settingsHideEmptyFields", { self: this, settingsHideEmptyFields: this.hideFields }).then(async () => {
+
+            console.log('after',this.settingsHideEmptyFields)
+
+        })
+
+        this.updateHideEmptyFieldsReDraw()
+    },
+
+
+    updateHideEmptyFieldsReDraw: function(){
+
+        if (this.hideFields){
+
+            // loop through all of the properties and
+
+            for (let rt in this.activeProfile.rt){
+                for (let pt in this.activeProfile.rt[rt].pt){
+
+                    let p = this.activeProfile.rt[rt].pt[pt]
+                    console.log(p)
+
+                    p.canBeHidden = true
+                    if (Object.keys(p.userValue).length>1){
+                        p.canBeHidden = false
+                    }
+
+                }
+            }
+
+
+        }
+
+
+        this.keyCounter++
+
+
+
+
+    },
+
     updateLayout: async function(mode){
-        console.log(mode)
-        this.$store.dispatch("setEditDisplayMode", { self: this, value: mode }).then(async () => {
+        
+        this.$store.dispatch("settingsDisplayMode", { self: this, settingsDisplayMode: mode }).then(async () => {
             console.log(this.activeProfile)
 
 
@@ -1543,6 +1650,26 @@ export default {
 
     },
 
+    makeVisible: function(event,profileCompoent,id){
+
+
+        for (let rt in this.activeProfile.rt){
+            for (let pt in this.activeProfile.rt[rt].pt){
+                if (pt == profileCompoent){
+                    this.activeProfile.rt[rt].pt[pt].canBeHidden = false
+                    // this changes the key on a lot of things forcing the ui to update
+                    this.keyCounter++
+                }
+            }
+        }
+
+        this.$nextTick(()=>{
+
+          this.scrollFieldContainerIntoView(null,id)
+
+        })
+
+    },
 
     scrollFieldContainerIntoView: function(event,id){
       console.log('-----')

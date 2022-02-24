@@ -182,11 +182,27 @@ export default {
 
 
     if (localStorage.getItem('bfeSettingsLookupsUseTextSubjectEditor')!== null){
-      console.log("APP Loading, set to:",localStorage.getItem('bfeSettingsLookupsUseTextSubjectEditor'), JSON.parse(localStorage.getItem('bfeSettingsLookupsUseTextSubjectEditor')))
+      console.log("APP Loading, set bfeSettingsLookupsUseTextSubjectEditor to:",localStorage.getItem('bfeSettingsLookupsUseTextSubjectEditor'), JSON.parse(localStorage.getItem('bfeSettingsLookupsUseTextSubjectEditor')))
       this.$store.dispatch("settingsLookupsUseTextSubjectEditor", { self: this, settingsLookupsUseTextSubjectEditor: JSON.parse(localStorage.getItem('bfeSettingsLookupsUseTextSubjectEditor')) }).then(() => {
       })   
     }        
 
+    if (localStorage.getItem('bfeSettingsDisplayMode')!== null){
+      console.log("APP Loading, set bfeSettingsDisplayMode to:",localStorage.getItem('bfeSettingsDisplayMode'), localStorage.getItem('bfeSettingsDisplayMode'))
+      this.$store.dispatch("settingsDisplayMode", { self: this, settingsDisplayMode: localStorage.getItem('bfeSettingsDisplayMode') }).then(() => {
+      })   
+    }   
+
+
+    if (localStorage.getItem('bfeSettingsHideEmptyFields')!== null){
+      console.log("APP Loading, set bfeSettingsHideEmptyFields to:",localStorage.getItem('bfeSettingsHideEmptyFields'), JSON.parse(localStorage.getItem('bfeSettingsHideEmptyFields')))
+      this.$store.dispatch("settingsHideEmptyFields", { self: this, settingsHideEmptyFields: JSON.parse(localStorage.getItem('bfeSettingsHideEmptyFields')) }).then(() => {
+      })   
+    } 
+
+
+
+    
 
 
     let r = await lookupUtil.checkVersionOutOfDate()

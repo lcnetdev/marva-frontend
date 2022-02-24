@@ -1,16 +1,16 @@
 <template>
-  <div v-if="nested == false" :class="'component-container' + ' component-container-' + editDisplayMode">
+  <div v-if="nested == false" :class="'component-container' + ' component-container-' + settingsDisplayMode">
 
 
-    <div :class="'component-container-title' + ' component-container-title-' + editDisplayMode ">{{structure.propertyLabel}}</div>
-    <div :class="'component-container-input-container' + ' component-container-input-container-' + editDisplayMode">
+    <div :class="'component-container-title' + ' component-container-title-' + settingsDisplayMode ">{{structure.propertyLabel}}</div>
+    <div :class="'component-container-input-container' + ' component-container-input-container-' + settingsDisplayMode">
 
 
 
         <div class="component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search">          
           <form autocomplete="off" v-on:submit.prevent>
 
-                <div style="position: absolute;" v-if="editDisplayMode=='compact'" class="component-nested-container-title">
+                <div style="position: absolute;" v-if="settingsDisplayMode=='compact'" class="component-nested-container-title">
                   <span>{{structure.propertyLabel}}</span>                  
                 </div>
 
@@ -52,7 +52,7 @@
           <div style="">
           <!-- <input autocomplete="off" v-bind:value="activeSelect"  type="text" disabled style="width: 95%; border:none; height: 90%; font-size: 1.5em; padding: 0.1em; position: relative; background: none; color: lightgray"> -->
             <div class="component-nested-container-title component-nested-container-title-simple-lookup" >
-              <span v-if="editDisplayMode=='compact'">{{parentStructureObj.propertyLabel}} -- </span>
+              <span v-if="settingsDisplayMode=='compact'">{{parentStructureObj.propertyLabel}} -- </span>
 
               <span>{{structure.propertyLabel}}</span>
 
@@ -379,7 +379,7 @@ export default {
     activeProfile: 'activeProfile',
     activeProfileMini: 'activeProfileMini',
     workingOnMiniProfile: 'workingOnMiniProfile',
-    editDisplayMode: 'editDisplayMode',
+    settingsDisplayMode: 'settingsDisplayMode',
 
 
     assignedId (){

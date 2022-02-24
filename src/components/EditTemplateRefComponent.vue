@@ -12,10 +12,10 @@
   </div>
 
 
-  <div v-else-if="nested == false" :class="'component-container' + ' component-container-' + editDisplayMode">
+  <div v-else-if="nested == false" :class="'component-container' + ' component-container-' + settingsDisplayMode">
 
-    <div :class="'component-container-title' + ' component-container-title-' + editDisplayMode ">{{structure.propertyLabel}}</div>
-    <div :class="'component-container-input-container' + ' component-container-input-container-' + editDisplayMode">
+    <div :class="'component-container-title' + ' component-container-title-' + settingsDisplayMode ">{{structure.propertyLabel}}</div>
+    <div :class="'component-container-input-container' + ' component-container-input-container-' + settingsDisplayMode">
 
       <template  v-if="structure.valueConstraint.valueTemplateRefs.length > 1">
         <div class="component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border" style="flex:4;">          
@@ -124,7 +124,7 @@ export default {
     rtLookup: 'rtLookup',
     activeInput: 'activeInput',
     activeProfile: 'activeProfile',
-    editDisplayMode: 'editDisplayMode',
+    settingsDisplayMode: 'settingsDisplayMode',
 
 
     assignedId (){

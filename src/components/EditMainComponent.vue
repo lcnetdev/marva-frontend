@@ -43,7 +43,7 @@
 
       </div>
 
-      <div v-if="editDisplayMode!='compact'" class="debug-toggle" style="position: relative; visibility: hidden; color:red; left: -26%;font-size: 0.85em;font-family: monospace;top: 8px; cursor: pointer; height: 0.85em;" @click="toggleDebug">debug</div>
+      <div v-if="settingsDisplayMode!='compact'" class="debug-toggle" style="position: relative; visibility: hidden; color:red; left: -26%;font-size: 0.85em;font-family: monospace;top: 8px; cursor: pointer; height: 0.85em;" @click="toggleDebug">debug</div>
 
 
 
@@ -159,7 +159,7 @@ export default {
   },
   computed: mapState({
 
-    editDisplayMode: 'editDisplayMode',
+    settingsDisplayMode: 'settingsDisplayMode',
 
   }),
 
