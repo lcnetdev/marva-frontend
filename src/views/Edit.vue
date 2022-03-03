@@ -103,6 +103,33 @@
     content: "";
 }
 
+
+.enriched-menu .enriched-menu-controls{
+    display: none;
+    text-align: center;
+}
+
+.enriched-menu:hover{
+    background-color: #6f6f6f;
+}
+
+.enriched-menu:hover .enriched-menu-controls{
+    display: block;
+}
+
+.enriched-menu-controls button{
+    border:  solid 1px white;
+    width: 50px;
+    font-size: 1.1em;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+.enriched-menu-controls button:hover{
+    background-color: white;
+    color: black;
+}
+
 </style>
 
 
@@ -311,10 +338,10 @@
                     <div style="display:flex; border: solid 2px whitesmoke;" class="slider">
 
                         <div style="flex:1; align-self: center; text-align: center; margin-right: 5px; ">
-                            Left Menu Controls
+                            Enriched Left Menu
                         </div>
                         <div style="flex:1; background-color: whitesmoke; align-self: center; text-align: center;">
-                            <input  type="checkbox" id="switch" v-model="leftMenuControls" /><label for="switch">Toggle</label>
+                            <input  type="checkbox" id="switch2" @change="updateLeftMenuEnriched()" v-model="leftMenuEnriched" /><label for="switch2">Toggle</label>
                         </div>
                     </div>                    
                     
@@ -443,7 +470,7 @@
                         </div>
 
                         <ul style="padding-left: 0;" :key="'leftmenu' + activeEditCounter">
-                            <li v-bind:class="['left-menu-list-item', { 'left-menu-list-item-has-data' :  liHasData(activeProfile.rt[profileName].pt[profileCompoent]) && returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue).length != 0, 'left-menu-list-item-active':(activeComponent==profileCompoent &&activeProfileName==profileName), 'left-menu-list-item-hide':(!displayComponentCheck(activeProfile.rt[profileName].pt[profileCompoent])), 'is-hidden-li': (hideFields === true && activeProfile.rt[profileName].pt[profileCompoent].canBeHidden) }]"  :id="'menu'+profileName+profileCompoent"  v-for="(profileCompoent,idx) in activeProfile.rt[profileName].ptOrder" :key="profileCompoent">
+                            <li v-bind:class="['left-menu-list-item', 'enriched-menu', { 'left-menu-list-item-has-data' :  liHasData(activeProfile.rt[profileName].pt[profileCompoent]) && returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue).length != 0, 'left-menu-list-item-active':(activeComponent==profileCompoent &&activeProfileName==profileName), 'left-menu-list-item-hide':(!displayComponentCheck(activeProfile.rt[profileName].pt[profileCompoent])), 'is-hidden-li': (hideFields === true && activeProfile.rt[profileName].pt[profileCompoent].canBeHidden) }]"  :id="'menu'+profileName+profileCompoent"  v-for="(profileCompoent,idx) in activeProfile.rt[profileName].ptOrder" :key="profileCompoent">
                               
                                 <template v-if="!hideFields">
                                     <a :key="'left_li_'+idx+'_'+keyCounter" v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" @click="scrollFieldContainerIntoView($event,profileName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')+idx+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_'))" href="#">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}}</a>
@@ -469,6 +496,28 @@
 
 
                                 </template>
+
+                                <div v-if="settingsLeftMenuEnriched" >
+                                    <template v-if="activeProfile.rt[profileName].pt[profileCompoent].valueConstraint.valueTemplateRefs.length>1">
+                                        <ul>
+                                            <li :key="t" v-for="t in returnTemplateTypes(activeProfile.rt[profileName].pt[profileCompoent].valueConstraint.valueTemplateRefs)"><a href="#" v-on:click.prevent.stop="scrollFieldContainerIntoView($event,profileName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')+idx+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_'))">{{t}}</a></li>
+                                        </ul>
+
+                                    </template>
+
+
+                                    <div class="enriched-menu-controls">
+                                        
+                                        <template v-if="!hideFields || (hideFields && !activeProfile.rt[profileName].pt[profileCompoent].canBeHidden) ">
+                                            <button @click="addProperty(profileName,profileCompoent)">Add</button>
+                                            
+                                            <button @click="removeProperty(profileName,profileCompoent)">Del</button>
+                                            <button @click="addProperty(profileName,profileCompoent,true)">Dup</button>
+                                            <button v-if="canSendToInstance(activeProfile.rt[profileName].pt[profileCompoent].propertyURI,profileName)">Send</button>
+                                        </template>
+                                    </div>
+                                </div>
+                                    
 
                             </li>
                         </ul>
@@ -863,12 +912,13 @@ export default {
         activeEditCounter: 'activeEditCounter',
         activeRecordSaved: 'activeRecordSaved',
         diagramMiniMap: 'diagramMiniMap',
-
+        rtLookup: 'rtLookup',
 
         
 
         settingsHideEmptyFields: 'settingsHideEmptyFields',
         settingsDisplayMode: 'settingsDisplayMode',
+        settingsLeftMenuEnriched: 'settingsLeftMenuEnriched',
 
 
         catInitials: 'catInitials',
@@ -914,6 +964,7 @@ export default {
                 console.log('-----diagramMiniMap:',this.diagramMiniMap)
 
                 this.hideFields  = this.settingsHideEmptyFields
+                this.leftMenuEnriched = this.settingsLeftMenuEnriched
                 this.updateHideEmptyFieldsReDraw()
 
 
@@ -962,6 +1013,7 @@ export default {
 
             console.log('-----diagramMiniMap:',this.diagramMiniMap)
             this.hideFields  = this.settingsHideEmptyFields
+            this.leftMenuEnriched = this.settingsLeftMenuEnriched
             this.updateHideEmptyFieldsReDraw()
 
 
@@ -1119,7 +1171,7 @@ export default {
       optionDisplay: false,
       hideFields: false,
 
-      leftMenuControls: false,      
+      leftMenuEnriched: false,      
 
     }
   },
@@ -1137,19 +1189,82 @@ export default {
     dupeProperty: uiUtils.dupeProperty,
 
 
+
+    addProperty: function(profileName, profileCompoent,dupeData){
+      if (!dupeData){dupeData=false}
+      this.$store.dispatch("duplicateProperty", { self: this, id: profileCompoent, profile:profileName, dupeData:dupeData }).then(() => {
+        
+      })   
+
+    },
+
+
+    removeProperty: function(profileName, profileCompoent){
+
+
+      const answer = window.confirm('Are you sure you want to remove the property?')
+      if (answer) {
+        this.$store.dispatch("removeProperty", { self: this, id: profileCompoent, profile:profileName }).then(() => {
+          
+        })         
+
+      } else {
+        
+        return false
+
+      }
+
+
+
+
+
+
+    },
+
+
+
+
+    canSendToInstance: function(uri,profileName){
+
+        if (profileName.includes(':Work')){
+            // add this to the config
+            if (uri == 'http://id.loc.gov/ontologies/bibframe/contribution'){
+                return true
+            }
+        }
+
+        return false
+
+    },
+
+    returnTemplateTypes: function(templates){
+
+        let titles = []
+        for (let t of templates){
+            console.log()    
+            titles.push(this.rtLookup[t].resourceLabel)
+        }
+        
+        return titles
+
+
+    },
     
-
-    updateHideEmptyFields: async function(){
-
-
-        this.$store.dispatch("settingsHideEmptyFields", { self: this, settingsHideEmptyFields: this.hideFields }).then(async () => {
-
-            console.log('after',this.settingsHideEmptyFields)
+    updateLeftMenuEnriched: async function(){
+        this.$store.dispatch("settingsLeftMenuEnriched", { self: this, settingsLeftMenuEnriched: this.leftMenuEnriched }).then(async () => {
 
         })
 
+    },
+
+
+    updateHideEmptyFields: async function(){
+        this.$store.dispatch("settingsHideEmptyFields", { self: this, settingsHideEmptyFields: this.hideFields }).then(async () => {
+            console.log('after',this.settingsHideEmptyFields)
+        })
         this.updateHideEmptyFieldsReDraw()
     },
+
 
 
     updateHideEmptyFieldsReDraw: function(){

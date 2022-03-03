@@ -626,7 +626,7 @@ const parseProfile = {
     },
 
 
-    duplicateProperty: function(id,profile,activeProfile){
+    duplicateProperty: function(id,profile,activeProfile,dupeData){
 
         let propertyIndex = activeProfile.rt[profile].ptOrder.indexOf(id)
         let newPropertyId = id + '|'+ (+ new Date())
@@ -636,11 +636,47 @@ const parseProfile = {
 
         // activeProfile.rt[profile].pt[newPropertyId] = Object.assign({},activeProfile.rt[profile].pt[id])
         activeProfile.rt[profile].pt[newPropertyId] = JSON.parse(JSON.stringify(activeProfile.rt[profile].pt[id]))
+        console.log(dupeData)
+        if (!dupeData){
+            activeProfile.rt[profile].pt[newPropertyId].userValue = {
+                '@guid': short.generate(),
+                '@root' : activeProfile.rt[profile].pt[newPropertyId].propertyURI
+            }
 
-        activeProfile.rt[profile].pt[newPropertyId].userValue = {
-            '@guid': short.generate(),
-            '@root' : activeProfile.rt[profile].pt[newPropertyId].propertyURI
+        }else{
+
+            // we need to change the @guid for all the parts of the user data
+            activeProfile.rt[profile].pt[newPropertyId].userValue['@guid'] = short.generate()
+
+            for (let key in activeProfile.rt[profile].pt[newPropertyId].userValue){
+
+                if (Array.isArray(activeProfile.rt[profile].pt[newPropertyId].userValue[key])){
+                    for (let val of activeProfile.rt[profile].pt[newPropertyId].userValue[key]){
+                        if (val['@guid']){
+                            val['@guid'] = short.generate()
+                        }
+
+                        for (let key2 in val){
+                            if (Array.isArray(val[key2])){
+                                for (let val2 of val[key2]){
+                                    if (val2['@guid']){
+                                        val2['@guid'] = short.generate()
+                                    }
+                                   
+                                    
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+            }
+            console.log(activeProfile.rt[profile].pt[newPropertyId].userValue)
+
         }
+
+
         activeProfile.rt[profile].pt[newPropertyId]['@guid'] = short.generate()
         activeProfile.rt[profile].pt[newPropertyId].xmlSource= ""
 

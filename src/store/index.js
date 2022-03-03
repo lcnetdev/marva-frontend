@@ -81,6 +81,7 @@ export default new Vuex.Store({
     settingsDisplayMode: 'default',
 
     settingsHideEmptyFields: false,
+    settingsLeftMenuEnriched: true,
 
 
     // used for auto complete lookups 
@@ -244,6 +245,13 @@ export default new Vuex.Store({
     SETTINGSHIDEEMPTYFIELDS(state, val) {
       state.settingsHideEmptyFields = val
     },   
+
+    SETTINGSLEFTMENUENRICHED(state, val) {
+      state.settingsLeftMenuEnriched = val
+    },   
+
+
+    
 
 
 
@@ -483,12 +491,18 @@ export default new Vuex.Store({
     },
 
     settingsHideEmptyFields({ commit}, data){
-      console.log("data.settingsHideEmptyFields = ",data.settingsHideEmptyFields)
       commit('SETTINGSHIDEEMPTYFIELDS', data.settingsHideEmptyFields)
       localStorage.setItem('bfeSettingsHideEmptyFields',data.settingsHideEmptyFields)
     },
 
-    
+
+    settingsLeftMenuEnriched({ commit}, data){
+      commit('SETTINGSLEFTMENUENRICHED', data.settingsLeftMenuEnriched)
+      localStorage.setItem('bfeSettingsLeftMenuEnriched',data.settingsLeftMenuEnriched)
+    },
+
+
+
 
 
 
@@ -698,7 +712,8 @@ export default new Vuex.Store({
         // state.saveRecord(state,commit)
 
       }else{
-        let newProfile = parseProfile.duplicateProperty(data.id,data.profile,state.activeProfile)
+        console.log(data.dupeData)
+        let newProfile = parseProfile.duplicateProperty(data.id,data.profile,state.activeProfile,data.dupeData)
         commit('ACTIVEPROFILE', newProfile) 
 
         state.saveRecord(state,commit)

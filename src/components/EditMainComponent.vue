@@ -36,12 +36,14 @@
 
       </div>
 
-      <div class="property-button-container" v-if="showDupeRemove()">
-        
-        <button tabindex="-1" class="property-button property-duplicate simptip-position-left" :data-tooltip="labels.propertyDuplicateTip" @click="duplicateProperty">{{labels.propertyDuplicateSymbol}}</button>
-        <button tabindex="-1" class="property-button property-remove" @click="removeProperty">{{labels.propertyRemoveSymbol}}</button>
+      <template v-if="settingsLeftMenuEnriched==false">            
+        <div class="property-button-container" v-if="showDupeRemove()">
+          
+          <button tabindex="-1" class="property-button property-duplicate simptip-position-left" :data-tooltip="labels.propertyDuplicateTip" @click="duplicateProperty">{{labels.propertyDuplicateSymbol}}</button>
+          <button tabindex="-1" class="property-button property-remove" @click="removeProperty">{{labels.propertyRemoveSymbol}}</button>
 
-      </div>
+        </div>
+      </template>
 
       <div v-if="settingsDisplayMode!='compact'" class="debug-toggle" style="position: relative; visibility: hidden; color:red; left: -26%;font-size: 0.85em;font-family: monospace;top: 8px; cursor: pointer; height: 0.85em;" @click="toggleDebug">debug</div>
 
@@ -160,6 +162,7 @@ export default {
   computed: mapState({
 
     settingsDisplayMode: 'settingsDisplayMode',
+    settingsLeftMenuEnriched: 'settingsLeftMenuEnriched',
 
   }),
 
