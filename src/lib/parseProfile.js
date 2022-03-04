@@ -663,7 +663,7 @@ const parseProfile = {
                                         val2['@guid'] = short.generate()
                                     }
                                    
-                                    
+
                                 }
                             }
                         }
@@ -748,6 +748,51 @@ const parseProfile = {
 
         return(activeProfile)
 
+    },
+
+
+    sendToInstance: function(from,to,activeProfile){
+
+        console.log(from)
+        console.log(to) 
+
+        let c = JSON.parse(JSON.stringify(from.data))
+
+
+        // remove it from the source
+        console.log(activeProfile.rt[from.profile])
+
+        console.log(activeProfile.rt[from.profile].pt[from.componet])
+
+        delete activeProfile.rt[from.profile].pt[from.componet]
+
+        activeProfile.rt[from.profile].ptOrder.splice(activeProfile.rt[from.profile].ptOrder.indexOf(from.componet), 1)
+
+
+        // try our best to change the parent string
+        c.parent = c.parent.replaceAll(from.profile,to)
+        // change the parent id on it        
+        c.parentId = to.profile
+
+        // this is custom code, to check for various things of transfering specific properties
+
+        if (c.userValue['@type'] === "http://id.loc.gov/ontologies/bflc/PrimaryContribution"){
+            c.userValue['@type'] = 'http://id.loc.gov/ontologies/bibframe/Contribution'
+        }
+
+        // check to see if we already have something in the list for this already
+        if (activeProfile.rt[to].ptOrder.indexOf(from.componet)>-1){
+            from.componet = from.componet + short.generate()
+        }
+
+        // insert it into the profile
+
+        activeProfile.rt[to].ptOrder.unshift(from.componet)
+        activeProfile.rt[to].pt[from.componet] = c
+
+
+        return(activeProfile)
+        
     },
 
     refTemplateChange: function(currentState, component, key, activeProfileName, template, parentId, thisRef, nextRef){

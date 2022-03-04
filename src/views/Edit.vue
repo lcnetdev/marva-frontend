@@ -104,11 +104,27 @@
 }
 
 
+.enriched-menu{
+    position: relative;
+    cursor: pointer;
+}
 .enriched-menu .enriched-menu-controls{
     display: none;
-    text-align: center;
+    float: right;
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
+
+
+.enriched-menu-icon{
+    fill: white;
+}
+/*.enriched-menu-controls:hover .enriched-menu-icon{
+    fill: blue;
+}
+*/
 .enriched-menu:hover{
     background-color: #6f6f6f;
 }
@@ -118,16 +134,46 @@
 }
 
 .enriched-menu-controls button{
-    border:  solid 1px white;
-    width: 50px;
-    font-size: 1.1em;
+    background-color: transparent;
     color: white;
     font-weight: bold;
     cursor: pointer;
+    height: 25px;
+    padding: 0;
 }
 .enriched-menu-controls button:hover{
-    background-color: white;
+    /*background-color: white;*/
     color: black;
+}
+.enriched-menu-controls button:hover .enriched-menu-icon{
+    /*background-color: white;*/
+    fill: red;
+    color: black;
+}
+
+
+#send-to-modal{
+
+    position: fixed;
+    top: 10%;
+    left: 15%;
+    width: 40vw;
+    height: 40vh;
+    background-color: whitesmoke;
+    border: solid 1px black;
+    border-radius: 0.5em;
+    -webkit-box-shadow: 5px 5px 15px 5px rgba(0,0,0,0.14); 
+    box-shadow: 5px 5px 15px 5px rgba(0,0,0,0.14);
+
+
+}
+#send-to-modal li{
+    padding-top: 1em;
+    cursor: pointer;
+}
+#send-to-modal li:hover{
+    background-color: white;
+
 }
 
 </style>
@@ -470,7 +516,7 @@
                         </div>
 
                         <ul style="padding-left: 0;" :key="'leftmenu' + activeEditCounter">
-                            <li v-bind:class="['left-menu-list-item', 'enriched-menu', { 'left-menu-list-item-has-data' :  liHasData(activeProfile.rt[profileName].pt[profileCompoent]) && returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue).length != 0, 'left-menu-list-item-active':(activeComponent==profileCompoent &&activeProfileName==profileName), 'left-menu-list-item-hide':(!displayComponentCheck(activeProfile.rt[profileName].pt[profileCompoent])), 'is-hidden-li': (hideFields === true && activeProfile.rt[profileName].pt[profileCompoent].canBeHidden) }]"  :id="'menu'+profileName+profileCompoent"  v-for="(profileCompoent,idx) in activeProfile.rt[profileName].ptOrder" :key="profileCompoent">
+                            <li v-bind:class="['left-menu-list-item', 'enriched-menu', { 'left-menu-list-item-has-data' :  liHasData(activeProfile.rt[profileName].pt[profileCompoent]) && returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue).length != 0, 'left-menu-list-item-active':(activeComponent==profileCompoent &&activeProfileName==profileName), 'left-menu-list-item-hide':(!displayComponentCheck(activeProfile.rt[profileName].pt[profileCompoent])), 'is-hidden-li': (hideFields === true && activeProfile.rt[profileName].pt[profileCompoent].canBeHidden) }]"  :id="'menu'+profileName+profileCompoent"  v-for="(profileCompoent,idx) in activeProfile.rt[profileName].ptOrder" :key="profileCompoent" @click="scrollFieldContainerIntoView($event,profileName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')+idx+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_'))">
                               
                                 <template v-if="!hideFields">
                                     <a :key="'left_li_'+idx+'_'+keyCounter" v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true" @click="scrollFieldContainerIntoView($event,profileName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')+idx+profileCompoent.replace(/\(|\)|\s|\/|:|\.|\|/g,'_'))" href="#">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}}</a>
@@ -509,11 +555,33 @@
                                     <div class="enriched-menu-controls">
                                         
                                         <template v-if="!hideFields || (hideFields && !activeProfile.rt[profileName].pt[profileCompoent].canBeHidden) ">
-                                            <button @click="addProperty(profileName,profileCompoent)">Add</button>
+                                            <button title="Add Blank Component" @click="addProperty($event, profileName,profileCompoent)">
+                                                <svg width="25px" height="25px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                                 <path class="enriched-menu-icon" d="m50 2.6797c-26.082 0-47.395 21.23-47.395 47.32 0 26.082 21.238 47.32 47.395 47.32 26.082 0 47.32-21.234 47.32-47.32 0-26.082-21.234-47.32-47.32-47.32zm0 10.996c20.039 0 36.324 16.289 36.324 36.324 0 20.039-16.289 36.324-36.324 36.324-20.039 0-36.324-16.289-36.324-36.324 0-20.039 16.289-36.324 36.324-36.324zm0 9.625c-3.0117 0-5.5352 2.5234-5.5352 5.5352v15.164h-15.16c-3.0117 0-5.5391 2.5234-5.5391 5.5352 0 3.0156 2.5234 5.5352 5.5391 5.5352h15.16v15.16c0 3.0117 2.5234 5.5352 5.5352 5.5352s5.5352-2.5234 5.5352-5.5352v-15.16h15.16c3.0117 0 5.5391-2.5234 5.5391-5.5352 0-3.0156-2.5938-5.457-5.5391-5.457h-15.16v-15.242c0-3.0117-2.5234-5.5352-5.5352-5.5352z"/>
+                                                </svg>
+                                            </button>
                                             
-                                            <button @click="removeProperty(profileName,profileCompoent)">Del</button>
-                                            <button @click="addProperty(profileName,profileCompoent,true)">Dup</button>
-                                            <button v-if="canSendToInstance(activeProfile.rt[profileName].pt[profileCompoent].propertyURI,profileName)">Send</button>
+                                            <button title="Remove Component" @click="removeProperty(profileName,profileCompoent)">
+                                                <svg width="25px" height="25px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                                 <g>
+                                                  <path class="enriched-menu-icon" d="m50 0c-27.613 0-50 22.387-50 50s22.387 50 50 50 50-22.387 50-50-22.387-50-50-50zm0 90c-22.059 0-40-17.941-40-40s17.941-40 40-40 40 17.941 40 40-17.941 40-40 40z"/>
+                                                  <path class="enriched-menu-icon" d="m71.613 36.719c0-2.2109-0.875-4.3281-2.4414-5.8945-1.5625-1.5664-3.6797-2.4414-5.8945-2.4414s-4.3281 0.87891-5.8945 2.4414l-8.25 8.25-8.25-8.25c-1.5625-1.5625-3.6797-2.4414-5.8945-2.4414-2.207 0.003907-4.3164 0.87891-5.8828 2.4453-1.5625 1.5625-2.4375 3.6836-2.4375 5.8906 0 2.2109 0.87891 4.3281 2.4414 5.8945l8.25 8.25-8.25 8.25c-1.5625 1.5586-2.4414 3.6758-2.4414 5.8867s0.875 4.3281 2.4414 5.8945c1.5625 1.5625 3.6797 2.4375 5.8906 2.4375s4.3281-0.87891 5.8945-2.4414l8.25-8.25 8.25 8.25c1.5586 1.5625 3.6758 2.4414 5.8867 2.4414s4.3281-0.875 5.8945-2.4414c1.5664-1.5625 2.4414-3.6797 2.4414-5.8945s-0.87891-4.3281-2.4414-5.8945l-8.25-8.25 8.25-8.25c1.5625-1.5547 2.4375-3.6719 2.4375-5.8828z"/>
+                                                 </g>
+                                                </svg>
+                                            </button>
+                                            <button title="Duplicate Component" @click="addProperty($event,profileName,profileCompoent,true)">
+                                                <svg width="25px" height="25px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                                 <g>
+                                                  <path class="enriched-menu-icon" d="m79.5 31.801h-43.398c-1.8008 0-3.3008 1.5-3.3008 3.3008v43.5c0 1.8008 1.5 3.3008 3.3008 3.3008h43.5c1.8008 0 3.3008-1.5 3.3008-3.3008l-0.003906-43.5c-0.097657-1.8008-1.5-3.3008-3.3984-3.3008z"/>
+                                                  <path class="enriched-menu-icon" d="m67.199 29.801v-7.5c0-2.3008-1.8008-4.1016-4.1016-4.1016h-41.797c-2.3008 0-4.1016 1.8984-4.1016 4.1016v41.801c0 2.3008 1.8008 4.1016 4.1016 4.1016h9.5v-33.102c0-2.8984 2.3984-5.3008 5.3008-5.3008z"/>
+                                                 </g>
+                                                </svg>
+                                            </button>
+                                            <button title="Send To Instance" v-if="canSendToInstance(activeProfile.rt[profileName].pt[profileCompoent].propertyURI,profileName)" @click="sendToInstance($event,profileName,profileCompoent,activeProfile.rt[profileName].pt[profileCompoent])">
+                                                <svg width="25px" height="25px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                                 <path class="enriched-menu-icon" d="m100 50-100-44.414 9.4961 37.988 34.918 6.4258-34.918 6.4258-9.4961 37.988z" fill-rule="evenodd"/>
+                                                </svg>
+                                            </button>
                                         </template>
                                     </div>
                                 </div>
@@ -851,6 +919,17 @@
 
 
 
+        <div v-if="sendToTempDispaly" id="send-to-modal">
+            
+            <ul>
+                <li v-for="rt in activeProfile.rtOrder" :key="rt" @click="sendToSendIt(rt)">{{rt}}</li>
+
+            </ul>
+
+            <button @click="sendToTempDispaly=false" style="position:absolute; bottom: 5px; right: 5px;">Close</button>
+        </div>
+
+
 
 
 
@@ -1171,7 +1250,11 @@ export default {
       optionDisplay: false,
       hideFields: false,
 
-      leftMenuEnriched: false,      
+      leftMenuEnriched: false,    
+
+
+      sendToTemp: {},
+      sendToTempDispaly: true,
 
     }
   },
@@ -1190,11 +1273,13 @@ export default {
 
 
 
-    addProperty: function(profileName, profileCompoent,dupeData){
+    addProperty: function(event, profileName, profileCompoent,dupeData){
       if (!dupeData){dupeData=false}
       this.$store.dispatch("duplicateProperty", { self: this, id: profileCompoent, profile:profileName, dupeData:dupeData }).then(() => {
         
       })   
+
+      event.stopPropagation();
 
     },
 
@@ -1222,7 +1307,32 @@ export default {
     },
 
 
+    sendToSendIt(rt){
 
+        if (rt != this.sendToTemp.profileName){
+
+
+            this.$store.dispatch("sendToInstance", { self: this, from: this.sendToTemp, to:rt }).then(async () => {
+
+            })
+
+
+        }
+        this.sendToTempDispaly=false;
+    },
+
+
+    sendToInstance(event, profileName,profileCompoent,data){
+
+        console.log(profileName,profileCompoent,data)
+
+        this.sendToTemp = {'profile':profileName,componet:profileCompoent,data:data}
+
+        this.sendToTempDispaly=true;
+
+        event.stopPropagation();
+
+    },
 
     canSendToInstance: function(uri,profileName){
 
@@ -1789,6 +1899,7 @@ export default {
     scrollFieldContainerIntoView: function(event,id){
       console.log('-----')
       console.log(id)
+      console.log(event)
       console.log(document.getElementById('container-for-'+id))
       document.getElementById('container-for-'+id).scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"})
       window.setTimeout(()=>{

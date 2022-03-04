@@ -697,6 +697,15 @@ export default new Vuex.Store({
       state.saveRecord(state,commit)
     },
 
+
+
+    sendToInstance: ({commit, state}, data) => {
+      let newProfile = parseProfile.sendToInstance(data.from,data.to,state.activeProfile)
+      commit('ACTIVEPROFILE', newProfile)    
+    },
+
+
+
     restoreProperty: ({commit, state}, data) => {
       let newProfile = parseProfile.restoreProperty(data.id,data.profile,state.activeProfile)
       commit('ACTIVEPROFILE', newProfile)    
