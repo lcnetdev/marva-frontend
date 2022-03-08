@@ -329,7 +329,15 @@ export default {
         // console.log('here')
         this.$store.dispatch("setActiveProfile", { self: this, profile: this.transformResults }).then(async () => {
 
-          this.$router.push({ name: 'Edit', params: { recordId: useProfile.eId } })
+          if (this.settingsDisplayMode == 'spreadsheet'){
+            this.$router.push({ name: 'CompactEdit', params: { recordId: useProfile.eId } })
+          }else{
+            this.$router.push({ name: 'Edit', params: { recordId: useProfile.eId } })
+
+          }
+
+
+
 
           // also save it since it now has a perm URL
           let xml = await exportXML.toBFXML(this.transformResults)
@@ -407,6 +415,7 @@ export default {
     profiles: 'profiles',
     profilesLoaded: 'profilesLoaded',
     idWorkSearchResults: 'idWorkSearchResults',
+    settingsDisplayMode: 'settingsDisplayMode',
     rtLookup:'rtLookup',
     idXML:'idXML',
     bfdbXML:'bfdbXML',

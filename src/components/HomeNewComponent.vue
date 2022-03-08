@@ -206,7 +206,15 @@ export default {
       let useProfile = this.loadTemplate(useStartingPoint, this.catInitials)
 
       this.$store.dispatch("setActiveProfile", { self: this, profile: useProfile, useDefaultValues: true }).then(() => {
-        this.$router.push({ name: 'Edit', params: { recordId: useProfile.eId } })
+        
+        if (this.settingsDisplayMode == 'spreadsheet'){
+          this.$router.push({ name: 'CompactEdit', params: { recordId: useProfile.eId } })
+        }else{
+          this.$router.push({ name: 'Edit', params: { recordId: useProfile.eId } })
+
+        }
+
+        
         window.scrollTo(0, 0);
 
       })
@@ -256,7 +264,8 @@ export default {
     startingPoints: 'startingPoints',
     profiles: 'profiles',
     profilesClean: 'profilesClean',
-    catInitials: 'catInitials'
+    catInitials: 'catInitials',
+    settingsDisplayMode: 'settingsDisplayMode',
 
     // assignedId (){
 
