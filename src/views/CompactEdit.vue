@@ -1,6 +1,10 @@
 <template>
     <div>
 
+        <EditNavToolBar ref="navToolBar" :forceComponentRedraw="forceComponentRedraw"/>
+
+
+
           <Keypress key-event="keydown" :key-code="40" @success="moveDown($event)" />
           <Keypress key-event="keydown" :key-code="39" @success="moveRight($event)" />
           <Keypress key-event="keydown" :key-code="37" @success="moveLeft($event)" />
@@ -22,12 +26,12 @@
 
 
             
-            <template v-if="profilesLoaded">
+            <template v-if="profilesLoaded && activeProfile && activeProfile.rtOrder">
 
-                <div v-for="(profileName, resourceIdx) in activeProfile.rtOrder.filter((p)=>{return (!p.includes(':Item'))})"  :key="profileName">
+                <div v-for="(profileName, resourceIdx) in activeProfile.rtOrder.filter((p)=>{return (!p.includes(':Item'))})"  :key="profileName+keyCounter">
 
                     
-                    <div v-if="activeProfile.rt[profileName].noData != true" :class="['container-' + profileName.split(':').slice(-1)[0].split('-')[0]]">
+                    <div v-if="activeProfile.rt[profileName].noData != true" :class="['container-' + profileName.split(':').slice(-1)[0].split('-')[0]]" :style="{ 'background-color': returnContainerBGColor(profileName) }">
 
 
                         <div style="display: flex; max-height: 2em; height: 2em;">
@@ -58,24 +62,59 @@
 
                         </div>
                        
-                        <div class="resources-grid-field-list">
+                        <div class="resources-grid-field-list ">
 
                             <template v-for="(profileCompoent,idx) in activeProfile.rt[profileName].ptOrder">
                                 
                                 <template v-if="displayComponentCheck(activeProfile.rt[profileName].pt[profileCompoent]) === true">
                                     
-                                    <div :class="['resources-grid-field-list-property', 'resource-grid-field-list-navable','navable-level-'+idx, 'navable-col-1', `navable-${resourceIdx}-0-${idx}` ]" :id="`navable-${resourceIdx}-0-${idx}-0`" :data-mainrow="idx" :key="idx">
+                                    <div :class="['resources-grid-field-list-property', 'enriched-menu-spreadsheet', 'navable-level-'+idx, 'navable-col-1', `navable-${resourceIdx}-0-${idx}` ]" :id="`navable-${resourceIdx}-0-${idx}-0`" :data-mainrow="idx" :key="idx+'_'+keyCounter">
                                         {{returnPropertyShortName(activeProfile.rt[profileName].pt[profileCompoent].propertyURI)}}
+                                        <div class="enriched-menu-controls-spreadsheet">
+                                            
+                                            
+                                                <button title="Add Blank Component" @click="addProperty($event, profileName,profileCompoent)">
+                                                    <svg width="25px" height="25px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                                     <path class="enriched-menu-icon-spreadsheet" d="m50 2.6797c-26.082 0-47.395 21.23-47.395 47.32 0 26.082 21.238 47.32 47.395 47.32 26.082 0 47.32-21.234 47.32-47.32 0-26.082-21.234-47.32-47.32-47.32zm0 10.996c20.039 0 36.324 16.289 36.324 36.324 0 20.039-16.289 36.324-36.324 36.324-20.039 0-36.324-16.289-36.324-36.324 0-20.039 16.289-36.324 36.324-36.324zm0 9.625c-3.0117 0-5.5352 2.5234-5.5352 5.5352v15.164h-15.16c-3.0117 0-5.5391 2.5234-5.5391 5.5352 0 3.0156 2.5234 5.5352 5.5391 5.5352h15.16v15.16c0 3.0117 2.5234 5.5352 5.5352 5.5352s5.5352-2.5234 5.5352-5.5352v-15.16h15.16c3.0117 0 5.5391-2.5234 5.5391-5.5352 0-3.0156-2.5938-5.457-5.5391-5.457h-15.16v-15.242c0-3.0117-2.5234-5.5352-5.5352-5.5352z"/>
+                                                    </svg>
+                                                </button>
+                                                
+                                                <button title="Remove Component" @click="removeProperty(profileName,profileCompoent)">
+                                                    <svg width="25px" height="25px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                                     <g>
+                                                      <path class="enriched-menu-icon-spreadsheet" d="m50 0c-27.613 0-50 22.387-50 50s22.387 50 50 50 50-22.387 50-50-22.387-50-50-50zm0 90c-22.059 0-40-17.941-40-40s17.941-40 40-40 40 17.941 40 40-17.941 40-40 40z"/>
+                                                      <path class="enriched-menu-icon-spreadsheet" d="m71.613 36.719c0-2.2109-0.875-4.3281-2.4414-5.8945-1.5625-1.5664-3.6797-2.4414-5.8945-2.4414s-4.3281 0.87891-5.8945 2.4414l-8.25 8.25-8.25-8.25c-1.5625-1.5625-3.6797-2.4414-5.8945-2.4414-2.207 0.003907-4.3164 0.87891-5.8828 2.4453-1.5625 1.5625-2.4375 3.6836-2.4375 5.8906 0 2.2109 0.87891 4.3281 2.4414 5.8945l8.25 8.25-8.25 8.25c-1.5625 1.5586-2.4414 3.6758-2.4414 5.8867s0.875 4.3281 2.4414 5.8945c1.5625 1.5625 3.6797 2.4375 5.8906 2.4375s4.3281-0.87891 5.8945-2.4414l8.25-8.25 8.25 8.25c1.5586 1.5625 3.6758 2.4414 5.8867 2.4414s4.3281-0.875 5.8945-2.4414c1.5664-1.5625 2.4414-3.6797 2.4414-5.8945s-0.87891-4.3281-2.4414-5.8945l-8.25-8.25 8.25-8.25c1.5625-1.5547 2.4375-3.6719 2.4375-5.8828z"/>
+                                                     </g>
+                                                    </svg>
+                                                </button>
+                                                <button title="Duplicate Component" @click="addProperty($event,profileName,profileCompoent,true)">
+                                                    <svg width="25px" height="25px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                                     <g>
+                                                      <path class="enriched-menu-icon-spreadsheet" d="m79.5 31.801h-43.398c-1.8008 0-3.3008 1.5-3.3008 3.3008v43.5c0 1.8008 1.5 3.3008 3.3008 3.3008h43.5c1.8008 0 3.3008-1.5 3.3008-3.3008l-0.003906-43.5c-0.097657-1.8008-1.5-3.3008-3.3984-3.3008z"/>
+                                                      <path class="enriched-menu-icon-spreadsheet" d="m67.199 29.801v-7.5c0-2.3008-1.8008-4.1016-4.1016-4.1016h-41.797c-2.3008 0-4.1016 1.8984-4.1016 4.1016v41.801c0 2.3008 1.8008 4.1016 4.1016 4.1016h9.5v-33.102c0-2.8984 2.3984-5.3008 5.3008-5.3008z"/>
+                                                     </g>
+                                                    </svg>
+                                                </button>
+                                                <button title="Send To Instance" v-if="canSendToInstance(activeProfile.rt[profileName].pt[profileCompoent].propertyURI,profileName)" @click="sendToInstance($event,profileName,profileCompoent,activeProfile.rt[profileName].pt[profileCompoent])">
+                                                    <svg width="25px" height="25px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                                     <path class="enriched-menu-icon-spreadsheet" d="m100 50-100-44.414 9.4961 37.988 34.918 6.4258-34.918 6.4258-9.4961 37.988z" fill-rule="evenodd"/>
+                                                    </svg>
+                                                </button>
+
+                                        </div>
+
                                     </div>
                                     
-                                    <CompactEditMainComponent :componentIdx="0" :rowIdx="idx" :resourceIdx="resourceIdx" :key="'component'+idx" v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true " :isMini="false" :class="['resources-grid-field-list-value', 'resource-grid-field-list-navable', 'navable-level-'+idx, 'navable-col-2']" @showMiniEditorEdit="showMiniEditorClick"  :parentURI="activeProfile.rt[profileName].URI" :activeTemplate="activeProfile.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :ptGuid="activeProfile.rt[profileName].pt[profileCompoent]['@guid']" :parentStructure="activeProfile.rtOrder" :structure="activeProfile.rt[profileName].pt[profileCompoent]"/>
+                                    <CompactEditMainComponent :componentIdx="1" :rowIdx="idx" :setNavAfterClick="setNavAfterClick" :resourceIdx="resourceIdx" :key="'component'+idx+'_'+keyCounter" v-if="activeProfile.rt[profileName].pt[profileCompoent].deleted != true " :isMini="false" :class="['resources-grid-field-list-value', 'navable-level-'+idx, 'navable-col-2']" @showMiniEditorEdit="showMiniEditorClick"  :parentURI="activeProfile.rt[profileName].URI" :activeTemplate="activeProfile.rt[profileName].pt[profileCompoent]" :profileName="profileName" :profileCompoent="profileCompoent" :topLevelComponent="true" :ptGuid="activeProfile.rt[profileName].pt[profileCompoent]['@guid']" :parentStructure="activeProfile.rtOrder" :structure="activeProfile.rt[profileName].pt[profileCompoent]"/>
                                 </template>
                                 
+    
 
 
                             </template>
 
                         </div>
+                
 
 
 
@@ -88,6 +127,59 @@
                           </details>
                         </div> -->
 
+                        <template v-if="profileName.includes(':Instance')">
+                            
+
+                            <div v-for="(profileName2) in activeProfile.rtOrder.filter((p)=>{return (p.includes(':Item'))})"  :key="profileName2+'_'+keyCounter" :style="{ 'background-color': '#ececec' }" >
+
+                                <div style="margin-top: 1em;" v-if="activeProfile.rt[profileName2].itemOf == activeProfile.rt[profileName].URI">
+
+                                    <div style="display: flex; max-height: 2em; height: 2em;">
+                                      <div style="flex: 0">
+
+                                        <div style="display:inline-block;     width: 26px; margin-left: 25px; margin-right: 5px;" v-if="profileName2.includes(':Item')">
+                                          <svg  viewBox="0 0 50 72" version="1.1" xmlns="http://www.w3.org/2000/svg">
+
+                                               <rect width="50px" height="50px" style="fill:#eaeaea;stroke-width:0.5;stroke:rgb(0,0,0)" />
+                                          </svg>
+                                        </div>
+                                      </div>
+                                      <div style="flex-basis: auto; font-size: 1.25em; font-weight: bold; text-align: left;">{{profileName2.split(':').slice(-1)[0]}}</div>
+                                      <div style="flex: 1; text-align: right;line-height: 1.25em;">{{activeProfile.rt[profileName2].URI.replace('http://id.loc.gov','').replace('https://id.loc.gov','')}}</div>
+
+                                    </div>
+
+
+                                </div>
+
+                                <div class="resources-grid-field-list">
+
+                                    <template v-for="(profileCompoent2,idx2) in activeProfile.rt[profileName2].ptOrder">
+                                        
+                                        <template v-if="displayComponentCheck(activeProfile.rt[profileName2].pt[profileCompoent2]) === true">
+                                            
+                                            <div :class="['resources-grid-field-list-property', 'navable-level-'+activeProfile.rt[profileName].ptOrder.length+idx2, 'navable-col-1', `navable-${resourceIdx}-0-${activeProfile.rt[profileName].ptOrder.length+idx2}` ]" :id="`navable-${resourceIdx}-0-${activeProfile.rt[profileName].ptOrder.length+idx2}-0`" :data-mainrow="activeProfile.rt[profileName].ptOrder.length+idx2" :key="activeProfile.rt[profileName].ptOrder.length+idx2+'_'+keyCounter">
+                                                {{returnPropertyShortName(activeProfile.rt[profileName2].pt[profileCompoent2].propertyURI)}}
+                                            </div>
+                                            
+                                            <CompactEditMainComponent :componentIdx="1" :rowIdx="activeProfile.rt[profileName].ptOrder.length+idx2" :setNavAfterClick="setNavAfterClick" :resourceIdx="resourceIdx" :key="'component'+idx2+'_'+keyCounter" v-if="activeProfile.rt[profileName2].pt[profileCompoent2].deleted != true " :isMini="false" :class="['resources-grid-field-list-value', 'navable-level-'+idx2, 'navable-col-2']" @showMiniEditorEdit="showMiniEditorClick"  :parentURI="activeProfile.rt[profileName2].URI" :activeTemplate="activeProfile.rt[profileName2].pt[profileCompoent2]" :profileName="profileName2" :profileCompoent="profileCompoent2" :topLevelComponent="true" :ptGuid="activeProfile.rt[profileName2].pt[profileCompoent2]['@guid']" :parentStructure="activeProfile.rtOrder" :structure="activeProfile.rt[profileName2].pt[profileCompoent2]"/>
+                                        </template>
+                                        
+
+
+
+                                    </template>
+
+                                </div>
+
+
+
+
+
+                            </div>     
+
+
+                        </template>
 
 
                     </div>
@@ -100,6 +192,22 @@
 
 
         </div>
+
+
+
+
+        <div v-if="sendToTempDispaly" id="send-to-modal">
+            
+            <ul>
+                <li v-for="rt in activeProfile.rtOrder" :key="rt" @click="sendToSendIt(rt)">{{rt}}</li>
+
+            </ul>
+
+            <button @click="sendToTempDispaly=false" style="position:absolute; bottom: 5px; right: 5px;">Close</button>
+        </div>
+
+
+
     </div>
 
 
@@ -108,6 +216,10 @@
 
 <style>
 
+/*.container-Work{
+    background-color: white !important;
+}
+*/
 .resources-grid{
    display: grid;
    grid-auto-columns: 1fr;
@@ -127,16 +239,26 @@
 
 .resources-grid-field-list-property{
      border: 1px solid transparent;
-     border-right: 1px solid whitesmoke;
-     border-bottom: 1px solid whitesmoke;
+     border-right: 1px solid black;
+     border-bottom: 1px solid black;
 }
 .resources-grid-field-list-value{
+
      border: 1px solid transparent;
-     border-bottom: 1px solid whitesmoke;
+     border-bottom: 1px solid black;
 }
 
 .navable-active{
-    border: 1px solid blue;
+    padding: 0px;
+    border: 1px solid blue !important;    
+}
+.resource-grid-field-list-navable{
+    padding: 1px;
+}
+.resource-grid-field-list-navable:hover{
+    padding: 0px;
+    border: 1px solid gray !important;   
+    cursor: pointer; 
 }
 
 #edit-left-menu-fixed{
@@ -147,6 +269,42 @@
   display: none;  /* Safari and Chrome */
 }
 
+.enriched-menu-spreadsheet{
+    position: relative;
+    cursor: pointer;
+}
+
+.enriched-menu-spreadsheet .enriched-menu-controls-spreadsheet{
+    display: none;
+    float: right;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+
+.enriched-menu-spreadsheet:hover .enriched-menu-controls-spreadsheet{
+    display: block;
+}
+
+
+.enriched-menu-controls-spreadsheet button{
+    background-color: transparent;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    height: 25px;
+    padding: 0;
+}
+.enriched-menu-controls-spreadsheet button:hover{
+    /*background-color: white;*/
+    color: black;
+}
+.enriched-menu-controls-spreadsheet button:hover .enriched-menu-icon-spreadsheet{
+    /*background-color: white;*/
+    fill: red;
+    color: black;
+}
 
 
 </style>
@@ -157,6 +315,7 @@
 <script>
 // @ is an alias to /src
 import CompactEditMainComponent from "@/components/CompactEditMainComponent.vue";
+import EditNavToolBar from "@/components/EditNavToolBar.vue";
 
 import lookupUtil from "@/lib/lookupUtil"
 import config from "@/lib/config"
@@ -178,7 +337,7 @@ export default {
   name: "EditCompact",
   components: {
     CompactEditMainComponent, // this is defined globaly to allow recursivness to work
-    // EditMini,
+    EditNavToolBar,
     // EditLiteralLanguage,
 
     Keypress: () => import('vue-keypress'),
@@ -218,7 +377,7 @@ export default {
 
 
           console.log(this.$route.params.recordId)
-          console.log(this.activeProfile)
+          console.log('activeProfile',this.activeProfile)
 
 
           // did we already load the record from the load screen or other place?
@@ -229,20 +388,13 @@ export default {
             // mark the record as not saved
             this.$store.dispatch("setActiveRecordSaved", { self: this}, false)
             this.$store.dispatch("setActiveProfile", { self: this, profile: ap }).then(() => {
-
-
-
-
-              // load the ontology lookups if they arnt
-              this.loadProfileOntologyLookupsBuild()
-
-              console.log('-----diagramMiniMap:',this.diagramMiniMap)
+                // load the ontology lookups if they arnt
+                this.loadProfileOntologyLookupsBuild()
+                console.log('activeProfile',this.activeProfile)
 
             })
 
           }else{
-
-
 
             // load the ontology lookups if they arnt
             this.loadProfileOntologyLookupsBuild()
@@ -401,14 +553,14 @@ export default {
 
   },
 
-  beforeRouteLeave (to, from , next) {
-    const answer = window.confirm('Do you really want to leave the edit screen?')
-    if (answer) {
-      next()
-    } else {
-      next(false)
-    }
-  },
+  // beforeRouteLeave (to, from , next) {
+  //   const answer = window.confirm('Do you really want to leave the edit screen?')
+  //   if (answer) {
+  //     next()
+  //   } else {
+  //     next(false)
+  //   }
+  // },
 
 
 
@@ -437,9 +589,9 @@ export default {
       sourceOfMiniComponent: null,
       displayLiteralLanguage: false,
 
+      keyCounter: 0,
 
-
-
+      color: 'black',
 
 
 
@@ -448,6 +600,9 @@ export default {
       navableRow: 0,
       navableComponent: 0,
 
+
+      sendToTemp: {},
+      sendToTempDispaly: false,
 
     }
   },
@@ -466,6 +621,144 @@ export default {
 
 
 
+    addProperty: function(event, profileName, profileCompoent,dupeData){
+      if (!dupeData){dupeData=false}
+    console.log(event, profileName, profileCompoent,dupeData)
+      this.$store.dispatch("duplicateProperty", { self: this, id: profileCompoent, profile:profileName, dupeData:dupeData }).then(() => {
+        
+      })   
+      this.keyCounter++
+      event.stopPropagation();
+
+    },
+
+
+    removeProperty: function(profileName, profileCompoent){
+
+
+      const answer = window.confirm('Are you sure you want to remove the property?')
+      if (answer) {
+        this.$store.dispatch("removeProperty", { self: this, id: profileCompoent, profile:profileName }).then(() => {
+          
+        })         
+
+      } else {
+        
+        return false
+
+      }
+      this.keyCounter++
+
+
+
+
+
+    },
+
+
+    sendToSendIt(rt){
+
+        if (rt != this.sendToTemp.profileName){
+
+
+            this.$store.dispatch("sendToInstance", { self: this, from: this.sendToTemp, to:rt }).then(async () => {
+
+            })
+
+
+        }
+        this.sendToTempDispaly=false;
+        this.keyCounter++
+    },
+
+
+    sendToInstance(event, profileName,profileCompoent,data){
+
+        console.log(profileName,profileCompoent,data)
+
+        this.sendToTemp = {'profile':profileName,componet:profileCompoent,data:data}
+
+        this.sendToTempDispaly=true;
+
+        event.stopPropagation();
+
+    },
+
+    canSendToInstance: function(uri,profileName){
+
+        if (profileName.includes(':Work')){
+            // add this to the config
+            if (uri == 'http://id.loc.gov/ontologies/bibframe/contribution'){
+                return true
+            }
+        }
+
+        return false
+
+    },
+
+
+
+    setNavAfterClick: function(elId){
+
+
+      let ids = elId.replace('navable-','').split('-')
+      console.log(ids)
+
+
+        this.navableResource = parseInt(ids[0])
+        this.navableCol = parseInt(ids[1])
+        this.navableRow = parseInt(ids[2])
+
+        if (ids[3].includes('.')){
+            this.navableComponent = parseFloat(ids[3])
+        }else{
+            this.navableComponent = parseInt(ids[3])
+        }
+        console.log(`navable-${this.navableResource}-${this.navableCol}-${this.navableRow}-${this.navableComponent}`)
+
+        let newActiveCell =  document.getElementById(`navable-${this.navableResource}-${this.navableCol}-${this.navableRow}-${this.navableComponent}`)
+
+        if (newActiveCell){
+            Array.from(document.querySelectorAll('.navable-active')).forEach((el) => el.classList.remove('navable-active'));
+            this.$nextTick(()=>{          
+                newActiveCell.classList.add('navable-active')
+            })        
+        }
+
+
+
+    },
+
+    forceComponentRedraw: function(){
+
+
+        console.log("do something to refresh here")
+
+
+    },
+
+    returnContainerBGColor: function(profileName){
+
+        console.log(profileName)
+        if (profileName.includes(':Work')){
+            return '#deeaea73'    
+        }
+        if (profileName.includes(':Instance')){
+            return 'whitesmoke'    
+        }
+
+        if (profileName.includes(':Item')){
+            return 'rgb(234, 234, 234)'    
+        }
+        
+
+        return 'white'
+
+    },
+
+
+
     returnPropertyShortName: function(uri){
 
         uri = uri.replace('http://id.loc.gov/ontologies/bibframe/','')
@@ -476,7 +769,7 @@ export default {
 
 
     moveDown: function(event){
-        console.log("this.disableMacroKeyNav",this.disableMacroKeyNav)
+
         if (this.disableMacroKeyNav){ return false}
 
         let navableResource = this.navableResource
@@ -485,56 +778,87 @@ export default {
         let navableComponent = this.navableComponent
 
 
+        // if we are just in the name col just move down one row
         if (navableCol == 0){
+            
             navableRow = navableRow + 1
             navableComponent = 0
+
+
+        // or we are in a component, in that case wee need to see if there are anymore 
+        // components below this one, if so pick that one
+        // if not then just jump to the next row down
         }else if (navableCol == 1){
 
-            //see if adding one to the navcomp finds something
-            if (document.getElementById(`navable-${navableResource}-${navableCol}-${navableRow}-${navableComponent+1}`)){
-                navableComponent++
-            }else{
-                navableRow++
-                navableComponent = 0
-            }
+            // increase navableComponent by at least one to move it off the current one
+            navableComponent=navableComponent+0.1
 
+            let possiblities = [];
+            [...Array(40)].forEach((_, i) => {
+
+                let addTo = i * 0.1
+                addTo = Math.round(addTo * 10) / 10
+                let n = Math.round((navableComponent+(addTo)) * 10) / 10
+
+                let id=`navable-${navableResource}-${navableCol}-${navableRow}-${n}`
+
+                if (document.getElementById(id)){
+                    console.log('Looking for',id,document.getElementById(id))
+                    possiblities.push(n)
+                }
+            });
+
+            if (possiblities.length>0){
+                navableComponent=possiblities[0]
+            }else{
+                // nothing was found, so jump rows
+                // but we also need to look for rows that are not in sequence
+                let found = false;
+                [...Array(10)].forEach(() => {  
+                    if (found){return false}
+                    navableRow = navableRow + 1;
+                    console.log("navableRow",navableRow)
+                    // but we still need to find the first component of that next row
+                    // so do the same thing
+                    navableComponent = 0
+                    let possiblities = [];
+                    [...Array(40)].forEach((_, i) => {         
+                        let addTo = i * 0.1
+                        addTo = Math.round(addTo * 10) / 10
+                        let n = Math.round((navableComponent+(addTo)) * 10) / 10
+
+                        if (document.getElementById(`navable-${navableResource}-${navableCol}-${navableRow}-${n}`)){
+                            console.log('Looking for',`navable-${navableResource}-${navableCol}-${navableRow}-${n}`,document.getElementById(`navable-${navableResource}-${navableCol}-${navableRow}-${n}`))
+                            possiblities.push(n)
+                        }
+                    });
+                    if (possiblities.length>0){
+                        navableComponent=possiblities[0]
+                        found=true
+                    }else{
+                        console.warn('No next component found in the next row MoveDown')
+                    }   
+
+                })            
+            }
         }
 
 
 
         let newActiveCell =  document.getElementById(`navable-${navableResource}-${navableCol}-${navableRow}-${navableComponent}`)
-        // console.log(`navable-${navableResource}-${navableCol}-${navableRow}-${navableComponent}`,newActiveCell)
 
         if (newActiveCell){
-
-            Array.from(document.querySelectorAll('.resource-grid-field-list-navable')).forEach((el) => el.classList.remove('navable-active'));
+            Array.from(document.querySelectorAll('.navable-active')).forEach((el) => el.classList.remove('navable-active'));
             this.$nextTick(()=>{          
                 newActiveCell.classList.add('navable-active')
-            })
-
-        
+            })        
             newActiveCell.focus()
             // set it back 
             this.navableRow = navableRow
             this.navableComponent = navableComponent
         }else{
 
-            //try one more ahead, sometimes fields are hidden
-            
-            navableRow = navableRow + 1
-            navableComponent = 0
-
-            let newActiveCell = document.getElementById(`navable-${navableResource}-${navableCol}-${navableRow}-${navableComponent}`)
-            if (newActiveCell){
-                Array.from(document.querySelectorAll('.resource-grid-field-list-navable')).forEach((el) => el.classList.remove('navable-active'));
-                this.$nextTick(()=>{    
-                    newActiveCell.focus()      
-                    newActiveCell.classList.add('navable-active')
-                })
-                // set it back 
-                this.navableRow = navableRow
-                this.navableComponent = navableComponent
-            }
+            // was not found for some reason
 
         }
 
@@ -553,53 +877,90 @@ export default {
         let navableComponent = this.navableComponent
 
 
+        // if we are just in the name col just move up one row
         if (navableCol == 0){
+            
             navableRow = navableRow - 1
             navableComponent = 0
+
+
+        // or we are in a component, in that case wee need to see if there are anymore 
+        // components aboce this one, if so pick that one
+        // if not then just jump to the next row down
         }else if (navableCol == 1){
 
-            //see if adding one to the navcomp finds something
-            if (document.getElementById(`navable-${navableResource}-${navableCol}-${navableRow}-${navableComponent+1}`)){
-                navableComponent=navableComponent-1
+            // increase navableComponent by at least one to move it off the current one
+            navableComponent = navableComponent -0.1
+
+
+            let possiblities = [];
+            [...Array(40)].forEach((_, i) => {
+            
+                let addTo = i * 0.1
+                addTo = Math.round(addTo * 10) / 10
+                let n = Math.round((navableComponent-(addTo)) * 10) / 10
+
+                if (document.getElementById(`navable-${navableResource}-${navableCol}-${navableRow}-${n}`)){
+                    console.log('Looking for', n,`navable-${navableResource}-${navableCol}-${navableRow}-${n}`,document.getElementById(`navable-${navableResource}-${navableCol}-${navableRow}-${n}`))
+                    possiblities.push(n)
+                }
+
+            });
+
+            if (possiblities.length>0){
+                navableComponent=possiblities[0]
             }else{
-                navableRow = navableRow - 1
-                navableComponent = 0
+                // nothing was found, so jump rows
+                // but we also need to look for rows that are not in sequence
+                let found = false;
+                [...Array(10)].forEach(() => {  
+                    if (found){return false}
+                    navableRow = navableRow - 1;
+
+                    // but we gota find the last component of the row above
+                    navableComponent = 20
+                    let possiblities = [];
+                    [...Array(1000)].forEach((_, i) => {         
+                        let addTo = i * 0.1
+                        addTo = Math.round(addTo * 10) / 10
+                        let n = Math.round((navableComponent-(addTo)) * 10) / 10
+
+                        if (document.getElementById(`navable-${navableResource}-${navableCol}-${navableRow}-${n}`)){
+                            console.log('Looking for', n,`navable-${navableResource}-${navableCol}-${navableRow}-${n}`,document.getElementById(`navable-${navableResource}-${navableCol}-${navableRow}-${n}`))
+                            possiblities.push(n)
+                        }
+                    });   
+
+                    if (possiblities.length>0){
+                        navableComponent=possiblities[0]
+                        found=true
+                    }else{
+                        console.warn('No previous component found in the next row MoveUp')
+                    }
+
+                })
             }
 
+            console.log(`navable-${navableResource}-${navableCol}-${navableRow}-${navableComponent}`)
         }
 
 
 
         let newActiveCell =  document.getElementById(`navable-${navableResource}-${navableCol}-${navableRow}-${navableComponent}`)
-        // console.log(`navable-${navableResource}-${navableCol}-${navableRow}-${navableComponent}`,newActiveCell)
 
         if (newActiveCell){
-            Array.from(document.querySelectorAll('.resource-grid-field-list-navable')).forEach((el) => el.classList.remove('navable-active'));
-            this.$nextTick(()=>{    
-                newActiveCell.focus()      
+
+            Array.from(document.querySelectorAll('.navable-active')).forEach((el) => el.classList.remove('navable-active'));
+            this.$nextTick(()=>{          
                 newActiveCell.classList.add('navable-active')
-            })
+            })        
+            newActiveCell.focus()
             // set it back 
             this.navableRow = navableRow
             this.navableComponent = navableComponent
         }else{
 
-            //try one more ahead, sometimes fields are hidden
-            
-            navableRow = navableRow - 1
-            navableComponent = 0
-
-            let newActiveCell = document.getElementById(`navable-${navableResource}-${navableCol}-${navableRow}-${navableComponent}`)
-            if (newActiveCell){
-                Array.from(document.querySelectorAll('.resource-grid-field-list-navable')).forEach((el) => el.classList.remove('navable-active'));
-                this.$nextTick(()=>{    
-                    newActiveCell.focus()      
-                    newActiveCell.classList.add('navable-active')
-                })
-                // set it back 
-                this.navableRow = navableRow
-                this.navableComponent = navableComponent
-            }
+            // was not found for some reason
 
         }
 
@@ -610,28 +971,56 @@ export default {
     moveRight: function(event){
 
         if (this.disableMacroKeyNav){ return false}
-    
-
-        
+            
         let navableResource = this.navableResource
         let navableCol = this.navableCol
         let navableRow = this.navableRow
         let navableComponent = this.navableComponent
 
+        // if we are in the name col move over to the component col
         if (navableCol==0){
             navableCol = navableCol + 1  
+
+            // but we want to find the first component div, it could be that it is x-x-x-0 or x-x-x-1 or even x-x-x-2 for some reason
+            // so look for the first one regardles if it 0/1/2 etc
+            navableComponent=0
+
+            let possiblities = [];
+            [...Array(40)].forEach((_, i) => {
+
+                let addTo = i * 0.1
+                addTo = Math.round(addTo * 10) / 10
+                let n = Math.round((navableComponent+(addTo)) * 10) / 10
+
+                let id=`navable-${navableResource}-${navableCol}-${navableRow}-${n}`
+
+                if (document.getElementById(id)){
+                    console.log('Looking for',id,document.getElementById(id))
+                    possiblities.push(n)
+                }
+            });
+
+            if (possiblities.length>0){
+                navableComponent=possiblities[0]
+            }
+
+
+
+        // if we are in the componet col move over to the next resource
         }else{
+
             navableCol = 0
+            navableComponent = 0
             navableResource=navableResource+1
         }
               
 
         let newActiveCell = document.getElementById(`navable-${navableResource}-${navableCol}-${navableRow}-${navableComponent}`)
-        // console.log(`navable-${navableResource}-${navableCol}-${navableRow}-${navableComponent}`,newActiveCell)
+        console.log(`navable-${navableResource}-${navableCol}-${navableRow}-${navableComponent}`,newActiveCell)
 
         if (newActiveCell){
 
-            Array.from(document.querySelectorAll('.resource-grid-field-list-navable')).forEach((el) => el.classList.remove('navable-active'));
+            Array.from(document.querySelectorAll('.navable-active')).forEach((el) => el.classList.remove('navable-active'));
             this.$nextTick(()=>{    
                 newActiveCell.focus()      
                 newActiveCell.classList.add('navable-active')
@@ -648,23 +1037,8 @@ export default {
 
 
         }else{
-            navableComponent++
-            newActiveCell = document.getElementById(`navable-${navableResource}-${navableCol}-${navableRow}-${navableComponent}`)
-              if (newActiveCell){
-
-                        Array.from(document.querySelectorAll('.resource-grid-field-list-navable')).forEach((el) => el.classList.remove('navable-active'));
-                        this.$nextTick(()=>{    
-                            newActiveCell.focus()      
-                            newActiveCell.classList.add('navable-active')
-                        })
-
-                        // set it back 
-                        this.navableRow = navableRow
-                        this.navableComponent = navableComponent
-                        this.navableCol=navableCol
-                        this.navableResource=navableResource
-
-              }
+            
+            // we cannot find the next nav component
 
         }
         event.event.preventDefault()
@@ -686,16 +1060,38 @@ export default {
         if (navableCol==1){
             navableCol = navableCol - 1  
         }else{
-            navableCol = 0
+            navableCol = 1
             navableResource=navableResource-1
         }
               
+        // need to find the active component
+        navableComponent=0
+
+        let possiblities = [];
+        [...Array(40)].forEach((_, i) => {
+
+            let addTo = i * 0.1
+            addTo = Math.round(addTo * 10) / 10
+            let n = Math.round((navableComponent+(addTo)) * 10) / 10
+
+            let id=`navable-${navableResource}-${navableCol}-${navableRow}-${n}`
+
+            if (document.getElementById(id)){
+                console.log('Looking for',id,document.getElementById(id))
+                possiblities.push(n)
+            }
+        });
+
+        if (possiblities.length>0){
+            navableComponent=possiblities[0]
+        }
+
 
         let newActiveCell = document.getElementById(`navable-${navableResource}-${navableCol}-${navableRow}-${navableComponent}`)
         // console.log(`navable-${navableResource}-${navableCol}-${navableRow}-${navableComponent}`,newActiveCell)
 
         if (newActiveCell){
-            Array.from(document.querySelectorAll('.resource-grid-field-list-navable')).forEach((el) => el.classList.remove('navable-active'));
+            Array.from(document.querySelectorAll('.navable-active')).forEach((el) => el.classList.remove('navable-active'));
             this.$nextTick(()=>{    
                 newActiveCell.focus()      
                 newActiveCell.classList.add('navable-active')
@@ -1235,66 +1631,6 @@ export default {
     },
 
 
-
-    returnOpacFormat: function(userValue){
-      let r = []
-      try{
-
-
-        // console.log(userValue)
-        // console.log(Object.keys(userValue))
-        Object.keys(userValue).forEach((k)=>{  
-          // console.log(k)    
-          // console.log(userValue[k])    
-          if (!k.startsWith('@')){
-            // console.log(userValue[k],"<----")
-            for (let objVal of userValue[k]){
-              // console.log(objVal)
-              Object.keys(objVal).forEach((kk)=>{
-                if (!kk.startsWith('@')){
-                  if (typeof objVal[kk] == 'string'){
-                    r.push(objVal[kk])                  
-                  }else if (Array.isArray(objVal[kk])){
-
-                    for (let objVal2 of objVal[kk]){
-                      Object.keys(objVal2).forEach((kkk)=>{
-                        if (!kkk.includes('@')){
-                          if (typeof objVal2[kkk] == 'string'){
-                            r.push(objVal2[kkk])
-                          }                      
-                        }
-                      })
-                    }
-                  }
-                }else if (kk=='@context'){
-
-                    if (objVal[kk].title){
-                        if (r.indexOf(objVal[kk].title)==-1){
-                            r.push(objVal[kk].title)
-                        }
-                    }
-
-                }
-              })
-            }
-          }
-
-
-
-        })
-
-        if (r.length == 0 && userValue['@id']){
-          r.push(userValue['@id'])
-        }
-
-
-        r = [...new Set(r)];
-
-      }catch{
-        return "error"
-      }
-      return r
-    },
 
 
     liHasData: function(structure){

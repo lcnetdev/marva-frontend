@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:bf="http://id.loc.gov/ontologies/bibframe/" xmlns:bflc="http://id.loc.gov/ontologies/bflc/" xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pmo="http://performedmusicontology.org/ontology/" xmlns:streams="info:lc/streams#"><bf:Instance rdf:about="http://id.loc.gov/resources/instances/21210374">
-              <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Print"/>
-              <bf:issuance>
+<rdf:RDF xmlns:bf="http://id.loc.gov/ontologies/bibframe/" xmlns:bflc="http://id.loc.gov/ontologies/bflc/" xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" xmlns:pmo="http://performedmusicontology.org/ontology/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:streams="info:lc/streams#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <bf:Instance rdf:about="http://id.loc.gov/resources/instances/21210374">
+    <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Print"/>
+    <bf:issuance>
       <bf:Issuance rdf:about="http://id.loc.gov/vocabulary/issuance/mono"/>
     </bf:issuance>
-              <bf:provisionActivity>
+    <bf:provisionActivity>
       <bf:ProvisionActivity>
         <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Publication"/>
         <bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">2018</bf:date>
@@ -13,31 +14,31 @@
         </bf:place>
       </bf:ProvisionActivity>
     </bf:provisionActivity>
-              <bf:identifiedBy>
+    <bf:identifiedBy>
       <bf:Lccn>
-        <rdf:value>  2019454124</rdf:value>
+        <rdf:value>2019454124</rdf:value>
       </bf:Lccn>
     </bf:identifiedBy>
-              <rdfs:label>Sefer ʻAṭeret dudaʼim</rdfs:label>
-              <bf:responsibilityStatement>ḥubar ʻa. y. Daṿid b . la-a.a. m. Yosef, zal, Tsuḳer, rosh Kolel Zikhron Sheneʼur, Shiḳago, Ilinoi</bf:responsibilityStatement>
-              <rdfs:label>ספר עטרת דודאים</rdfs:label>
-              <bf:responsibilityStatement>חובר ע״י דוד בלאא״מ יוסף, ז"ל, צוקער, ראש כולל זכרון שניאור, שיקאגו, אילינוי</bf:responsibilityStatement>
-              <bf:title>
-                <bf:Title>
-                  <rdfs:label>Sefer ʻAṭeret dudaʼim</rdfs:label>
-                  <rdfs:label>ספר עטרת דודאים</rdfs:label>
-                  <bf:mainTitle>Sefer ʻAṭeret dudaʼim</bf:mainTitle>
-                  <bf:mainTitle>ספר עטרת דודאים</bf:mainTitle>
-                </bf:Title>
-              </bf:title>
-              <bf:title>
-                <bf:VariantTitle>
-                  <rdfs:label>עטרת דודאים</rdfs:label>
-                  <bf:variantType>running</bf:variantType>
-                  <bf:mainTitle>עטרת דודאים</bf:mainTitle>
-                </bf:VariantTitle>
-              </bf:title>
-              <bf:provisionActivity>
+    <rdfs:label>Sefer ʻAṭeret dudaʼim</rdfs:label>
+    <bf:responsibilityStatement>ḥubar ʻa. y. Daṿid b . la-a.a. m. Yosef, zal, Tsuḳer, rosh Kolel Zikhron Sheneʼur, Shiḳago, Ilinoi</bf:responsibilityStatement>
+    <rdfs:label>ספר עטרת דודאים</rdfs:label>
+    <bf:responsibilityStatement>חובר ע״י דוד בלאא״מ יוסף, ז&quot;ל, צוקער, ראש כולל זכרון שניאור, שיקאגו, אילינוי</bf:responsibilityStatement>
+    <bf:title>
+      <bf:Title>
+        <rdfs:label>Sefer ʻAṭeret dudaʼim</rdfs:label>
+        <rdfs:label>ספר עטרת דודאים</rdfs:label>
+        <bf:mainTitle>Sefer ʻAṭeret dudaʼim</bf:mainTitle>
+        <bf:mainTitle>ספר עטרת דודאים</bf:mainTitle>
+      </bf:Title>
+    </bf:title>
+    <bf:title>
+      <bf:VariantTitle>
+        <rdfs:label>עטרת דודאים</rdfs:label>
+        <bf:variantType>running</bf:variantType>
+        <bf:mainTitle>עטרת דודאים</bf:mainTitle>
+      </bf:VariantTitle>
+    </bf:title>
+    <bf:provisionActivity>
       <bf:ProvisionActivity>
         <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Publication"/>
         <bf:place>
@@ -53,14 +54,14 @@
         <bf:date>c 2018</bf:date>
       </bf:ProvisionActivity>
     </bf:provisionActivity>
-              <bf:provisionActivityStatement>Chicago, Il : Rabbi Dovid Zucker, c 2018.</bf:provisionActivityStatement>
-              <bf:extent>
+    <bf:provisionActivityStatement>Chicago, Il : Rabbi Dovid Zucker, c 2018.</bf:provisionActivityStatement>
+    <bf:extent>
       <bf:Extent>
         <rdfs:label>2 volumes</rdfs:label>
       </bf:Extent>
     </bf:extent>
-              <bf:dimensions>25 cm</bf:dimensions>
-              <bf:media>
+    <bf:dimensions>25 cm</bf:dimensions>
+    <bf:media>
       <bf:Media rdf:about="http://id.loc.gov/vocabulary/mediaTypes/n">
         <rdfs:label>unmediated</rdfs:label>
         <bf:source>
@@ -68,7 +69,7 @@
         </bf:source>
       </bf:Media>
     </bf:media>
-              <bf:carrier>
+    <bf:carrier>
       <bf:Carrier rdf:about="http://id.loc.gov/vocabulary/carriers/nc">
         <rdfs:label>volume</rdfs:label>
         <bf:source>
@@ -76,33 +77,33 @@
         </bf:source>
       </bf:Carrier>
     </bf:carrier>
-              <dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/instances" xmlns:dcterms="http://purl.org/dc/terms/"/>
-              <bf:instanceOf rdf:resource="http://id.loc.gov/resources/works/21210374"/>
-              <bf:adminMetadata>
-                <bf:AdminMetadata>
-                  <bf:generationProcess>
+    <dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/instances" xmlns:dcterms="http://purl.org/dc/terms/"/>
+    <bf:instanceOf rdf:resource="http://id.loc.gov/resources/works/21210374"/>
+    <bf:adminMetadata>
+      <bf:AdminMetadata>
+        <bf:generationProcess>
           <bf:GenerationProcess>
             <rdfs:label>DLC marc2bibframe2 v1.7.0-SNAPSHOT</rdfs:label>
             <bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-08-04T23:27:37-04:00</bf:generationDate>
           </bf:GenerationProcess>
         </bf:generationProcess>
-                  <bf:status>
+        <bf:status>
           <bf:Status>
             <rdfs:label>corrected or revised</rdfs:label>
             <bf:code>c</bf:code>
           </bf:Status>
         </bf:status>
-                  <bflc:encodingLevel>
+        <bflc:encodingLevel>
           <bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/5">
             <rdfs:label>preliminary</rdfs:label>
           </bflc:EncodingLevel>
         </bflc:encodingLevel>
-                  <bf:descriptionConventions>
+        <bf:descriptionConventions>
           <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd">
             <rdfs:label>isbd</rdfs:label>
           </bf:DescriptionConventions>
         </bf:descriptionConventions>
-                  <bf:identifiedBy>
+        <bf:identifiedBy>
           <bf:Local>
             <rdf:value>21210374</rdf:value>
             <bf:assigner>
@@ -112,91 +113,92 @@
             </bf:assigner>
           </bf:Local>
         </bf:identifiedBy>
-                  <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-09-18T15:29:43</bf:changeDate>
-                  <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-09-18</bf:creationDate>
-                  <lclocal:d906>=906     $a 0 $b ibc $c origres $d 2 $e ncip $f 20 $g y-nonroman</lclocal:d906>
-                  <lclocal:d925>=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925>
-                  <lclocal:d955>=955     $b cd20 2019-09-18 z-processor JACKPHY $a cd00 2019-09-18 to ASME/IJ</lclocal:d955>
-                  <bf:assigner>
+        <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-09-18T15:29:43</bf:changeDate>
+        <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-09-18</bf:creationDate>
+        <lclocal:d906>=906     $a 0 $b ibc $c origres $d 2 $e ncip $f 20 $g y-nonroman</lclocal:d906>
+        <lclocal:d925>=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925>
+        <lclocal:d955>=955     $b cd20 2019-09-18 z-processor JACKPHY $a cd00 2019-09-18 to ASME/IJ</lclocal:d955>
+        <bf:assigner>
           <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
             <bf:code>DLC</bf:code>
           </bf:Agent>
         </bf:assigner>
-                  <bf:descriptionAuthentication>
+        <bf:descriptionAuthentication>
           <bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/pcc">
             <bf:code>pcc</bf:code>
           </bf:DescriptionAuthentication>
         </bf:descriptionAuthentication>
-                </bf:AdminMetadata>
-              </bf:adminMetadata>
-            </bf:Instance><bf:Work rdf:about="http://id.loc.gov/resources/works/21210374">
-              <bflc:aap>Zucker, Dovid, Sefer ʻAṭeret dudaʼim ספר עטרת דודאים</bflc:aap>
-              <bflc:aap-normalized>zuckerdovidseferʻaṭeretdudaʼimספרעטרתדודאים</bflc:aap-normalized>
-              <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Text"/>
-              <bf:language>
+      </bf:AdminMetadata>
+    </bf:adminMetadata>
+  </bf:Instance>
+  <bf:Work rdf:about="http://id.loc.gov/resources/works/21210374">
+    <bflc:aap>Zucker, Dovid, Sefer ʻAṭeret dudaʼim ספר עטרת דודאים</bflc:aap>
+    <bflc:aap-normalized>zuckerdovidseferʻaṭeretdudaʼimספרעטרתדודאים</bflc:aap-normalized>
+    <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Text"/>
+    <bf:language>
       <bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/heb"/>
     </bf:language>
-              <bf:supplementaryContent>
+    <bf:supplementaryContent>
       <bf:SupplementaryContent rdf:about="http://id.loc.gov/vocabulary/msupplcont/bibliography">
         <rdfs:label>bibliography</rdfs:label>
       </bf:SupplementaryContent>
     </bf:supplementaryContent>
-              <bf:contribution>
-                <bf:Contribution>
-                  <rdf:type rdf:resource="http://id.loc.gov/ontologies/bflc/PrimaryContribution"/>
-                  <bf:agent>
-                    <bf:Agent>
-                      <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
-                      <rdfs:label>Zucker, Dovid,</rdfs:label>
-                    </bf:Agent>
-                  </bf:agent>
-                  <bf:role>
-                    <bf:Role>
-                      <rdfs:label>author.</rdfs:label>
-                    </bf:Role>
-                  </bf:role>
-                </bf:Contribution>
-              </bf:contribution>
-              <bf:expressionOf>
-                <bf:Work>
-                  <bflc:aap>Zucker, Dovid, ʻAṭeret dudaʼim</bflc:aap>
-                  <bflc:aap-normalized>zuckerdovidʻaṭeretdudaʼim</bflc:aap-normalized>
-                  <rdfs:label>ʻAṭeret dudaʼim.</rdfs:label>
-                  <bf:contribution>
-                    <bf:Contribution>
-                      <rdf:type rdf:resource="http://id.loc.gov/ontologies/bflc/PrimaryContribution"/>
-                      <bf:agent>
-                        <bf:Agent>
-                          <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
-                          <rdfs:label>Zucker, Dovid,</rdfs:label>
-                        </bf:Agent>
-                      </bf:agent>
-                      <bf:role>
-                        <bf:Role>
-                          <rdfs:label>author.</rdfs:label>
-                        </bf:Role>
-                      </bf:role>
-                    </bf:Contribution>
-                  </bf:contribution>
-                  <bf:title>
-                    <bf:Title>
-                      <rdfs:label>ʻAṭeret dudaʼim.</rdfs:label>
-                      <bf:mainTitle>ʻAṭeret dudaʼim</bf:mainTitle>
-                    </bf:Title>
-                  </bf:title>
-                </bf:Work>
-              </bf:expressionOf>
-              <rdfs:label>Sefer ʻAṭeret dudaʼim</rdfs:label>
-              <rdfs:label>ספר עטרת דודאים</rdfs:label>
-              <bf:title>
-                <bf:Title>
-                  <rdfs:label>Sefer ʻAṭeret dudaʼim</rdfs:label>
-                  <rdfs:label>ספר עטרת דודאים</rdfs:label>
-                  <bf:mainTitle>Sefer ʻAṭeret dudaʼim</bf:mainTitle>
-                  <bf:mainTitle>ספר עטרת דודאים</bf:mainTitle>
-                </bf:Title>
-              </bf:title>
-              <bf:content>
+    <bf:contribution>
+      <bf:Contribution>
+        <rdf:type rdf:resource="http://id.loc.gov/ontologies/bflc/PrimaryContribution"/>
+        <bf:agent>
+          <bf:Agent>
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+            <rdfs:label>Zucker, Dovid,</rdfs:label>
+          </bf:Agent>
+        </bf:agent>
+        <bf:role>
+          <bf:Role>
+            <rdfs:label>author.</rdfs:label>
+          </bf:Role>
+        </bf:role>
+      </bf:Contribution>
+    </bf:contribution>
+    <bf:expressionOf>
+      <bf:Work>
+        <bflc:aap>Zucker, Dovid, ʻAṭeret dudaʼim</bflc:aap>
+        <bflc:aap-normalized>zuckerdovidʻaṭeretdudaʼim</bflc:aap-normalized>
+        <rdfs:label>ʻAṭeret dudaʼim.</rdfs:label>
+        <bf:contribution>
+          <bf:Contribution>
+            <rdf:type rdf:resource="http://id.loc.gov/ontologies/bflc/PrimaryContribution"/>
+            <bf:agent>
+              <bf:Agent>
+                <rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+                <rdfs:label>Zucker, Dovid,</rdfs:label>
+              </bf:Agent>
+            </bf:agent>
+            <bf:role>
+              <bf:Role>
+                <rdfs:label>author.</rdfs:label>
+              </bf:Role>
+            </bf:role>
+          </bf:Contribution>
+        </bf:contribution>
+        <bf:title>
+          <bf:Title>
+            <rdfs:label>ʻAṭeret dudaʼim.</rdfs:label>
+            <bf:mainTitle>ʻAṭeret dudaʼim</bf:mainTitle>
+          </bf:Title>
+        </bf:title>
+      </bf:Work>
+    </bf:expressionOf>
+    <rdfs:label>Sefer ʻAṭeret dudaʼim</rdfs:label>
+    <rdfs:label>ספר עטרת דודאים</rdfs:label>
+    <bf:title>
+      <bf:Title>
+        <rdfs:label>Sefer ʻAṭeret dudaʼim</rdfs:label>
+        <rdfs:label>ספר עטרת דודאים</rdfs:label>
+        <bf:mainTitle>Sefer ʻAṭeret dudaʼim</bf:mainTitle>
+        <bf:mainTitle>ספר עטרת דודאים</bf:mainTitle>
+      </bf:Title>
+    </bf:title>
+    <bf:content>
       <bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/txt">
         <rdfs:label>text</rdfs:label>
         <bf:source>
@@ -204,22 +206,22 @@
         </bf:source>
       </bf:Content>
     </bf:content>
-              <bf:supplementaryContent>
+    <bf:supplementaryContent>
       <bf:SupplementaryContent>
         <rdfs:label>Includes bibliographical references.</rdfs:label>
       </bf:SupplementaryContent>
     </bf:supplementaryContent>
-              <bf:tableOfContents>
+    <bf:tableOfContents>
       <bf:TableOfContents>
         <rdfs:label>חלק א. זכרון מטל : שיעורים על מסכת חולין -- חלק ב. זכרון זכריה : שיעורים על יורה דעה, הלכות בשר וחלב ותערובות שנאמרו בכולל זכרון שניאור.</rdfs:label>
       </bf:TableOfContents>
     </bf:tableOfContents>
-              <bf:subject>
-                <bf:Topic>
-                  <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
-                  <madsrdf:authoritativeLabel>Talmud. Ḥullin--Commentaries.</madsrdf:authoritativeLabel>
-                  <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
-                  <madsrdf:componentList rdf:parseType="Collection">
+    <bf:subject>
+      <bf:Topic>
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#ComplexSubject"/>
+        <madsrdf:authoritativeLabel>Talmud. Ḥullin--Commentaries.</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+        <madsrdf:componentList rdf:parseType="Collection">
           <bf:Work rdf:about="http://id.loc.gov/resources/REPLACE/21210374#Work630-25">
             <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#"/>
             <madsrdf:authoritativeLabel>Talmud. Ḥullin</madsrdf:authoritativeLabel>
@@ -245,54 +247,54 @@
             <madsrdf:authoritativeLabel>Commentaries</madsrdf:authoritativeLabel>
           </madsrdf:GenreForm>
         </madsrdf:componentList>
-                  <bflc:aap-normalized>talmudḥullincommentaries</bflc:aap-normalized>
-                </bf:Topic>
-              </bf:subject>
-              <bf:subject>
-                <bf:Topic>
-                  <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
-                  <rdfs:label>Milk and meat (Jewish law)</rdfs:label>
-                  <madsrdf:authoritativeLabel>Milk and meat (Jewish law)</madsrdf:authoritativeLabel>
-                  <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
-                  <bflc:aap-normalized>milkandmeat(jewishlaw)</bflc:aap-normalized>
-                </bf:Topic>
-              </bf:subject>
-              <bf:subject>
-                <bf:Topic>
-                  <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
-                  <rdfs:label>Mixture of permitted and forbidden foods (Jewish law)</rdfs:label>
-                  <madsrdf:authoritativeLabel>Mixture of permitted and forbidden foods (Jewish law)</madsrdf:authoritativeLabel>
-                  <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
-                  <bflc:aap-normalized>mixtureofpermittedandforbiddenfoods(jewishlaw)</bflc:aap-normalized>
-                </bf:Topic>
-              </bf:subject>
-              <dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/works" xmlns:dcterms="http://purl.org/dc/terms/"/>
-              <bf:hasInstance rdf:resource="http://id.loc.gov/resources/instances/21210374"/>
-              <bf:adminMetadata>
-                <bf:AdminMetadata>
-                  <bf:generationProcess>
+        <bflc:aap-normalized>talmudḥullincommentaries</bflc:aap-normalized>
+      </bf:Topic>
+    </bf:subject>
+    <bf:subject>
+      <bf:Topic>
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <rdfs:label>Milk and meat (Jewish law)</rdfs:label>
+        <madsrdf:authoritativeLabel>Milk and meat (Jewish law)</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+        <bflc:aap-normalized>milkandmeat(jewishlaw)</bflc:aap-normalized>
+      </bf:Topic>
+    </bf:subject>
+    <bf:subject>
+      <bf:Topic>
+        <rdf:type rdf:resource="http://www.loc.gov/mads/rdf/v1#Topic"/>
+        <rdfs:label>Mixture of permitted and forbidden foods (Jewish law)</rdfs:label>
+        <madsrdf:authoritativeLabel>Mixture of permitted and forbidden foods (Jewish law)</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+        <bflc:aap-normalized>mixtureofpermittedandforbiddenfoods(jewishlaw)</bflc:aap-normalized>
+      </bf:Topic>
+    </bf:subject>
+    <dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/works" xmlns:dcterms="http://purl.org/dc/terms/"/>
+    <bf:hasInstance rdf:resource="http://id.loc.gov/resources/instances/21210374"/>
+    <bf:adminMetadata>
+      <bf:AdminMetadata>
+        <bf:generationProcess>
           <bf:GenerationProcess>
             <rdfs:label>DLC marc2bibframe2 v1.7.0-SNAPSHOT</rdfs:label>
             <bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-08-04T23:27:37-04:00</bf:generationDate>
           </bf:GenerationProcess>
         </bf:generationProcess>
-                  <bf:status>
+        <bf:status>
           <bf:Status>
             <rdfs:label>corrected or revised</rdfs:label>
             <bf:code>c</bf:code>
           </bf:Status>
         </bf:status>
-                  <bflc:encodingLevel>
+        <bflc:encodingLevel>
           <bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/5">
             <rdfs:label>preliminary</rdfs:label>
           </bflc:EncodingLevel>
         </bflc:encodingLevel>
-                  <bf:descriptionConventions>
+        <bf:descriptionConventions>
           <bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd">
             <rdfs:label>isbd</rdfs:label>
           </bf:DescriptionConventions>
         </bf:descriptionConventions>
-                  <bf:identifiedBy>
+        <bf:identifiedBy>
           <bf:Local>
             <rdf:value>21210374</rdf:value>
             <bf:assigner>
@@ -302,21 +304,22 @@
             </bf:assigner>
           </bf:Local>
         </bf:identifiedBy>
-                  <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-09-18T15:29:43</bf:changeDate>
-                  <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-09-18</bf:creationDate>
-                  <lclocal:d906>=906     $a 0 $b ibc $c origres $d 2 $e ncip $f 20 $g y-nonroman</lclocal:d906>
-                  <lclocal:d925>=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925>
-                  <lclocal:d955>=955     $b cd20 2019-09-18 z-processor JACKPHY $a cd00 2019-09-18 to ASME/IJ</lclocal:d955>
-                  <bf:assigner>
+        <bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-09-18T15:29:43</bf:changeDate>
+        <bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2019-09-18</bf:creationDate>
+        <lclocal:d906>=906     $a 0 $b ibc $c origres $d 2 $e ncip $f 20 $g y-nonroman</lclocal:d906>
+        <lclocal:d925>=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925>
+        <lclocal:d955>=955     $b cd20 2019-09-18 z-processor JACKPHY $a cd00 2019-09-18 to ASME/IJ</lclocal:d955>
+        <bf:assigner>
           <bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
             <bf:code>DLC</bf:code>
           </bf:Agent>
         </bf:assigner>
-                  <bf:descriptionAuthentication>
+        <bf:descriptionAuthentication>
           <bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/pcc">
             <bf:code>pcc</bf:code>
           </bf:DescriptionAuthentication>
         </bf:descriptionAuthentication>
-                </bf:AdminMetadata>
-              </bf:adminMetadata>
-            </bf:Work></rdf:RDF>
+      </bf:AdminMetadata>
+    </bf:adminMetadata>
+  </bf:Work>
+</rdf:RDF>

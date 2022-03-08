@@ -362,6 +362,7 @@ const parseProfile = {
                                 pt.userValue =  {'@root':pt.propertyURI}
                                 pt.valueConstraint.valueTemplateRefs = pt.valueConstraint.valueTemplateRefs.filter((v)=>{return (v.length>0)})
                                 pt['@guid'] = short.generate()
+                                pt.canBeHidden = false
                                 
 
                                 let key = pt.propertyURI + '|' + ((pt.propertyLabel) ? pt.propertyLabel : "plabel")

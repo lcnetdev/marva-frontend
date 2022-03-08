@@ -516,7 +516,7 @@ export default {
           })
         }
       })
-      console.log("optionsoptionsoptionsoptionsoptions",options)
+      
       return options
     },
 
@@ -568,7 +568,7 @@ export default {
           sourceId: this.assignedId,
           component: this
         }
-        console.log("Emit",payload,this.$parent)
+        
         this.$emit('showMiniEditorEdit',payload);
         this.$parent.$emit('showMiniEditorEdit',payload);
         this.$parent.$parent.$emit('showMiniEditorEdit',payload);
@@ -757,7 +757,7 @@ export default {
             // dis connect it from the source so it doesnt update the value, read only
             userData = JSON.parse(JSON.stringify(userData))
 
-            console.log("We are validTING THIS",userData)
+            // console.log("We are validTING THIS",userData)
             if (userData && this.parentStructureObj && this.parentStructureObj.propertyURI){
               // pass some more info to this process to help it
               userData.hintUri = this.parentStructureObj.propertyURI
@@ -777,7 +777,7 @@ export default {
                         // What we need is the agent.
                         userData = userData["http://id.loc.gov/ontologies/bibframe/agent"][0];
                     }
-                    console.log("this.displayContext",this.displayContext)
+                    // console.log("this.displayContext",this.displayContext)
 
                     // Do we need to set the display URI because the userData ID changed?
                     if (userData["@id"] !== this.displayContext.uri) {
@@ -867,12 +867,12 @@ export default {
       }
 
 
-      console.log(type)
+      // console.log(type)
       // if (contextType != type){
       
       //   return false
       // }
-      console.log({uri:uri,label:label,type:contextType,typeFull:this.contextData.typeFull})
+      // console.log({uri:uri,label:label,type:contextType,typeFull:this.contextData.typeFull})
 
 
       this.precoordinated.push({uri:uri,label:label,type:contextType,typeFull:this.contextData.typeFull})
@@ -1279,8 +1279,8 @@ export default {
       this.displayModal = true
       this.initalSearchState = true
       
-      console.log('here',this.displayModal)
-      window.setTimeout(()=>{console.log('here',this.displayModal)},1000)
+      // console.log('here',this.displayModal)
+      
       this.searchValue = event.target.value
 
       this.$store.dispatch("clearContext", { self: this})
@@ -1298,7 +1298,7 @@ export default {
       // set the last input, but do it after the modal has been displaed
       setTimeout(()=>{
         if (document.getElementById(this.assignedId+'search')){
-          console.log('focus:',document.getElementById(this.assignedId+'search'))
+          //console.log('focus:',document.getElementById(this.assignedId+'search'))
           document.getElementById(this.assignedId+'search').focus()
         }
       },0)
@@ -1526,7 +1526,7 @@ export default {
         }        
       }
 
-      console.log(event.key)
+      // console.log(event.key)
 
       if ((event.key === '1' || event.key === '!') && this.displayPreCoordinated == true && event.ctrlKey === true && event.shiftKey == true){
         
@@ -1710,7 +1710,7 @@ export default {
 
 
       this.searchTimeout = window.setTimeout(()=>{
-        console.log('searching',searchPayload)    
+        // console.log('searching',searchPayload)    
         this.$store.dispatch("fetchLookupValuesComplex", { self: this, searchPayload: searchPayload }).then(() => {
           this.initalSearchState =false;
         })    

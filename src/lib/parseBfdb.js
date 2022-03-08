@@ -700,12 +700,12 @@ const parseBfdb = {
 
 			}
 
-			console.log('-------\\/')
-			console.log(store.state.rtLookup['lc:RT:bf2:WorkTitle'])
+			// console.log('-------\\/')
+			// console.log(store.state.rtLookup['lc:RT:bf2:WorkTitle'])
 			for (const pt in resultsTest.rt[rtKey].pt){
 
-				console.log(pt)
-				console.log(resultsTest.rt[rtKey].pt[pt])
+				// console.log(pt)
+				// console.log(resultsTest.rt[rtKey].pt[pt])
 
 				if (resultsTest.rt[rtKey].pt[pt].missingProfile && resultsTest.rt[rtKey].pt[pt].missingProfile.length>0){
 					
@@ -875,9 +875,9 @@ const parseBfdb = {
 
 			// select the right part of the profile
 			let pt = profile.rt[pkey].pt
-			console.log('tle',tle)
-			console.log(this.activeDom)
-			console.log(this.activeDom.getElementsByTagName(tle))
+			// console.log('tle',tle)
+			// console.log(this.activeDom)
+			// console.log(this.activeDom.getElementsByTagName(tle))
 			// select the right part of the XML
 			let xml
 			if (testRun){
@@ -1180,7 +1180,7 @@ const parseBfdb = {
 
 						}else if (e.children.length == 0){
 
-							console.log(e.tagName)
+							// console.log(e.tagName)
 							
 							// if (!populateData.userValue){
 								populateData.userValue['@guid'] = short.generate()
@@ -1274,7 +1274,7 @@ const parseBfdb = {
 
 								}
 
-								console.log(populateData.userValue)
+								// console.log(populateData.userValue)
 
 								populateData.userValue[eProperty].push(eData)
 

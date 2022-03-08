@@ -1,6 +1,6 @@
 <template>
   
-  <div tabindex="-1" @keydown="displayModeElementKeydown($event)"  class="resource-grid-field-list-navable" :id="`navable-${resourceIdx}-1-${rowIdx}-${componentIdx}`" v-if="hideField == false">
+  <div tabindex="-1" @click="displayModeClick($event)" @keydown="displayModeElementKeydown($event)"  :class="['resource-grid-field-list-navable', `resource-${resourceIdx}`]" :id="`navable-${resourceIdx}-1-${rowIdx}-${componentIdx}`" v-if="hideField == false">
     <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: false}]" @success="openDiacriticSelect" />
 
     <template v-if="editMode"> 
@@ -8,7 +8,7 @@
       <div style="position: relative;">
         <div style="">
           <form autocomplete="off">            
-            <input :placeholder="structure.propertyLabel" bfeType="EditLiteralComponent-unnested" :id="assignedId" v-on:keydown.enter.prevent="submitField" :name="assignedId" ref="input" v-on:focus="focused" autocomplete="off" type="text" @keydown="nav" @keyup="change" v-model="inputValue"  :class="['input-single', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true), 'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">            
+            <input :placeholder="structure.propertyLabel" @blur="editMode=false"  bfeType="EditLiteralComponent-unnested" :id="assignedId" v-on:keydown.enter.prevent="submitField" :name="assignedId" ref="input" v-on:focus="focused" autocomplete="off" type="text" @keydown="nav" @keyup="change" v-model="inputValue"  :class="['input-single', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true), 'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">            
           </form>
         </div>
         <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-tooltip="'Diacritics [CTRL-ALT-D]'" @click="openDiacriticSelect"></button>
@@ -17,7 +17,7 @@
     </template>
     <template v-else>
 
-        <div ref="displayModeElement" v-if="inputValue !== null && inputValue.trim().length>0" style="min-height: 1em; background-color: whitesmoke;">{{inputValue}}</div>
+        <div ref="displayModeElement" v-if="inputValue !== null && inputValue.trim().length>0" style="min-height: 1em;">{{inputValue}}</div>
         <div ref="displayModeElement" v-else style="min-height: 1em; font-style: italic;">{{structure.propertyLabel}}</div>        
       
 
@@ -85,17 +85,38 @@ export default {
     rowIdx: Number,
     resourceIdx: Number,
     componentIdx:Number,
+    setNavAfterClick: { type: Function },
 
   },
 
   methods: {
 
 
+    
+    displayModeClick: function(event){
+      if (this.editMode){
+        this.editMode=false
+        this.$store.dispatch("enableMacroNav")
+
+      }else{
+        this.editMode=true
+        this.$store.dispatch("disableMacroNav")
+        this.$nextTick(()=>{
+          this.$refs.input.focus()
+        })
+
+      }
+
+
+      this.setNavAfterClick(event.target.parentNode.id)
+    },
+
+
+
     displayModeElementKeydown: function(event){
 
       console.log(event.key)
       if (event.key =='Enter'){
-
         if (this.editMode){
           this.editMode=false
           this.$store.dispatch("enableMacroNav")

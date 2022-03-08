@@ -2,17 +2,22 @@
 
 
 
-  <div tabindex="-1" class="resource-grid-field-list-navable" :id="`navable-${resourceIdx}-1-${rowIdx}-${componentIdx}`">
+  <div tabindex="-1" :class="['resource-grid-field-list-navable', `resource-${resourceIdx}`]" @click="displayModeClick($event)" @keydown="displayModeElementKeydown($event)"  :id="`navable-${resourceIdx}-1-${rowIdx}-${componentIdx}`">
 
     <Keypress key-event="keydown" :key-code="27" @success="closeModal" />
     <Keypress key-event="keydown" :multiple-keys="[{keyCode: 66, modifiers: ['ctrlKey', 'shiftKey'],preventDefault: true}]" @success="togglePreCoordinated" />
 
-    <div v-if="!editMode" class="">
+    <div v-if="true == true" class="trigger-open">
 
-      <div ref="displayLabel" class="" style="display: inline-block; position: relative; bottom: 2px; background-color: whitesmoke;">
-          <span ref="displayLabelSpan"  @click="toggleSelectedDetails" style="padding-right: 0.3em;"><span class="selected-value-icon" v-html="returnAuthIcon(this.displayType)"></span>{{formatDisplayLabel()}}</span>
-          <span  class="selected-value-icon" v-html="validateHeading()" v-bind:title="validationMessage" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em"></span>
+      <div ref="displayLabel" class="trigger-open" style="display: inline-block; position: relative; bottom: 2px;">
           
+          <template v-if="formatDisplayLabel()!=false && formatDisplayLabel() != null">
+            <span ref="displayLabelSpan" class="trigger-open"  @click="toggleSelectedDetails" style="padding-right: 0.3em;"><span class="selected-value-icon trigger-open" v-html="returnAuthIcon(this.displayType)"></span>{{formatDisplayLabel()}}</span>
+            <span  class="selected-value-icon trigger-open" v-html="validateHeading()" v-bind:title="validationMessage" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em"></span>
+          </template>
+          <template v-else>
+            <span class="trigger-open" style="font-size: 0.85em; font-style: oblique;">{{structure.propertyLabel}}</span>
+          </template>
 
           
       </div>
@@ -321,6 +326,9 @@ export default {
     rowIdx: Number,
     resourceIdx: Number,
     componentIdx: Number,
+    setNavAfterClick: { type: Function },
+
+
   },
   data: function() {
     return {
@@ -360,6 +368,7 @@ export default {
 
 
       editMode: false,
+
 
 
 
@@ -458,6 +467,51 @@ export default {
     returnAuthIcon: uiUtils.returnAuthIcon,
 
 
+    displayModeClick: function(event){
+
+      if (event && event.target && event.target.classList.contains('trigger-open') && this.displayModal === false){
+
+        this.openEditor()
+
+        this.setNavAfterClick(event.target.parentNode.parentNode.parentNode.id)
+      }
+
+
+
+      
+    },
+
+
+
+    displayModeElementKeydown: function(event){
+
+      console.log(event.key,event.target.classList)
+      if (event.key =='Enter'){
+        if (event && event.target && event.target.classList.contains('resource-grid-field-list-navable') && !this.displayModal){
+          this.openEditor()
+        }
+
+      }else{
+        // ssss
+        // if (!this.editMode){
+        //   event.target.blur()
+        // }
+      }
+
+
+      
+      
+
+      if (event.key=='Enter'){
+        event.preventDefault()
+        return false
+      }
+      
+
+
+    },
+
+
 
     showMiniHubEdit: function(){
 
@@ -492,8 +546,8 @@ export default {
       // if the display label is a URI it means there is no RDFLabel in the data because that property is just deisgned to be a rdf:resource link with a @id 
       // not a full bnode with label data. So two options here request the label or if they just added it there might be a @context we can use
       let useTitle = false
-
-      if (this.displayLabel.startsWith('http:')){
+      
+      if (this.displayLabel && this.displayLabel.startsWith('http:')){
 
         let userData = parseProfile.returnUserValues(this.activeProfile, this.profileCompoent, this.structure.propertyURI)
         
@@ -516,6 +570,8 @@ export default {
 
 
       }
+
+
 
       if (useTitle){
 
@@ -643,7 +699,7 @@ export default {
                         // What we need is the agent.
                         userData = userData["http://id.loc.gov/ontologies/bibframe/agent"][0];
                     }
-                    console.log("this.displayContext",this.displayContext)
+                    // console.log("this.displayContext",this.displayContext)
 
                     // Do we need to set the display URI because the userData ID changed?
                     if (userData["@id"] !== this.displayContext.uri) {
@@ -1526,6 +1582,10 @@ export default {
         if (event.key==='ArrowDown'){        
           return false              
         }
+      }
+
+      if (!this.searchValue){
+        this.searchValue=''
       }
 
       if (this.searchValue.trim()==''){

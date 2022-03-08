@@ -16,10 +16,10 @@
     <div class="">
 
       <template  v-if="structure.valueConstraint.valueTemplateRefs.length > 1">
-          <div style="display: flex;" class="resource-grid-field-list-navable" :id="'navable-' + resourceIdx + '-1-' + rowIdx + '-' + (parseInt(componentIdx))">
+          <div style="display: flex;" :class="['resource-grid-field-list-navable', `resource-${resourceIdx}`]" :id="'navable-' + resourceIdx + '-1-' + rowIdx + '-' + (parseInt(componentIdx))">
             <div style="flex:1">
               <form autocomplete="off">
-                <input bfeType="CompactEditTemplateRefComponent-nested"  :id="assignedId"  v-on:focus="focused" class="selectable-input" autocomplete="off" @keydown="multiTemplateSelectKeydown($event)" type="text" v-bind:value="multiTemplateSelect" style="width: 95%; border:none; font-size: 1em; background: whitesmoke;">
+                <input bfeType="CompactEditTemplateRefComponent-nested"  :id="assignedId"  v-on:focus="focused" class="selectable-input" autocomplete="off" @keydown="multiTemplateSelectKeydown($event)" type="text" v-bind:value="multiTemplateSelect" style="width: 95%; background-color: transparent; border:none; font-size: 1em;">
               </form>              
             </div>
             <button tabindex="-1" class="temp-icon-switch simptip-position-top" style="height: 1em; width: 1em;" :data-tooltip="labels.refComponentSwitchButton" @click="multiTemplateSelectKeydown($event, true)">
@@ -28,8 +28,10 @@
 
       </template>
       <div v-if="activeTemplate != null && activeTemplate.propertyTemplates.length > 0">
+        
+        
 
-        <CompactEditMainComponent  v-for="(pt,idx) in activeTemplate.propertyTemplates" :resourceIdx="resourceIdx" :rowIdx="rowIdx" :componentIdx="returnComponentIdx(pt,componentIdx,idx)" :ptGuid="ptGuid" :key="idx" :isMini="isMini" :activeTemplate="activeTemplate" :structure="activeTemplate.propertyTemplates[idx]" :parentStructureObj="structure" :parentStructure="['nothing']" :profileCompoent="profileCompoent" :profileName="profileName" :nested="true"></CompactEditMainComponent>
+        <CompactEditMainComponent  v-for="(pt,idx) in activeTemplate.propertyTemplates" :resourceIdx="resourceIdx" :rowIdx="rowIdx" :componentIdx="returnComponentIdx(pt,componentIdx,idx)" :ptGuid="ptGuid" :key="idx" :isMini="isMini" :activeTemplate="activeTemplate" :structure="activeTemplate.propertyTemplates[idx]" :parentStructureObj="structure" :parentStructure="['nothing']" :profileCompoent="profileCompoent" :profileName="profileName" :nested="true" :navLevel="navLevel+1" :setNavAfterClick="setNavAfterClick"></CompactEditMainComponent>
         
 
       </div>
@@ -80,6 +82,8 @@ export default {
     rowIdx: Number,
     resourceIdx: Number,    
     componentIdx:Number,
+    navLevel: Number,
+    setNavAfterClick: { type: Function },
   },  
   data: function() {
     return {
@@ -235,9 +239,13 @@ export default {
 
     returnComponentIdx: function(pt,componentIdx,idx){
 
-      console.log(">>>>>>",pt,componentIdx,idx)
-
-      return parseInt(componentIdx) + parseInt(idx) + 1;
+      // console.log(">>>>>>",pt,componentIdx,idx)
+      // if (parseInt(idx) == 0){
+      //   idx = parseInt(idx) + 1
+      // }else{
+      //   idx = parseInt(idx) + 2
+      // }
+      return parseInt(componentIdx) + parseInt(idx) + 0.1;
 
     },
 

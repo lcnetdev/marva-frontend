@@ -114,7 +114,7 @@ const config = {
 	checkForRepeatedLiterals: [
 		'http://id.loc.gov/ontologies/bibframe/mainTitle',
 		'http://id.loc.gov/ontologies/bibframe/subtitle',
-		'http://www.w3.org/2000/01/rdf-schema#label'
+		'http://www.w3.org/2000/01/rdf-schema#label'		
 	],
 
 

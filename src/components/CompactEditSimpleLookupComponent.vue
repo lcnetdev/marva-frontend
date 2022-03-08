@@ -1,5 +1,5 @@
 <template>
-  <div tabindex="-1" class="resource-grid-field-list-navable" :id="`navable-${resourceIdx}-1-${rowIdx}-${componentIdx}`" @keydown="displayModeElementKeydown($event)" >    
+  <div tabindex="-1" :class="['resource-grid-field-list-navable', 'trigger-open', `resource-${resourceIdx}`]" @click="displayModeClick($event)" :id="`navable-${resourceIdx}-1-${rowIdx}-${componentIdx}`" @keydown="displayModeElementKeydown($event)" >    
     <div v-if="editMode" class="">
           <form autocomplete="off" v-on:submit.prevent>
             <div style=" display: flex; height: 1.5em;">
@@ -22,14 +22,14 @@
       </div>
     </div>
 
-    <div v-else>        
+    <div v-else class="trigger-open">        
           <template v-if="activeLookupValue.length>0">
-            <div v-for="(avl,idx) in activeLookupValue" :key="idx" class="">
-                <span style="background-color: whitesmoke; padding: 0 5px 0 5px; font-size: 0.9em;">[{{avl['http://www.w3.org/2000/01/rdf-schema#label']}}<span class="uncontrolled" v-if="!avl.uri">(uncontrolled)</span>]</span>
+            <div v-for="(avl,idx) in activeLookupValue" :key="idx" class="trigger-open">
+                <span style="background-color: whitesmoke; padding: 0 5px 0 5px; font-size: 0.9em;" class="trigger-open">[{{avl['http://www.w3.org/2000/01/rdf-schema#label']}}<span class="uncontrolled trigger-open" v-if="!avl.uri">(uncontrolled)</span>]</span>
             </div>         
           </template>
           <template v-else>
-            <div  style="font-size:0.85em; font-style: oblique;">
+            <div  style="font-size:0.85em; font-style: oblique;" class="trigger-open">
             {{structure.propertyLabel}}
             </div>
           </template>
@@ -98,6 +98,7 @@ export default {
     rowIdx: Number,
     resourceIdx: Number,    
     componentIdx:Number,
+    setNavAfterClick: { type: Function },
 
   },
   data: function() {
@@ -382,6 +383,29 @@ export default {
 
         return event
     },
+
+
+    displayModeClick: function(event){
+      console.log(event.target)
+      if (event && event.target && event.target.classList.contains('trigger-open') && this.editMode==false){
+
+        this.editMode=true
+        this.$store.dispatch("disableMacroNav")
+        this.$nextTick(()=>{
+          this.$refs.lookupInput.focus()
+        })
+
+
+        this.setNavAfterClick(event.target.parentNode.parentNode.parentNode.id)
+      }
+
+
+
+      
+    },
+
+
+
 
 
     displayModeElementKeydown: function(event){
@@ -912,7 +936,7 @@ input{
 }
 .autocomplete-container{
   padding: 0.45em;
-  position: absolute;
+  position: sticky;
   z-index: 1000;
   background-color: white;
   border-radius: 15px;

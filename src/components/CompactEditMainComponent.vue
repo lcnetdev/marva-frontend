@@ -11,7 +11,7 @@
               <!--  -->
             
              <!-- <CompactEditTemplateRefComponent v-on="$listeners"  :ptGuid="ptGuid" :parentURI="parentURI" :key="useKey" :isMini="isMini" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></CompactEditTemplateRefComponent> -->
-             <div class="resource-grid-field-list-navable" :id="`navable-${resourceIdx}-1-${rowIdx}-0`">{{rowIdx}} has dynamic</div>
+             <div :class="['resource-grid-field-list-navable', `resource-${resourceIdx}`]" :id="`navable-${resourceIdx}-1-${rowIdx}-0`">{{rowIdx}} has dynamic</div>
 
 
           </template>
@@ -22,12 +22,12 @@
            
            <!-- <EditAdminComponent v-else-if="returnLookupType(structure) == 'admin'" :ptGuid="ptGuid" :parentURI="parentURI" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditAdminComponent> -->
            
-           <CompactEditLiteralComponent v-if="structure.type == 'literal' || structure.type == 'literal-lang'" :key="useKey" :isMini="isMini" :ptGuid="ptGuid" :parentURI="parentURI" :resourceIdx="resourceIdx" :rowIdx="rowIdx" :componentIdx="componentIdx"  :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></CompactEditLiteralComponent>
-           <CompactEditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" :ptGuid="ptGuid" :key="useKey" :isMini="isMini" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :componentIdx="componentIdx" :resourceIdx="resourceIdx" :rowIdx="rowIdx" :parentStructure="parentStructure" :nested="nested"  :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate" ></CompactEditSimpleLookupComponent>
-           <CompactEditComplexLookupComponent v-on="$listeners" v-else-if="returnLookupType(structure) == 'complex'" :key="useKey" :isMini="isMini" @updated="forceUpdate" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure" :componentIdx="componentIdx" :resourceIdx="resourceIdx" :rowIdx="rowIdx"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></CompactEditComplexLookupComponent>          
-           <CompactEditTemplateRefComponent v-on="$listeners" v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" :isMini="isMini" :key="useKey" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure" :componentIdx="componentIdx"  :resourceIdx="resourceIdx" :rowIdx="rowIdx" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></CompactEditTemplateRefComponent>
+           <CompactEditLiteralComponent v-if="structure.type == 'literal' || structure.type == 'literal-lang'" :key="useKey" :isMini="isMini" :ptGuid="ptGuid" :parentURI="parentURI" :resourceIdx="resourceIdx" :rowIdx="rowIdx" :componentIdx="componentIdx"  :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" :setNavAfterClick="setNavAfterClick" ></CompactEditLiteralComponent>
+           <CompactEditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" :ptGuid="ptGuid" :key="useKey" :isMini="isMini" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :componentIdx="componentIdx" :resourceIdx="resourceIdx" :rowIdx="rowIdx" :parentStructure="parentStructure" :nested="nested"  :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate" :setNavAfterClick="setNavAfterClick"></CompactEditSimpleLookupComponent>
+           <CompactEditComplexLookupComponent v-on="$listeners" v-else-if="returnLookupType(structure) == 'complex'" :key="useKey" :isMini="isMini" @updated="forceUpdate" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure" :componentIdx="componentIdx" :resourceIdx="resourceIdx" :rowIdx="rowIdx"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  :setNavAfterClick="setNavAfterClick" ></CompactEditComplexLookupComponent>          
+           <CompactEditTemplateRefComponent v-on="$listeners" v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" :isMini="isMini" :key="useKey" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure" :componentIdx="componentIdx"  :resourceIdx="resourceIdx" :rowIdx="rowIdx" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate" :navLevel="0" :setNavAfterClick="setNavAfterClick" ></CompactEditTemplateRefComponent>
         
-           <div  v-else class="resource-grid-field-list-navable" :id="`navable-${resourceIdx}-1-${rowIdx}-0`">{{rowIdx}} {{structure.valueConstraint.valueTemplateRefs.length}}</div>
+           <div  v-else :class="['resource-grid-field-list-navable', `resource-${resourceIdx}`]" :id="`navable-${resourceIdx}-1-${rowIdx}-0`">{{rowIdx}} {{structure.valueConstraint.valueTemplateRefs.length}}</div>
 
           </template>
 
@@ -95,7 +95,7 @@ export default {
     rowIdx:Number,
     resourceIdx: Number,
     componentIdx: Number,
-
+    setNavAfterClick: { type: Function },
   },
   data: function() {
     return {

@@ -201,7 +201,7 @@ export default {
     } 
 
 
-    if (localStorage.getItem('bfeSettingsLeftMenuEnriched')!== null){
+    if (localStorage.getItem('bfeSettingsLeftMenuEnriched')!== null){      
       console.log("APP Loading, set bfeSettingsLeftMenuEnriched to:",localStorage.getItem('bfeSettingsLeftMenuEnriched'), JSON.parse(localStorage.getItem('bfeSettingsLeftMenuEnriched')))
       this.$store.dispatch("settingsLeftMenuEnriched", { self: this, settingsLeftMenuEnriched: JSON.parse(localStorage.getItem('bfeSettingsLeftMenuEnriched')) }).then(() => {
       })   
