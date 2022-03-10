@@ -702,13 +702,16 @@ export default {
     setNavAfterClick: function(elId){
 
 
-      let ids = elId.replace('navable-','').split('-')
-      console.log(ids)
+        let ids = elId.replace('navable-','').split('-')
 
+        if (ids.length<3){
+            return false
+        }
 
         this.navableResource = parseInt(ids[0])
         this.navableCol = parseInt(ids[1])
         this.navableRow = parseInt(ids[2])
+
 
         if (ids[3].includes('.')){
             this.navableComponent = parseFloat(ids[3])
@@ -1618,8 +1621,10 @@ export default {
 
 
       if (this.ontologyLookupTodo.length>0){
+        console.log('this.ontologyLookupTodo',this.ontologyLookupTodo)
         // grab one
         let uri = this.ontologyLookupTodo.pop()
+        console.log("uri",uri)
         this.$store.dispatch("fetchOntology", { self: this, uri: uri }).then(() => {          
           this.loadProfileOntologyLookupsRequest()
         })   

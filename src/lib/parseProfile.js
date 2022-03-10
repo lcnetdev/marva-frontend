@@ -1478,7 +1478,7 @@ const parseProfile = {
 
 
             // console.log('currentState, component, key, activeProfileName, template, value, structure,parentStructure')
-            // console.log(currentState, component, key, activeProfileName, template, value, structure,parentStructure)
+            console.log(currentState, component, key, activeProfileName, template, value, structure,parentStructure)
 
             // clearing a value works by clearing the context in the store,
             // if it is an empy object then the context was clered before 

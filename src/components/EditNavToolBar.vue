@@ -705,11 +705,22 @@ export default {
             if (window.location.pathname.includes('/compactedit/')){
               if (mode == 'default'){
                   await this.triggerSave()
-                  this.$router.push('/edit/'+this.activeProfile.eId) 
+                  this.$router.push('/edit/'+this.activeProfile.eId).then(()=>{
+
+
+                    window.location.reload();
+
+                  }) 
+                  
               }
               if (mode == 'compact'){
                   await this.triggerSave()
-                  this.$router.push('/edit/'+this.activeProfile.eId) 
+                  this.$router.push('/edit/'+this.activeProfile.eId).then(()=>{
+
+
+                    window.location.reload();
+
+                  }) 
               }
             }
 
@@ -717,7 +728,12 @@ export default {
             if (window.location.pathname.includes('/edit/')){
               if (mode == 'spreadsheet'){
                   await this.triggerSave()
-                  this.$router.push('/compactedit/'+this.activeProfile.eId) 
+                  this.$router.push('/compactedit/'+this.activeProfile.eId).then(()=>{
+
+
+                    window.location.reload();
+
+                  }) 
               }
             }
 

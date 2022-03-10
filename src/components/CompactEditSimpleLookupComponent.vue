@@ -5,7 +5,7 @@
             <div style=" display: flex; height: 1.5em;">
               
               <div v-for="(avl,idx) in activeLookupValue" :key="idx" class="selected-value-container">
-                  <span style="padding-right: 0.3em; line-height: 1.75em;">{{avl['http://www.w3.org/2000/01/rdf-schema#label']}}<span class="uncontrolled" v-if="!avl.uri">(uncontrolled)</span></span>
+                  <span style="padding-right: 0.3em; line-height: 1.75em;"><EditLabelDereference :URI="avl['http://www.w3.org/2000/01/rdf-schema#label']"/><span class="uncontrolled" v-if="!avl.uri">(uncontrolled)</span></span>
                   <span @click="removeValue(idx)" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em; cursor: pointer;">x</span>
               </div>
               <input bfeType="EditSimpleLookupComponent-unnested" ref="lookupInput"  :id="assignedId" autocomplete="off" v-on:blur="blur" v-bind:value="activeValue"  type="text" @focus="autoFocus($event)" @keydown="keyDownEvent($event)" @keyup="keyUpEvent($event)" :class="['input-single',{'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]">
@@ -25,7 +25,7 @@
     <div v-else class="trigger-open">        
           <template v-if="activeLookupValue.length>0">
             <div v-for="(avl,idx) in activeLookupValue" :key="idx" class="trigger-open">
-                <span style="background-color: whitesmoke; padding: 0 5px 0 5px; font-size: 0.9em;" class="trigger-open">[{{avl['http://www.w3.org/2000/01/rdf-schema#label']}}<span class="uncontrolled trigger-open" v-if="!avl.uri">(uncontrolled)</span>]</span>
+                <span style="background-color: transparent; padding: 0 5px 0 5px; font-size: 0.9em;" class="trigger-open"><EditLabelDereference :URI="avl['http://www.w3.org/2000/01/rdf-schema#label']"/><span class="uncontrolled trigger-open" v-if="!avl.uri">(uncontrolled)</span></span>
             </div>         
           </template>
           <template v-else>
@@ -81,6 +81,7 @@
 
 import { mapState } from 'vuex'
 import uiUtils from "@/lib/uiUtils"
+import EditLabelDereference from "@/components/EditLabelDereference.vue";
 
 
 export default {
@@ -101,6 +102,11 @@ export default {
     setNavAfterClick: { type: Function },
 
   },
+  components: {    
+    EditLabelDereference
+  }, 
+
+
   data: function() {
     return {
       displayAutocomplete: false,
@@ -192,7 +198,7 @@ export default {
 
           // no label was found, try to make one from the URI
           if (uri){
-            label = uri.split('/').slice(-1)[0]
+            label = uri //.split('/').slice(-1)[0]
           }
 
         }

@@ -1149,23 +1149,28 @@ const lookupUtil = {
 
         // we are going to look into the local storage to see if we have a cache version of this URI from
         // less than 24 hours ago
-
+        
         let currentTS = Math.floor(Date.now() / 1000)
 
         if (window.localStorage && window.localStorage.getItem('ontology_'+url+'.rdf')){
           let response = JSON.parse(window.localStorage.getItem('ontology_'+url+'.rdf'))
-          if (currentTS - response.ts < 86400){
-
-            // we have a fresh catch less than 1 day old, use that instead of asking the srver
-            return response.response
-
+          // make sure it is valid
+          if (response && response.response && response.ts){
+            if (currentTS - response.ts < 86400){
+              // we have a fresh catch less than 1 day old, use that instead of asking the srver
+              return response.response
+            }
           }
         }
 
         if (url.endsWith('.rdf')===false){
           url = url + '.rdf'
         }
+        
+        
         let r = await this.fetchSimpleLookup(url)
+
+        
 
 
         // if we got here set that localstorage for next time
@@ -1222,7 +1227,7 @@ const lookupUtil = {
 
 
      let url = config.returnUrls().ldpjs +'ldp/' + eId
-     fetch(url, putMethod)
+     await fetch(url, putMethod)
      .then(response => console.log(response.text))
      .then((responseText)=>{
 

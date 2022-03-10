@@ -761,9 +761,9 @@ const parseBfdb = {
 
 					if (resultsTest.rt[rtKey].pt[pt].userValue[checkProperty] && resultsTest.rt[rtKey].pt[pt].userValue[checkProperty].length > 1){
 
-						// console.log("&&&&&&&&&&&&&& HERE")
-						// console.log(checkProperty)
-						// console.log(resultsTest.rt[rtKey].pt[pt].userValue[checkProperty])
+						console.log("&&&&&&&&&&&&&& HERE")
+						console.log(checkProperty)
+						console.log(resultsTest.rt[rtKey].pt[pt].userValue[checkProperty])
 
 
 						// we found one, look through the linked templates and modify as needed

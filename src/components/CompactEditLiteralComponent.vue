@@ -8,7 +8,7 @@
       <div style="position: relative;">
         <div style="">
           <form autocomplete="off">            
-            <input :placeholder="structure.propertyLabel" @blur="editMode=false"  bfeType="EditLiteralComponent-unnested" :id="assignedId" v-on:keydown.enter.prevent="submitField" :name="assignedId" ref="input" v-on:focus="focused" autocomplete="off" type="text" @keydown="nav" @keyup="change" v-model="inputValue"  :class="['input-single', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true), 'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">            
+            <input :placeholder="structure.propertyLabel" @blur="literalBlur() "  bfeType="EditLiteralComponent-unnested" :id="assignedId" v-on:keydown.enter.prevent="submitField" :name="assignedId" ref="input" v-on:focus="focused" autocomplete="off" type="text" @keydown="nav" @keyup="change" v-model="inputValue"  :class="['input-single', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true), 'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">            
           </form>
         </div>
         <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-tooltip="'Diacritics [CTRL-ALT-D]'" @click="openDiacriticSelect"></button>
@@ -18,7 +18,7 @@
     <template v-else>
 
         <div ref="displayModeElement" v-if="inputValue !== null && inputValue.trim().length>0" style="min-height: 1em;">{{inputValue}}</div>
-        <div ref="displayModeElement" v-else style="min-height: 1em; font-style: italic;">{{structure.propertyLabel}}</div>        
+        <div ref="displayModeElement" v-else style="font-size: 0.85em; font-style: oblique;">{{structure.propertyLabel}}</div>        
       
 
     </template>
@@ -91,24 +91,28 @@ export default {
 
   methods: {
 
+    literalBlur: function(){
+
+      this.editMode=false
+      this.$store.dispatch("enableMacroNav")
+
+    },
 
     
     displayModeClick: function(event){
-      if (this.editMode){
-        this.editMode=false
-        this.$store.dispatch("enableMacroNav")
-
-      }else{
+      if (!this.editMode){
         this.editMode=true
         this.$store.dispatch("disableMacroNav")
         this.$nextTick(()=>{
           this.$refs.input.focus()
         })
 
+        this.setNavAfterClick(event.target.parentNode.id)
+
       }
 
 
-      this.setNavAfterClick(event.target.parentNode.id)
+      
     },
 
 
@@ -284,6 +288,7 @@ export default {
 
         if (event.key == 'Escape'){
           this.showDiacritics=false
+          console.log(this.inputValueLast)
           this.$store.dispatch("enableMacroNav")
 
         }else if (event.key == 'ArrowDown' || event.key == 'ArrowUp' ){
@@ -343,6 +348,8 @@ export default {
 
       if (event && (event.key == 'Escape')){
         console.log("HERE")
+        console.log(this.inputValueOrginal)
+        this.inputValue = this.inputValueOrginal
         this.editMode = false
         this.showDiacritics=false
         this.$store.dispatch("enableMacroNav")         
@@ -358,7 +365,9 @@ export default {
     change: function(event){
 
 
-
+      if (!this.inputValueOrginal){
+        this.inputValueOrginal = this.inputValue
+      }
 
       if (diacrticsVoyagerMacroExpress[event.code] && this.settingsDPackVoyager){
 
@@ -580,6 +589,7 @@ export default {
 
       inputValue: null,
       inputValueLast: null,
+      inputValueOrginal: null,
       inputValueCombiningDiacritic: null,
       showDiacritics: false,
       diacriticData: [],
@@ -640,15 +650,37 @@ export default {
     }else if (this.parentStructureObj && this.parentStructureObj.propertyURI == data.userValue['@root'] && data.userValue[this.structure.propertyURI]){
       // there is aparent element, but it is the root element also
 
+      // for (let value of data.userValue[this.structure.propertyURI]){
+      //   if (value[this.structure.propertyURI]){
+      //     // if there are multiple literals of the same property, like multuple rdf:label (why?) then just merge them
+      //     // together into the imput so we dont lose it and can be edited
+      //     this.inputValue = this.inputValue + value[this.structure.propertyURI]
+
+      //     this.guid = value['@guid']
+      //   }
+      // }
+
       for (let value of data.userValue[this.structure.propertyURI]){
         if (value[this.structure.propertyURI]){
-          // if there are multiple literals of the same property, like multuple rdf:label (why?) then just merge them
-          // together into the imput so we dont lose it and can be edited
-          this.inputValue = this.inputValue + value[this.structure.propertyURI]
+          // store some info about it in the parent about what literal has been used so far
+          if (!this.parentStructureObj.multiLiteral){
+            this.parentStructureObj.multiLiteral={}
+          }
 
-          this.guid = value['@guid']
+          if (!this.parentStructureObj.multiLiteral[value['@guid']]){
+            // console.log(value[this.structure.propertyURI], 'not exist, setting its value')
+            this.parentStructureObj.multiLiteral[value['@guid']] = value[this.structure.propertyURI]
+            this.inputValue = value[this.structure.propertyURI]  
+            this.guid = value['@guid']
+            break
+          }else{
+            // if it is already in there it was taken by a previous copy of this literal property
+            // console.log(value[this.structure.propertyURI], 'does alraedy exist, ')
+          }      
         }
       }
+
+
 
 
     }
@@ -689,7 +721,8 @@ export default {
     }
 
     this.inputValueLast = this.inputValue
-    
+    this.inputValueOrginal = this.inputValue
+
     // if it is a dynamic property and no data was populated, hide it
     // if (data.dynamic && this.inputValue == null){
     //   this.hideField = true

@@ -12,8 +12,15 @@
       <div ref="displayLabel" class="trigger-open" style="display: inline-block; position: relative; bottom: 2px;">
           
           <template v-if="formatDisplayLabel()!=false && formatDisplayLabel() != null">
-            <span ref="displayLabelSpan" class="trigger-open"  @click="toggleSelectedDetails" style="padding-right: 0.3em;"><span class="selected-value-icon trigger-open" v-html="returnAuthIcon(this.displayType)"></span>{{formatDisplayLabel()}}</span>
+            <span ref="displayLabelSpan" class="trigger-open"  @click="toggleSelectedDetails" style="padding-right: 0.3em;">
+              <span class="selected-value-icon trigger-open" v-html="returnAuthIcon(this.displayType)"></span>
+              <span ref="labelSpan" class="trigger-open" :key="editLabelDereferenceKey" v-if="!formatDisplayLabel().startsWith('http')">{{formatDisplayLabel()}}</span>
+              <span ref="labelSpan" class="trigger-open" v-else><EditLabelDereference class="trigger-open" :key="editLabelDereferenceKey" :URI="formatDisplayLabel()"/></span>
+            </span>
             <span  class="selected-value-icon trigger-open" v-html="validateHeading()" v-bind:title="validationMessage" style="border-left: solid 1px black; padding: 0 0.5em; font-size: 1em"></span>
+
+
+
           </template>
           <template v-else>
             <span class="trigger-open" style="font-size: 0.85em; font-style: oblique;">{{structure.propertyLabel}}</span>
@@ -303,6 +310,7 @@ import validationUtil from "@/lib/validationUtil"
 import config from "@/lib/config"
 import parseProfile from "@/lib/parseProfile"
 import EditSubjectEditor from "@/components/EditSubjectEditor.vue";
+import EditLabelDereference from "@/components/EditLabelDereference.vue";
 
 
 
@@ -311,6 +319,7 @@ export default {
   components: {    
     Keypress: () => import('vue-keypress'),
     EditSubjectEditor,
+    EditLabelDereference,
 
   },  
   props: {
@@ -348,10 +357,14 @@ export default {
       precoordinated: [],
       displayPreCoordinated: false,
 
+      displayLabelDreferenced: null,
+
       displayLabel: null,
       displayType: null,
       displayGuid: null,
       displayContext: {},
+
+      editLabelDereferenceKey: Date.now(),
 
       contextRequestInProgress: false,
       validated: false,
@@ -469,6 +482,7 @@ export default {
 
     displayModeClick: function(event){
 
+      console.log(event)
       if (event && event.target && event.target.classList.contains('trigger-open') && this.displayModal === false){
 
         this.openEditor()
@@ -567,33 +581,25 @@ export default {
           }
         }
 
-
-
+        // we are piggybacking off the dereferenceLabel element here
+        // so we don't really know when that will be ready, so just try a few times
+        // and if it has a title then nice, use it
+        this.$nextTick(() => {
+          [100,500,1000,2000].forEach((ts)=>{
+            window.setTimeout(()=>{
+              if (!this.displayLabelDreferenced){
+                this.displayLabelDreferenced = this.$refs.labelSpan.innerText
+              }                
+            },ts)
+          })
+        })
       }
 
 
 
       if (useTitle){
 
-        // we have a title, but it might BE HUGE like really long, so see how big our container is an modify the displaly a little to make sure it fits
-
-          this.$nextTick(() => {
-
-            // code in here will run after the below return has sent the value back and the UI has been updated
-            // test if the label is now bigger than the container and if so do something about it
-            if (this.$refs.fakeInputContainer.clientWidth - this.$refs.displayLabel.clientWidth < 100){
-              this.$refs.displayLabelSpan.innerHTML = useTitle.substring(0,100) + '...'
-            }
-            // just do it one more time....
-            this.$nextTick(() => {
-              if (this.$refs.fakeInputContainer.clientWidth - this.$refs.displayLabel.clientWidth < 100){
-                this.$refs.displayLabelSpan.innerHTML = useTitle.substring(0,50) + '....'
-              }              
-            })            
-          })
-
-
-        
+      
 
         return useTitle
 
@@ -1312,7 +1318,16 @@ export default {
       }else{
 
 
-        this.searchValue = this.displayLabel
+        console.log('this.displayLabel', this.displayLabel)
+        console.log('this.displayLabelDreferenced', this.displayLabelDreferenced)
+
+        if (this.displayLabelDreferenced && this.displayLabel.startsWith('http')){
+          this.searchValue = this.displayLabelDreferenced
+        }else{
+          this.searchValue = this.displayLabel
+        }
+
+
         this.initalSearchState = true
         this.search()
         this.$nextTick(() => {
@@ -1717,6 +1732,9 @@ export default {
           this.validated = false
           this.validateHeading()
           this.$store.dispatch("enableMacroNav", { self: this})
+
+          this.editLabelDereferenceKey = Date.now()
+
 
           // put the focus back on the input
           setTimeout(()=>{
