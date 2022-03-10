@@ -472,16 +472,22 @@
                             <div v-for="profileCompoent in activeProfile.rt[profileName].ptOrder" :key="profileCompoent">
 
 
+                                <template v-if="!ignoreRightMenuProperty(activeProfile.rt[profileName].pt[profileCompoent])">
+                                    
 
-                              <div style="margin-bottom: 1em;" v-bind:class="[ {'opac-field-active':(activeComponent==profileCompoent &&activeProfileName==profileName)}]" v-if="Object.keys(activeProfile.rt[profileName].pt[profileCompoent].userValue).length>0 && returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue).length != 0 && activeProfile.rt[profileName].pt[profileCompoent].deleted != true">
-                                <span class="opac-field-title">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}}</span>
-                                <div class="opac-field-value">
-                                  <div v-bind:key="index" v-for="(val, index) in returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue)">
-                                    <span v-if="!val.startsWith('http')">{{val}}</span>
-                                    <EditLabelDereference v-else :URI="val"/>
+                                
+
+                                  <div style="margin-bottom: 1em;" v-bind:class="[ {'opac-field-active':(activeComponent==profileCompoent &&activeProfileName==profileName)}]" v-if="Object.keys(activeProfile.rt[profileName].pt[profileCompoent].userValue).length>0 && returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue).length != 0 && activeProfile.rt[profileName].pt[profileCompoent].deleted != true">
+                                    <span class="opac-field-title">{{activeProfile.rt[profileName].pt[profileCompoent].propertyLabel}}</span>
+                                    <div class="opac-field-value">
+                                      <div v-bind:key="index" v-for="(val, index) in returnOpacFormat(activeProfile.rt[profileName].pt[profileCompoent].userValue)">
+                                        <span v-if="!val.startsWith('http')">{{val}}</span>
+                                        <EditLabelDereference v-else :URI="val"/>
+                                      </div>
+                                    </div>
                                   </div>
-                                </div>
-                              </div>
+
+                                </template>
 
 
                             </div>
@@ -827,6 +833,17 @@ export default {
 
     dupeProperty: uiUtils.dupeProperty,
 
+
+    ignoreRightMenuProperty: function(component){
+
+        if (component.propertyURI == 'http://id.loc.gov/ontologies/bibframe/instanceOf'){
+            return true
+        }
+
+        console.log('component',component)
+        return false
+
+    },
 
     forceComponentRedraw: function(){
 
