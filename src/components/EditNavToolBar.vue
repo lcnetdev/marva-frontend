@@ -708,7 +708,7 @@ export default {
                   this.$router.push('/edit/'+this.activeProfile.eId).then(()=>{
 
 
-                    window.location.reload();
+                    // window.location.reload();
 
                   }) 
                   
@@ -718,7 +718,7 @@ export default {
                   this.$router.push('/edit/'+this.activeProfile.eId).then(()=>{
 
 
-                    window.location.reload();
+                    // window.location.reload();
 
                   }) 
               }
@@ -731,7 +731,7 @@ export default {
                   this.$router.push('/compactedit/'+this.activeProfile.eId).then(()=>{
 
 
-                    window.location.reload();
+                    // window.location.reload();
 
                   }) 
               }

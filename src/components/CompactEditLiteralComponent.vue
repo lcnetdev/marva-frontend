@@ -619,7 +619,10 @@ export default {
     // check to see if there are alaready multiples in it, if so we need to 
     // delete data.multiLiteral
     if (data.multiLiteral){
-      if (Object.keys(data.multiLiteral)>1){
+      console.log(this.profileCompoent, "Its hxxere already", data)
+
+      if (Object.keys(data.multiLiteral).length>1){
+        console.log("deleting")
         // if there are already 2+ keys then it means that this component has 
         // already been initalized, and this is just a state reload or something
         // so clear out the flag so it populates both multuliteral values again

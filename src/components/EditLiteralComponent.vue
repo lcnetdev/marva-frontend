@@ -587,6 +587,22 @@ export default {
     this.inputValue = ""
     // let bnodeHasURI = false
 
+
+    if (data.multiLiteral){
+      console.log(this.profileCompoent, "Its hxxere already", data)
+
+      if (Object.keys(data.multiLiteral).length>1){
+        console.log("deleting")
+        // if there are already 2+ keys then it means that this component has 
+        // already been initalized, and this is just a state reload or something
+        // so clear out the flag so it populates both multuliteral values again
+        delete data.multiLiteral
+      }
+    }
+
+
+
+
     // first test to see if this property exists in the user value at the parent structure / properturi lvl
     if (this.parentStructureObj && data.userValue[this.parentStructureObj.propertyURI]){
       for (let parentValueArray of data.userValue[this.parentStructureObj.propertyURI]){
@@ -624,9 +640,6 @@ export default {
 
       for (let value of data.userValue[this.structure.propertyURI]){
         if (value[this.structure.propertyURI]){
-
-
-
           // store some info about it in the parent about what literal has been used so far
           if (!this.parentStructureObj.multiLiteral){
             this.parentStructureObj.multiLiteral={}
@@ -641,10 +654,7 @@ export default {
           }else{
             // if it is already in there it was taken by a previous copy of this literal property
             // console.log(value[this.structure.propertyURI], 'does alraedy exist, ')
-            
-          }
-
-          
+          }      
         }
       }
 
