@@ -487,7 +487,19 @@ export default {
 
         this.openEditor()
 
-        this.setNavAfterClick(event.target.parentNode.parentNode.parentNode.id)
+        let parent = event.target.parentNode;
+        [...Array(5)].forEach(() => {
+          // if it the parent we are looking for send it otherwise keep moving back up the tree
+          if(parent.classList.contains('resource-grid-field-list-navable')){
+            return
+          }else{
+            parent = parent.parentNode
+          }
+
+        });
+        this.setNavAfterClick(parent.id)
+
+
       }
 
 

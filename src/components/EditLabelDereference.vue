@@ -1,5 +1,5 @@
 <template>
- <span>{{displayLabel}}</span>
+ <span class="trigger-open">{{displayLabel}}</span>
 </template>
 
 <script>

@@ -392,6 +392,7 @@ export default {
 
 
     displayModeClick: function(event){
+      console.log("HERER")
       console.log(event.target)
       if (event && event.target && event.target.classList.contains('trigger-open') && this.editMode==false){
 
@@ -399,10 +400,22 @@ export default {
         this.$store.dispatch("disableMacroNav")
         this.$nextTick(()=>{
           this.$refs.lookupInput.focus()
-        })
+        });
+        
 
 
-        this.setNavAfterClick(event.target.parentNode.parentNode.parentNode.id)
+        // search up the tree for the parent of this thing with the nav- info, it could vary based on the where they clicked
+        let parent = event.target.parentNode;
+        [...Array(5)].forEach(() => {
+          // if it the parent we are looking for send it otherwise keep moving back up the tree
+          if(parent.classList.contains('resource-grid-field-list-navable')){
+            return
+          }else{
+            parent = parent.parentNode
+          }
+
+        });
+        this.setNavAfterClick(parent.id)
       }
 
 
@@ -789,11 +802,9 @@ export default {
 
      // we want to hide the menu on deblur but not if they just click an item in the list
 
-    //  this.$store.dispatch("enableMacroNav") 
-    //  setTimeout(()=>{ 
-    //   this.displayAutocomplete=false 
-    //   this.$store.dispatch("enableMacroNav") 
-    // },500)
+      this.$store.dispatch("enableMacroNav") 
+      this.editMode = false
+      this.displayAutocomplete=false 
 
 
     },

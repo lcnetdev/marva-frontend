@@ -5,6 +5,7 @@ import exportXML from "./exportXML"
 import store from "../store";
 
 
+
 const short = require('short-uuid');
 // const translator = short();
 const translator = short();
@@ -637,14 +638,19 @@ const parseProfile = {
 
         // activeProfile.rt[profile].pt[newPropertyId] = Object.assign({},activeProfile.rt[profile].pt[id])
         activeProfile.rt[profile].pt[newPropertyId] = JSON.parse(JSON.stringify(activeProfile.rt[profile].pt[id]))
-        console.log(dupeData)
+
         if (!dupeData){
+            store.state.activeUndoLog.push(`Added another property ${exportXML.namespaceUri(activeProfile.rt[profile].pt[id].propertyURI)}`)
+
             activeProfile.rt[profile].pt[newPropertyId].userValue = {
                 '@guid': short.generate(),
                 '@root' : activeProfile.rt[profile].pt[newPropertyId].propertyURI
             }
 
         }else{
+
+            store.state.activeUndoLog.push(`Duplicated property ${exportXML.namespaceUri(activeProfile.rt[profile].pt[id].propertyURI)}`)
+
 
             // we need to change the @guid for all the parts of the user data
             activeProfile.rt[profile].pt[newPropertyId].userValue['@guid'] = short.generate()
@@ -690,12 +696,18 @@ const parseProfile = {
             },500)                    
         },0)
 
+        
+
         return(activeProfile)
 
     },
 
     removeProperty: function(id,profile,activeProfile){
         let propertyIndex = activeProfile.rt[profile].ptOrder.indexOf(id)
+
+        store.state.activeUndoLog.push(`Removed property ${exportXML.namespaceUri(activeProfile.rt[profile].pt[id].propertyURI)}`)
+
+
 
         // is this the last pt with this uri and label?
         let lastPtCount = 0
@@ -726,7 +738,8 @@ const parseProfile = {
 
         }
 
-      
+
+
         return(activeProfile)
 
     },
@@ -735,7 +748,9 @@ const parseProfile = {
 
 
         let propertyIndex = activeProfile.rt[profile].ptOrder.indexOf(id)
-                
+
+        store.state.activeUndoLog.push(`Restored property ${exportXML.namespaceUri(activeProfile.rt[profile].pt[id].propertyURI)}`)
+
         let tmp = JSON.parse(JSON.stringify(activeProfile.rt[profile].pt[id]))
         
         // delete the one that is in there
@@ -754,16 +769,16 @@ const parseProfile = {
 
     sendToInstance: function(from,to,activeProfile){
 
-        console.log(from)
-        console.log(to) 
+
+        store.state.activeUndoLog.push(`Transfered property ${exportXML.namespaceUri(activeProfile.rt[from.profile].pt[from.componet].propertyURI)}`)
 
         let c = JSON.parse(JSON.stringify(from.data))
 
 
-        // remove it from the source
-        console.log(activeProfile.rt[from.profile])
+        // // remove it from the source
+        // console.log(activeProfile.rt[from.profile])
 
-        console.log(activeProfile.rt[from.profile].pt[from.componet])
+        // console.log(activeProfile.rt[from.profile].pt[from.componet])
 
         delete activeProfile.rt[from.profile].pt[from.componet]
 
@@ -993,6 +1008,11 @@ const parseProfile = {
 
             }
         }
+
+
+        // store.state.activeUndoLog.push(`Transfered property ${exportXML.namespaceUri(activeProfile.rt[from.profile].pt[from.componet].propertyURI)}`)
+
+
 
         return currentState
     },

@@ -68,7 +68,7 @@
                                 
                                 <template v-if="displayComponentCheck(activeProfile.rt[profileName].pt[profileCompoent]) === true">
                                     
-                                    <div :class="['resources-grid-field-list-property', 'enriched-menu-spreadsheet', 'navable-level-'+idx, 'navable-col-1', `navable-${resourceIdx}-0-${idx}` ]" :id="`navable-${resourceIdx}-0-${idx}-0`" :data-mainrow="idx" :key="idx+'_'+keyCounter">
+                                    <div :class="['resources-grid-field-list-property', 'enriched-menu-spreadsheet', 'navable-level-'+idx, 'navable-col-1', `navable-${resourceIdx}-0-${idx}` ]" :id="`navable-${resourceIdx}-0-${idx}-0`" :data-mainrow="idx" :key="profileCompoent+'_'+idx+'_'+keyCounter">
                                         {{returnPropertyShortName(activeProfile.rt[profileName].pt[profileCompoent].propertyURI)}}
                                         <div class="enriched-menu-controls-spreadsheet">
                                             
@@ -152,7 +152,7 @@
 
                                 </div>
 
-                                <div class="resources-grid-field-list">
+                                <div class="resources-grid-field-list" :key="'resources-grid-field-list_'+profileName2+'_'+keyCounter">
 
                                     <template v-for="(profileCompoent2,idx2) in activeProfile.rt[profileName2].ptOrder">
                                         
@@ -330,6 +330,7 @@ import exportXML from "@/lib/exportXML"
 // import EditLiteralLanguage from "@/components/EditLiteralLanguage"
 
 
+
 import { mapState } from 'vuex'
 
 
@@ -370,6 +371,22 @@ export default {
 
 
   created: async function () {
+
+    // document.addEventListener("visibilitychange", function() {
+        
+    //     console.log('document.hidden',document.hidden)
+    //     this.keyCounter++
+        
+
+
+
+
+
+    // });
+
+
+
+
 
     // load them profiles if they aint  
     if (!this.profilesLoaded){
@@ -415,7 +432,7 @@ export default {
     }else{
 
 
-
+        console.log('this.activeProfile.eId',this.activeProfile.eId)
 
         // did we already load the record from the load screen or other place?
         if (!this.activeProfile.eId && this.$route.params.recordId){
@@ -439,7 +456,7 @@ export default {
           })
 
         }else{
-
+          console.log('ACtive proifiel:',this.activeProfile)
           this.$nextTick(()=>{
 
             this.loadProfileOntologyLookupsBuild()
@@ -703,7 +720,7 @@ export default {
 
 
         let ids = elId.replace('navable-','').split('-')
-
+        console.log(ids)
         if (ids.length<3){
             return false
         }

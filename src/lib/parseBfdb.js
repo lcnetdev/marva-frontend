@@ -793,6 +793,83 @@ const parseBfdb = {
 						}
 
 
+					}else{
+
+
+
+						// look one layer down as well
+						for (let userValueKey in resultsTest.rt[rtKey].pt[pt].userValue){
+
+							if (Array.isArray(resultsTest.rt[rtKey].pt[pt].userValue[userValueKey])){
+
+								for (let userValue of resultsTest.rt[rtKey].pt[pt].userValue[userValueKey]){
+
+									for (let k in userValue){
+
+
+										if (k == checkProperty && Array.isArray(userValue[k]) && userValue[k].length>1){
+
+
+											console.log("############## HERE")
+											console.log(k)
+											console.log(userValue)
+
+											for (let vtr of resultsTest.rt[rtKey].pt[pt].valueConstraint.valueTemplateRefs){
+
+												for (let [index, p] of store.state.rtLookup[vtr].propertyTemplates.entries()){
+													// we now need to loop through this templates templates :(
+													console.log('p',p,index)
+													
+													if (p.valueConstraint && p.valueConstraint.valueTemplateRefs && p.valueConstraint.valueTemplateRefs.length>0){
+
+														for (let vtr2 of p.valueConstraint.valueTemplateRefs){
+															// keep track of how many there are and save a copy so we can insert it again
+															let pcount = 0
+															let ppos = 0
+															let pvalue = null
+
+															for (let [index, p2] of store.state.rtLookup[vtr2].propertyTemplates.entries()){
+																console.log('p2',vtr2,p2,index)
+																if (p2.propertyURI === checkProperty){
+																	pcount++
+																	pvalue = JSON.parse(JSON.stringify(p2))
+																	ppos = index
+																}
+
+															}
+
+															if (pcount>0){
+																console.log(ppos,pcount)
+																console.log(pvalue)
+															}
+
+
+
+														}
+													}
+												
+												}
+											}
+										}
+									}
+
+
+								}
+
+
+
+							}
+
+
+
+
+
+						}
+
+
+
+
+
 					}
 
 

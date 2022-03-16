@@ -115,17 +115,30 @@ export default new Vuex.Store({
     diagramMiniMap: false,
 
 
+    undo: [],
+    undoIndex: 0,
+    activeUndoLog: [],
+
+
 
 
     saveRecord : debounce((state,commit) => {
 
-      console.log(state, commit,exportXML)
+      // console.log(state, commit,exportXML)
       
       exportXML.toBFXML(state.activeProfile)
       .then((xml)=>{
         
         lookupUtil.saveRecord(xml.xlmStringBasic, state.activeProfile.eId)
         commit('ACTIVERECORDSAVED',true)  
+        state.undoIndex= 0
+        if (state.activeUndoLog.length==0){
+          state.activeUndoLog.push('Unknown change...')
+        }
+        state.undo.push({'state':JSON.parse(JSON.stringify(state.activeProfile)),'log':JSON.parse(JSON.stringify(state.activeUndoLog))})
+        state.activeUndoLog=[]
+        console.log(state.undo)
+
       })
       
 
@@ -254,6 +267,9 @@ export default new Vuex.Store({
     
 
 
+    UNDOLOG(state, val) {
+      state.activeUndoLog = val
+    }, 
 
     
 
@@ -410,6 +426,16 @@ export default new Vuex.Store({
       commit('CATINITALS', data.catInitials)
     },
 
+    setActiveUndo({ commit, state}, data){
+      let msg = [data.msg]
+      if (state.activeUndoLog.length>0){
+        msg = JSON.parse(JSON.stringify(state.activeUndoLog))
+        msg.push(data.msg)
+      }
+      commit('UNDOLOG', data.msg)
+    },
+
+
 
     async  setValueComplex ({ commit, state }, data) {   
       // we know the value bc it is the active context value in this case
@@ -426,6 +452,7 @@ export default new Vuex.Store({
 
         nap = await parseProfile.setValueComplex(state.activeProfile, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, state.contextData, data.structure, data.parentStructure)
         nap = parseProfile.rebuildHubURI(nap)
+
 
         commit('ACTIVEPROFILE', nap)
         commit('ACTIVEEDITCOUNTER') 

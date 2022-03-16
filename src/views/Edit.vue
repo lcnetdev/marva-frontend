@@ -839,8 +839,6 @@ export default {
         if (component.propertyURI == 'http://id.loc.gov/ontologies/bibframe/instanceOf'){
             return true
         }
-
-        console.log('component',component)
         return false
 
     },
