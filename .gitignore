@@ -1,6 +1,8 @@
 .DS_Store
 node_modules
 /dist
+public/profiles.json
+public/profiles_stage.json
 
 # local env files
 .env.local
