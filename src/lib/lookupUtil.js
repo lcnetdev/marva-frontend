@@ -1072,14 +1072,16 @@ const lookupUtil = {
     },
 
 
-    fetchRecords: async function(user){
+    fetchRecords: async function(user,search){
 
         let utilUrl = config.returnUrls().util
         let utilPath = config.returnUrls().env
 
         let url
-        if (user){
+        if (user && !search){
           url = `${utilUrl}myrecords/${utilPath}/${user}`
+        }else if (user && search){
+          url = `${utilUrl}allrecords/${utilPath}/${search}/${user}`
         }else{
           url = `${utilUrl}allrecords/${utilPath}/`
         }
@@ -1321,7 +1323,10 @@ const lookupUtil = {
 
     checkVersionOutOfDate: async function(){
 
-      let url = config.returnUrls().util + 'version/editor' + "?blastdacache=" + Date.now()
+
+      let versionPath = (config.returnUrls().env === 'production') ? 'version/editor' : 'version/editor/stage'
+
+      let url = config.returnUrls().util + versionPath + "?blastdacache=" + Date.now()
       let content
 
       try{

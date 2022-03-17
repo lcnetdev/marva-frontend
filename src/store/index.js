@@ -368,8 +368,8 @@ export default new Vuex.Store({
     },
 
 
-    async fetchAllRecords ({ commit }) {
-      let results = await lookupUtil.fetchRecords()
+    async fetchAllRecords ({ commit },data) {
+      let results = await lookupUtil.fetchRecords(data.user,data.search)
       commit('ALLRECORDS', results)
     },
     async fetchMyRecords ({ commit },data) {
