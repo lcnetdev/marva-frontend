@@ -24,6 +24,10 @@
     font-size: larger;
     border-radius: 0;
     width: 50px;
+    height: 26px;
+    max-height: 26px;
+    min-height: 26px;
+    
     background-color: white;
     color: rgb(44, 62, 80);
     border: 1px solid #2c3e50;
@@ -72,9 +76,9 @@ button[disabled]{
     position: absolute;
     top: 15px;
     left: 110px;
-    height: 28px;
-    max-height: 28px;
-    min-height: 28px;
+    height: 26px;
+    max-height: 26px;
+    min-height: 26px;
 
     border-radius: 0.25em;
     border-top-right-radius: 0;
@@ -94,9 +98,9 @@ button[disabled]{
     position: absolute;
     top: 15px;
     left: 210px;
-    height: 28px;
-    max-height: 28px;
-    min-height: 28px;
+    height: 26px;
+    max-height: 26px;
+    min-height: 26px;
 
     border-radius: 0.25em;
     border-top-left-radius: 0;
