@@ -435,18 +435,18 @@ button[disabled]{
                 </div>
 
 
-                <button style="display:none" class="undo-button" :disabled="(undoIndex==0)" title="undo" @click="undoRedo('undo',1)">
+                <button class="undo-button" :disabled="(undoIndex==0)" title="undo" @click="undoRedo('undo',1)">
                   <svg width="25px" height="25px" version="1.1" viewBox="0 0 105 105" xmlns="http://www.w3.org/2000/svg">
                    <path d="m36.605 58.57v-17.141h17.145c9.4531 0 17.145 7.6914 17.145 17.141 0 9.4531-7.6914 17.145-17.145 17.145h-17.145v19.285h17.145c20.086 0 36.43-16.344 36.43-36.43 0-20.086-16.344-36.43-36.43-36.43h-17.145v-17.141l-26.785 26.785z"/>
                   </svg>
                                  
 
                 </button>
-                <button style="display:none" class="log-button" title="log" @click="toggleUndoDisplay">
+                <button class="log-button" title="log" @click="toggleUndoDisplay">
                     Log
                 </button>
 
-                <button style="display:none" class="redo-button"   title="redo" @click="undoRedo('redo',1)">
+                <button class="redo-button"   title="redo" @click="undoRedo('redo',1)">
                   <svg width="25px" height="25px" version="1.1" viewBox="0 0 105 105" xmlns="http://www.w3.org/2000/svg">
                    <path d="m90.18 31.785-26.785-26.785v17.141h-17.145c-20.086 0-36.43 16.344-36.43 36.43 0 20.09 16.344 36.43 36.43 36.43h17.145v-19.285h-17.145c-9.4531 0-17.145-7.6914-17.145-17.145 0-9.4531 7.6914-17.141 17.145-17.141h17.145v17.141z"/>
                   </svg>
