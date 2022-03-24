@@ -603,6 +603,11 @@ export default {
       }
     }
 
+    // if it is not set as multiliteral just always wipe it
+    if (!data.isMultiLiteral){
+      delete data.multiLiteral
+    }
+
 
 
 
@@ -648,7 +653,7 @@ export default {
 
 
 
-              
+
             }
           }
         }

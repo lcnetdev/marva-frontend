@@ -1,3 +1,168 @@
+<style>
+
+.option-button{
+        position: absolute;
+    top: 15px;
+    font-size: larger;
+    border-radius: 0.25em;
+    width: 100px;
+    background-color: white;
+    color: rgb(44, 62, 80);
+    border: 1px solid #2c3e50;
+    padding: 0;
+    font-weight: bold;
+}
+.option-button:hover{
+    background-color: whitesmoke;
+    cursor: pointer;
+}
+
+.log-button{
+    position: absolute;
+    top: 15px;
+    left: 10em;
+    font-size: larger;
+    border-radius: 0.25em;
+    width: 50px;
+    background-color: white;
+    color: rgb(44, 62, 80);
+    border: 1px solid #2c3e50;
+    padding: 0;
+    font-weight: bold;
+}
+.log-button:hover{
+    background-color: whitesmoke;
+    cursor: pointer;
+}
+
+
+
+.toolbar-main-button{
+    background-color:white; 
+    cursor:pointer; 
+    margin-right: 1em;
+    border: 1px solid #2c3e5063;
+    color:  #2c3e50;
+    text-decoration: none !important;
+    height: 96%;
+    margin-top: 1px;    
+}
+
+.toolbar-main-button:hover{
+    background-color: whitesmoke !important;
+}
+
+.component-default{
+    margin: 1em 0 1em 0;
+    padding: 1em 0 1em 0;
+    transition: background-color 400ms;
+}
+.component-compact{
+    margin: 0;
+    padding: 0;
+    transition: background-color 400ms;
+}
+
+
+
+  .slider input[type=checkbox]{
+    height: 0;
+    width: 0;
+    visibility: hidden;
+  }
+
+  .slider label {
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 50px;
+    height: 25px;
+    background: grey;
+    display: block;
+    border-radius: 25px;
+    position: relative;
+  }
+
+  .slider label:after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: 22px;
+    height: 22px;
+    background: #fff;
+    border-radius: 22px;
+    transition: 0.3s;
+  }
+
+  .slider input:checked + label {
+    background: #bada55;
+  }
+
+  .slider input:checked + label:after {
+    left: calc(100% - 5px);
+    transform: translateX(-100%);
+  }
+
+  .slider label:active:after {
+    width: 45px;
+  }
+
+
+.is-hidden-li::before{
+    content: "";
+}
+
+
+.enriched-menu{
+    position: relative;
+    cursor: pointer;
+}
+.enriched-menu .enriched-menu-controls{
+    display: none;
+    float: right;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+
+
+.enriched-menu-icon{
+    fill: white;
+}
+/*.enriched-menu-controls:hover .enriched-menu-icon{
+    fill: blue;
+}
+*/
+.enriched-menu:hover{
+    background-color: #6f6f6f;
+}
+
+.enriched-menu:hover .enriched-menu-controls{
+    display: block;
+}
+
+.enriched-menu-controls button{
+    background-color: transparent;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    height: 25px;
+    padding: 0;
+}
+.enriched-menu-controls button:hover{
+    /*background-color: white;*/
+    color: black;
+}
+.enriched-menu-controls button:hover .enriched-menu-icon{
+    /*background-color: white;*/
+    fill: red;
+    color: black;
+}
+
+
+</style>
+
 <template>
 
   <header ref="header" class="inital">
@@ -141,7 +306,7 @@
             </div>
 
 
-            <div style="flex:1">
+            <div style="flex:1; position:relative;">
                 
                 <button class="option-button" name="optopns" title="options" @click="toggleOptionDisplay" style="">
                     Options
@@ -189,10 +354,13 @@
                             <input  type="checkbox" id="switch2" @change="updateLeftMenuEnriched()" v-model="leftMenuEnriched" /><label for="switch2">Toggle</label>
                         </div>
                     </div>                    
-                    
-
-
+                  
                 </div>
+
+                <button class="log-button" name="logbtn" title="log" @click="toggleOptionDisplay" style="">
+                    Log
+                </button>
+
 
             </div>
             <div style="flex:1; text-align: right;">

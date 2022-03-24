@@ -1340,6 +1340,7 @@ const parseBfdb = {
 							console.log("THIS ONE IS A MULTILITERAL ONE!!!")
 							console.log(populateData)
 							console.log(this.multiLitearlLookup[hashCode(populateData.xmlSource)])
+							populateData.isMultiLiteral = true
 							// check and change he refrence templates
 							for (let mlup of this.multiLitearlLookup[hashCode(populateData.xmlSource)]){
 								let idx = populateData.valueConstraint.valueTemplateRefs.indexOf(mlup.old)
