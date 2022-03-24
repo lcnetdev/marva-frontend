@@ -1069,6 +1069,7 @@ const parseProfile = {
                 // the root node is the lookup val, reset the uservale to remove
                 if (idGuid != null && currentState.rt[rt].pt[pt].userValue['@guid'] == idGuid){
                     currentState.rt[rt].pt[pt].userValue = {'@root':currentState.rt[rt].pt[pt].propertyURI}
+                    removed = true
                 }else if (idGuid != null) {
 
                     // search through the properties to see if we have this guid anywhere
@@ -1129,6 +1130,7 @@ const parseProfile = {
                                 // if we removed the only/last one remove the property
                                 if (currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName].length==0){
                                     delete currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName]
+                                    removed = true
                                 }
                             }
 
@@ -1145,6 +1147,11 @@ const parseProfile = {
 
 
                 if (removed){
+
+
+                    
+                    store.state.activeUndoLog.push(`Removed lookup value from ${exportXML.namespaceUri(currentState.rt[rt].pt[pt].propertyURI)}`)
+
                     break
                 }
 
@@ -1212,6 +1219,8 @@ const parseProfile = {
                                 }
 
                             )
+                            store.state.activeUndoLog.push(`Added lookup value ${valueLabel} to ${exportXML.namespaceUri(URI)}`)
+
                             
                         }
                         if (valueURI && !userValue['@id']){
@@ -1248,6 +1257,9 @@ const parseProfile = {
                                 }
 
                             )
+                            store.state.activeUndoLog.push(`Added lookup value ${valueLabel} to ${exportXML.namespaceUri(URI)}`)
+
+
                             
                         }
                         if (valueURI){
@@ -1303,7 +1315,7 @@ const parseProfile = {
             for (let pt in currentState.rt[rt].pt){
                 if (currentState.rt[rt].pt[pt]['@guid'] == ptGuid){
 
-                    console.log("found the existing PTguid",currentState.rt[rt].pt[pt])
+                    // console.log("found the existing PTguid",currentState.rt[rt].pt[pt])
                     let userValue = currentState.rt[rt].pt[pt].userValue
 
                     if (guid){
@@ -1486,6 +1498,13 @@ const parseProfile = {
 
 
 
+        let pURI = (parentURI) ? parentURI : URI;
+
+        // see if the previous edit of this literal is already in the log, if so remove
+        store.state.activeUndoLog = store.state.activeUndoLog.filter((f) => (f.includes(exportXML.namespaceUri(pURI)) ? false : true ))
+        store.state.activeUndoLog.push(`Changed literal value "${value}" on ${exportXML.namespaceUri(pURI)}`)
+
+
 
         results.currentState = currentState
 
@@ -1552,6 +1571,8 @@ const parseProfile = {
                     "@guid": short.generate(),
                     "http://www.w3.org/2000/01/rdf-schema#label": subjectComponents[0].label
                 }]
+                console.log("Adding single")
+                store.state.activeUndoLog.push(`Added subject heading ${subjectComponents[0].label}`)
 
 
             }else if (subjectComponents.length>1){
@@ -1560,6 +1581,8 @@ const parseProfile = {
 
                 
                 let fullLabel = subjectComponents.map((c)=>{return c.label}).join('--')
+
+                store.state.activeUndoLog.push(`Added subject heading ${fullLabel}`)
 
                 userValue["http://www.loc.gov/mads/rdf/v1#authoritativeLabel"] = [{
                     "@guid": short.generate(),
@@ -1706,6 +1729,8 @@ const parseProfile = {
 
                 }
 
+                let pURI = (parentStructure) ? parentStructure.propertyURI : structure.propertyURI
+                store.state.activeUndoLog.push(`Removed lookup value from ${exportXML.namespaceUri(pURI)}`)
 
                 return currentState
             }
@@ -1903,7 +1928,7 @@ const parseProfile = {
                 
                 }else{
 
-                    console.log('ELES Triggerd')
+
 
                     // dunno, use the root level
                     currentState.rt[activeProfileName].pt[component].userValue = {
@@ -2069,6 +2094,11 @@ const parseProfile = {
             // }
 
         // })
+        let pValue = (value && value.title) ? ` (${value.title})` : "";
+        let pURI = (parentStructure) ? parentStructure.propertyURI : structure.propertyURI;
+        store.state.activeUndoLog.push(`Added lookup value${pValue} to ${exportXML.namespaceUri(pURI)}`)
+
+
 
         return currentState
     },
@@ -2265,10 +2295,15 @@ const parseProfile = {
 
                                 // if it already that undo it
                                 if (val['@language'] === lang){
+                                    store.state.activeUndoLog.push(`Removing ${val['@language']} language for ${exportXML.namespaceUri(pt.propertyURI)}`)
                                     delete val['@language']
+                                    
                                 }else{
                                     //set it otherwise
                                     val['@language'] = lang
+                                    store.state.activeUndoLog.push(`Setting ${val['@language']} language for ${exportXML.namespaceUri(pt.propertyURI)}`)
+
+
                                 }
                             }
                             

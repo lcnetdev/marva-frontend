@@ -6,6 +6,9 @@ import exportXML from "@/lib/exportXML"
 
 Vue.use(Vuex);
 
+const unique = (arr) => [...new Set(arr)];
+
+
 const debounce = (callback, wait) => {
   let timeoutId = null;
   return (...args) => {
@@ -135,6 +138,8 @@ export default new Vuex.Store({
         if (state.activeUndoLog.length==0){
           state.activeUndoLog.push('Unknown change...')
         }
+        // make unique
+        state.activeUndoLog = unique(state.activeUndoLog);
         state.undo.push({'state':JSON.parse(JSON.stringify(state.activeProfile)),'log':JSON.parse(JSON.stringify(state.activeUndoLog))})
         state.activeUndoLog=[]
         console.log(state.undo)
@@ -271,6 +276,9 @@ export default new Vuex.Store({
       state.activeUndoLog = val
     }, 
 
+    SETUNDOINDEX(state, val) {
+      state.undoIndex = val
+    }, 
     
 
 
@@ -378,6 +386,7 @@ export default new Vuex.Store({
     },
 
 
+
     
     setWorkingOnMiniProfile({commit}, data){
       commit('WORKINGONMINIPROFILE', data.value)
@@ -464,6 +473,49 @@ export default new Vuex.Store({
 
     },
 
+
+    undoRedoAction({ commit, state }, data) { 
+
+
+      if (data.undo){
+
+        let steps = data.undo + state.undoIndex
+
+        if (data.jumpToState){
+          steps = data.jumpToState
+        }
+
+        console.log("steps",steps)
+        // can we undo?
+        if (state.undo.length>=steps){
+
+          let getStateAtIndex = state.undo.length - 1 - steps
+
+          console.log(state.undo[getStateAtIndex])
+          console.log(getStateAtIndex)
+
+          commit('SETUNDOINDEX', getStateAtIndex)
+          
+
+        }
+
+
+        console.log('undo',steps)
+
+      }else{
+
+        //
+
+      }
+      // let nap = parseProfile.setLangLiterals(state.activeProfile, data.guid, data.lang)
+      console.log(commit,state)
+      // commit('ACTIVEPROFILE', nap)
+      // commit('ACTIVEEDITCOUNTER') 
+
+      // commit('ACTIVERECORDSAVED', false)
+      // state.saveRecord(state,commit)
+
+    }, 
 
     
     setLangLiterals({ commit, state }, data) { 

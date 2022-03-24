@@ -20,9 +20,65 @@
 .log-button{
     position: absolute;
     top: 15px;
-    left: 10em;
+    left: 160px;
     font-size: larger;
+    border-radius: 0;
+    width: 50px;
+    background-color: white;
+    color: rgb(44, 62, 80);
+    border: 1px solid #2c3e50;
+    padding: 0;
+    font-weight: bold;
+    border-left: none;
+    border-right: none;
+
+}
+.log-button:hover{
+    background-color: whitesmoke;
+    cursor: pointer;
+}
+
+#undo-log-container{
+  border: 1px solid #2c3e50;
+  padding: 0.25em;
+  border-radius: 0.25em;
+  z-index: 10000;
+  position:absolute;
+  height: 80vh;
+  top: 100%;
+  width: 450px;
+  background-color:white;   
+}
+.undo-log{
+  padding: 0.1em;
+}
+.undo-log:hover{
+  background-color: rgb(43 71 255 / 8%) !important;
+}
+
+#undo-log-container .undo-log:nth-child(odd){
+  background-color: whitesmoke;
+}
+
+
+button:disabled,
+button[disabled]{
+  cursor: not-allowed;
+  opacity: 0.25;
+}
+
+
+.undo-button{
+    position: absolute;
+    top: 15px;
+    left: 110px;
+    height: 28px;
+    max-height: 28px;
+    min-height: 28px;
+
     border-radius: 0.25em;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
     width: 50px;
     background-color: white;
     color: rgb(44, 62, 80);
@@ -30,12 +86,32 @@
     padding: 0;
     font-weight: bold;
 }
-.log-button:hover{
+.undo-button:hover{
     background-color: whitesmoke;
     cursor: pointer;
 }
+.redo-button{
+    position: absolute;
+    top: 15px;
+    left: 210px;
+    height: 28px;
+    max-height: 28px;
+    min-height: 28px;
 
-
+    border-radius: 0.25em;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    width: 50px;
+    background-color: white;
+    color: rgb(44, 62, 80);
+    border: 1px solid #2c3e50;
+    padding: 0;
+    font-weight: bold;
+}
+.redo-button:hover{
+    background-color: whitesmoke;
+    cursor: pointer;
+}
 
 .toolbar-main-button{
     background-color:white; 
@@ -311,6 +387,7 @@
                 <button class="option-button" name="optopns" title="options" @click="toggleOptionDisplay" style="">
                     Options
                 </button>
+
                 <div v-if="optionDisplay" style="border: 1px solid #2c3e50; padding: 1em; border-radius: 0.25em; z-index: 10000; position:absolute; height: 80vh; top: 100%; width: 450px; background-color:white; ">
                         
                     
@@ -357,9 +434,44 @@
                   
                 </div>
 
-                <button class="log-button" name="logbtn" title="log" @click="toggleOptionDisplay" style="">
+
+                <button style="display:none" class="undo-button" :disabled="(undoIndex==0)" title="undo" @click="undoRedo('undo',1)">
+                  <svg width="25px" height="25px" version="1.1" viewBox="0 0 105 105" xmlns="http://www.w3.org/2000/svg">
+                   <path d="m36.605 58.57v-17.141h17.145c9.4531 0 17.145 7.6914 17.145 17.141 0 9.4531-7.6914 17.145-17.145 17.145h-17.145v19.285h17.145c20.086 0 36.43-16.344 36.43-36.43 0-20.086-16.344-36.43-36.43-36.43h-17.145v-17.141l-26.785 26.785z"/>
+                  </svg>
+                                 
+
+                </button>
+                <button style="display:none" class="log-button" title="log" @click="toggleUndoDisplay">
                     Log
                 </button>
+
+                <button style="display:none" class="redo-button"   title="redo" @click="undoRedo('redo',1)">
+                  <svg width="25px" height="25px" version="1.1" viewBox="0 0 105 105" xmlns="http://www.w3.org/2000/svg">
+                   <path d="m90.18 31.785-26.785-26.785v17.141h-17.145c-20.086 0-36.43 16.344-36.43 36.43 0 20.09 16.344 36.43 36.43 36.43h17.145v-19.285h-17.145c-9.4531 0-17.145-7.6914-17.145-17.145 0-9.4531 7.6914-17.141 17.145-17.141h17.145v17.141z"/>
+                  </svg>
+                </button>
+
+
+                <div v-if="undoDisplay" id="undo-log-container">
+                    {{undoIndex}}
+                    <div class="undo-log" v-for="(u,idx) in Array.from(undoLog).reverse()" :key="'undo_'+idx" >
+                      <div style="display:flex; align-items: center; justify-content: center;">
+                        <div style="flex:2; ">
+                          <div v-for="(l,idx2) in u.log" :key="'undolog_'+idx+'_'+idx2">{{l}}</div>
+                        </div>
+                        <div style="flex:1; text-align:center;">Restore</div>
+
+                      </div>
+                      
+                    </div>      
+                      
+                  
+                </div>
+
+
+
+
 
 
             </div>
@@ -558,7 +670,8 @@ export default {
         settingsDisplayMode: 'settingsDisplayMode',
         settingsLeftMenuEnriched: 'settingsLeftMenuEnriched',
         activeProfile: 'activeProfile',
-
+        undoLog: 'undo',
+        undoIndex: 'undoIndex',
 
       // to access local state with `this`, a normal function must be used
       // countPlusLocalState (state) {
@@ -580,6 +693,7 @@ export default {
       miniMapActionValue: 'Actions',
       headerState: 'inital',
       optionDisplay: false,
+      undoDisplay: false,
       hideFields: false,
       leftMenuEnriched: false,   
       displayLiteralLanguage: false,
@@ -628,6 +742,7 @@ export default {
               if (this.displayLiteralLanguage){ return false}
               if (this.showPostModal){ return false}
               if (this.optionDisplay){ return false}
+              if (this.undoDisplay){ return false}             
               if (this.displayPreview){ return false}
 
 
@@ -670,6 +785,7 @@ export default {
               }
             }else if (e.y > 75 && this.headerState == 'deployed'){
               if (this.optionDisplay){ return false}
+              if (this.undoDisplay){ return false}
               if (this.displayLiteralLanguage){ return false}
               if (this.showPostModal){ return false}
               if (this.displayPreview){ return false}
@@ -697,6 +813,25 @@ export default {
 
 
   methods:{
+
+    undoRedo: function(type,steps){
+
+    let action = {undo:steps}
+
+    if (type === 'redo'){
+      action = {redo:steps}
+    }
+
+
+
+    this.$store.dispatch("undoRedoAction",action).then(() => {        
+    
+
+    })
+
+
+
+    },
 
     miniMapAction: function(){
 
@@ -815,6 +950,12 @@ export default {
     toggleOptionDisplay: function(){
         this.optionDisplay = (this.optionDisplay) ? false : true;        
     },
+
+    toggleUndoDisplay: function(){
+        this.undoDisplay = (this.undoDisplay) ? false : true;        
+    },
+
+    
 
     updateLeftMenuEnriched: async function(){
         this.$store.dispatch("settingsLeftMenuEnriched", { self: this, settingsLeftMenuEnriched: this.leftMenuEnriched }).then(async () => {
