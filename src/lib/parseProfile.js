@@ -630,6 +630,8 @@ const parseProfile = {
 
     duplicateProperty: function(id,profile,activeProfile,dupeData){
 
+        // console.log(id,'|',profile,'|',activeProfile,'|',dupeData)
+
         let propertyIndex = activeProfile.rt[profile].ptOrder.indexOf(id)
         let newPropertyId = id + '|'+ (+ new Date())
 
@@ -642,12 +644,100 @@ const parseProfile = {
         if (!dupeData){
             store.state.activeUndoLog.push(`Added another property ${exportXML.namespaceUri(activeProfile.rt[profile].pt[id].propertyURI)}`)
 
-            console.log(activeProfile.rt[profile].pt[newPropertyId])
-            console.log(profile,newPropertyId)
+            // console.log(activeProfile.rt[profile].pt[newPropertyId])
+            // console.log(profile,newPropertyId)
             activeProfile.rt[profile].pt[newPropertyId].userValue = {
                 '@guid': short.generate(),
                 '@root' : activeProfile.rt[profile].pt[newPropertyId].propertyURI
             }
+
+            // we also want to add any default values in if it is just a empty new property and not duping
+
+            let idPropertyId = activeProfile.rt[profile].pt[id].propertyURI  
+
+
+
+            // let defaults = null
+
+            // first check the top level
+            let defaultsProperty = store.state.rtLookup[profile].propertyTemplates.filter((x)=>{ return (x.propertyURI === idPropertyId) ? true : false})
+            if (defaultsProperty.length>0){
+                defaultsProperty=defaultsProperty[0]
+
+            }
+
+
+
+            if (defaultsProperty && defaultsProperty.valueConstraint.defaults.length>0){
+
+                // there are defauts at this level
+                // its not a nested component just add it in the first level                
+                if (defaultsProperty.valueConstraint.defaults[0].defaultLiteral){
+                    console.log(activeProfile.rt[profile].pt[newPropertyId])
+                    activeProfile.rt[profile].pt[newPropertyId].userValue['http://www.w3.org/2000/01/rdf-schema#label'] = [{
+                        '@guid': short.generate(),
+                        'http://www.w3.org/2000/01/rdf-schema#label':defaultsProperty.valueConstraint.defaults[0].defaultLiteral
+                    }]
+                }
+                if (defaultsProperty.valueConstraint.defaults[0].defaultURI){
+                    activeProfile.rt[profile].pt[newPropertyId].userValue['@id'] = defaultsProperty.valueConstraint.defaults[0].defaultURI
+                }                  
+
+
+            }else if (defaultsProperty && defaultsProperty.valueConstraint.valueTemplateRefs.length>0){
+
+                // it doesn't exist at the top level, see if it has at least one reference template, if so use the first one and look up if that one has defualt values
+                // the first one since it is the default for the referencetemplace componment
+                let useRef = defaultsProperty.valueConstraint.valueTemplateRefs[0]
+
+                // look through all of them and add in any default
+                for (let refPt of store.state.rtLookup[useRef].propertyTemplates){
+                    if (refPt.valueConstraint.defaults.length>0){
+
+                        let defaults = refPt.valueConstraint.defaults[0]
+
+
+                        if (defaults.defaultLiteral){
+
+                            activeProfile.rt[profile].pt[newPropertyId].userValue[refPt.propertyURI]= [{
+                                '@guid': short.generate(),
+                                'http://www.w3.org/2000/01/rdf-schema#label': [
+                                    {
+                                        'http://www.w3.org/2000/01/rdf-schema#label':defaults.defaultLiteral,
+                                        '@guid': short.generate(),
+                                    }
+                                ]
+                                
+                            }]
+                        }
+
+                        if (defaults.defaultURI){
+                            if (activeProfile.rt[profile].pt[newPropertyId].userValue[refPt.propertyURI][0]){
+                                activeProfile.rt[profile].pt[newPropertyId].userValue[refPt.propertyURI][0]['@id'] = defaults.defaultURI    
+                                if (refPt.valueConstraint.valueDataType && refPt.valueConstraint.valueDataType.dataTypeURI){
+                                    activeProfile.rt[profile].pt[newPropertyId].userValue[refPt.propertyURI][0]['@type'] = refPt.valueConstraint.valueDataType.dataTypeURI
+                                }
+
+                            }
+                            
+                        }      
+
+
+
+
+
+
+
+                    }
+                }
+
+
+            }
+
+
+
+
+
 
         }else{
 
