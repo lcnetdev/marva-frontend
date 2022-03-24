@@ -642,6 +642,8 @@ const parseProfile = {
         if (!dupeData){
             store.state.activeUndoLog.push(`Added another property ${exportXML.namespaceUri(activeProfile.rt[profile].pt[id].propertyURI)}`)
 
+            console.log(activeProfile.rt[profile].pt[newPropertyId])
+            console.log(profile,newPropertyId)
             activeProfile.rt[profile].pt[newPropertyId].userValue = {
                 '@guid': short.generate(),
                 '@root' : activeProfile.rt[profile].pt[newPropertyId].propertyURI
@@ -815,6 +817,9 @@ const parseProfile = {
 
         if (currentState.rt[activeProfileName].pt[component]){
 
+            console.log(component, '|', key, '|', activeProfileName, '|', template, '|', parentId, '|', thisRef, '|', nextRef)
+
+
             // keep track at the top level what is the active type for this template
             currentState.rt[activeProfileName].pt[component].activeType = nextRef.resourceURI
                 
@@ -906,6 +911,56 @@ const parseProfile = {
                 }
 
             }
+
+            // also check to see if there are default values in the orignal profile that we might need to over write with if they are switching 
+
+            
+            for (let pt of store.state.rtLookup[nextRef.id].propertyTemplates){
+                if (pt.valueConstraint.defaults && pt.valueConstraint.defaults.length>0){
+                    // console.log("These fdautls:",pt.valueConstraint.defaults && pt.valueConstraint.defaults[0])
+                    // console.log(pt.propertyURI)
+                    // if there is already this property in the uservalue remove it
+                    if (currentState.rt[activeProfileName].pt[component].userValue[pt.propertyURI]){
+                        currentState.rt[activeProfileName].pt[component].userValue[pt.propertyURI] = []
+                    }
+
+                    // popualte with the default
+
+                    if (pt.valueConstraint.defaults[0].defaultLiteral){
+                        currentState.rt[activeProfileName].pt[component].userValue[pt.propertyURI]= [{
+                            '@guid': short.generate(),
+                            'http://www.w3.org/2000/01/rdf-schema#label': [
+                                {
+                                    'http://www.w3.org/2000/01/rdf-schema#label':pt.valueConstraint.defaults[0].defaultLiteral,
+                                    '@guid': short.generate(),
+                                }
+                            ]
+                            
+                        }]
+                    }
+
+                    if (pt.valueConstraint.defaults[0].defaultURI){
+                        currentState.rt[activeProfileName].pt[component].userValue[pt.propertyURI][0]['@id'] = pt.valueConstraint.defaults[0].defaultURI
+
+                        if (pt.valueConstraint.valueDataType && pt.valueConstraint.valueDataType.dataTypeURI){
+                            currentState.rt[activeProfileName].pt[component].userValue[pt.propertyURI][0]['@type'] = pt.valueConstraint.valueDataType.dataTypeURI
+                        }
+
+                    }      
+
+
+
+
+                }
+            }
+
+
+
+
+
+
+
+
         
 
         }

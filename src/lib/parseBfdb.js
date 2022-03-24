@@ -928,7 +928,7 @@ const parseBfdb = {
 																console.log(store.state.rtLookup[newVtr])
 
 																// mark this xml block in the lookup as needing to use the multiliteral profile templates
-																								
+
 																if (!this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)]){
 																	this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)]=[]
 																}
@@ -1197,6 +1197,7 @@ const parseBfdb = {
 				
 
 				// remove any default values since we will be populating from the record
+				// ptk.valueConstraint.defaultsBackup = JSON.parse(JSON.stringify(ptk.valueConstraint.defaults))
 				ptk.valueConstraint.defaults=[]
 
 				let propertyURI = ptk.propertyURI
