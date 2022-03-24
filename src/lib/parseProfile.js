@@ -817,8 +817,6 @@ const parseProfile = {
 
         if (currentState.rt[activeProfileName].pt[component]){
 
-            console.log(component, '|', key, '|', activeProfileName, '|', template, '|', parentId, '|', thisRef, '|', nextRef)
-
 
             // keep track at the top level what is the active type for this template
             currentState.rt[activeProfileName].pt[component].activeType = nextRef.resourceURI
