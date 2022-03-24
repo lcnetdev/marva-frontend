@@ -22,6 +22,8 @@ const parseBfdb = {
 		item:[]
 	},
 
+	multiLitearlLookup: {},
+
 
 	namespace: {
 		'bflc': 'http://id.loc.gov/ontologies/bflc/',
@@ -593,7 +595,7 @@ const parseBfdb = {
 
 
 		this.tempTemplates = {}
-
+		this.multiLitearlLookup = {}
 
 		// add a admin data to all the rts
 		// TODO replace this later with more advanced/dynamic approch
@@ -783,11 +785,33 @@ const parseBfdb = {
 							// if we found one, but there are not enough based on how many userValues we have for it
 							if (pcount>0&&pcount<resultsTest.rt[rtKey].pt[pt].userValue[checkProperty].length){
 								let diff = resultsTest.rt[rtKey].pt[pt].userValue[checkProperty].length - pcount;								
+
+								// make a copy, and alternate multi-literal version of this subtemplate								
+								let copy = JSON.parse(JSON.stringify(store.state.rtLookup[vtr]))
+								
+								let newVtr = `${vtr}:MultiLiteral`
+								copy.id = newVtr
+								// does it already exist, meaning maybe there are multiple multiliterals?!?!
+								// like two mainTitle and two subtitle
+								if (!store.state.rtLookup[newVtr]){
+									store.state.rtLookup[newVtr] = copy;	
+								}
+								// if it already exists, just keep using it
+								
 								[...Array(diff)].forEach((_, i) => { // eslint-disable-line
 									pvalue['@guid'] = short.generate();
+									pvalue.parentId = newVtr
 									// insert after the old one
-									store.state.rtLookup[vtr].propertyTemplates.splice(ppos+1, 0, pvalue);
+									console.log("modifying ",newVtr)									
+									store.state.rtLookup[newVtr].propertyTemplates.splice(ppos+1, 0, pvalue);
 								});
+
+								// keep note of what property needed this
+								if (!this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)]){
+									this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)]=[]
+								}
+								this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)].push({'old':vtr,'new':newVtr})
+
 							}
 
 						}
@@ -805,7 +829,6 @@ const parseBfdb = {
 								for (let userValue of resultsTest.rt[rtKey].pt[pt].userValue[userValueKey]){
 
 									for (let k in userValue){
-
 
 										if (k == checkProperty && Array.isArray(userValue[k]) && userValue[k].length>1){
 
@@ -831,9 +854,11 @@ const parseBfdb = {
 															for (let [index, p2] of store.state.rtLookup[vtr2].propertyTemplates.entries()){
 																console.log('p2',vtr2,p2,index)
 																if (p2.propertyURI === checkProperty){
+
 																	pcount++
 																	pvalue = JSON.parse(JSON.stringify(p2))
 																	ppos = index
+																	console.log("MATCHED ", checkProperty, pcount)
 																}
 
 															}
@@ -841,6 +866,76 @@ const parseBfdb = {
 															if (pcount>0){
 																console.log(ppos,pcount)
 																console.log(pvalue)
+																console.log("Needs to modify profile:")
+																console.log(vtr,"=>",vtr2,"=>",pvalue.propertyURI)
+
+																// we have a property in a template referenced in the main tempalte
+																// like lc:RT:bf2:MonographNR:PubInfo -> lc:RT:bf2:MonographNR:PubPlace
+																// so we need to modify the subtemplate as well as template 
+																// so make the lc:RT:bf2:MonographNR:PubPlace into lc:RT:bf2:MonographNR:PubPlaceMultiliteral
+																// but also change the lc:RT:bf2:MonographNR:PubInfo so that it is referenceing the new subtemplate 
+																// and also change it to lc:RT:bf2:MonographNR:PubInfoMultiliteral so we can apply it to the needed properties
+
+
+																// do sub-template first, modify it with the new property
+																// make a copy, and alternate multi-literal version of this subtemplate								
+																let copy = JSON.parse(JSON.stringify(store.state.rtLookup[vtr2]))
+																let newVtr2 = `${vtr2}:MultiLiteral`
+
+																// make some updates to the template like id
+																copy.id = newVtr2
+
+
+																// does it already exist, meaning maybe there are multiple multiliterals?!?!
+																// like two mainTitle and two subtitle
+																if (!store.state.rtLookup[newVtr2]){
+																	store.state.rtLookup[newVtr2] = copy;	
+																}
+																// if it already exists, just keep using it
+																
+																// how many are there in there already?
+
+																let diff = userValue[k].length - store.state.rtLookup[newVtr2].propertyTemplates.filter( (p) => {  return ( p.propertyURI ===  checkProperty) ? true : false } ).length
+																
+																console.log("NEEEDDS TO ADD ", diff , " MROA");
+																[...Array(diff)].forEach((_, i) => { // eslint-disable-line
+																	pvalue['@guid'] = short.generate();
+																	pvalue.parentId = newVtr2
+																	// insert after the old one
+																	console.log("modifying 2222222",newVtr2)	
+																	console.log(pvalue)
+																	console.log(store.state.rtLookup[newVtr2])								
+																	store.state.rtLookup[newVtr2].propertyTemplates.splice(ppos+1, 0, pvalue);
+																});
+
+
+																// the sub template is now avaiable, make a new template to house it
+																let newVtr = `${vtr}:MultiLiteral`
+																let parentCopy = JSON.parse(JSON.stringify(store.state.rtLookup[vtr]))
+																parentCopy.id = newVtr
+																if (!store.state.rtLookup[newVtr]){
+																	store.state.rtLookup[newVtr] = parentCopy;	
+																}
+																// if it already exists, just keep using it
+
+																// swap out the subtemplate references for the one we just made
+																console.log("THIS IS THE PARENT:",store.state.rtLookup[newVtr].propertyTemplates[index],index)
+																let idx = store.state.rtLookup[newVtr].propertyTemplates[index].valueConstraint.valueTemplateRefs.indexOf(vtr2)
+																if (idx>-1){
+																	store.state.rtLookup[newVtr].propertyTemplates[index].valueConstraint.valueTemplateRefs[idx]=newVtr2
+																}
+
+																console.log(store.state.rtLookup[newVtr])
+
+																// mark this xml block in the lookup as needing to use the multiliteral profile templates
+																								
+																if (!this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)]){
+																	this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)]=[]
+																}
+																this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)].push({'old':vtr,'new':newVtr})
+
+
+
 															}
 
 
@@ -894,6 +989,9 @@ const parseBfdb = {
 		// console.log(results)
 		console.log(profile)
 		console.log('-------------------DONE WITH TEST PARSE---------------------xxx')
+
+
+
 
 		let results = await this.transformRts(profile)
 
@@ -1236,15 +1334,24 @@ const parseBfdb = {
 						populateData.xmlSource = e.outerHTML
 
 						populateData['@guid'] = short.generate()
+					
+						if (this.multiLitearlLookup[hashCode(populateData.xmlSource)]){
+							console.log("THIS ONE IS A MULTILITERAL ONE!!!")
+							console.log(populateData)
+							console.log(this.multiLitearlLookup[hashCode(populateData.xmlSource)])
+							// check and change he refrence templates
+							for (let mlup of this.multiLitearlLookup[hashCode(populateData.xmlSource)]){
+								let idx = populateData.valueConstraint.valueTemplateRefs.indexOf(mlup.old)
+								if (idx>-1){
+									populateData.valueConstraint.valueTemplateRefs[idx] = mlup.new
+								}
+							}
 
+						}
 
 						//
 						if (this.tempTemplates[hashCode(populateData.propertyURI + populateData.xmlSource)]){
-							
-							populateData.valueConstraint.valueTemplateRefs.push(this.tempTemplates[hashCode(populateData.propertyURI + populateData.xmlSource)])
-
-							// populateData.valueConstraint.valueTemplateRefs.push('lc:RT:bf2:Note')
-							
+							populateData.valueConstraint.valueTemplateRefs.push(this.tempTemplates[hashCode(populateData.propertyURI + populateData.xmlSource)])							
 						}
 
 

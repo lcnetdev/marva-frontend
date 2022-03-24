@@ -239,9 +239,81 @@ export default {
 
       
 
+    }else if (currentUserValue && currentUserValue['@type'] && currentUserValue['@type'] == this.structure.propertyURI ){
+
+      
+
+      // it is the root user value, we need to find its URI if it has one and what the label is
+      // but the label could be stored all over and the URI might be stored at the label level as well :(
+
+      let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(currentUserValue).indexOf(p) > -1) ? true : false })
+
+      // does it have any data?
+      if (currentUserValue['@id'] || foundLabelProperties.length > 0){
+
+        // so it has at least a URI or a label property
+
+        // try to find the label
+
+        let label = null
+        let labelGuid = null
+        let uri = null
+        let uriGuid = null
+
+        for (let p of foundLabelProperties){
+
+          if (currentUserValue[p]){
+            for (let value of currentUserValue[p]){
+              if (value[p]){
+                label = value[p]
+                labelGuid = value['@guid']
+              }
+              // it could also store the URI in the #value or something
+              if (value['@id']){
+                uri= value['@id']
+                uriGuid = value['@guid']
+              }
+            }
+          }
+        }
+
+        if (currentUserValue['@id'] && uri &&  currentUserValue['@id'] != uri){
+          console.warn('---------------------------------------------')
+          console.warn('There is a URI at the root level and also in the label? Which to use?')
+          console.warn(currentUserValue)
+          console.warn(this.structure)
+          console.warn('---------------------------------------------')
+        }
+
+        if (currentUserValue['@id']){
+          uri = currentUserValue['@id']
+          uriGuid = currentUserValue['@guid']
+        }
+
+
+        if (!label){
+
+          // no label was found, just use the URI and it will get dereferenced by the componet
+          if (uri){
+            label = uri
+          }
+
+        }
+
+        // we just use rdf:label internally here, but it could be any of the label properties above
+        // we keep the guid so the predicate doesn't really matter
+        this.activeLookupValue.push({
+          'http://www.w3.org/2000/01/rdf-schema#label' : label,
+          uri : uri,
+          uriGuid: uriGuid,
+          labelGuid: labelGuid
+
+        })
+
+
+      }
 
     }else if (this.parentStructureObj && currentUserValue[this.parentStructureObj.propertyURI]){
-
 
 
 
@@ -300,7 +372,6 @@ export default {
 
 
     }else if (this.parentStructureObj && currentUserValue['@root'] && currentUserValue['@root'] == this.parentStructureObj.propertyURI && currentUserValue[this.structure.propertyURI]) {
-
 
       // its at the first level
 

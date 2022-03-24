@@ -587,14 +587,19 @@ export default {
     this.inputValue = ""
     // let bnodeHasURI = false
 
-
     if (data.multiLiteral){
-
       if (Object.keys(data.multiLiteral).length>1){
         // if there are already 2+ keys then it means that this component has 
         // already been initalized, and this is just a state reload or something
         // so clear out the flag so it populates both multuliteral values again
         delete data.multiLiteral
+      // }else if (data.initalized && Object.keys(data.multiLiteral).length === 1){
+
+      //   // otherwise if there is one value, and this thing as been initalized already
+      //   // then we know its some kind of state reload again, wipe it out as well and 
+      //   delete data.multiLiteral
+      //   console.log(data.multiLiteral)
+
       }
     }
 
@@ -607,17 +612,43 @@ export default {
         if (parentValueArray[this.structure.propertyURI]){          
           for (let childValue of parentValueArray[this.structure.propertyURI]){
             if (childValue[this.structure.propertyURI]){
-              // if there are multiple literals of the same property, like multuple rdf:label (why?) then just merge them
-              // together into the imput so we dont lose it and can be edited
-              this.inputValue = this.inputValue + childValue[this.structure.propertyURI]
+
+
+              // // if there are multiple literals of the same property, like multuple rdf:label (why?) then just merge them
+              // // together into the imput so we dont lose it and can be edited
+              // this.inputValue = this.inputValue + childValue[this.structure.propertyURI] + "MUSH"
 
               // for use later, does this bnode have a URI?              
               // if (parentValueArray['@id']){
               //   bnodeHasURI = true
               // }
 
-              // also set the guid
-              this.guid = childValue['@guid']
+              // // also set the guid
+              // this.guid = childValue['@guid']
+
+
+              // store some info about it in the parent about what literal has been used so far
+              if (!this.parentStructureObj.multiLiteral){
+                this.parentStructureObj.multiLiteral={}
+              }
+
+              if (!this.parentStructureObj.multiLiteral[childValue['@guid']]){
+                // console.log(childValue[this.structure.propertyURI], 'not exist, setting its childValue')
+                this.parentStructureObj.multiLiteral[childValue['@guid']] = childValue[this.structure.propertyURI]
+                this.inputValue = childValue[this.structure.propertyURI]  
+                this.guid = childValue['@guid']
+                break
+              }else{
+                // if it is already in there it was taken by a previous copy of this literal property
+                // console.log(value[this.structure.propertyURI], 'does alraedy exist, ')
+              }   
+
+
+
+
+
+
+              
             }
           }
         }
@@ -638,6 +669,7 @@ export default {
 
       for (let value of data.userValue[this.structure.propertyURI]){
         if (value[this.structure.propertyURI]){
+
           // store some info about it in the parent about what literal has been used so far
           if (!this.parentStructureObj.multiLiteral){
             this.parentStructureObj.multiLiteral={}
@@ -711,7 +743,7 @@ export default {
       this.diacriticData = JSON.parse(d)
     }
 
-
+    data.initalized = true
 
   },
 };

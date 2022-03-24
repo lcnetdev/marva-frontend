@@ -642,17 +642,36 @@ export default {
         if (parentValueArray[this.structure.propertyURI]){          
           for (let childValue of parentValueArray[this.structure.propertyURI]){
             if (childValue[this.structure.propertyURI]){
-              // if there are multiple literals of the same property, like multuple rdf:label (why?) then just merge them
-              // together into the imput so we dont lose it and can be edited
-              this.inputValue = this.inputValue + childValue[this.structure.propertyURI]
+              // // if there are multiple literals of the same property, like multuple rdf:label (why?) then just merge them
+              // // together into the imput so we dont lose it and can be edited
+              // this.inputValue = this.inputValue + childValue[this.structure.propertyURI]
 
-              // for use later, does this bnode have a URI?              
-              // if (parentValueArray['@id']){
-              //   bnodeHasURI = true
-              // }
+              // // for use later, does this bnode have a URI?              
+              // // if (parentValueArray['@id']){
+              // //   bnodeHasURI = true
+              // // }
 
-              // also set the guid
-              this.guid = childValue['@guid']
+              // // also set the guid
+              // this.guid = childValue['@guid']
+              if (!this.parentStructureObj.multiLiteral){
+                this.parentStructureObj.multiLiteral={}
+              }
+
+              if (!this.parentStructureObj.multiLiteral[childValue['@guid']]){
+                // console.log(childValue[this.structure.propertyURI], 'not exist, setting its childValue')
+                this.parentStructureObj.multiLiteral[childValue['@guid']] = childValue[this.structure.propertyURI]
+                this.inputValue = childValue[this.structure.propertyURI]  
+                this.guid = childValue['@guid']
+                break
+              }else{
+                // if it is already in there it was taken by a previous copy of this literal property
+                // console.log(value[this.structure.propertyURI], 'does alraedy exist, ')
+              }   
+
+
+
+
+
             }
           }
         }
