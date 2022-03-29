@@ -950,14 +950,20 @@ const parseProfile = {
 
             // if there are properties in the old template that are not in the new one then we need to remove them from the userValue
             let possibleProperties = nextRef.propertyTemplates.map((p) => {return p.propertyURI})
+ 
+            // This part keeps track of values in previous templates not just the last and next
+            // so it could keep them around, but lets try not doing that, it will loose a value 
+            // if it cycles through one template without one of the properties but that's fine
 
-            if (currentState.rt[activeProfileName].pt[component].refTemplateUserValueKeys[thisRef.id]){
-                currentState.rt[activeProfileName].pt[component].refTemplateUserValueKeys[thisRef.id].forEach((k)=>{
-                    if (possibleProperties.indexOf(k)==-1){
-                        possibleProperties.push(k)
-                    }
-                })
-            }            
+            // if (currentState.rt[activeProfileName].pt[component].refTemplateUserValueKeys[thisRef.id]){
+            //     currentState.rt[activeProfileName].pt[component].refTemplateUserValueKeys[thisRef.id].forEach((k)=>{
+            //         console.log('addding',k)
+            //         if (possibleProperties.indexOf(k)==-1){
+            //             possibleProperties.push(k)
+            //         }
+            //     })
+            // }            
+
 
 
             // also add in the properties at the parent level, because there could be other pts that are not in this level RT but in the parent's children
@@ -1015,24 +1021,47 @@ const parseProfile = {
                     // popualte with the default
 
                     if (pt.valueConstraint.defaults[0].defaultLiteral){
-                        currentState.rt[activeProfileName].pt[component].userValue[pt.propertyURI]= [{
-                            '@guid': short.generate(),
-                            'http://www.w3.org/2000/01/rdf-schema#label': [
+
+
+
+                        // if the default is for a label property, don't double nest it
+                        if (pt.propertyURI === 'http://www.w3.org/2000/01/rdf-schema#label'){
+
+                            currentState.rt[activeProfileName].pt[component].userValue[pt.propertyURI]= [
                                 {
                                     'http://www.w3.org/2000/01/rdf-schema#label':pt.valueConstraint.defaults[0].defaultLiteral,
                                     '@guid': short.generate(),
-                                }
+                                }                              
                             ]
-                            
-                        }]
+
+                        }else{
+                            currentState.rt[activeProfileName].pt[component].userValue[pt.propertyURI]= [{
+                                '@guid': short.generate(),
+                                'http://www.w3.org/2000/01/rdf-schema#label': [
+                                    {
+                                        'http://www.w3.org/2000/01/rdf-schema#label':pt.valueConstraint.defaults[0].defaultLiteral,
+                                        '@guid': short.generate(),
+                                    }
+                                ]
+                                
+                            }]
+
+                        }
+
+
+
                     }
 
-                    if (pt.valueConstraint.defaults[0].defaultURI){
+                    if (pt.valueConstraint.defaults[0].defaultURI && pt.valueConstraint.defaults[0].defaultURI.trim() != ""){
+
+
                         currentState.rt[activeProfileName].pt[component].userValue[pt.propertyURI][0]['@id'] = pt.valueConstraint.defaults[0].defaultURI
 
                         if (pt.valueConstraint.valueDataType && pt.valueConstraint.valueDataType.dataTypeURI){
                             currentState.rt[activeProfileName].pt[component].userValue[pt.propertyURI][0]['@type'] = pt.valueConstraint.valueDataType.dataTypeURI
                         }
+
+
 
                     }      
 
