@@ -65,6 +65,11 @@
 }
 
 
+.undo-current-index{
+  border: 2px solid #0000ff3b;
+}
+
+
 button:disabled,
 button[disabled]{
   cursor: not-allowed;
@@ -450,7 +455,7 @@ button[disabled]{
                     Log
                 </button>
 
-                <button class="redo-button"   title="redo" @click="undoRedo('redo',1)">
+                <button class="redo-button" :disabled="(undoIndex==undoLog.length-1)"   title="redo" @click="undoRedo('redo',1)">
                   <svg width="25px" height="25px" version="1.1" viewBox="0 0 105 105" xmlns="http://www.w3.org/2000/svg">
                    <path d="m90.18 31.785-26.785-26.785v17.141h-17.145c-20.086 0-36.43 16.344-36.43 36.43 0 20.09 16.344 36.43 36.43 36.43h17.145v-19.285h-17.145c-9.4531 0-17.145-7.6914-17.145-17.145 0-9.4531 7.6914-17.141 17.145-17.141h17.145v17.141z"/>
                   </svg>
@@ -458,13 +463,12 @@ button[disabled]{
 
 
                 <div v-if="undoDisplay" id="undo-log-container">
-                    {{undoIndex}}
                     <div class="undo-log" v-for="(u,idx) in Array.from(undoLog).reverse()" :key="'undo_'+idx" >
-                      <div style="display:flex; align-items: center; justify-content: center;">
+                      <div :class="{ 'undo-current-index' : (undoLog.length - idx - 1  == undoIndex) }" style="display:flex; align-items: center; justify-content: center;">
                         <div style="flex:2; ">
                           <div v-for="(l,idx2) in u.log" :key="'undolog_'+idx+'_'+idx2">{{l}}</div>
                         </div>
-                        <div style="flex:1; text-align:center;">Restore</div>
+                        <div style="flex:1; text-align:center; cursor: pointer;" @click="undoRedo('goto',undoLog.length - idx - 1)">Restore {{undoLog.length - idx - 1}}</div>
 
                       </div>
                       
@@ -826,9 +830,17 @@ export default {
       action = {redo:steps}
     }
 
+    if (type === 'goto'){
+      action = {goto:steps}
+    }
 
 
-    this.$store.dispatch("undoRedoAction",action).then(() => {        
+
+
+    this.$store.dispatch("undoRedoAction",action).then(() => {   
+
+          
+      this.$store.dispatch("incrementUndoCounter") 
     
 
     })

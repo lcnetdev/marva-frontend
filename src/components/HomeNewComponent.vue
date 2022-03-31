@@ -205,17 +205,34 @@ export default {
       
       let useProfile = this.loadTemplate(useStartingPoint, this.catInitials)
 
+      this.$store.dispatch("clearUndo", { self: this}).then(()=>{
+
+        this.$store.dispatch("setActiveUndo", { self: this, msg:'Created blank record'})
+
+
+      })
+
+
       this.$store.dispatch("setActiveProfile", { self: this, profile: useProfile, useDefaultValues: true }).then(() => {
         
         if (this.settingsDisplayMode == 'spreadsheet'){
           this.$router.push({ name: 'CompactEdit', params: { recordId: useProfile.eId } })
         }else{
           this.$router.push({ name: 'Edit', params: { recordId: useProfile.eId } })
-
         }
 
+        this.$store.dispatch("forceSave", { self: this}, true).then(() => {
+          this.$store.dispatch("setActiveRecordSaved", { self: this}, true).then(() => {
+
+            window.scrollTo(0, 0);
+
+
+          })    
+        })   
+
+
         
-        window.scrollTo(0, 0);
+        
 
       })
 

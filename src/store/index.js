@@ -33,6 +33,7 @@ export default new Vuex.Store({
     startingPoints: {},
 
     activeProfile: {},
+    // lastActiveProfile: null,
     activeProfileIdCounter: {},
 
     workingOnMiniProfile: false,
@@ -119,7 +120,8 @@ export default new Vuex.Store({
 
 
     undo: [],
-    undoIndex: 0,
+    undoIndex: -1,
+    undoCounter: 0,
     activeUndoLog: [],
 
 
@@ -127,14 +129,32 @@ export default new Vuex.Store({
 
     saveRecord : debounce((state,commit) => {
 
+      console.log("--------------------SAVING NOW ----------------------")
+      console.log("--------------------SAVING NOW ----------------------")
+      console.log("--------------------SAVING NOW ----------------------")
+      console.log("--------------------SAVING NOW ----------------------")
+
       // console.log(state, commit,exportXML)
+      // state.lastActiveProfile = JSON.parse(JSON.stringify(state.activeProfile))
       
       exportXML.toBFXML(state.activeProfile)
       .then((xml)=>{
         
         lookupUtil.saveRecord(xml.xlmStringBasic, state.activeProfile.eId)
         commit('ACTIVERECORDSAVED',true)  
-        state.undoIndex= 0
+        
+        console.log("state.undoIndex:",state.undoIndex, "state.undo.length - 1:",state.undo.length - 1)
+
+        if (state.undo.length - 1 > state.undoIndex){
+
+          state.undo.splice(state.undoIndex + 1)
+
+        }
+
+        state.undoIndex= state.undoIndex + 1
+
+        
+
         if (state.activeUndoLog.length==0){
           state.activeUndoLog.push('Unknown change...')
         }
@@ -147,7 +167,7 @@ export default new Vuex.Store({
       })
       
 
-    }, 2500),
+    }, 1000),
 
 
   },
@@ -205,6 +225,10 @@ export default new Vuex.Store({
     ACTIVEPROFILEMINI(state,val) {
       state.activeProfileMini = val
     },
+    // LASTACTIVEPROFILE(state,val) {
+    //   state.lastActiveProfile = val
+    // },
+
 
     ACTIVEPROFILECOUNTER(state,val) {
       state.activeProfileIdCounter = val
@@ -270,7 +294,15 @@ export default new Vuex.Store({
 
 
     
+    SETUNDO(state, val) {
+      state.undo = val
+    }, 
 
+    INCREMENTUNDOCOUNTER(state) {
+      state.undoCounter = state.undoCounter + 1
+    }, 
+
+    
 
     UNDOLOG(state, val) {
       state.activeUndoLog = val
@@ -402,8 +434,16 @@ export default new Vuex.Store({
       // 
       // 
     },
-    setActiveProfile({ commit, state}, data){
 
+
+
+    
+    // setLastActiveProfile({ commit, state}, data){
+    //   commit('LASTACTIVEPROFILE', data.profile)
+    // },
+
+    setActiveProfile({ commit, state}, data){
+      
       if (data.useDefaultValues){
         data.profile = parseProfile.populateDefaultValuesIntoUserValues(data.profile)
       }
@@ -441,8 +481,18 @@ export default new Vuex.Store({
         msg = JSON.parse(JSON.stringify(state.activeUndoLog))
         msg.push(data.msg)
       }
-      commit('UNDOLOG', data.msg)
+      commit('UNDOLOG', msg)
     },
+
+
+    clearUndo({ commit}){
+      commit('SETUNDO', [])
+      commit('UNDOLOG', [])
+      commit('SETUNDOINDEX', -1)
+    },
+
+
+    
 
 
 
@@ -474,46 +524,77 @@ export default new Vuex.Store({
     },
 
 
+
+    
+    forceSave({ commit, state }) { 
+
+      state.saveRecord(state,commit)
+
+    },
+
+
+    incrementUndoCounter({ commit }){
+
+      commit('INCREMENTUNDOCOUNTER')
+
+    },
+
     undoRedoAction({ commit, state }, data) { 
 
 
       if (data.undo){
 
-        let steps = data.undo + state.undoIndex
 
-        if (data.jumpToState){
-          steps = data.jumpToState
-        }
+        let goto = state.undoIndex - data.undo
 
-        console.log("steps",steps)
-        // can we undo?
-        if (state.undo.length>=steps){
 
-          let getStateAtIndex = state.undo.length - 1 - steps
+        // can we undo? 
+      if (goto >= 0){
+          // yes, so go back to that index of the undo hisotry
+          let newState = state.undo[goto].state
 
-          console.log(state.undo[getStateAtIndex])
-          console.log(getStateAtIndex)
 
-          commit('SETUNDOINDEX', getStateAtIndex)
+
           
+          commit('SETUNDOINDEX', goto)
+          commit('ACTIVEPROFILE', newState)
+
+          console.log("going vack to this state:",goto,state.undo[goto])
 
         }
 
+      }else if (data.redo){
 
-        console.log('undo',steps)
 
-      }else{
+        let goto = state.undoIndex + data.redo
 
-        //
+        if (goto <= state.undo.length){
+         
+          let newState = state.undo[goto].state
+
+
+
+          
+          commit('SETUNDOINDEX', goto)
+          commit('ACTIVEPROFILE', newState)
+
+          console.log("going forward to this state:",goto,state.undo[goto])
+
+        }
+
+      }else if ('goto' in data){
+
+        let newState = state.undo[data.goto].state
+
+        commit('SETUNDOINDEX', data.goto)
+        commit('ACTIVEPROFILE', newState)
+
+
+
 
       }
-      // let nap = parseProfile.setLangLiterals(state.activeProfile, data.guid, data.lang)
-      console.log(commit,state)
-      // commit('ACTIVEPROFILE', nap)
-      // commit('ACTIVEEDITCOUNTER') 
+ 
 
-      // commit('ACTIVERECORDSAVED', false)
-      // state.saveRecord(state,commit)
 
     }, 
 

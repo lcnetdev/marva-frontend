@@ -413,6 +413,9 @@ export default {
     activeComplexSearchInProgress: 'activeComplexSearchInProgress',
     settingsLookupsUseTextSubjectEditor:'settingsLookupsUseTextSubjectEditor',
     contextData: 'contextData',
+
+    undoCounter: 'undoCounter',
+
     assignedId (){
       return uiUtils.assignID(this.structure,this.parentStructure,config)
     },
@@ -471,7 +474,23 @@ export default {
 
       
     }
-  }),  
+  }), 
+
+  watch: {
+
+    // watch when the undoindex changes, means they are undoing redoing, so refresh the
+    // value in the acutal input box
+    undoCounter: function(){
+        this.checkForUserData()
+    }
+
+
+  },
+
+
+
+
+
   methods:{
 
 

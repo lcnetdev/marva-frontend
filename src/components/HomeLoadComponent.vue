@@ -109,8 +109,8 @@ import { mapState } from 'vuex'
 // import uiUtils from "@/lib/uiUtils"
 import parseId from '@/lib/parseId'
 import parseBfdb from '@/lib/parseBfdb'
-import exportXML from "@/lib/exportXML"
-import lookupUtil from "@/lib/lookupUtil"
+// import exportXML from "@/lib/exportXML"
+// import lookupUtil from "@/lib/lookupUtil"
 
 const short = require('short-uuid');
 const decimalTranslator = short("0123456789");
@@ -311,11 +311,13 @@ export default {
         this.transformResults  = await parseBfdb.transform(useProfile)
 
 
-        console.log("==========loadInstance3")
-        console.log(JSON.parse(JSON.stringify(this.transformResults)))
+        // console.log("==========loadInstance3")
+        // console.log(JSON.parse(JSON.stringify(this.transformResults)))
 
         // let workkey = this.transformResults.rtOrder.filter((k)=> k.endsWith(":Instance"))[0]
         // this.transformResultsDisplay = this.transformResults.rt[workkey]
+
+
 
         await this.$store.dispatch("setActiveRecordSaved", { self: this}, false)
 
@@ -327,6 +329,12 @@ export default {
         // let xml = await exportXML.toBFXML(this.transformResults)
         // console.log(xml)
         // console.log('here')
+
+
+        
+        
+        this.$store.dispatch("clearUndo", { self: this})
+
         this.$store.dispatch("setActiveProfile", { self: this, profile: this.transformResults }).then(async () => {
 
           if (this.settingsDisplayMode == 'spreadsheet'){
@@ -337,15 +345,20 @@ export default {
           }
 
 
+          
 
+
+          this.$store.dispatch("setActiveUndo", { self: this, msg:'Loaded record'})
 
           // also save it since it now has a perm URL
-          let xml = await exportXML.toBFXML(this.transformResults)
-          lookupUtil.saveRecord(xml.xlmStringBasic, useProfile.eId)
+          // let xml = await exportXML.toBFXML(this.transformResults)
+          // lookupUtil.saveRecord(xml.xlmStringBasic, useProfile.eId)
+          this.$store.dispatch("forceSave", { self: this}, true).then(() => {
+            this.$store.dispatch("setActiveRecordSaved", { self: this}, true).then(() => {
+            })    
+          })     
 
-          this.$store.dispatch("setActiveRecordSaved", { self: this}, true).then(() => {
-
-          })          
+      
 
 
 

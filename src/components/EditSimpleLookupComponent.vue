@@ -143,181 +143,300 @@ export default {
 
     }
   },
+
+  watch: {
+
+    // watch when the undoindex changes, means they are undoing redoing, so refresh the
+    // value in the acutal input box
+    undoCounter: function(){
+      this.refreshInputDisplay()
+    }
+
+
+  },
+
+
+
   created: function(){
 
-    let currentUserValue
+ 
+    this.refreshInputDisplay()    
 
-    if (this.isMini){
-      currentUserValue = this.activeProfileMini.rt[this.profileName].pt[this.profileCompoent].userValue
-    }else{
-      currentUserValue = this.activeProfile.rt[this.profileName].pt[this.profileCompoent].userValue  
+
+
+  },
+
+  computed: mapState({
+    lookupLibrary: 'lookupLibrary',
+    activeInput: 'activeInput',
+    activeProfile: 'activeProfile',
+    activeProfileMini: 'activeProfileMini',
+    workingOnMiniProfile: 'workingOnMiniProfile',
+    settingsDisplayMode: 'settingsDisplayMode',
+    undoCounter: 'undoCounter',
+
+    assignedId (){
+      return uiUtils.assignID(this.structure,this.parentStructure)
+    },  
+    // to access local state with `this`, a normal function must be used
+    lookupVocab (state) {
+      // let uri = this.structure.valueConstraint.useValuesFrom[0]
+
+      // let returnVal = []
+      // Object.keys(state.lookupLibrary).forEach((s)=>{
+      
+      // })
+      
+      // if (state.lookupLibrary[this.structure.valueConstraint.useValuesFrom[0]]){
+      
+      //   return state.lookupLibrary[this.structure.valueConstraint.useValuesFrom[0]]
+      // }else{
+      //   return []
+      // }
+      return state.lookupLibrary[this.structure.valueConstraint.useValuesFrom[0]]
+
+      
     }
-    
+  }),  
+  methods:{
+
+
+    refreshInputDisplay: function(){
+
+      this.activeLookupValue = []
+
+      let currentUserValue
+
+      if (this.isMini){
+        currentUserValue = this.activeProfileMini.rt[this.profileName].pt[this.profileCompoent].userValue
+      }else{
+        currentUserValue = this.activeProfile.rt[this.profileName].pt[this.profileCompoent].userValue  
+      }
+      
 
 
 
-    let possibleLiteralProperties = ['http://www.w3.org/1999/02/22-rdf-syntax-ns#value', 'http://www.w3.org/2000/01/rdf-schema#label', 'http://id.loc.gov/ontologies/bibframe/code','http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
-    
+      let possibleLiteralProperties = ['http://www.w3.org/1999/02/22-rdf-syntax-ns#value', 'http://www.w3.org/2000/01/rdf-schema#label', 'http://id.loc.gov/ontologies/bibframe/code','http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
+      
 
-    // find the level we are going to work with, it could be the root level or it 
-    // could be like Role and stored as a blank node in the data structure
-    // let useValue = null
-
-
-    if (currentUserValue && currentUserValue['@root'] && currentUserValue['@root'] == this.structure.propertyURI ){
+      // find the level we are going to work with, it could be the root level or it 
+      // could be like Role and stored as a blank node in the data structure
+      // let useValue = null
 
 
-      // it is the root user value, we need to find its URI if it has one and what the label is
-      // but the label could be stored all over and the URI might be stored at the label level as well :(
+      if (currentUserValue && currentUserValue['@root'] && currentUserValue['@root'] == this.structure.propertyURI ){
 
-      let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(currentUserValue).indexOf(p) > -1) ? true : false })
 
-      // does it have any data?
-      if (currentUserValue['@id'] || foundLabelProperties.length > 0){
+        // it is the root user value, we need to find its URI if it has one and what the label is
+        // but the label could be stored all over and the URI might be stored at the label level as well :(
 
-        // so it has at least a URI or a label property
+        let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(currentUserValue).indexOf(p) > -1) ? true : false })
 
-        // try to find the label
+        // does it have any data?
+        if (currentUserValue['@id'] || foundLabelProperties.length > 0){
 
-        let label = null
-        let labelGuid = null
-        let uri = null
-        let uriGuid = null
+          // so it has at least a URI or a label property
 
-        for (let p of foundLabelProperties){
+          // try to find the label
 
-          if (currentUserValue[p]){
-            for (let value of currentUserValue[p]){
-              if (value[p]){
-                label = value[p]
-                labelGuid = value['@guid']
-              }
-              // it could also store the URI in the #value or something
-              if (value['@id']){
-                uri= value['@id']
-                uriGuid = value['@guid']
+          let label = null
+          let labelGuid = null
+          let uri = null
+          let uriGuid = null
+
+          for (let p of foundLabelProperties){
+
+            if (currentUserValue[p]){
+              for (let value of currentUserValue[p]){
+                if (value[p]){
+                  label = value[p]
+                  labelGuid = value['@guid']
+                }
+                // it could also store the URI in the #value or something
+                if (value['@id']){
+                  uri= value['@id']
+                  uriGuid = value['@guid']
+                }
               }
             }
           }
-        }
 
-        if (currentUserValue['@id'] && uri &&  currentUserValue['@id'] != uri){
-          console.warn('---------------------------------------------')
-          console.warn('There is a URI at the root level and also in the label? Which to use?')
-          console.warn(currentUserValue)
-          console.warn(this.structure)
-          console.warn('---------------------------------------------')
-        }
-
-        if (currentUserValue['@id']){
-          uri = currentUserValue['@id']
-          uriGuid = currentUserValue['@guid']
-        }
-
-
-        if (!label){
-
-          // no label was found, just use the URI and it will get dereferenced by the componet
-          if (uri){
-            label = uri
+          if (currentUserValue['@id'] && uri &&  currentUserValue['@id'] != uri){
+            console.warn('---------------------------------------------')
+            console.warn('There is a URI at the root level and also in the label? Which to use?')
+            console.warn(currentUserValue)
+            console.warn(this.structure)
+            console.warn('---------------------------------------------')
           }
 
+          if (currentUserValue['@id']){
+            uri = currentUserValue['@id']
+            uriGuid = currentUserValue['@guid']
+          }
+
+
+          if (!label){
+
+            // no label was found, just use the URI and it will get dereferenced by the componet
+            if (uri){
+              label = uri
+            }
+
+          }
+
+          // we just use rdf:label internally here, but it could be any of the label properties above
+          // we keep the guid so the predicate doesn't really matter
+          this.activeLookupValue.push({
+            'http://www.w3.org/2000/01/rdf-schema#label' : label,
+            uri : uri,
+            uriGuid: uriGuid,
+            labelGuid: labelGuid
+
+          })
+
+
         }
 
-        // we just use rdf:label internally here, but it could be any of the label properties above
-        // we keep the guid so the predicate doesn't really matter
-        this.activeLookupValue.push({
-          'http://www.w3.org/2000/01/rdf-schema#label' : label,
-          uri : uri,
-          uriGuid: uriGuid,
-          labelGuid: labelGuid
+        
 
-        })
+      }else if (currentUserValue && currentUserValue['@type'] && currentUserValue['@type'] == this.structure.propertyURI ){
 
+        
 
-      }
+        // it is the root user value, we need to find its URI if it has one and what the label is
+        // but the label could be stored all over and the URI might be stored at the label level as well :(
 
-      
+        let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(currentUserValue).indexOf(p) > -1) ? true : false })
 
-    }else if (currentUserValue && currentUserValue['@type'] && currentUserValue['@type'] == this.structure.propertyURI ){
+        // does it have any data?
+        if (currentUserValue['@id'] || foundLabelProperties.length > 0){
 
-      
+          // so it has at least a URI or a label property
 
-      // it is the root user value, we need to find its URI if it has one and what the label is
-      // but the label could be stored all over and the URI might be stored at the label level as well :(
+          // try to find the label
 
-      let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(currentUserValue).indexOf(p) > -1) ? true : false })
+          let label = null
+          let labelGuid = null
+          let uri = null
+          let uriGuid = null
 
-      // does it have any data?
-      if (currentUserValue['@id'] || foundLabelProperties.length > 0){
+          for (let p of foundLabelProperties){
 
-        // so it has at least a URI or a label property
-
-        // try to find the label
-
-        let label = null
-        let labelGuid = null
-        let uri = null
-        let uriGuid = null
-
-        for (let p of foundLabelProperties){
-
-          if (currentUserValue[p]){
-            for (let value of currentUserValue[p]){
-              if (value[p]){
-                label = value[p]
-                labelGuid = value['@guid']
-              }
-              // it could also store the URI in the #value or something
-              if (value['@id']){
-                uri= value['@id']
-                uriGuid = value['@guid']
+            if (currentUserValue[p]){
+              for (let value of currentUserValue[p]){
+                if (value[p]){
+                  label = value[p]
+                  labelGuid = value['@guid']
+                }
+                // it could also store the URI in the #value or something
+                if (value['@id']){
+                  uri= value['@id']
+                  uriGuid = value['@guid']
+                }
               }
             }
           }
-        }
 
-        if (currentUserValue['@id'] && uri &&  currentUserValue['@id'] != uri){
-          console.warn('---------------------------------------------')
-          console.warn('There is a URI at the root level and also in the label? Which to use?')
-          console.warn(currentUserValue)
-          console.warn(this.structure)
-          console.warn('---------------------------------------------')
-        }
-
-        if (currentUserValue['@id']){
-          uri = currentUserValue['@id']
-          uriGuid = currentUserValue['@guid']
-        }
-
-
-        if (!label){
-
-          // no label was found, just use the URI and it will get dereferenced by the componet
-          if (uri){
-            label = uri
+          if (currentUserValue['@id'] && uri &&  currentUserValue['@id'] != uri){
+            console.warn('---------------------------------------------')
+            console.warn('There is a URI at the root level and also in the label? Which to use?')
+            console.warn(currentUserValue)
+            console.warn(this.structure)
+            console.warn('---------------------------------------------')
           }
 
+          if (currentUserValue['@id']){
+            uri = currentUserValue['@id']
+            uriGuid = currentUserValue['@guid']
+          }
+
+
+          if (!label){
+
+            // no label was found, just use the URI and it will get dereferenced by the componet
+            if (uri){
+              label = uri
+            }
+
+          }
+
+          // we just use rdf:label internally here, but it could be any of the label properties above
+          // we keep the guid so the predicate doesn't really matter
+          this.activeLookupValue.push({
+            'http://www.w3.org/2000/01/rdf-schema#label' : label,
+            uri : uri,
+            uriGuid: uriGuid,
+            labelGuid: labelGuid
+
+          })
+
+
         }
 
-        // we just use rdf:label internally here, but it could be any of the label properties above
-        // we keep the guid so the predicate doesn't really matter
-        this.activeLookupValue.push({
-          'http://www.w3.org/2000/01/rdf-schema#label' : label,
-          uri : uri,
-          uriGuid: uriGuid,
-          labelGuid: labelGuid
-
-        })
-
-
-      }
-
-    }else if (this.parentStructureObj && currentUserValue[this.parentStructureObj.propertyURI]){
+      }else if (this.parentStructureObj && currentUserValue[this.parentStructureObj.propertyURI]){
 
 
 
-        for (let childProperty of currentUserValue[this.parentStructureObj.propertyURI]){
+          for (let childProperty of currentUserValue[this.parentStructureObj.propertyURI]){
+
+            let label = null
+            let labelGuid = null
+            let uri = null
+            let uriGuid = null
+
+
+            let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(childProperty).indexOf(p) > -1) ? true : false })
+
+            // likely just stored at the first level
+            if (childProperty['@id']){
+              uri = childProperty['@id']
+              uriGuid = childProperty['@guid']
+            }
+
+            for (let p of foundLabelProperties){
+
+              if (childProperty[p]){
+                for (let value of childProperty[p]){
+                  if (value[p]){
+                    label = value[p]
+                    labelGuid = value['@guid']
+                  }
+                  // it could also store the URI in the #value or something
+                  if (value['@id']){
+                    uri= value['@id']
+                    uriGuid = value['@guid']
+                  }
+                }
+              }
+            }
+
+
+            if (!label){
+
+              // no label was found, just use the URI and it will get dereferenced by the componet
+              if (uri){
+                label = uri
+              }
+
+            }
+
+            this.activeLookupValue.push({
+              'http://www.w3.org/2000/01/rdf-schema#label' : label,
+              uri : uri,
+              uriGuid: uriGuid,
+              labelGuid: labelGuid
+
+            })
+
+          }
+
+
+      }else if (this.parentStructureObj && currentUserValue['@root'] && currentUserValue['@root'] == this.parentStructureObj.propertyURI && currentUserValue[this.structure.propertyURI]) {
+
+        // its at the first level
+
+
+        for (let childProperty of currentUserValue[this.structure.propertyURI]){
 
           let label = null
           let labelGuid = null
@@ -371,112 +490,21 @@ export default {
         }
 
 
-    }else if (this.parentStructureObj && currentUserValue['@root'] && currentUserValue['@root'] == this.parentStructureObj.propertyURI && currentUserValue[this.structure.propertyURI]) {
+      }else{
 
-      // its at the first level
-
-
-      for (let childProperty of currentUserValue[this.structure.propertyURI]){
-
-        let label = null
-        let labelGuid = null
-        let uri = null
-        let uriGuid = null
-
-
-        let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(childProperty).indexOf(p) > -1) ? true : false })
-
-        // likely just stored at the first level
-        if (childProperty['@id']){
-          uri = childProperty['@id']
-          uriGuid = childProperty['@guid']
-        }
-
-        for (let p of foundLabelProperties){
-
-          if (childProperty[p]){
-            for (let value of childProperty[p]){
-              if (value[p]){
-                label = value[p]
-                labelGuid = value['@guid']
-              }
-              // it could also store the URI in the #value or something
-              if (value['@id']){
-                uri= value['@id']
-                uriGuid = value['@guid']
-              }
-            }
-          }
-        }
-
-
-        if (!label){
-
-          // no label was found, just use the URI and it will get dereferenced by the componet
-          if (uri){
-            label = uri
-          }
-
-        }
-
-        this.activeLookupValue.push({
-          'http://www.w3.org/2000/01/rdf-schema#label' : label,
-          uri : uri,
-          uriGuid: uriGuid,
-          labelGuid: labelGuid
-
-        })
+        // this.activeLookupValue.push({
+        //   'http://www.w3.org/2000/01/rdf-schema#label' : 'No DATA'
+        // })
 
       }
-
-
-    }else{
-
-      // this.activeLookupValue.push({
-      //   'http://www.w3.org/2000/01/rdf-schema#label' : 'No DATA'
-      // })
-
-    }
-    
-    
-
-
-
-  },
-
-  computed: mapState({
-    lookupLibrary: 'lookupLibrary',
-    activeInput: 'activeInput',
-    activeProfile: 'activeProfile',
-    activeProfileMini: 'activeProfileMini',
-    workingOnMiniProfile: 'workingOnMiniProfile',
-    settingsDisplayMode: 'settingsDisplayMode',
-
-
-    assignedId (){
-      return uiUtils.assignID(this.structure,this.parentStructure)
-    },  
-    // to access local state with `this`, a normal function must be used
-    lookupVocab (state) {
-      // let uri = this.structure.valueConstraint.useValuesFrom[0]
-
-      // let returnVal = []
-      // Object.keys(state.lookupLibrary).forEach((s)=>{
       
-      // })
-      
-      // if (state.lookupLibrary[this.structure.valueConstraint.useValuesFrom[0]]){
-      
-      //   return state.lookupLibrary[this.structure.valueConstraint.useValuesFrom[0]]
-      // }else{
-      //   return []
-      // }
-      return state.lookupLibrary[this.structure.valueConstraint.useValuesFrom[0]]
 
-      
-    }
-  }),  
-  methods:{
+
+
+
+    },
+
+
 
     fakeContainerFocus: function(event){
 

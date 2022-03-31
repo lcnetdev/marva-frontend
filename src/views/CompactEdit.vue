@@ -403,7 +403,19 @@ export default {
             // no
             let ap = await parseProfile.loadRecordFromBackend(this.$route.params.recordId)
             // mark the record as not saved
-            this.$store.dispatch("setActiveRecordSaved", { self: this}, false)
+
+            // mark the record as saved and save the inital of it so it is registered in the undo log
+            this.$store.dispatch("setActiveUndo", { self: this, msg:'Loaded record'}).then(()=>{
+
+                this.$store.dispatch("forceSave", { self: this}, true).then(() => {
+                    this.$store.dispatch("setActiveRecordSaved", { self: this}, true).then(() => {
+                    })    
+                })  
+
+            })
+
+
+            // this.$store.dispatch("setActiveRecordSaved", { self: this}, false)
             this.$store.dispatch("setActiveProfile", { self: this, profile: ap }).then(() => {
                 // load the ontology lookups if they arnt
                 this.loadProfileOntologyLookupsBuild()

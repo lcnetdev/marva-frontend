@@ -11,145 +11,6 @@
 
 
 
-.option-button{
-        position: absolute;
-    top: 15px;
-    font-size: larger;
-    border-radius: 0.25em;
-    width: 100px;
-    background-color: white;
-    color: rgb(44, 62, 80);
-    border: 1px solid #2c3e50;
-    padding: 0;
-    font-weight: bold;
-}
-.option-button:hover{
-    background-color: whitesmoke;
-    cursor: pointer;
-}
-
-.toolbar-main-button{
-    background-color:white; 
-    cursor:pointer; 
-    margin-right: 1em;
-    border: 1px solid #2c3e5063;
-    color:  #2c3e50;
-    text-decoration: none !important;
-    height: 96%;
-    margin-top: 1px;    
-}
-
-.toolbar-main-button:hover{
-    background-color: whitesmoke !important;
-}
-
-.component-default{
-    margin: 1em 0 1em 0;
-    padding: 1em 0 1em 0;
-    transition: background-color 400ms;
-}
-.component-compact{
-    margin: 0;
-    padding: 0;
-    transition: background-color 400ms;
-}
-
-
-
-  .slider input[type=checkbox]{
-    height: 0;
-    width: 0;
-    visibility: hidden;
-  }
-
-  .slider label {
-    cursor: pointer;
-    text-indent: -9999px;
-    width: 50px;
-    height: 25px;
-    background: grey;
-    display: block;
-    border-radius: 25px;
-    position: relative;
-  }
-
-  .slider label:after {
-    content: '';
-    position: absolute;
-    top: 1px;
-    left: 1px;
-    width: 22px;
-    height: 22px;
-    background: #fff;
-    border-radius: 22px;
-    transition: 0.3s;
-  }
-
-  .slider input:checked + label {
-    background: #bada55;
-  }
-
-  .slider input:checked + label:after {
-    left: calc(100% - 5px);
-    transform: translateX(-100%);
-  }
-
-  .slider label:active:after {
-    width: 45px;
-  }
-
-
-.is-hidden-li::before{
-    content: "";
-}
-
-
-.enriched-menu{
-    position: relative;
-    cursor: pointer;
-}
-.enriched-menu .enriched-menu-controls{
-    display: none;
-    float: right;
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-
-
-
-.enriched-menu-icon{
-    fill: white;
-}
-/*.enriched-menu-controls:hover .enriched-menu-icon{
-    fill: blue;
-}
-*/
-.enriched-menu:hover{
-    background-color: #6f6f6f;
-}
-
-.enriched-menu:hover .enriched-menu-controls{
-    display: block;
-}
-
-.enriched-menu-controls button{
-    background-color: transparent;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    height: 25px;
-    padding: 0;
-}
-.enriched-menu-controls button:hover{
-    /*background-color: white;*/
-    color: black;
-}
-.enriched-menu-controls button:hover .enriched-menu-icon{
-    /*background-color: white;*/
-    fill: red;
-    color: black;
-}
 
 
 #send-to-modal{
@@ -370,7 +231,7 @@
 
                           </div>
                           <div style="flex-basis: auto; font-size: 1.25em; font-weight: bold; text-align: left;">{{profileName.split(':').slice(-1)[0]}}</div>
-                          <div style="flex: 1; text-align: right;line-height: 1.25em;">{{activeProfile.rt[profileName].URI}}</div>
+                          <div style="flex: 1; text-align: right;line-height: 1.25em;">{{activeProfile.rt[profileName].URI.replace('http://id.loc.gov/','/').replace('https://id.loc.gov/','/')}}</div>
 
                         </div>
                        
@@ -675,9 +536,24 @@ export default {
           if (!this.activeProfile.eId && this.$route.params.recordId){
 
             // no
+            this.$store.dispatch("clearUndo", { self: this})
+
             let ap = await parseProfile.loadRecordFromBackend(this.$route.params.recordId)
-            // mark the record as not saved
-            this.$store.dispatch("setActiveRecordSaved", { self: this}, false)
+
+
+            // mark the record as saved and save the inital of it so it is registered in the undo log
+            this.$store.dispatch("setActiveUndo", { self: this, msg:'Loaded record'}).then(()=>{
+
+                this.$store.dispatch("forceSave", { self: this}, true).then(() => {
+                    this.$store.dispatch("setActiveRecordSaved", { self: this}, true).then(() => {
+                    })    
+                })  
+
+            })
+
+
+
+
             this.$store.dispatch("setActiveProfile", { self: this, profile: ap }).then(() => {
 
 
