@@ -93,7 +93,8 @@ export default {
 
     refreshInputDisplay: function(){
 
-
+      this.guid = null
+      
       let data
       if (this.isMini){
         data = this.activeProfileMini.rt[this.profileName].pt[this.profileCompoent] 

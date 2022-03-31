@@ -69,6 +69,10 @@
   border: 2px solid #0000ff3b;
 }
 
+.undo-restore-link:hover{
+  font-weight: bold;
+
+}
 
 button:disabled,
 button[disabled]{
@@ -468,7 +472,7 @@ button[disabled]{
                         <div style="flex:2; ">
                           <div v-for="(l,idx2) in u.log" :key="'undolog_'+idx+'_'+idx2">{{l}}</div>
                         </div>
-                        <div style="flex:1; text-align:center; cursor: pointer;" @click="undoRedo('goto',undoLog.length - idx - 1)">Restore {{undoLog.length - idx - 1}}</div>
+                        <div class="undo-restore-link" style="flex:1; text-align:center; cursor: pointer;" @click="undoRedo('goto',undoLog.length - idx - 1)">Restore</div>
 
                       </div>
                       
@@ -964,11 +968,19 @@ export default {
     },
 
     toggleOptionDisplay: function(){
-        this.optionDisplay = (this.optionDisplay) ? false : true;        
+        this.optionDisplay = (this.optionDisplay) ? false : true;  
+
+        if (this.optionDisplay){
+          this.undoDisplay = false
+        }  
     },
 
     toggleUndoDisplay: function(){
         this.undoDisplay = (this.undoDisplay) ? false : true;        
+        if (this.undoDisplay){
+          this.optionDisplay = false
+        }  
+
     },
 
     

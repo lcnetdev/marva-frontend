@@ -139,6 +139,8 @@ export default new Vuex.Store({
       
       exportXML.toBFXML(state.activeProfile)
       .then((xml)=>{
+
+        console.log("NEW STATE:",JSON.parse(JSON.stringify(state.activeProfile)))
         
         lookupUtil.saveRecord(xml.xlmStringBasic, state.activeProfile.eId)
         commit('ACTIVERECORDSAVED',true)  
@@ -146,14 +148,15 @@ export default new Vuex.Store({
         console.log("state.undoIndex:",state.undoIndex, "state.undo.length - 1:",state.undo.length - 1)
 
         if (state.undo.length - 1 > state.undoIndex){
-
+          console.log('Splicing this shit')
           state.undo.splice(state.undoIndex + 1)
+          // state.undoIndex = state.undo.length - 1
 
         }
 
         state.undoIndex= state.undoIndex + 1
-
         
+        console.log("NEW STATE:",JSON.parse(JSON.stringify(state.activeProfile)))
 
         if (state.activeUndoLog.length==0){
           state.activeUndoLog.push('Unknown change...')
@@ -163,6 +166,7 @@ export default new Vuex.Store({
         state.undo.push({'state':JSON.parse(JSON.stringify(state.activeProfile)),'log':JSON.parse(JSON.stringify(state.activeUndoLog))})
         state.activeUndoLog=[]
         console.log(state.undo)
+        state.undoCounter++
 
       })
       
@@ -475,21 +479,6 @@ export default new Vuex.Store({
       commit('CATINITALS', data.catInitials)
     },
 
-    setActiveUndo({ commit, state}, data){
-      let msg = [data.msg]
-      if (state.activeUndoLog.length>0){
-        msg = JSON.parse(JSON.stringify(state.activeUndoLog))
-        msg.push(data.msg)
-      }
-      commit('UNDOLOG', msg)
-    },
-
-
-    clearUndo({ commit}){
-      commit('SETUNDO', [])
-      commit('UNDOLOG', [])
-      commit('SETUNDOINDEX', -1)
-    },
 
 
     
@@ -516,6 +505,8 @@ export default new Vuex.Store({
         commit('ACTIVEPROFILE', nap)
         commit('ACTIVEEDITCOUNTER') 
         commit('ACTIVERECORDSAVED', false)      
+
+
         state.saveRecord(state,commit)
 
       }
@@ -539,6 +530,25 @@ export default new Vuex.Store({
 
     },
 
+
+    setActiveUndo({ commit, state}, data){
+      let msg = [data.msg]
+      if (state.activeUndoLog.length>0){
+        msg = JSON.parse(JSON.stringify(state.activeUndoLog))
+        msg.push(data.msg)
+      }
+      commit('UNDOLOG', msg)
+    },
+
+
+    clearUndo({ commit}){
+      commit('SETUNDO', [])
+      commit('UNDOLOG', [])
+      commit('SETUNDOINDEX', -1)
+    },
+
+
+
     undoRedoAction({ commit, state }, data) { 
 
 
@@ -551,7 +561,7 @@ export default new Vuex.Store({
         // can we undo? 
       if (goto >= 0){
           // yes, so go back to that index of the undo hisotry
-          let newState = state.undo[goto].state
+          let newState = JSON.parse(JSON.stringify(state.undo[goto].state))
 
 
 
@@ -570,7 +580,7 @@ export default new Vuex.Store({
 
         if (goto <= state.undo.length){
          
-          let newState = state.undo[goto].state
+          let newState = JSON.parse(JSON.stringify(state.undo[goto].state))
 
 
 
@@ -584,7 +594,7 @@ export default new Vuex.Store({
 
       }else if ('goto' in data){
 
-        let newState = state.undo[data.goto].state
+        let newState = JSON.parse(JSON.stringify(state.undo[data.goto].state))
 
         commit('SETUNDOINDEX', data.goto)
         commit('ACTIVEPROFILE', newState)
@@ -701,9 +711,9 @@ export default new Vuex.Store({
     },
 
     async setValueLiteral ({ commit, state }, data) {   
-      // console.log('-----------setValueLiteral-----------')
-      // console.log(data)
-      // console.log('-----------setValueLiteral-----------')
+      console.log('-----------setValueLiteral-----------')
+      console.log(data)
+      console.log('-----------setValueLiteral-----------')
       let results
 
       if (state.workingOnMiniProfile){
@@ -721,6 +731,11 @@ export default new Vuex.Store({
         commit('ACTIVEPROFILE', results.currentState)
         commit('ACTIVEEDITCOUNTER')    
         commit('ACTIVERECORDSAVED', false)
+
+        console.log('doing set literal value ', JSON.parse(JSON.stringify(results)))
+
+
+
         state.saveRecord(state,commit)
       }
 

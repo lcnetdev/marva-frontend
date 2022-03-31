@@ -1344,18 +1344,22 @@ const parseProfile = {
             for (let pt in currentState.rt[rt].pt){
                 if (currentState.rt[rt].pt[pt]['@guid'] == ptGuid){
 
-                    // console.log("found the existing PTguid",currentState.rt[rt].pt[pt])
+                    console.log("found the existing PTguid",currentState.rt[rt].pt[pt])
                     let userValue = currentState.rt[rt].pt[pt].userValue
 
                     if (guid){
+                        console.log("here1")
                         // it already has a guid, so we are editing an existing value
                         if (parentURI){
+                            console.log("here2")
                             // if we have the parent URi try to search using both 
                             if (userValue[parentURI]){
+                                console.log("here3")
                                 for (let parentValueArray of userValue[parentURI]){
                                     if (parentValueArray[URI]){          
                                       for (let childValue of parentValueArray[URI]){
                                         if (childValue['@guid'] == guid){
+                                            console.log("here5")
                                             childValue[URI] = value
                                             if (value && value.length==0){
                                                 delete parentValueArray[URI]
@@ -1372,19 +1376,22 @@ const parseProfile = {
                                 }
                             }else{
 
-                                
+                                console.log("here6")
                                 // just search using the propertyURI
                                 if (userValue[URI]){
+                                  console.log("here611")  
                                   for (let childValue of userValue[URI]){
                                     if (childValue['@guid'] == guid){
                                         childValue[URI] = value
                                         if (value && value.length==0){
                                             delete userValue[URI]
                                             results.newGuid=false
+                                            console.log("here66")
                                         }else if (!value){
                                             // value is null remove the property
                                             delete userValue[URI]
                                             results.newGuid=false
+                                            console.log("here666")
                                         }
 
                                     }
@@ -1393,7 +1400,7 @@ const parseProfile = {
 
                             }
                         }else{
-
+                            console.log("here7")
                             // not nested
                             if (userValue[URI]){
                               for (let childValue of userValue[URI]){
