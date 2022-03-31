@@ -752,7 +752,7 @@ button[disabled]{
 
         <div v-if="subjectListDisplay" id="subject-reorder-display">
           
-          <div style="font-size: 1.25em;font-weight: bold;padding: 5px;margin-bottom: 1em;">Subject Headings:</div>
+          <div style="font-size: 1.25em;font-weight: bold;padding: 5px;margin-bottom: 1em;">Subject Headings (drag to reorder):</div>
 
           <draggable
             class="list-group"
@@ -773,6 +773,7 @@ button[disabled]{
               </li>
             </transition-group>
           </draggable>
+          <div style="font-style: italic;     margin-left: 4%; margin-top: 1em;">Subject reordering is for display purposes only, order on posting is not guaranteed.</div>
 
 
         </div>
