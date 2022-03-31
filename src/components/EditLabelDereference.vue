@@ -45,18 +45,35 @@ export default {
           }
 
           let URL = this.URI + '.nt'
+          URL = URL.replace('http://','https://')
 
-          let self = this
+          let cache = sessionStorage.getItem(URL);
+          
+          if (cache){
 
-          fetch(URL.replace('http://','https://'), {method: 'HEAD', redirect: "follow" }).then(
-            function(response)
-              {
-              let preflabel = response.headers.get("x-preflabel");
-              if (preflabel){
-                self.displayLabel = preflabel
-              }
-              }
-            );
+            this.displayLabel = cache
+
+          }else{
+
+            let self = this
+            fetch(URL, {method: 'HEAD', redirect: "follow" }).then(
+              function(response)
+                {
+                let preflabel = response.headers.get("x-preflabel");
+                if (preflabel){
+                  self.displayLabel = preflabel
+
+
+                  sessionStorage.setItem(URL, preflabel);
+
+
+                }
+                }
+              );
+
+
+          }
+
 
 
 
