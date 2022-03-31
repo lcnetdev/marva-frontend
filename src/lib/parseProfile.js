@@ -1558,8 +1558,12 @@ const parseProfile = {
         // we're just going to overwrite the whole userValue with the constructed headings
 
 
+
         // find it
         if (currentState.rt[activeProfileName].pt[component]){
+
+
+
 
             // hard code some properties that are used
             let userValue = {
@@ -1583,10 +1587,12 @@ const parseProfile = {
                 //     }],                    
                 //     "@id": "http://id.loc.gov/vocabulary/subjectSchemes/lcsh"
                 // }]
-
-
-
             }
+
+            // but find a source predicates so we can add those back in
+            if (currentState.rt[activeProfileName].pt[component].userValue['http://id.loc.gov/ontologies/bibframe/source']){
+                userValue['http://id.loc.gov/ontologies/bibframe/source'] = JSON.parse(JSON.stringify(currentState.rt[activeProfileName].pt[component].userValue['http://id.loc.gov/ontologies/bibframe/source']))
+             }
 
             // overwrite the guid if it already exists in the source
             // if (currentState.rt[activeProfileName].pt[component].userValue['http://id.loc.gov/ontologies/bibframe/source']){
