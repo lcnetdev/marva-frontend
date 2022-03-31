@@ -112,8 +112,9 @@
       <Keypress v-if="useSubjectEditor()" key-event="keydown" :multiple-keys="[{keyCode: 69, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="openEditor" />
 
 
+
       
-      <div ref="fakeInputContainer" style="position: relative;" v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search']">       
+      <div ref="fakeInputContainer" style="position: relative;" v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search']">              
           <div class="component-nested-container-title" style="top: 0; width: 100%">
             <span v-if="parentStructureObj && (structure.propertyLabel == 'Lookup' || settingsDisplayMode=='compact')">{{parentStructureObj.propertyLabel}} -- </span>
             <span>{{structure.propertyLabel}}</span>
@@ -140,7 +141,7 @@
                 </form>
               </div>
 
-              <button v-if="useSubjectEditor()" tabindex="-1" class="temp-icon-search fake-real-button simptip-position-top" style="position:absolute;right: -2px;top:-26px" @click="openEditor" :data-tooltip="'Edit this Subject Heading [CTRL-ALT-SHIFT-E]'"></button>
+              <button v-if="useSubjectEditor()" tabindex="-1" class="temp-icon-search fake-real-button simptip-position-top" style="position:absolute;right: -2px;top:-26px" @click="openEditor" :id="returnGuid()+'_subjectButton'" :data-tooltip="'Edit this Subject Heading [CTRL-ALT-SHIFT-E]'"></button>
 
               <!-- This is the detail drop down that can be click to show context of the entitiy -->
               
@@ -602,6 +603,13 @@ export default {
 
 
 
+
+    },
+
+
+    returnGuid: function(){
+
+      return parseProfile.returnGuid(this.activeProfile, this.profileCompoent, this.structure.propertyURI)
 
     },
 
@@ -1460,6 +1468,8 @@ export default {
               this.$store.dispatch("enableMacroNav", { self: this})
 
         },0)
+
+        this.$store.dispatch("setSubjectList")
 
       }) 
 

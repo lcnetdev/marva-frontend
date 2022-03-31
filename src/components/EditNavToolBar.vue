@@ -12,7 +12,36 @@
     padding: 0;
     font-weight: bold;
 }
-.option-button:hover{
+
+
+.subject-list-button{
+position: absolute;
+    top: 15px;
+    font-size: larger;
+    border-radius: 0.25em;
+    width: 50px;
+    background-color: white;
+    color: rgb(44, 62, 80);
+    border: 1px solid #2c3e50;
+    padding: 0;
+    font-weight: bold;
+    left: -58px;
+    max-height: 28px;
+    min-height: 28px;
+}
+
+
+.subject-edit-link{
+  cursor: pointer;
+}
+
+.subject-edit-link:hover{
+  font-weight: bold;
+
+}
+
+
+.option-button:hover, .subject-list-button:hover{
     background-color: whitesmoke;
     cursor: pointer;
 }
@@ -250,6 +279,68 @@ button[disabled]{
 }
 
 
+#subject-reorder-display{
+  width: 75%; 
+  left: 12%;
+  border: solid 2px black;
+  height: 470px;
+  background-color: white;
+  position: absolute;
+  z-index: 100;
+}
+
+
+
+.flip-list-move {
+  transition: transform 0.5s;
+}
+.no-move {
+  transition: transform 0s;
+}
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
+.list-group {
+  min-height: 20px;
+  margin: 0;
+  padding: 0;
+
+}
+
+
+
+.list-group-item:first-child {
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+}
+
+.list-group-item {
+  cursor: move;
+  position: relative;
+  display: block;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: -1px;
+  background-color: #fff;
+  border: 1px solid rgba(0,0,0,.125);
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+.list-group-item::before{
+  content: "";
+}
+
+
+
+.list-group-item i {
+  cursor: pointer;
+}
+
+
+
 </style>
 
 <template>
@@ -397,6 +488,15 @@ button[disabled]{
 
             <div style="flex:1; position:relative;">
                 
+                <button class="subject-list-button" name="subject-list" title="subject-list" @click="toggleSubjectListDisplay" style="">
+
+                  <svg width="25px" height="25px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                   <path d="m5 83c0-3.6406 2.1914-6.9219 5.5547-8.3164 3.3633-1.3906 7.2344-0.62109 9.8086 1.9531s3.3438 6.4453 1.9531 9.8086c-1.3945 3.3633-4.6758 5.5547-8.3164 5.5547-4.9688 0-9-4.0312-9-9zm9-57c3.6406 0 6.9219-2.1914 8.3164-5.5547 1.3906-3.3633 0.62109-7.2344-1.9531-9.8086s-6.4453-3.3438-9.8086-1.9531c-3.3633 1.3945-5.5547 4.6758-5.5547 8.3164 0 4.9688 4.0312 9 9 9zm0 33c3.6406 0 6.9219-2.1914 8.3164-5.5547 1.3906-3.3633 0.62109-7.2344-1.9531-9.8086s-6.4453-3.3438-9.8086-1.9531c-3.3633 1.3945-5.5547 4.6758-5.5547 8.3164 0 4.9688 4.0312 9 9 9zm30-36h45c3.3125 0 6-2.6875 6-6s-2.6875-6-6-6h-45c-3.3125 0-6 2.6875-6 6s2.6875 6 6 6zm0 33h45c3.3125 0 6-2.6875 6-6s-2.6875-6-6-6h-45c-3.3125 0-6 2.6875-6 6s2.6875 6 6 6zm0 33h45c3.3125 0 6-2.6875 6-6s-2.6875-6-6-6h-45c-3.3125 0-6 2.6875-6 6s2.6875 6 6 6z"/>
+                  </svg>
+
+
+                </button>
+
                 <button class="option-button" name="optopns" title="options" @click="toggleOptionDisplay" style="">
                     Options
                 </button>
@@ -650,6 +750,36 @@ button[disabled]{
         </div>
 
 
+        <div v-if="subjectListDisplay" id="subject-reorder-display">
+          
+          <div style="font-size: 1.25em;font-weight: bold;padding: 5px;margin-bottom: 1em;">Subject Headings:</div>
+
+          <draggable
+            class="list-group"
+            tag="ul"
+            v-model="list"
+            v-bind="dragOptions"
+            @start="drag = true"
+            @end="drag = false; subjectDragEnd()"
+          >
+            <transition-group type="transition" :name="!drag ? 'flip-list' : null">
+              <li
+                class="list-group-item"
+                v-for="element in list"
+                :key="element.guid"
+              >               
+                <span style="display:inline-block">{{ element.label }} {{ (element.source) ? `(${element.source})` : ''}}</span>
+                <a class="subject-edit-link" @click="editSubjectClick(element.guid)" style="display:inline-block; float: right;">Edit</a>
+              </li>
+            </transition-group>
+          </draggable>
+
+
+        </div>
+
+
+
+
   </header>
 
 
@@ -663,12 +793,15 @@ import exportXML from "@/lib/exportXML"
 import lookupUtil from "@/lib/lookupUtil"
 import config from "@/lib/config"
 import EditLiteralLanguage from "@/components/EditLiteralLanguage"
+import draggable from 'vuedraggable'
+
 
 
 export default {
   name: "EditLabelDereference",
   components: {
     EditLiteralLanguage,
+    draggable,
 
     Keypress: () => import('vue-keypress'),
 
@@ -684,6 +817,18 @@ export default {
         activeProfile: 'activeProfile',
         undoLog: 'undo',
         undoIndex: 'undoIndex',
+
+        subjectList: 'subjectList',
+
+
+        dragOptions() {
+          return {
+            animation: 200,
+            group: "description",
+            disabled: false,
+            ghostClass: "ghost"
+        }},
+     
 
       // to access local state with `this`, a normal function must be used
       // countPlusLocalState (state) {
@@ -706,6 +851,7 @@ export default {
       headerState: 'inital',
       optionDisplay: false,
       undoDisplay: false,
+      subjectListDisplay: false,
       hideFields: false,
       leftMenuEnriched: false,   
       displayLiteralLanguage: false,
@@ -716,8 +862,30 @@ export default {
       showPostModal: false,
       showPostModalErrorMsg: false,      
 
+      list: [],
+      drag: false
+
+
     }
   },
+
+
+  watch: {
+
+    // watch when the undoindex changes, means they are undoing redoing, so refresh the
+    // value in the acutal input box
+    subjectList: function(){
+
+      this.list = this.subjectList.map((value, index) => {
+
+        return { label: value.label, source: value.source, guid:value.guid, index:index, pt:value.pt };
+
+      })
+    }
+
+
+  },
+
 
   created: function(){
       
@@ -754,6 +922,9 @@ export default {
               if (this.displayLiteralLanguage){ return false}
               if (this.showPostModal){ return false}
               if (this.optionDisplay){ return false}
+              if (this.subjectListDisplay){ return false}
+
+
               if (this.undoDisplay){ return false}             
               if (this.displayPreview){ return false}
 
@@ -797,6 +968,10 @@ export default {
               }
             }else if (e.y > 75 && this.headerState == 'deployed'){
               if (this.optionDisplay){ return false}
+              if (this.subjectListDisplay){ return false}
+
+
+
               if (this.undoDisplay){ return false}
               if (this.displayLiteralLanguage){ return false}
               if (this.showPostModal){ return false}
@@ -826,6 +1001,16 @@ export default {
 
   methods:{
 
+    subjectDragEnd: function(){
+
+      this.$store.dispatch("setSubjectOrder",this.list).then(() => {   
+
+        console.log("YEAH")
+      });    
+
+
+    },
+
     undoRedo: function(type,steps){
 
     let action = {undo:steps}
@@ -852,6 +1037,17 @@ export default {
 
 
     },
+
+    sort() {
+      this.list = this.list.sort((a, b) => a.order - b.order);
+    },
+
+    editSubjectClick: function(guid){
+
+      document.getElementById(guid+'_subjectButton').click()
+      this.subjectListDisplay=false
+    },
+
 
     miniMapAction: function(){
 
@@ -972,13 +1168,29 @@ export default {
 
         if (this.optionDisplay){
           this.undoDisplay = false
+          this.subjectListDisplay = false
         }  
     },
+
+    toggleSubjectListDisplay: function(){
+
+        this.$store.dispatch("setSubjectList")
+
+        this.subjectListDisplay = (this.subjectListDisplay) ? false : true;  
+
+        if (this.subjectListDisplay){
+          this.undoDisplay = false
+          this.optionDisplay = false
+        }  
+    },
+
+    
 
     toggleUndoDisplay: function(){
         this.undoDisplay = (this.undoDisplay) ? false : true;        
         if (this.undoDisplay){
           this.optionDisplay = false
+          this.subjectListDisplay = false
         }  
 
     },

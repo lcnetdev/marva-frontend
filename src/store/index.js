@@ -115,6 +115,8 @@ export default new Vuex.Store({
     allRecords : [],
     myRecords: [],
 
+    subjectList: [],
+
 
     diagramMiniMap: false,
 
@@ -278,6 +280,11 @@ export default new Vuex.Store({
     SETTINGSDPACKVOYAGER(state, val) {
       state.settingsDPackVoyager = val
     },   
+
+    SUBJECTLIST(state, val) {
+      state.subjectList = val
+    },   
+    
     SETTINGSDPACKVOYAGERNATIVE(state, val) {
       state.settingsDPackVoyagerNative = val
     },   
@@ -514,7 +521,12 @@ export default new Vuex.Store({
 
     },
 
+    setSubjectOrder({ commit, state}, subjects){
+     
+        let nap = parseProfile.reorderSubjects(state.activeProfile, subjects)
+        commit('ACTIVEPROFILE', nap)
 
+    },
 
     
     forceSave({ commit, state }) { 
@@ -759,6 +771,17 @@ export default new Vuex.Store({
     returnDiagramMiniMap ({ commit, state }) {   
       let mini = parseProfile.returnDiagramMiniMap(state.activeProfile)
       commit('DIAGRAMMINIMAP', mini)    
+    },
+
+
+
+    setSubjectList ({ commit, state }) {   
+      let list = parseProfile.returnSubjectList(state.activeProfile)
+      console.log(list)
+      commit('SUBJECTLIST', list)    
+
+
+     
     },
 
 

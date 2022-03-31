@@ -1549,6 +1549,99 @@ const parseProfile = {
 
     },
 
+    
+    reorderSubjects: function(profile, subjects){
+
+
+        console.log(subjects)
+        for (let rt of profile.rtOrder){
+
+            if (rt.includes(':Work')){
+                    
+                let subjectsStartAtIndex = 0
+
+                for (let pt of profile.rt[rt].ptOrder){
+
+                    if (pt.includes('http://id.loc.gov/ontologies/bibframe/subject')){
+                        break
+                    }
+                    subjectsStartAtIndex++
+                }
+
+                let ptOrderNoSubjects = profile.rt[rt].ptOrder.filter((p)=>{ return (!p.includes('http://id.loc.gov/ontologies/bibframe/subject')) })
+
+                console.log('subjectsStartAtIndex',subjectsStartAtIndex)
+                console.log(ptOrderNoSubjects)
+
+                let subjectNewOrder = subjects.map((s)=>{return s.pt})
+
+                console.log(subjectNewOrder)
+
+                // add them in 
+                ptOrderNoSubjects.splice(subjectsStartAtIndex, 0, ...subjectNewOrder);
+
+                profile.rt[rt].ptOrder = ptOrderNoSubjects
+            }
+        }
+
+        return profile
+
+    },
+
+    returnSubjectList: function(profile){
+
+        let list = []
+
+        for (let rt of profile.rtOrder){
+
+            if (rt.includes(':Work')){
+                
+                for (let pt of profile.rt[rt].ptOrder){
+
+                    if (pt.includes('id.loc.gov/ontologies/bibframe/subject')){
+                        console.log("SUBJECT!!!",profile.rt[rt].pt[pt])
+
+                        let label = "!Unkown Subject Label!"
+                        let source = ''
+
+                        if (profile.rt[rt].pt[pt].userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'] && profile.rt[rt].pt[pt].userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0] && profile.rt[rt].pt[pt].userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'] ){
+                            label = profile.rt[rt].pt[pt].userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
+                        }
+
+                        if (profile.rt[rt].pt[pt].userValue['http://www.w3.org/2000/01/rdf-schema#label'] && profile.rt[rt].pt[pt].userValue['http://www.w3.org/2000/01/rdf-schema#label'][0] && profile.rt[rt].pt[pt].userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label'] ){
+                            label = profile.rt[rt].pt[pt].userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
+                        }
+
+                        if (profile.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/source'] && profile.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/source'][0] && profile.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/source'][0] ){
+                            let s = profile.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/source'][0]
+                            if (s['@id'] &&  s['@id'] == 'http://id.loc.gov/authorities/subjects'){
+                                source = 'lcsh'
+                            }
+                            if (s['@id'] &&  s['@id'] == 'http://id.loc.gov/vocabulary/subjectSchemes/fast'){
+                                source = 'fast'
+                            }
+
+
+                        }
+
+                        
+                        list.push({
+                            guid: profile.rt[rt].pt[pt]['@guid'],
+                            source: source,
+                            label: label,
+                            pt: pt
+
+                        })
+                    }
+
+                }
+            }
+        }
+
+
+        return list
+
+    },
 
 
     // a special funtion just for subject headings (how fun)
@@ -2417,6 +2510,26 @@ const parseProfile = {
         return results
 
     },
+
+    returnGuid: function(currentState, component, propertyURI){
+        let results = false
+
+        // eslint-disable-next-line
+        let temp = propertyURI 
+
+        Object.keys(currentState.rt).forEach((rt)=>{
+            // check if this profile has the pt we are looking for
+            if (currentState.rt[rt].pt[component]){
+                results = currentState.rt[rt].pt[component]['@guid']
+ 
+            }
+        })
+        
+        return results
+
+    },
+
+
 
     returnRootPropertyURI: function(currentState, component, propertyURI){
         let results = false

@@ -554,6 +554,9 @@ export default {
 
 
 
+
+
+
             this.$store.dispatch("setActiveProfile", { self: this, profile: ap }).then(() => {
 
 
@@ -563,6 +566,10 @@ export default {
                 this.loadProfileOntologyLookupsBuild()
 
                 console.log('-----diagramMiniMap:',this.diagramMiniMap)
+
+                this.$store.dispatch("setSubjectList")
+
+                
 
                 
                 this.leftMenuEnriched = this.settingsLeftMenuEnriched
@@ -577,7 +584,7 @@ export default {
 
             // load the ontology lookups if they arnt
             this.loadProfileOntologyLookupsBuild()
-
+            this.$store.dispatch("setSubjectList")
 
           }
 
@@ -613,7 +620,8 @@ export default {
             })
 
             console.log('-----diagramMiniMap:',this.diagramMiniMap)
-            
+            this.$store.dispatch("setSubjectList")
+
             this.leftMenuEnriched = this.settingsLeftMenuEnriched
             this.$refs.navToolBar.updateHideEmptyFieldsReDraw()
             this.forceComponentRedraw()
@@ -625,6 +633,7 @@ export default {
           this.$nextTick(()=>{
             // this.sideBarGrabDragInit()
             this.loadProfileOntologyLookupsBuild()
+            this.$store.dispatch("setSubjectList")
             
             this.$refs.navToolBar.updateHideEmptyFieldsReDraw()
             this.forceComponentRedraw()
