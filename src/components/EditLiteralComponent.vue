@@ -249,8 +249,8 @@ export default {
 
     nav: function(event){
 
-      console.log(event)
-      console.log(this.settingsDPackVoyagerNative, this.diacrticsVoyagerNativeMode,event.code,event.ctrlKey)
+      // console.log(event)
+      // console.log(this.settingsDPackVoyagerNative, this.diacrticsVoyagerNativeMode,event.code,event.ctrlKey)
       // turn it on
       if (this.settingsDPackVoyagerNative && this.diacrticsVoyagerNativeMode == false && event.code == 'KeyE' && event.ctrlKey == true){
         this.$refs["input"].style.color="blue"
@@ -541,7 +541,6 @@ export default {
 
     refreshInputDisplay: function(){
 
-
       this.guid = null
 
       let data
@@ -550,64 +549,80 @@ export default {
       }else{
         data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]  
       }
-      
 
-      this.inputValue = ""
-      // let bnodeHasURI = false
 
-      if (data.multiLiteral){
-        if (Object.keys(data.multiLiteral).length>1){
-          // if there are already 2+ keys then it means that this component has 
-          // already been initalized, and this is just a state reload or something
-          // so clear out the flag so it populates both multuliteral values again
-          delete data.multiLiteral
-        // }else if (data.initalized && Object.keys(data.multiLiteral).length === 1){
-
-        //   // otherwise if there is one value, and this thing as been initalized already
-        //   // then we know its some kind of state reload again, wipe it out as well and 
-        //   delete data.multiLiteral
-        //   console.log(data.multiLiteral)
-
-        }
-      }
-
-      // if it is not set as multiliteral just always wipe it
+      // clear out this flag so that it can populate if the state is realoding 
+      // check to see if there are alaready multiples in it, if so we need to 
       if (!data.isMultiLiteral){
         delete data.multiLiteral
       }
 
 
+      this.inputValue = ""
 
 
-      // first test to see if this property exists in the user value at the parent structure / properturi lvl
+      // do some tests to see where in uservalue data that the literal is being store
+      let level = null
       if (this.parentStructureObj && data.userValue[this.parentStructureObj.propertyURI]){
         for (let parentValueArray of data.userValue[this.parentStructureObj.propertyURI]){
           if (parentValueArray[this.structure.propertyURI]){          
             for (let childValue of parentValueArray[this.structure.propertyURI]){
               if (childValue[this.structure.propertyURI]){
+                level = {var:this.parentStructureObj,text:'parentStructureObj',uri: this.parentStructureObj.propertyURI + '|' +this.structure.propertyURI, data:parentValueArray[this.structure.propertyURI]}
+              }
+            }
+          }
+        }
+      }else if (!this.parentStructureObj && data.userValue[this.structure.propertyURI]){
+        level = {var:data,text:'data',uri:this.structure.propertyURI, data:data.userValue[this.structure.propertyURI]}
+      }else if (this.parentStructureObj && this.parentStructureObj.propertyURI == data.userValue['@root'] && data.userValue[this.structure.propertyURI]){
+        for (let value of data.userValue[this.structure.propertyURI]){
+          // console.log("HERE 3.1")
+          if (value[this.structure.propertyURI]){
+            level = {var:data,text:'data',uri:this.structure.propertyURI, data:data.userValue[this.structure.propertyURI]}
+          }
+        }
+      }
+
+      // console.log('level',level, data.isMultiLiteral)
+
+      // if we found where the data is living at what level we will make a multuliteral entry for that
+      if (level && data.isMultiLiteral){
+        if (data.multiLiteral && data.multiLiteral[level.uri] && Object.keys(data.multiLiteral[level.uri]).length>1){
+          delete data.multiLiteral[level.uri]
+        }
+
+        // if the component is marked as multiLiteral but the individual property doesn't have multiple values then remove the flag so it just populates each time
+        if (level.data.length<2){
+          delete data.multiLiteral[level.uri]
+        }
+
+      }
 
 
-                // // if there are multiple literals of the same property, like multuple rdf:label (why?) then just merge them
-                // // together into the imput so we dont lose it and can be edited
-                // this.inputValue = this.inputValue + childValue[this.structure.propertyURI] + "MUSH"
-
-                // for use later, does this bnode have a URI?              
-                // if (parentValueArray['@id']){
-                //   bnodeHasURI = true
-                // }
-
-                // // also set the guid
-                // this.guid = childValue['@guid']
 
 
-                // store some info about it in the parent about what literal has been used so far
-                if (!this.parentStructureObj.multiLiteral){
-                  this.parentStructureObj.multiLiteral={}
+      // test to see if this property exists in the user value at the parent structure / properturi lvl
+      if (this.parentStructureObj && data.userValue[this.parentStructureObj.propertyURI]){
+        // console.log("HERE 1")
+        for (let parentValueArray of data.userValue[this.parentStructureObj.propertyURI]){
+          if (parentValueArray[this.structure.propertyURI]){          
+            for (let childValue of parentValueArray[this.structure.propertyURI]){
+              if (childValue[this.structure.propertyURI]){
+  
+
+
+                if (!data.multiLiteral){
+                  data.multiLiteral={}
                 }
 
-                if (!this.parentStructureObj.multiLiteral[childValue['@guid']]){
-                  // console.log(childValue[this.structure.propertyURI], 'not exist, setting its childValue')
-                  this.parentStructureObj.multiLiteral[childValue['@guid']] = childValue[this.structure.propertyURI]
+
+                if (!data.multiLiteral[level.uri]){
+                  data.multiLiteral[level.uri] = {}
+                }
+
+                if (!data.multiLiteral[level.uri][childValue['@guid']]){
+                  data.multiLiteral[level.uri][childValue['@guid']] = childValue[this.structure.propertyURI]
                   this.inputValue = childValue[this.structure.propertyURI]  
                   this.guid = childValue['@guid']
                   break
@@ -615,7 +630,7 @@ export default {
                   // if it is already in there it was taken by a previous copy of this literal property
                   // console.log(value[this.structure.propertyURI], 'does alraedy exist, ')
                 }   
-
+                // console.log(data.multiLiteral)
 
 
 
@@ -627,6 +642,7 @@ export default {
           }
         }
       }else if (!this.parentStructureObj && data.userValue[this.structure.propertyURI]){
+        // console.log("HERE 2")
         // if it is not a nested template literal then it should be a first lvl one
         for (let value of data.userValue[this.structure.propertyURI]){
           if (value[this.structure.propertyURI]){
@@ -638,29 +654,35 @@ export default {
           }
         }
       }else if (this.parentStructureObj && this.parentStructureObj.propertyURI == data.userValue['@root'] && data.userValue[this.structure.propertyURI]){
-        // there is aparent element, but it is the root element also
+
 
         for (let value of data.userValue[this.structure.propertyURI]){
+          // console.log("HERE 3.1")
           if (value[this.structure.propertyURI]){
 
-            // store some info about it in the parent about what literal has been used so far
-            if (!this.parentStructureObj.multiLiteral){
-              this.parentStructureObj.multiLiteral={}
+
+            if (!data.multiLiteral){
+              data.multiLiteral={}
+            }
+            if (!data.multiLiteral[level.uri]){
+              data.multiLiteral[level.uri] = {}
             }
 
-            if (!this.parentStructureObj.multiLiteral[value['@guid']]){
+
+            if (!data.multiLiteral[level.uri][value['@guid']]){
+              // console.log("HERE 3.4")
               // console.log(value[this.structure.propertyURI], 'not exist, setting its value')
-              this.parentStructureObj.multiLiteral[value['@guid']] = value[this.structure.propertyURI]
+              data.multiLiteral[level.uri][value['@guid']] = value[this.structure.propertyURI]
               this.inputValue = value[this.structure.propertyURI]  
               this.guid = value['@guid']
               break
             }else{
+              // console.log("HERE 3.5")
               // if it is already in there it was taken by a previous copy of this literal property
               // console.log(value[this.structure.propertyURI], 'does alraedy exist, ')
             }      
           }
         }
-
 
       }
 
@@ -693,6 +715,7 @@ export default {
       }
 
 
+      // console.log("this.inputValue",this.inputValue,this.inputValue,this.inputValue.length,data)
 
 
       if (this.inputValue == ""){
@@ -700,7 +723,8 @@ export default {
       }
 
       this.inputValueLast = this.inputValue
-      
+      this.inputValueOrginal = this.inputValue
+
       // if it is a dynamic property and no data was populated, hide it
       // if (data.dynamic && this.inputValue == null){
       //   this.hideField = true
@@ -716,7 +740,227 @@ export default {
         this.diacriticData = JSON.parse(d)
       }
 
-      data.initalized = true
+
+
+
+
+
+
+
+
+
+
+      // // console.log('-------', this.structure.propertyURI, this.parentStructureObj)
+      // this.guid = null
+
+      // let data
+      // if (this.isMini){
+      //   data = this.activeProfileMini.rt[this.profileName].pt[this.profileCompoent] 
+      // }else{
+      //   data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]  
+      // }
+      
+
+      // this.inputValue = ""
+      // // let bnodeHasURI = false
+      // // console.log('data.multiLiteral',data.multiLiteral)
+      // if (this.parentStructureObj){
+      //   // console.log('this.parentStructureObj.multiLiteral',this.parentStructureObj.multiLiteral)
+      // }
+
+
+
+
+
+
+      // if (data.multiLiteral){
+      //   if (Object.keys(data.multiLiteral).length>1){
+      //     // console.log("CLEAR MYLIUTLITERAL")
+      //     // if there are already 2+ keys then it means that this component has 
+      //     // already been initalized, and this is just a state reload or something
+      //     // so clear out the flag so it populates both multuliteral values again
+      //     delete data.multiLiteral
+      //   }
+      // }
+      // if (this.parentStructureObj && this.parentStructureObj.multiLiteral && Object.keys(this.parentStructureObj.multiLiteral).length>1){
+      //   delete this.parentStructureObj.multiLiteral
+      // }
+
+
+
+
+      // // if it is not set as multiliteral just always wipe it
+      // if (!data.isMultiLiteral){
+      //   delete data.multiLiteral
+      //   if (this.parentStructureObj && this.parentStructureObj.multiLiteral){
+      //     delete this.parentStructureObj.multiLiteral
+      //   }
+
+      // }
+
+
+
+
+
+
+
+      // // first test to see if this property exists in the user value at the parent structure / properturi lvl
+      // if (this.parentStructureObj && data.userValue[this.parentStructureObj.propertyURI]){
+      //     // console.log("HERE 1a")
+      //   for (let parentValueArray of data.userValue[this.parentStructureObj.propertyURI]){
+      //     if (parentValueArray[this.structure.propertyURI]){          
+      //       for (let childValue of parentValueArray[this.structure.propertyURI]){
+      //         if (childValue[this.structure.propertyURI]){
+
+
+      //           // // if there are multiple literals of the same property, like multuple rdf:label (why?) then just merge them
+      //           // // together into the imput so we dont lose it and can be edited
+      //           // this.inputValue = this.inputValue + childValue[this.structure.propertyURI] + "MUSH"
+
+      //           // for use later, does this bnode have a URI?              
+      //           // if (parentValueArray['@id']){
+      //           //   bnodeHasURI = true
+      //           // }
+
+      //           // // also set the guid
+      //           // this.guid = childValue['@guid']
+
+      //           // console.log("HERE 1",this.parentStructureObj.multiLiteral)
+      //           // store some info about it in the parent about what literal has been used so far
+      //           if (!this.parentStructureObj.multiLiteral){
+      //             this.parentStructureObj.multiLiteral={}
+      //           }
+
+      //           if (!this.parentStructureObj.multiLiteral[childValue['@guid']]){
+      //             // console.log("HERE 1z",this.parentStructureObj.multiLiteral)
+      //             // console.log(childValue[this.structure.propertyURI], 'not exist, setting its childValue')
+      //             this.parentStructureObj.multiLiteral[childValue['@guid']] = childValue[this.structure.propertyURI]
+      //             this.inputValue = childValue[this.structure.propertyURI]  
+      //             this.guid = childValue['@guid']
+      //             break
+      //           }else{
+      //             // if it is already in there it was taken by a previous copy of this literal property
+      //             // console.log(value[this.structure.propertyURI], 'does alraedy exist, ')
+      //           }   
+
+
+
+
+
+
+
+      //         }
+      //       }
+      //     }
+      //   }
+      // }else if (!this.parentStructureObj && data.userValue[this.structure.propertyURI]){
+      //   // console.log("HERE 2a")
+      //   // if it is not a nested template literal then it should be a first lvl one
+      //   for (let value of data.userValue[this.structure.propertyURI]){
+      //     if (value[this.structure.propertyURI]){
+      //       // if there are multiple literals of the same property, like multuple rdf:label (why?) then just merge them
+      //       // together into the imput so we dont lose it and can be edited
+      //       this.inputValue = this.inputValue + value[this.structure.propertyURI]
+      //       // console.log("HERE 2")
+      //       this.guid = value['@guid']
+      //     }
+      //   }
+      // }else if (this.parentStructureObj && this.parentStructureObj.propertyURI == data.userValue['@root'] && data.userValue[this.structure.propertyURI]){
+      //   // there is aparent element, but it is the root element also
+      //   // console.log("HERE 3a")
+      //   for (let value of data.userValue[this.structure.propertyURI]){
+      //     if (value[this.structure.propertyURI]){
+      //       // console.log("HERE 3")
+      //       // store some info about it in the parent about what literal has been used so far
+      //       if (!this.parentStructureObj.multiLiteral){
+      //         this.parentStructureObj.multiLiteral={}
+      //       }
+
+      //       if (!this.parentStructureObj.multiLiteral[value['@guid']]){
+      //         // console.log(value[this.structure.propertyURI], 'not exist, setting its value')
+      //         this.parentStructureObj.multiLiteral[value['@guid']] = value[this.structure.propertyURI]
+      //         this.inputValue = value[this.structure.propertyURI]  
+      //         this.guid = value['@guid']
+      //         break
+      //       }else{
+      //         // if it is already in there it was taken by a previous copy of this literal property
+      //         // console.log(value[this.structure.propertyURI], 'does alraedy exist, ')
+      //       }      
+      //     }
+      //   }
+
+
+      // }else{
+
+      //   //
+
+
+      // }
+
+
+      // // look at the config file to understand this flag
+      // if (config.profileHacks.agentsHideManualRDFLabelIfURIProvided.enabled){
+      //   if (this.parentStructureObj && this.parentStructureObj.propertyURI == 'http://id.loc.gov/ontologies/bibframe/agent'){
+      //     if (this.structure.propertyURI=='http://www.w3.org/2000/01/rdf-schema#label'){
+      //       // always hide it
+      //       // if (bnodeHasURI){
+              
+      //         if (
+      //             !this.parentStructureObj.parentId.includes('Information') &&
+      //             !this.structure.parentId.includes('PubPlace') &&
+      //             !this.structure.parentId.includes('PubName') &&
+      //             !this.structure.parentId.includes(':Provision:')
+
+                  
+      //             ){
+      //           // console.log("HERE 4")
+      //           this.hideField = true
+      //         }
+
+
+
+      //       // }
+      //     }
+      //   }
+
+
+      // }
+
+
+
+
+      // if (this.inputValue == ""){
+      //   this.inputValue = null
+      // }
+
+      // if (this.parentStructureObj && this.parentStructureObj.propertyURI == 'http://id.loc.gov/ontologies/bibframe/provisionActivity'){
+      // // console.log('this.structure.propertyURI',this.structure.propertyURI)
+      // // console.log('data',data)
+      // // console.log('this.inputValue',this.inputValue)
+      // // console.log('this.guid',this.guid)
+
+
+      // }
+
+
+      // this.inputValueLast = this.inputValue
+      
+      // // if it is a dynamic property and no data was populated, hide it
+      // // if (data.dynamic && this.inputValue == null){
+      // //   this.hideField = true
+      // // }
+      // // if (this.parentStructureObj && this.parentStructureObj.dynamic && this.inputValue == null){
+      // //   this.hideField = true
+      // // }
+
+
+
+      // let d = localStorage.getItem('bfeDiacritics')
+      // if (d){
+      //   this.diacriticData = JSON.parse(d)
+      // }
+
+      // data.initalized = true
 
 
 
@@ -752,6 +996,57 @@ export default {
     // watch when the undoindex changes, means they are undoing redoing, so refresh the
     // value in the acutal input box
     undoCounter: function(){
+      
+
+      // // 
+      // let data
+
+      // if (this.isMini){
+      //   data = this.activeProfileMini.rt[this.profileName].pt[this.profileCompoent] 
+      // }else{
+      //   data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]  
+      // }      
+
+
+      // if (data.multiLiteral){
+      //   if (Object.keys(data.multiLiteral).length>1){
+      //     console.log("CLEAR MYLIUTLITERAL")
+      //     // if there are already 2+ keys then it means that this component has 
+      //     // already been initalized, and this is just a state reload or something
+      //     // so clear out the flag so it populates both multuliteral values again
+      //     delete data.multiLiteral
+      //     if (this.parentStructureObj && this.parentStructureObj.multiLiteral){
+      //       delete this.parentStructureObj.multiLiteral
+      //     }
+      //   // }else if (data.initalized && Object.keys(data.multiLiteral).length === 1){
+
+      //   //   // otherwise if there is one value, and this thing as been initalized already
+      //   //   // then we know its some kind of state reload again, wipe it out as well and 
+      //   //   delete data.multiLiteral
+      //   //   console.log(data.multiLiteral)
+
+      //   }
+
+      //   if (this.parentStructureObj && this.parentStructureObj.multiLiteral && Object.keys(this.parentStructureObj.multiLiteral).length>1){
+      //     delete this.parentStructureObj.multiLiteral
+      //   }
+
+
+      // }
+
+
+
+
+      // // if it is not set as multiliteral just always wipe it
+      // if (!data.isMultiLiteral){
+      //   delete data.multiLiteral
+      //   if (this.parentStructureObj && this.parentStructureObj.multiLiteral){
+      //     delete this.parentStructureObj.multiLiteral
+      //   }
+
+      // }
+
+
       this.refreshInputDisplay()
     }
 
@@ -769,8 +1064,7 @@ export default {
       diacriticDataNav: 0,
       hideField: false,
       guid: null,
-      diacrticsVoyagerNativeMode:false
-
+      diacrticsVoyagerNativeMode:false,
 
     }
   },

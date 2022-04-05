@@ -94,7 +94,7 @@ export default {
     refreshInputDisplay: function(){
 
       this.guid = null
-      
+
       let data
       if (this.isMini){
         data = this.activeProfileMini.rt[this.profileName].pt[this.profileCompoent] 
@@ -103,61 +103,78 @@ export default {
       }
 
 
-
-
       // clear out this flag so that it can populate if the state is realoding 
       // check to see if there are alaready multiples in it, if so we need to 
-      // delete data.multiLiteral
-      if (data.multiLiteral){
-        if (Object.keys(data.multiLiteral).length>1){
-          // if there are already 2+ keys then it means that this component has 
-          // already been initalized, and this is just a state reload or something
-          // so clear out the flag so it populates both multuliteral values again
-          delete data.multiLiteral
-        // }else if (data.initalized && Object.keys(data.multiLiteral).length === 1){
-
-        //   // otherwise if there is one value, and this thing as been initalized already
-        //   // then we know its some kind of state reload again, wipe it out as well and 
-        //   delete data.multiLiteral
-        //   console.log(data.multiLiteral)
-
-        }
-      }
-
-      // if it is not set as multiliteral just always wipe it
       if (!data.isMultiLiteral){
         delete data.multiLiteral
       }
 
-      // console.log(this.profileCompoent,'----------')
-      this.inputValue = ""
-      // let bnodeHasURI = false
 
-      // first test to see if this property exists in the user value at the parent structure / properturi lvl
+      this.inputValue = ""
+
+
+      // do some tests to see where in uservalue data that the literal is being store
+      let level = null
+      if (this.parentStructureObj && data.userValue[this.parentStructureObj.propertyURI]){
+        for (let parentValueArray of data.userValue[this.parentStructureObj.propertyURI]){
+          if (parentValueArray[this.structure.propertyURI]){          
+            for (let childValue of parentValueArray[this.structure.propertyURI]){
+              if (childValue[this.structure.propertyURI]){
+                level = {var:this.parentStructureObj,text:'parentStructureObj',uri: this.parentStructureObj.propertyURI + '|' +this.structure.propertyURI, data:parentValueArray[this.structure.propertyURI]}
+              }
+            }
+          }
+        }
+      }else if (!this.parentStructureObj && data.userValue[this.structure.propertyURI]){
+        level = {var:data,text:'data',uri:this.structure.propertyURI, data:data.userValue[this.structure.propertyURI]}
+      }else if (this.parentStructureObj && this.parentStructureObj.propertyURI == data.userValue['@root'] && data.userValue[this.structure.propertyURI]){
+        for (let value of data.userValue[this.structure.propertyURI]){
+          // console.log("HERE 3.1")
+          if (value[this.structure.propertyURI]){
+            level = {var:data,text:'data',uri:this.structure.propertyURI, data:data.userValue[this.structure.propertyURI]}
+          }
+        }
+      }
+
+      // console.log('level',level, data.isMultiLiteral)
+
+      // if we found where the data is living at what level we will make a multuliteral entry for that
+      if (level && data.isMultiLiteral){
+        if (data.multiLiteral && data.multiLiteral[level.uri] && Object.keys(data.multiLiteral[level.uri]).length>1){
+          delete data.multiLiteral[level.uri]
+        }
+
+        // if the component is marked as multiLiteral but the individual property doesn't have multiple values then remove the flag so it just populates each time
+        if (level.data.length<2){
+          delete data.multiLiteral[level.uri]
+        }
+
+      }
+
+
+
+
+      // test to see if this property exists in the user value at the parent structure / properturi lvl
       if (this.parentStructureObj && data.userValue[this.parentStructureObj.propertyURI]){
         // console.log("HERE 1")
         for (let parentValueArray of data.userValue[this.parentStructureObj.propertyURI]){
           if (parentValueArray[this.structure.propertyURI]){          
             for (let childValue of parentValueArray[this.structure.propertyURI]){
               if (childValue[this.structure.propertyURI]){
-                // // if there are multiple literals of the same property, like multuple rdf:label (why?) then just merge them
-                // // together into the imput so we dont lose it and can be edited
-                // this.inputValue = this.inputValue + childValue[this.structure.propertyURI]
+  
 
-                // // for use later, does this bnode have a URI?              
-                // // if (parentValueArray['@id']){
-                // //   bnodeHasURI = true
-                // // }
 
-                // // also set the guid
-                // this.guid = childValue['@guid']
-                if (!this.parentStructureObj.multiLiteral){
-                  this.parentStructureObj.multiLiteral={}
+                if (!data.multiLiteral){
+                  data.multiLiteral={}
                 }
 
-                if (!this.parentStructureObj.multiLiteral[childValue['@guid']]){
-                  // console.log(childValue[this.structure.propertyURI], 'not exist, setting its childValue')
-                  this.parentStructureObj.multiLiteral[childValue['@guid']] = childValue[this.structure.propertyURI]
+
+                if (!data.multiLiteral[level.uri]){
+                  data.multiLiteral[level.uri] = {}
+                }
+
+                if (!data.multiLiteral[level.uri][childValue['@guid']]){
+                  data.multiLiteral[level.uri][childValue['@guid']] = childValue[this.structure.propertyURI]
                   this.inputValue = childValue[this.structure.propertyURI]  
                   this.guid = childValue['@guid']
                   break
@@ -165,6 +182,8 @@ export default {
                   // if it is already in there it was taken by a previous copy of this literal property
                   // console.log(value[this.structure.propertyURI], 'does alraedy exist, ')
                 }   
+                // console.log(data.multiLiteral)
+
 
 
 
@@ -187,32 +206,25 @@ export default {
           }
         }
       }else if (this.parentStructureObj && this.parentStructureObj.propertyURI == data.userValue['@root'] && data.userValue[this.structure.propertyURI]){
-        // there is aparent element, but it is the root element also
-        // console.log("HERE 3")
-        // for (let value of data.userValue[this.structure.propertyURI]){
-        //   if (value[this.structure.propertyURI]){
-        //     // if there are multiple literals of the same property, like multuple rdf:label (why?) then just merge them
-        //     // together into the imput so we dont lose it and can be edited
-        //     this.inputValue = this.inputValue + value[this.structure.propertyURI]
 
-        //     this.guid = value['@guid']
-        //   }
-        // }
 
         for (let value of data.userValue[this.structure.propertyURI]){
           // console.log("HERE 3.1")
           if (value[this.structure.propertyURI]){
-            // console.log("HERE 3.2")
-            // store some info about it in the parent about what literal has been used so far
-            if (!this.parentStructureObj.multiLiteral){
-              // console.log("HERE 3.3")
-              this.parentStructureObj.multiLiteral={}
+
+
+            if (!data.multiLiteral){
+              data.multiLiteral={}
+            }
+            if (!data.multiLiteral[level.uri]){
+              data.multiLiteral[level.uri] = {}
             }
 
-            if (!this.parentStructureObj.multiLiteral[value['@guid']]){
+
+            if (!data.multiLiteral[level.uri][value['@guid']]){
               // console.log("HERE 3.4")
               // console.log(value[this.structure.propertyURI], 'not exist, setting its value')
-              this.parentStructureObj.multiLiteral[value['@guid']] = value[this.structure.propertyURI]
+              data.multiLiteral[level.uri][value['@guid']] = value[this.structure.propertyURI]
               this.inputValue = value[this.structure.propertyURI]  
               this.guid = value['@guid']
               break
@@ -223,9 +235,6 @@ export default {
             }      
           }
         }
-
-
-
 
       }
 
@@ -816,6 +825,9 @@ export default {
 
     this.refreshInputDisplay()
 
+    setTimeout(()=>{
+      this.refreshInputDisplay()
+    },2000)
 
   },
 };
