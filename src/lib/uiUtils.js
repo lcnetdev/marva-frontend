@@ -15,7 +15,7 @@ const uiUtils = {
       if (store.state.workingOnMiniProfile){
         list = document.getElementsByClassName('selectable-input-mini')
       }
-
+      console.log(list)
       
       let activeInputIndex = -1
       for (let i = 0; i < list.length; i++) {

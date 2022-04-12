@@ -29,7 +29,9 @@ export default new Vuex.Store({
     // profile related
     profilesLoaded: false,
     profiles: [],
+    profilesUnmodified: [],
     rtLookup: {},
+    rtLookupUnmodified: {},
     startingPoints: {},
 
     activeProfile: {},
@@ -186,11 +188,22 @@ export default new Vuex.Store({
       // 
       // 
     },
+    PROFILESUNMODIFIED(state, profiles) {
+      state.profiles = profiles
+    },
+
+
     RTLOOKUP(state, lookup) {
       state.rtLookup = lookup
-
-      // 
     },
+
+    RTLOOKUPUNMODIFIED(state, lookup) {
+      state.rtLookupUnmodified = lookup
+    },
+
+
+
+
     STARTINGPOINTS(state, lookup) {
       state.startingPoints = lookup
     },
@@ -353,7 +366,10 @@ export default new Vuex.Store({
       let p = await parseProfile.buildProfiles()
       commit('PROFILES', p.profiles)
       commit('RTLOOKUP', p.lookup)
-      // 
+
+      commit('PROFILESUNMODIFIED',JSON.parse(JSON.stringify(p.profiles)))
+      commit('RTLOOKUPUNMODIFIED',JSON.parse(JSON.stringify(p.lookup)))
+
       commit('STARTINGPOINTS', p.startingPoints)
 
 

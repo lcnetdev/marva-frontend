@@ -7,29 +7,50 @@
 
     <div :class="'component-container-title' + ' component-container-title-' + settingsDisplayMode ">{{structure.propertyLabel}}</div>
     <div :class="'component-container-input-container' + ' component-container-input-container-' + settingsDisplayMode">
-
+<!-- 
 
         <div v-bind:class="'component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border'">
           <div style="display: flex; position: relative;">
             <div style="flex:1">
               <form autocomplete="off">    
 
-
                 <div style="position: absolute;" v-if="settingsDisplayMode=='compact'" class="component-nested-container-title">
                   <span>{{structure.propertyLabel}}</span>                  
                 </div>
-
-
                 <input  bfeType="EditLiteralComponent-unnested" :id="assignedId" v-on:keydown.enter.prevent="submitField" :name="assignedId" ref="input" v-on:focus="focused" autocomplete="off" type="text" @keydown="nav" @keyup="change" v-model="inputValue"  :class="['input-single', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true), 'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">            
               </form>
             </div>
-            <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-tooltip="'Diacritics [CTRL-ALT-D]'" @click="openDiacriticSelect"></button>
-
-          </div>
-          
+            <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top"  :data-tooltip="'Diacritics [CTRL-ALT-D]'" @click="openDiacriticSelect"></button>
+          </div>   
         </div>
+
+         -->
+
+        <div v-for="(inputV,idx) in inputValue" :key="`input_${idx}`" v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border', { 'component-container-fake-input-note' : isNoteField(structure.propertyLabel)  }]" >
+
+
+          <div style="display: flex; position: relative;">
+            <div style="flex:1">
+              <form autocomplete="off" >
+                <div  class="component-nested-container-title">
+                  <span v-if="settingsDisplayMode=='compact'">{{parentStructureObj.propertyLabel}} -- </span>
+                  <span>{{structure.propertyLabel}}</span>                  
+                </div>
+                <input v-if="!isNoteField(structure.propertyLabel)" :ref="'input'+ '_' + inputV.guid" :data-guid="inputV.guid"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value" :class="['input-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true),'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">
+                <textarea v-if="isNoteField(structure.propertyLabel)"  bfeType="EditLiteralComponent-nested" :id="assignedId" :data-guid="inputV.guid" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-nested', 'input-textarea-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]"></textarea>
+              </form>
+            </div>
+            <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-guid="inputV.guid" :data-tooltip="'Diacritics [CTRL-ALT-SHIFT-D]'" @click="openDiacriticSelect"></button>
+          </div>
+        </div>
+
+
+
+
+
     </div>
     <div v-if="showDiacritics==true" class="diacritic-modal">
+      <div style="float: right;">[x]</div>
       <ul class="diacritic-modal-script-list">
         <li style="font-weight: bold">Custom</li>
   }
@@ -57,35 +78,34 @@
 
 
   <div v-else-if="hideField == false">
-        
 
         <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="openDiacriticSelect" />
 
-        
 
-        <div v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border', { 'component-container-fake-input-note' : isNoteField(structure.propertyLabel)  }]" >
+
+
+        <div v-for="(inputV,idx) in inputValue" :key="`input_${idx}`" v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border', { 'component-container-fake-input-note' : isNoteField(structure.propertyLabel)  }]" >
           <div style="display: flex; position: relative;">
             <div style="flex:1">
-
               <form autocomplete="off" >
-
                 <div  class="component-nested-container-title">
                   <span v-if="settingsDisplayMode=='compact'">{{parentStructureObj.propertyLabel}} -- </span>
-                  <span>{{structure.propertyLabel}}</span>
-                  
+                  <span>{{structure.propertyLabel}}</span>                  
                 </div>
-
-
-                <input v-if="!isNoteField(structure.propertyLabel)" ref="input"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change" @keydown="nav" v-model="inputValue" :class="['input-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true),'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">
-                <textarea v-if="isNoteField(structure.propertyLabel)"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change" @keydown="nav" v-model="inputValue"  :class="['input-nested', 'input-textarea-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]"></textarea>
-
+                <input v-if="!isNoteField(structure.propertyLabel)" :ref="'input'+ '_' + inputV.guid" :data-guid="inputV.guid"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value" :class="['input-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true),'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">
+                <textarea v-if="isNoteField(structure.propertyLabel)"  bfeType="EditLiteralComponent-nested" :id="assignedId" :data-guid="inputV.guid" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-nested', 'input-textarea-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]"></textarea>
               </form>
             </div>
-            <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-tooltip="'Diacritics [CTRL-ALT-SHIFT-D]'" @click="openDiacriticSelect"></button>
-
+            <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-guid="inputV.guid" :data-tooltip="'Diacritics [CTRL-ALT-SHIFT-D]'" @click="openDiacriticSelect"></button>
           </div>
         </div>
+
+
+
+
         <div v-if="showDiacritics==true" class="diacritic-modal">
+          <div style="float: right; cursor: pointer;" @click="showDiacritics=false">[x]</div>
+
           <ul class="diacritic-modal-script-list">
             <li style="font-weight: bold">Custom</li>
 <!--             <li style="color:lightgrey">Other</li>
@@ -122,6 +142,8 @@ import uiUtils from "@/lib/uiUtils"
 import config from "@/lib/config"
 import diacrticsVoyagerMacroExpress from "@/lib/diacritics/diacritic_pack_voyager_macro_express.json"
 import diacrticsVoyagerNative from "@/lib/diacritics/diacritic_pack_voyager_native.json"
+const short = require('short-uuid');
+
 
 
 
@@ -196,11 +218,13 @@ export default {
    
     openDiacriticSelect: function(event){
 
-
+      this.showDiacriticsGuid=event.target.dataset.guid
       // we are using global dicratics so stop if this is one of the other components and not this one
       if (this.assignedId != this.activeInput){
         return false
       }
+
+      // showDiacriticsGuid
 
       this.$store.dispatch("disableMacroNav")
       this.showDiacritics=true
@@ -227,42 +251,70 @@ export default {
 
     diacriticSelect: function(event){
 
+
       // depending on where they click the parent maybe the td or it may be the tr where the data-id attrubture is storeing the trigger 
       let pos = (event.target.parentNode.dataset.id) ? event.target.parentNode.dataset.id : event.target.parentNode.parentNode.dataset.id
-   
-      
-      if (this.inputValue){
-        this.inputValue = this.inputValue + this.diacriticData[pos].letter
-      }else{
-        this.inputValue = this.diacriticData[pos].letter
+      let insertAt = false
+      console.log(event,this.$refs[`input_${this.showDiacriticsGuid}`][0].selectionStart)
+      for (let inputV of this.inputValue){
+
+        if (inputV.guid == this.showDiacriticsGuid){
+
+          insertAt = inputV.value.length
+          if (this.$refs[`input_${this.showDiacriticsGuid}`] && this.$refs[`input_${this.showDiacriticsGuid}`][0] && this.$refs[`input_${this.showDiacriticsGuid}`][0].selectionStart){
+            insertAt=this.$refs[`input_${this.showDiacriticsGuid}`][0].selectionStart
+          }
+
+
+          inputV.value = inputV.value.substring(0, insertAt) + this.diacriticData[pos].letter + inputV.value.substring(insertAt);
+
+        }
+
       }
+
+
+
+      // if (this.inputValue){
+      //   this.inputValue = this.inputValue + this.diacriticData[pos].letter
+      // }else{
+      //   this.inputValue = this.diacriticData[pos].letter
+      // }
+      this.showDiacriticsGuid=null
       this.showDiacritics=false
       this.$store.dispatch("enableMacroNav")
 
       // focus back on the input
-      setTimeout(()=>{
+      this.$nextTick(()=>{
+
+        // focus back on the element,  but also set the cursor at the point we inserted
+        if (insertAt){
+          document.getElementById(this.assignedId).setSelectionRange(insertAt+1,insertAt+1)
+        }
         document.getElementById(this.assignedId).focus()
-      },0)
+        
+      })
+
+
 
 
     },
 
     nav: function(event){
 
-      // console.log(event)
+      console.log(event.target)
       // console.log(this.settingsDPackVoyagerNative, this.diacrticsVoyagerNativeMode,event.code,event.ctrlKey)
+      let guid = event.target.dataset.guid
       // turn it on
       if (this.settingsDPackVoyagerNative && this.diacrticsVoyagerNativeMode == false && event.code == 'KeyE' && event.ctrlKey == true){
-        this.$refs["input"].style.color="blue"
+        this.$refs["input_"+guid].style.color="blue"
         this.diacrticsVoyagerNativeMode = true
-        console.log("Here")
         event.preventDefault()
         return false
       // turn it off
       }else if (this.settingsDPackVoyagerNative && this.diacrticsVoyagerNativeMode == true && event.code == 'KeyE' && event.ctrlKey == true){
         this.diacrticsVoyagerNativeMode = false
         window.setTimeout(()=>{
-          this.$refs["input"].style.color="black"
+          this.$refs["input_"+guid].style.color="black"
         },500)
         event.preventDefault()
         return false
@@ -295,17 +347,26 @@ export default {
               el.style.backgroundColor = 'transparent'
             })
             this.$refs.diacriticTable[this.diacriticDataNav].style.backgroundColor="#dfe5f1"
-            console.log(this.$refs.diacriticTable[this.diacriticDataNav].style)
             this.$refs.diacriticTable[this.diacriticDataNav].scrollIntoView({behavior: "smooth", block: "nearest", inline: "nearest"})
         }else if (event.key == 'Enter'){
 
           let letter = this.diacriticData[this.diacriticDataNav].letter
-
-          if (this.inputValue){
-            this.inputValue = this.inputValue + letter
-          }else{
-            this.inputValue = letter
+          
+          let useGuid = guid
+          if (!useGuid){
+            useGuid=this.showDiacriticsGuid
           }
+          let insertAt = false
+          for (let inputV of this.inputValue){
+            if (inputV.guid == useGuid){
+              insertAt = inputV.value.length
+              if (this.$refs[`input_${useGuid}`] && this.$refs[`input_${useGuid}`][0] && this.$refs[`input_${useGuid}`][0].selectionStart){
+                insertAt=this.$refs[`input_${useGuid}`][0].selectionStart
+              }
+              inputV.value = inputV.value.substring(0, insertAt) + letter + inputV.value.substring(insertAt);
+            }
+          }
+
 
           this.showDiacritics=false
           this.$store.dispatch("enableMacroNav")
@@ -315,11 +376,31 @@ export default {
 
           for (let key of this.diacriticData){
             if (event.key == key.trigger){
-              if (this.inputValue){
-                this.inputValue = this.inputValue + key.letter
-              }else{
-                this.inputValue = key.letter
+
+              
+              let useGuid = guid
+              if (!useGuid){
+                useGuid=this.showDiacriticsGuid
               }
+              let insertAt = false
+
+              for (let inputV of this.inputValue){
+                if (inputV.guid == useGuid){
+                  insertAt = inputV.value.length
+                  if (this.$refs[`input_${useGuid}`] && this.$refs[`input_${useGuid}`][0] && this.$refs[`input_${useGuid}`][0].selectionStart){
+                    insertAt=this.$refs[`input_${useGuid}`][0].selectionStart
+                  }
+                  inputV.value = inputV.value.substring(0, insertAt) + key.letter + inputV.value.substring(insertAt);
+                }
+              }
+
+
+
+              // if (this.inputValue){
+              //   this.inputValue = this.inputValue + key.letter
+              // }else{
+              //   this.inputValue = key.letter
+              // }
               
               this.showDiacritics=false
               this.$store.dispatch("enableMacroNav")              
@@ -337,9 +418,19 @@ export default {
     },
 
 
-    change: function(event){
+    change: function(event,inputV){
 
 
+      console.log(inputV)
+
+
+      // find where we are inserting the value into
+      // default to the end of the string
+      let insertAt = inputV.value.length
+      
+      if (this.$refs[`input_${inputV.guid}`] && this.$refs[`input_${inputV.guid}`][0] && this.$refs[`input_${inputV.guid}`][0].selectionStart){
+        insertAt=this.$refs[`input_${inputV.guid}`][0].selectionStart
+      }            
 
 
       if (diacrticsVoyagerMacroExpress[event.code] && this.settingsDPackVoyager){
@@ -351,12 +442,13 @@ export default {
 
             event.preventDefault();
 
-            console.log(this.$refs["input"])
 
-
-            this.$refs["input"].style.color="blue"
+            console.log("HEREREERERERERREREREER OKAY <<<<<<<",insertAt)
+            console.log(this.$refs["input"+ '_' + inputV.guid])
+            console.log("input"+ '_' + inputV.guid)
+            this.$refs["input"+ '_' + inputV.guid][0].style.color="blue"
             window.setTimeout(()=>{
-              this.$refs["input"].style.color="black"
+              this.$refs["input"+ '_' + inputV.guid][0].style.color="black"
             },500)
 
             if (!macro.combining){
@@ -365,36 +457,45 @@ export default {
               // so if thats the case remove the last digit from the value
               if (event.code.includes('Digit')){
                 // if it is in fact a digit char then remove it
-                if (this.inputValue.charAt(this.inputValue.length-1) == event.code.replace('Digit','')){
+                if (inputV.value.charAt(insertAt) == event.code.replace('Digit','')){
                   // remove the last char
-                  this.inputValue = this.inputValue.slice(0, -1); 
+                  // inputV.value = inputV.value.slice(0, -1); 
+                  inputV.value = inputV.value.slice(0,insertAt) + inputV.value.slice(insertAt)
+
                 }
               }
 
               // same for euqal key
               if (event.code == 'Equal'){
-                if (this.inputValue.charAt(this.inputValue.length-1) == '='){
+                if (inputV.value.charAt(inputV.value.length-1) == '='){
                   // remove the last char
-                  this.inputValue = this.inputValue.slice(0, -1); 
+                  // inputV.value = inputV.value.slice(0, -1);
+                  inputV.value = inputV.value.slice(0,insertAt) + inputV.value.slice(insertAt)
+ 
                 }
               }
               // same for Backquote key
               console.log('event.code',event.code)
               if (event.code == 'Backquote'){
-                console.log('this.inputValue',this.inputValue)
-                if (this.inputValue.charAt(this.inputValue.length-1) == '`'){
+                console.log('inputV.value',inputV.value)
+                if (inputV.value.charAt(inputV.value.length-1) == '`'){
                   // remove the last char
-                  this.inputValue = this.inputValue.slice(0, -1); 
+                  // inputV.value = inputV.value.slice(0, -1);
+                  inputV.value = inputV.value.slice(0,insertAt) + inputV.value.slice(insertAt) 
                 }
 
               }
 
 
               // it is not a combining unicode char so just insert it into the value
-              if (this.inputValue){
-                this.inputValue=this.inputValue+macro.codeEscape
+              if (inputV.value){
+                // inputV.value=inputV.value+macro.codeEscape
+
+                inputV.value = inputV.value.substring(0, insertAt) + macro.codeEscape + inputV.value.substring(insertAt);
+
+
               }else{
-                this.inputValue = macro.codeEscape
+                inputV.value = macro.codeEscape
               }
               
             }else{
@@ -403,10 +504,10 @@ export default {
               // same for Backquote key
               console.log('event.code',event.code)
               if (event.code == 'Backquote'){
-                console.log('this.inputValue',this.inputValue)
-                if (this.inputValue.charAt(this.inputValue.length-1) == '`'){
+                console.log('inputV.value',inputV.value)
+                if (inputV.value.charAt(inputV.value.length-1) == '`'){
                   // remove the last char
-                  this.inputValue = this.inputValue.slice(0, -1); 
+                  inputV.value = inputV.value.slice(0, -1); 
                 }
 
               }
@@ -414,18 +515,25 @@ export default {
 
               // little cheap hack here, on macos the Alt+9 makes ª digits 1-0 do this with Alt+## but we only 
               // have one short cut that uses Alt+9 so just remove that char for now
-              this.inputValue=this.inputValue.replace('ª','')
-              this.inputValue=this.inputValue+macro.codeEscape
-    
+              inputV.value=inputV.value.replace('ª','')
+
+              inputV.value = inputV.value.substring(0, insertAt) + macro.codeEscape + inputV.value.substring(insertAt);
+              // inputV.value=inputV.value+macro.codeEscape
+              console.log(document.getElementById(this.assignedId).setSelectionRange(insertAt+1,insertAt+1))
+              document.getElementById(this.assignedId).setSelectionRange(insertAt+1,insertAt+1)
+              document.getElementById(this.assignedId).focus()
 
 
             }
 
 
+
           }
 
-        }
 
+
+        }
+ 
 
       }
 
@@ -445,7 +553,7 @@ export default {
         },500)
 
         // remove the shortcut key we just dumped into the text box
-        this.inputValue = this.inputValue.slice(0, -1); 
+        inputV.value = inputV.value.slice(0, -1); 
 
         this.diacrticsVoyagerNativeMode = false
         
@@ -460,14 +568,19 @@ export default {
 
         if (!useMacro.combining){
           // it is not a combining unicode char so just insert it into the value
-          if (this.inputValue){
-            this.inputValue=this.inputValue+useMacro.codeEscape
+          
+          if (inputV.value){
+            // inputV.value=inputV.value+useMacro.codeEscape
+            inputV.value = inputV.value.substring(0, insertAt) + useMacro.codeEscape + inputV.value.substring(insertAt);
+
+
           }else{
-            this.inputValue = useMacro.codeEscape
+            inputV.value = useMacro.codeEscape
           }
 
         }else{
-              this.inputValue=this.inputValue+useMacro.codeEscape
+              // inputV.value=inputV.value+useMacro.codeEscape
+              inputV.value = inputV.value.substring(0, insertAt) + useMacro.codeEscape + inputV.value.substring(insertAt);
 
         }
 
@@ -486,19 +599,19 @@ export default {
       //   console.log('~~~~~~~~~~~~~~~~~~~~')
       //   console.log(event)
 
-      //   this.inputValue=this.inputValue+'a\u0328'
+      //   inputV.value=inputV.value+'a\u0328'
       // }
 
 
 
       // don't update if nothing changed or havent entered anythign yet...
-      if (this.inputValue == null){
+      if (inputV.value == null){
         return false
       }
 
-      if (this.inputValue == this.inputValueLast){
-        return false
-      }
+      // if (inputV.value == this.inputValueLast){
+      //   return false
+      // }
 
 
       // this resizes the textarea as there is more content
@@ -516,19 +629,46 @@ export default {
         parentURI = this.parentStructureObj.propertyURI
       }
 
+      console.log(this.inputValue)
+      let useGuid = inputV.guid
+      if (inputV.guid.startsWith('new_')){
+        useGuid = null
+      }
 
-      this.$store.dispatch("setValueLiteral", { self: this, ptGuid: this.ptGuid, guid: this.guid, parentURI:parentURI, URI: this.structure.propertyURI, value: this.inputValue }).then((newGuid) => {
-       
-        this.inputValueLast = this.inputValue
+
+      this.$store.dispatch("setValueLiteral", { self: this, ptGuid: this.ptGuid, guid: useGuid, parentURI:parentURI, URI: this.structure.propertyURI, value: inputV.value }).then((newGuid) => {
+        
+
+        // this.inputValueLast = this.inputValue
         // if this is here then we created a new value, store it for future edits
         if(newGuid){
-          this.guid = newGuid
+          inputV.guid = newGuid
         }
 
         // but if it is explictly set to false that means we just unset the value, so reset the guid here
         if (newGuid===false){
-          this.guid = null
+          inputV.guid = 'new_' + short.generate()
         }
+
+        
+        // if (newGuid===false){
+        //   // remove it from the list of assigned guids
+
+
+        //   let data
+        //   if (this.isMini){
+        //     data = this.activeProfileMini.rt[this.profileName].pt[this.profileCompoent] 
+        //   }else{
+        //     data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]  
+        //   }
+
+        //   let idx = data.assignedGuids.indexOf(this.guid)
+        //   if (idx){
+        //     console.log('found it',data.assignedGuids[idx])
+        //     delete data.assignedGuids[idx]
+        //   }
+        //   this.guid = null
+        // }
 
 
 
@@ -541,8 +681,6 @@ export default {
 
     refreshInputDisplay: function(){
 
-      this.guid = null
-
       let data
       if (this.isMini){
         data = this.activeProfileMini.rt[this.profileName].pt[this.profileCompoent] 
@@ -550,55 +688,7 @@ export default {
         data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]  
       }
 
-
-      // clear out this flag so that it can populate if the state is realoding 
-      // check to see if there are alaready multiples in it, if so we need to 
-      if (!data.isMultiLiteral){
-        delete data.multiLiteral
-      }
-
-
-      this.inputValue = ""
-
-
-      // do some tests to see where in uservalue data that the literal is being store
-      let level = null
-      if (this.parentStructureObj && data.userValue[this.parentStructureObj.propertyURI]){
-        for (let parentValueArray of data.userValue[this.parentStructureObj.propertyURI]){
-          if (parentValueArray[this.structure.propertyURI]){          
-            for (let childValue of parentValueArray[this.structure.propertyURI]){
-              if (childValue[this.structure.propertyURI]){
-                level = {var:this.parentStructureObj,text:'parentStructureObj',uri: this.parentStructureObj.propertyURI + '|' +this.structure.propertyURI, data:parentValueArray[this.structure.propertyURI]}
-              }
-            }
-          }
-        }
-      }else if (!this.parentStructureObj && data.userValue[this.structure.propertyURI]){
-        level = {var:data,text:'data',uri:this.structure.propertyURI, data:data.userValue[this.structure.propertyURI]}
-      }else if (this.parentStructureObj && this.parentStructureObj.propertyURI == data.userValue['@root'] && data.userValue[this.structure.propertyURI]){
-        for (let value of data.userValue[this.structure.propertyURI]){
-          // console.log("HERE 3.1")
-          if (value[this.structure.propertyURI]){
-            level = {var:data,text:'data',uri:this.structure.propertyURI, data:data.userValue[this.structure.propertyURI]}
-          }
-        }
-      }
-
-      // console.log('level',level, data.isMultiLiteral)
-
-      // if we found where the data is living at what level we will make a multuliteral entry for that
-      if (level && data.isMultiLiteral){
-        if (data.multiLiteral && data.multiLiteral[level.uri] && Object.keys(data.multiLiteral[level.uri]).length>1){
-          delete data.multiLiteral[level.uri]
-        }
-
-        // if the component is marked as multiLiteral but the individual property doesn't have multiple values then remove the flag so it just populates each time
-        if (level.data.length<2){
-          delete data.multiLiteral[level.uri]
-        }
-
-      }
-
+      let allGuidsFound = []
 
 
 
@@ -612,27 +702,18 @@ export default {
   
 
 
-                if (!data.multiLiteral){
-                  data.multiLiteral={}
-                }
 
-
-                if (!data.multiLiteral[level.uri]){
-                  data.multiLiteral[level.uri] = {}
-                }
-
-                if (!data.multiLiteral[level.uri][childValue['@guid']]){
-                  data.multiLiteral[level.uri][childValue['@guid']] = childValue[this.structure.propertyURI]
-                  this.inputValue = childValue[this.structure.propertyURI]  
-                  this.guid = childValue['@guid']
-                  break
-                }else{
-                  // if it is already in there it was taken by a previous copy of this literal property
-                  // console.log(value[this.structure.propertyURI], 'does alraedy exist, ')
-                }   
-                // console.log(data.multiLiteral)
-
-
+                    allGuidsFound.push(childValue['@guid'])
+                    // check that it doesn't yet exist, if it does just update value
+                    if (this.inputValue.map((v)=> {return v.guid} ).includes(childValue['@guid'])){
+                        for (let iv of this.inputValue){
+                          if (iv.guid == childValue['@guid']){
+                            iv.value = childValue[this.structure.propertyURI]
+                          }
+                        }                  
+                    }else{
+                      this.inputValue.push({value:childValue[this.structure.propertyURI], guid:childValue['@guid'] })
+                    }
 
 
 
@@ -646,41 +727,46 @@ export default {
         // if it is not a nested template literal then it should be a first lvl one
         for (let value of data.userValue[this.structure.propertyURI]){
           if (value[this.structure.propertyURI]){
-            // if there are multiple literals of the same property, like multuple rdf:label (why?) then just merge them
-            // together into the imput so we dont lose it and can be edited
-            this.inputValue = this.inputValue + value[this.structure.propertyURI]
+         
 
-            this.guid = value['@guid']
+
+              allGuidsFound.push(value['@guid'])
+              // check that it doesn't yet exist, if it does just update value
+              if (this.inputValue.map((v)=> {return v.guid} ).includes(value['@guid'])){
+                  for (let iv of this.inputValue){
+                    if (iv.guid == value['@guid']){
+                      iv.value = value[this.structure.propertyURI]
+                    }
+                  }                  
+              }else{
+                this.inputValue.push({value:value[this.structure.propertyURI], guid:value['@guid'] })
+              }
+
+
+
+
           }
         }
       }else if (this.parentStructureObj && this.parentStructureObj.propertyURI == data.userValue['@root'] && data.userValue[this.structure.propertyURI]){
 
 
         for (let value of data.userValue[this.structure.propertyURI]){
-          // console.log("HERE 3.1")
           if (value[this.structure.propertyURI]){
 
 
-            if (!data.multiLiteral){
-              data.multiLiteral={}
-            }
-            if (!data.multiLiteral[level.uri]){
-              data.multiLiteral[level.uri] = {}
-            }
+                allGuidsFound.push(value['@guid'])
 
+                // check that it doesn't yet exist, if it does just update value
+                if (this.inputValue.map((v)=> {return v.guid} ).includes(value['@guid'])){
+                    for (let iv of this.inputValue){
+                      if (iv.guid == value['@guid']){
+                        iv.value = value[this.structure.propertyURI]
+                      }
+                    }                  
+                }else{
+                  this.inputValue.push({value:value[this.structure.propertyURI], guid:value['@guid'] })
+                }
 
-            if (!data.multiLiteral[level.uri][value['@guid']]){
-              // console.log("HERE 3.4")
-              // console.log(value[this.structure.propertyURI], 'not exist, setting its value')
-              data.multiLiteral[level.uri][value['@guid']] = value[this.structure.propertyURI]
-              this.inputValue = value[this.structure.propertyURI]  
-              this.guid = value['@guid']
-              break
-            }else{
-              // console.log("HERE 3.5")
-              // if it is already in there it was taken by a previous copy of this literal property
-              // console.log(value[this.structure.propertyURI], 'does alraedy exist, ')
-            }      
           }
         }
 
@@ -715,256 +801,34 @@ export default {
       }
 
 
-      // console.log("this.inputValue",this.inputValue,this.inputValue,this.inputValue.length,data)
-
-
-      if (this.inputValue == ""){
-        this.inputValue = null
+      // if we have more than the default empty value it means we have a value, so remvoe the default blank one
+      if (this.inputValue.length>1){
+        this.inputValue = this.inputValue.filter((iv) => {return (iv.value!='')})
       }
 
-      this.inputValueLast = this.inputValue
-      this.inputValueOrginal = this.inputValue
+      // also look to see that the guids in there are really in the data
+      // they might be leftovers from when they did an undo command and we need to clean up the inputValue
+      this.inputValue = this.inputValue.filter((iv) => {
 
-      // if it is a dynamic property and no data was populated, hide it
-      // if (data.dynamic && this.inputValue == null){
-      //   this.hideField = true
-      // }
-      // if (this.parentStructureObj && this.parentStructureObj.dynamic && this.inputValue == null){
-      //   this.hideField = true
-      // }
+        if (iv.guid.startsWith('new_')){
+          return true
+        }
+
+        if (allGuidsFound.indexOf(iv.guid)==-1){
+          return false
+        }
 
 
+        return true
 
-      let d = localStorage.getItem('bfeDiacritics')
-      if (d){
-        this.diacriticData = JSON.parse(d)
+
+      })
+
+
+      // the did an undo and now there is nothing in the data, make sure there is at least an empty one
+      if (this.inputValue.length==0){
+        this.inputValue.push({value:'',guid:'new_' + short.generate()})
       }
-
-
-
-
-
-
-
-
-
-
-
-      // // console.log('-------', this.structure.propertyURI, this.parentStructureObj)
-      // this.guid = null
-
-      // let data
-      // if (this.isMini){
-      //   data = this.activeProfileMini.rt[this.profileName].pt[this.profileCompoent] 
-      // }else{
-      //   data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]  
-      // }
-      
-
-      // this.inputValue = ""
-      // // let bnodeHasURI = false
-      // // console.log('data.multiLiteral',data.multiLiteral)
-      // if (this.parentStructureObj){
-      //   // console.log('this.parentStructureObj.multiLiteral',this.parentStructureObj.multiLiteral)
-      // }
-
-
-
-
-
-
-      // if (data.multiLiteral){
-      //   if (Object.keys(data.multiLiteral).length>1){
-      //     // console.log("CLEAR MYLIUTLITERAL")
-      //     // if there are already 2+ keys then it means that this component has 
-      //     // already been initalized, and this is just a state reload or something
-      //     // so clear out the flag so it populates both multuliteral values again
-      //     delete data.multiLiteral
-      //   }
-      // }
-      // if (this.parentStructureObj && this.parentStructureObj.multiLiteral && Object.keys(this.parentStructureObj.multiLiteral).length>1){
-      //   delete this.parentStructureObj.multiLiteral
-      // }
-
-
-
-
-      // // if it is not set as multiliteral just always wipe it
-      // if (!data.isMultiLiteral){
-      //   delete data.multiLiteral
-      //   if (this.parentStructureObj && this.parentStructureObj.multiLiteral){
-      //     delete this.parentStructureObj.multiLiteral
-      //   }
-
-      // }
-
-
-
-
-
-
-
-      // // first test to see if this property exists in the user value at the parent structure / properturi lvl
-      // if (this.parentStructureObj && data.userValue[this.parentStructureObj.propertyURI]){
-      //     // console.log("HERE 1a")
-      //   for (let parentValueArray of data.userValue[this.parentStructureObj.propertyURI]){
-      //     if (parentValueArray[this.structure.propertyURI]){          
-      //       for (let childValue of parentValueArray[this.structure.propertyURI]){
-      //         if (childValue[this.structure.propertyURI]){
-
-
-      //           // // if there are multiple literals of the same property, like multuple rdf:label (why?) then just merge them
-      //           // // together into the imput so we dont lose it and can be edited
-      //           // this.inputValue = this.inputValue + childValue[this.structure.propertyURI] + "MUSH"
-
-      //           // for use later, does this bnode have a URI?              
-      //           // if (parentValueArray['@id']){
-      //           //   bnodeHasURI = true
-      //           // }
-
-      //           // // also set the guid
-      //           // this.guid = childValue['@guid']
-
-      //           // console.log("HERE 1",this.parentStructureObj.multiLiteral)
-      //           // store some info about it in the parent about what literal has been used so far
-      //           if (!this.parentStructureObj.multiLiteral){
-      //             this.parentStructureObj.multiLiteral={}
-      //           }
-
-      //           if (!this.parentStructureObj.multiLiteral[childValue['@guid']]){
-      //             // console.log("HERE 1z",this.parentStructureObj.multiLiteral)
-      //             // console.log(childValue[this.structure.propertyURI], 'not exist, setting its childValue')
-      //             this.parentStructureObj.multiLiteral[childValue['@guid']] = childValue[this.structure.propertyURI]
-      //             this.inputValue = childValue[this.structure.propertyURI]  
-      //             this.guid = childValue['@guid']
-      //             break
-      //           }else{
-      //             // if it is already in there it was taken by a previous copy of this literal property
-      //             // console.log(value[this.structure.propertyURI], 'does alraedy exist, ')
-      //           }   
-
-
-
-
-
-
-
-      //         }
-      //       }
-      //     }
-      //   }
-      // }else if (!this.parentStructureObj && data.userValue[this.structure.propertyURI]){
-      //   // console.log("HERE 2a")
-      //   // if it is not a nested template literal then it should be a first lvl one
-      //   for (let value of data.userValue[this.structure.propertyURI]){
-      //     if (value[this.structure.propertyURI]){
-      //       // if there are multiple literals of the same property, like multuple rdf:label (why?) then just merge them
-      //       // together into the imput so we dont lose it and can be edited
-      //       this.inputValue = this.inputValue + value[this.structure.propertyURI]
-      //       // console.log("HERE 2")
-      //       this.guid = value['@guid']
-      //     }
-      //   }
-      // }else if (this.parentStructureObj && this.parentStructureObj.propertyURI == data.userValue['@root'] && data.userValue[this.structure.propertyURI]){
-      //   // there is aparent element, but it is the root element also
-      //   // console.log("HERE 3a")
-      //   for (let value of data.userValue[this.structure.propertyURI]){
-      //     if (value[this.structure.propertyURI]){
-      //       // console.log("HERE 3")
-      //       // store some info about it in the parent about what literal has been used so far
-      //       if (!this.parentStructureObj.multiLiteral){
-      //         this.parentStructureObj.multiLiteral={}
-      //       }
-
-      //       if (!this.parentStructureObj.multiLiteral[value['@guid']]){
-      //         // console.log(value[this.structure.propertyURI], 'not exist, setting its value')
-      //         this.parentStructureObj.multiLiteral[value['@guid']] = value[this.structure.propertyURI]
-      //         this.inputValue = value[this.structure.propertyURI]  
-      //         this.guid = value['@guid']
-      //         break
-      //       }else{
-      //         // if it is already in there it was taken by a previous copy of this literal property
-      //         // console.log(value[this.structure.propertyURI], 'does alraedy exist, ')
-      //       }      
-      //     }
-      //   }
-
-
-      // }else{
-
-      //   //
-
-
-      // }
-
-
-      // // look at the config file to understand this flag
-      // if (config.profileHacks.agentsHideManualRDFLabelIfURIProvided.enabled){
-      //   if (this.parentStructureObj && this.parentStructureObj.propertyURI == 'http://id.loc.gov/ontologies/bibframe/agent'){
-      //     if (this.structure.propertyURI=='http://www.w3.org/2000/01/rdf-schema#label'){
-      //       // always hide it
-      //       // if (bnodeHasURI){
-              
-      //         if (
-      //             !this.parentStructureObj.parentId.includes('Information') &&
-      //             !this.structure.parentId.includes('PubPlace') &&
-      //             !this.structure.parentId.includes('PubName') &&
-      //             !this.structure.parentId.includes(':Provision:')
-
-                  
-      //             ){
-      //           // console.log("HERE 4")
-      //           this.hideField = true
-      //         }
-
-
-
-      //       // }
-      //     }
-      //   }
-
-
-      // }
-
-
-
-
-      // if (this.inputValue == ""){
-      //   this.inputValue = null
-      // }
-
-      // if (this.parentStructureObj && this.parentStructureObj.propertyURI == 'http://id.loc.gov/ontologies/bibframe/provisionActivity'){
-      // // console.log('this.structure.propertyURI',this.structure.propertyURI)
-      // // console.log('data',data)
-      // // console.log('this.inputValue',this.inputValue)
-      // // console.log('this.guid',this.guid)
-
-
-      // }
-
-
-      // this.inputValueLast = this.inputValue
-      
-      // // if it is a dynamic property and no data was populated, hide it
-      // // if (data.dynamic && this.inputValue == null){
-      // //   this.hideField = true
-      // // }
-      // // if (this.parentStructureObj && this.parentStructureObj.dynamic && this.inputValue == null){
-      // //   this.hideField = true
-      // // }
-
-
-
-      // let d = localStorage.getItem('bfeDiacritics')
-      // if (d){
-      //   this.diacriticData = JSON.parse(d)
-      // }
-
-      // data.initalized = true
-
-
-
-
 
 
 
@@ -996,56 +860,7 @@ export default {
     // watch when the undoindex changes, means they are undoing redoing, so refresh the
     // value in the acutal input box
     undoCounter: function(){
-      
-
-      // // 
-      // let data
-
-      // if (this.isMini){
-      //   data = this.activeProfileMini.rt[this.profileName].pt[this.profileCompoent] 
-      // }else{
-      //   data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]  
-      // }      
-
-
-      // if (data.multiLiteral){
-      //   if (Object.keys(data.multiLiteral).length>1){
-      //     console.log("CLEAR MYLIUTLITERAL")
-      //     // if there are already 2+ keys then it means that this component has 
-      //     // already been initalized, and this is just a state reload or something
-      //     // so clear out the flag so it populates both multuliteral values again
-      //     delete data.multiLiteral
-      //     if (this.parentStructureObj && this.parentStructureObj.multiLiteral){
-      //       delete this.parentStructureObj.multiLiteral
-      //     }
-      //   // }else if (data.initalized && Object.keys(data.multiLiteral).length === 1){
-
-      //   //   // otherwise if there is one value, and this thing as been initalized already
-      //   //   // then we know its some kind of state reload again, wipe it out as well and 
-      //   //   delete data.multiLiteral
-      //   //   console.log(data.multiLiteral)
-
-      //   }
-
-      //   if (this.parentStructureObj && this.parentStructureObj.multiLiteral && Object.keys(this.parentStructureObj.multiLiteral).length>1){
-      //     delete this.parentStructureObj.multiLiteral
-      //   }
-
-
-      // }
-
-
-
-
-      // // if it is not set as multiliteral just always wipe it
-      // if (!data.isMultiLiteral){
-      //   delete data.multiLiteral
-      //   if (this.parentStructureObj && this.parentStructureObj.multiLiteral){
-      //     delete this.parentStructureObj.multiLiteral
-      //   }
-
-      // }
-
+     
 
       this.refreshInputDisplay()
     }
@@ -1056,14 +871,16 @@ export default {
   data: function() {
     return {
 
-      inputValue: null,
+      inputValue: [{value:'',guid:'new_' + short.generate()}],
       inputValueLast: null,
       inputValueCombiningDiacritic: null,
       showDiacritics: false,
+      showDiacriticsGuid: null,
       diacriticData: [],
       diacriticDataNav: 0,
       hideField: false,
       guid: null,
+      initalGuid: null,
       diacrticsVoyagerNativeMode:false,
 
     }
@@ -1071,6 +888,13 @@ export default {
   created: function(){
 
     this.refreshInputDisplay()
+
+
+    let d = localStorage.getItem('bfeDiacritics')
+    if (d){
+      this.diacriticData = JSON.parse(d)
+    }
+
 
   },
 };

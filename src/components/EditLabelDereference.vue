@@ -59,15 +59,15 @@ export default {
             fetch(URL, {method: 'HEAD', redirect: "follow" }).then(
               function(response)
                 {
-                let preflabel = response.headers.get("x-preflabel");
-                if (preflabel){
-                  self.displayLabel = preflabel
+                  let preflabel = response.headers.get("x-preflabel");
+                  if (preflabel){
+                    self.displayLabel = preflabel
 
 
-                  sessionStorage.setItem(URL, preflabel);
+                    sessionStorage.setItem(URL, preflabel);
 
 
-                }
+                  }
                 }
               );
 
@@ -75,6 +75,15 @@ export default {
           }
 
 
+
+
+
+        }else{
+
+          // some common hardcoded values
+          if (this.URI == 'http://id.loc.gov/authorities/subjects'){
+            this.displayLabel = 'LCSH'
+          }
 
 
 

@@ -22,7 +22,7 @@ const parseBfdb = {
 		item:[]
 	},
 
-	multiLitearlLookup: {},
+	// multiLitearlLookup: {},
 
 
 	namespace: {
@@ -572,6 +572,10 @@ const parseBfdb = {
 
 
 	transform: async function(profile){ 
+
+		// restore the RTlookups so we are starting from a clean state
+		store.state.rtLookup = JSON.parse(JSON.stringify(store.state.rtLookupUnmodified))
+
 		console.log("********")
 		console.log(JSON.parse(JSON.stringify(profile)))
 
@@ -595,7 +599,7 @@ const parseBfdb = {
 
 
 		this.tempTemplates = {}
-		this.multiLitearlLookup = {}
+		// this.multiLitearlLookup = {}
 
 		// add a admin data to all the rts
 		// TODO replace this later with more advanced/dynamic approch
@@ -756,219 +760,221 @@ const parseBfdb = {
 
 
 
-				// here we are cheking to see if some of the literals have multiple values
-				// if it does then we need to modify the profile template to add another copy of it
-				// so that it shows both values
-				for (let checkProperty of config.checkForRepeatedLiterals){
+				// // here we are cheking to see if some of the literals have multiple values
+				// // if it does then we need to modify the profile template to add another copy of it
+				// // so that it shows both values
+				// for (let checkProperty of config.checkForRepeatedLiterals){
 
-					if (resultsTest.rt[rtKey].pt[pt].userValue[checkProperty] && resultsTest.rt[rtKey].pt[pt].userValue[checkProperty].length > 1){
+				// 	if (resultsTest.rt[rtKey].pt[pt].userValue[checkProperty] && resultsTest.rt[rtKey].pt[pt].userValue[checkProperty].length > 1){
 
-						console.log("&&&&&&&&&&&&&& HERE")
-						console.log(checkProperty)
-						console.log(resultsTest.rt[rtKey].pt[pt].userValue[checkProperty])
+				// 		console.log("&&&&&&&&&&&&&& HERE")
+				// 		console.log(checkProperty)
+				// 		console.log(resultsTest.rt[rtKey].pt[pt].userValue[checkProperty])
 
 
-						// we found one, look through the linked templates and modify as needed
-						for (let vtr of resultsTest.rt[rtKey].pt[pt].valueConstraint.valueTemplateRefs){
-							// keep track of how many there are and save a copy so we can insert it again
-							let pcount = 0
-							let ppos = 0
-							let pvalue = null
-							for (let [index, p] of store.state.rtLookup[vtr].propertyTemplates.entries()){
-								if (p.propertyURI === checkProperty){
-									pcount++
-									pvalue = JSON.parse(JSON.stringify(p))
-									ppos = index
-								}
-							}
+				// 		// we found one, look through the linked templates and modify as needed
+				// 		for (let vtr of resultsTest.rt[rtKey].pt[pt].valueConstraint.valueTemplateRefs){
+				// 			// keep track of how many there are and save a copy so we can insert it again
+				// 			let pcount = 0
+				// 			let ppos = 0
+				// 			let pvalue = null
+				// 			for (let [index, p] of store.state.rtLookup[vtr].propertyTemplates.entries()){
+				// 				if (p.propertyURI === checkProperty){
+				// 					pcount++
+				// 					pvalue = JSON.parse(JSON.stringify(p))
+				// 					ppos = index
+				// 				}
+				// 			}
 
-							// if we found one, but there are not enough based on how many userValues we have for it
-							if (pcount>0&&pcount<resultsTest.rt[rtKey].pt[pt].userValue[checkProperty].length){
-								let diff = resultsTest.rt[rtKey].pt[pt].userValue[checkProperty].length - pcount;								
+				// 			// if we found one, but there are not enough based on how many userValues we have for it
+				// 			if (pcount>0&&pcount<resultsTest.rt[rtKey].pt[pt].userValue[checkProperty].length){
+				// 				let diff = resultsTest.rt[rtKey].pt[pt].userValue[checkProperty].length - pcount;								
 
-								// make a copy, and alternate multi-literal version of this subtemplate								
-								let copy = JSON.parse(JSON.stringify(store.state.rtLookup[vtr]))
+				// 				// make a copy, and alternate multi-literal version of this subtemplate								
+				// 				let copy = JSON.parse(JSON.stringify(store.state.rtLookup[vtr]))
 								
-								let newVtr = `${vtr}:MultiLiteral`
-								copy.id = newVtr
-								// does it already exist, meaning maybe there are multiple multiliterals?!?!
-								// like two mainTitle and two subtitle
-								if (!store.state.rtLookup[newVtr]){
-									store.state.rtLookup[newVtr] = copy;	
-								}
-								// if it already exists, just keep using it
+				// 				let newVtr = `${vtr}:MultiLiteral`
+				// 				copy.id = newVtr
+				// 				// does it already exist, meaning maybe there are multiple multiliterals?!?!
+				// 				// like two mainTitle and two subtitle
+				// 				if (!store.state.rtLookup[newVtr]){
+				// 					store.state.rtLookup[newVtr] = copy;	
+				// 				}
+				// 				// if it already exists, just keep using it
 								
-								[...Array(diff)].forEach((_, i) => { // eslint-disable-line
-									pvalue['@guid'] = short.generate();
-									pvalue.parentId = newVtr
-									// insert after the old one
-									console.log("modifying ",newVtr)									
-									store.state.rtLookup[newVtr].propertyTemplates.splice(ppos+1, 0, pvalue);
-								});
+				// 				[...Array(diff)].forEach((_, i) => { // eslint-disable-line
+				// 					pvalue['@guid'] = short.generate();
+				// 					pvalue.parentId = newVtr
+				// 					// insert after the old one
+				// 					console.log("modifying ",newVtr)									
+				// 					store.state.rtLookup[newVtr].propertyTemplates.splice(ppos+1, 0, pvalue);
+				// 				});
 
-								// keep note of what property needed this
-								if (!this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)]){
-									this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)]=[]
-								}
-								this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)].push({'old':vtr,'new':newVtr})
+				// 				// keep note of what property needed this
+				// 				if (!this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)]){
+				// 					this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)]=[]
+				// 				}
+				// 				this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)].push({'old':vtr,'new':newVtr})
 
-							}
+				// 			}
 
-						}
-
-
-					}else{
+				// 		}
 
 
-
-						// look one layer down as well
-						for (let userValueKey in resultsTest.rt[rtKey].pt[pt].userValue){
-
-							if (Array.isArray(resultsTest.rt[rtKey].pt[pt].userValue[userValueKey])){
-
-								for (let userValue of resultsTest.rt[rtKey].pt[pt].userValue[userValueKey]){
-
-									for (let k in userValue){
-
-										if (k == checkProperty && Array.isArray(userValue[k]) && userValue[k].length>1){
+				// 	}else{
 
 
-											console.log("############## HERE")
-											console.log(k)
-											console.log(userValue)
 
-											for (let vtr of resultsTest.rt[rtKey].pt[pt].valueConstraint.valueTemplateRefs){
+				// 		// look one layer down as well
+				// 		for (let userValueKey in resultsTest.rt[rtKey].pt[pt].userValue){
 
-												for (let [index, p] of store.state.rtLookup[vtr].propertyTemplates.entries()){
-													// we now need to loop through this templates templates :(
-													console.log('p',p,index)
+				// 			if (Array.isArray(resultsTest.rt[rtKey].pt[pt].userValue[userValueKey])){
+
+				// 				for (let userValue of resultsTest.rt[rtKey].pt[pt].userValue[userValueKey]){
+
+				// 					for (let k in userValue){
+
+				// 						if (k == checkProperty && Array.isArray(userValue[k]) && userValue[k].length>1){
+
+
+				// 							console.log("############## HERE")
+				// 							console.log(pt)
+				// 							console.log(k)
+				// 							console.log(userValue)
+
+				// 							for (let vtr of resultsTest.rt[rtKey].pt[pt].valueConstraint.valueTemplateRefs){
+
+				// 								for (let [index, p] of store.state.rtLookup[vtr].propertyTemplates.entries()){
+				// 									// we now need to loop through this templates templates :(
+				// 									console.log('p',p,index)
 													
-													if (p.valueConstraint && p.valueConstraint.valueTemplateRefs && p.valueConstraint.valueTemplateRefs.length>0){
+				// 									if (p.valueConstraint && p.valueConstraint.valueTemplateRefs && p.valueConstraint.valueTemplateRefs.length>0){
 
-														for (let vtr2 of p.valueConstraint.valueTemplateRefs){
-															// keep track of how many there are and save a copy so we can insert it again
-															let pcount = 0
-															let ppos = 0
-															let pvalue = null
+				// 										for (let vtr2 of p.valueConstraint.valueTemplateRefs){
+				// 											console.log('vtr2',vtr2)
+				// 											// keep track of how many there are and save a copy so we can insert it again
+				// 											let pcount = 0
+				// 											let ppos = 0
+				// 											let pvalue = null
 
-															for (let [index, p2] of store.state.rtLookup[vtr2].propertyTemplates.entries()){
-																console.log('p2',vtr2,p2,index)
-																if (p2.propertyURI === checkProperty){
+				// 											for (let [index, p2] of store.state.rtLookup[vtr2].propertyTemplates.entries()){
+				// 												console.log('p2',vtr2,p2,index)
+				// 												if (p2.propertyURI === checkProperty){
 
-																	pcount++
-																	pvalue = JSON.parse(JSON.stringify(p2))
-																	ppos = index
-																	console.log("MATCHED ", checkProperty, pcount)
-																}
+				// 													pcount++
+				// 													pvalue = JSON.parse(JSON.stringify(p2))
+				// 													ppos = index
+				// 													console.log("MATCHED ", checkProperty, pcount)
+				// 												}
 
-															}
+				// 											}
 
-															if (pcount>0){
-																console.log(ppos,pcount)
-																console.log(pvalue)
-																console.log("Needs to modify profile:")
-																console.log(vtr,"=>",vtr2,"=>",pvalue.propertyURI)
+				// 											if (pcount>0){
+				// 												console.log(ppos,pcount)
+				// 												console.log(pvalue)
+				// 												console.log("Needs to modify profile:")
+				// 												console.log(vtr,"=>",vtr2,"=>",pvalue.propertyURI)
 
-																// we have a property in a template referenced in the main tempalte
-																// like lc:RT:bf2:MonographNR:PubInfo -> lc:RT:bf2:MonographNR:PubPlace
-																// so we need to modify the subtemplate as well as template 
-																// so make the lc:RT:bf2:MonographNR:PubPlace into lc:RT:bf2:MonographNR:PubPlaceMultiliteral
-																// but also change the lc:RT:bf2:MonographNR:PubInfo so that it is referenceing the new subtemplate 
-																// and also change it to lc:RT:bf2:MonographNR:PubInfoMultiliteral so we can apply it to the needed properties
-
-
-																// do sub-template first, modify it with the new property
-																// make a copy, and alternate multi-literal version of this subtemplate								
-																let copy = JSON.parse(JSON.stringify(store.state.rtLookup[vtr2]))
-																let newVtr2 = `${vtr2}:MultiLiteral`
-
-																// make some updates to the template like id
-																copy.id = newVtr2
+				// 												// we have a property in a template referenced in the main tempalte
+				// 												// like lc:RT:bf2:MonographNR:PubInfo -> lc:RT:bf2:MonographNR:PubPlace
+				// 												// so we need to modify the subtemplate as well as template 
+				// 												// so make the lc:RT:bf2:MonographNR:PubPlace into lc:RT:bf2:MonographNR:PubPlaceMultiliteral
+				// 												// but also change the lc:RT:bf2:MonographNR:PubInfo so that it is referenceing the new subtemplate 
+				// 												// and also change it to lc:RT:bf2:MonographNR:PubInfoMultiliteral so we can apply it to the needed properties
 
 
-																// does it already exist, meaning maybe there are multiple multiliterals?!?!
-																// like two mainTitle and two subtitle
-																if (!store.state.rtLookup[newVtr2]){
-																	store.state.rtLookup[newVtr2] = copy;	
-																}
-																// if it already exists, just keep using it
+				// 												// do sub-template first, modify it with the new property
+				// 												// make a copy, and alternate multi-literal version of this subtemplate								
+				// 												let copy = JSON.parse(JSON.stringify(store.state.rtLookup[vtr2]))
+				// 												let newVtr2 = `${vtr2}:MultiLiteral`
+
+				// 												// make some updates to the template like id
+				// 												copy.id = newVtr2
+				// 												console.log("MADE ",copy)
+
+				// 												// does it already exist, meaning maybe there are multiple multiliterals?!?!
+				// 												// like two mainTitle and two subtitle
+				// 												if (!store.state.rtLookup[newVtr2]){
+				// 													store.state.rtLookup[newVtr2] = copy;	
+				// 												}
+				// 												// if it already exists, just keep using it
 																
-																// how many are there in there already?
+				// 												// how many are there in there already?
 
-																let diff = userValue[k].length - store.state.rtLookup[newVtr2].propertyTemplates.filter( (p) => {  return ( p.propertyURI ===  checkProperty) ? true : false } ).length
+				// 												let diff = userValue[k].length - store.state.rtLookup[newVtr2].propertyTemplates.filter( (p) => {  return ( p.propertyURI ===  checkProperty) ? true : false } ).length
 																
-																console.log("NEEEDDS TO ADD ", diff , " MROA");
-																[...Array(diff)].forEach((_, i) => { // eslint-disable-line
-																	pvalue['@guid'] = short.generate();
-																	pvalue.parentId = newVtr2
-																	// insert after the old one
-																	console.log("modifying 2222222",newVtr2)	
-																	console.log(pvalue)
-																	console.log(store.state.rtLookup[newVtr2])								
-																	store.state.rtLookup[newVtr2].propertyTemplates.splice(ppos+1, 0, pvalue);
-																});
+				// 												console.log("NEEEDDS TO ADD ", diff , " MROA", 'has ', userValue[k].length, 'user val len', k, userValue[k]);
+				// 												[...Array(diff)].forEach((_, i) => { // eslint-disable-line
+				// 													pvalue['@guid'] = short.generate();
+				// 													pvalue.parentId = newVtr2
+				// 													// insert after the old one
+				// 													console.log("modifying 2222222",newVtr2)	
+				// 													console.log(pvalue)
+				// 													console.log(store.state.rtLookup[newVtr2])								
+				// 													store.state.rtLookup[newVtr2].propertyTemplates.splice(ppos+1, 0, pvalue);
+				// 												});
 
 
-																// the sub template is now avaiable, make a new template to house it
-																let newVtr = `${vtr}:MultiLiteral`
-																let parentCopy = JSON.parse(JSON.stringify(store.state.rtLookup[vtr]))
-																parentCopy.id = newVtr
-																if (!store.state.rtLookup[newVtr]){
-																	store.state.rtLookup[newVtr] = parentCopy;	
-																}
-																// if it already exists, just keep using it
+				// 												// the sub template is now avaiable, make a new template to house it
+				// 												let newVtr = `${vtr}:MultiLiteral`
+				// 												let parentCopy = JSON.parse(JSON.stringify(store.state.rtLookup[vtr]))
+				// 												parentCopy.id = newVtr
+				// 												if (!store.state.rtLookup[newVtr]){
+				// 													store.state.rtLookup[newVtr] = parentCopy;	
+				// 												}
+				// 												// if it already exists, just keep using it
 
-																// swap out the subtemplate references for the one we just made
-																console.log("THIS IS THE PARENT:",store.state.rtLookup[newVtr].propertyTemplates[index],index)
-																let idx = store.state.rtLookup[newVtr].propertyTemplates[index].valueConstraint.valueTemplateRefs.indexOf(vtr2)
-																if (idx>-1){
-																	store.state.rtLookup[newVtr].propertyTemplates[index].valueConstraint.valueTemplateRefs[idx]=newVtr2
-																}
+				// 												// swap out the subtemplate references for the one we just made
+				// 												console.log("THIS IS THE PARENT:",store.state.rtLookup[newVtr].propertyTemplates[index],index)
+				// 												let idx = store.state.rtLookup[newVtr].propertyTemplates[index].valueConstraint.valueTemplateRefs.indexOf(vtr2)
+				// 												if (idx>-1){
+				// 													store.state.rtLookup[newVtr].propertyTemplates[index].valueConstraint.valueTemplateRefs[idx]=newVtr2
+				// 												}
 
-																console.log(store.state.rtLookup[newVtr])
+				// 												console.log(store.state.rtLookup[newVtr])
 
-																// mark this xml block in the lookup as needing to use the multiliteral profile templates
+				// 												// mark this xml block in the lookup as needing to use the multiliteral profile templates
 
-																if (!this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)]){
-																	this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)]=[]
-																}
-																this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)].push({'old':vtr,'new':newVtr})
-
-
-
-															}
+				// 												if (!this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)]){
+				// 													this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)]=[]
+				// 												}
+				// 												this.multiLitearlLookup[hashCode(resultsTest.rt[rtKey].pt[pt].xmlSource)].push({'old':vtr,'new':newVtr})
 
 
 
-														}
-													}
+				// 											}
+
+
+
+				// 										}
+				// 									}
 												
-												}
-											}
-										}
-									}
+				// 								}
+				// 							}
+				// 						}
+				// 					}
 
 
-								}
-
-
-
-							}
+				// 				}
 
 
 
-
-
-						}
+				// 			}
 
 
 
 
 
-					}
+				// 		}
 
 
-				}
+
+
+
+				// 	}
+
+
+				// }
 
 
 
@@ -1336,20 +1342,20 @@ const parseBfdb = {
 
 						populateData['@guid'] = short.generate()
 					
-						if (this.multiLitearlLookup[hashCode(populateData.xmlSource)]){
-							console.log("THIS ONE IS A MULTILITERAL ONE!!!")
-							console.log(populateData)
-							console.log(this.multiLitearlLookup[hashCode(populateData.xmlSource)])
-							populateData.isMultiLiteral = true
-							// check and change he refrence templates
-							for (let mlup of this.multiLitearlLookup[hashCode(populateData.xmlSource)]){
-								let idx = populateData.valueConstraint.valueTemplateRefs.indexOf(mlup.old)
-								if (idx>-1){
-									populateData.valueConstraint.valueTemplateRefs[idx] = mlup.new
-								}
-							}
+						// if (this.multiLitearlLookup[hashCode(populateData.xmlSource)]){
+						// 	console.log("THIS ONE IS A MULTILITERAL ONE!!!")
+						// 	console.log(populateData)
+						// 	console.log(this.multiLitearlLookup[hashCode(populateData.xmlSource)])
+						// 	populateData.isMultiLiteral = true
+						// 	// check and change he refrence templates
+						// 	for (let mlup of this.multiLitearlLookup[hashCode(populateData.xmlSource)]){
+						// 		let idx = populateData.valueConstraint.valueTemplateRefs.indexOf(mlup.old)
+						// 		if (idx>-1){
+						// 			populateData.valueConstraint.valueTemplateRefs[idx] = mlup.new
+						// 		}
+						// 	}
 
-						}
+						// }
 
 						//
 						if (this.tempTemplates[hashCode(populateData.propertyURI + populateData.xmlSource)]){
@@ -2039,6 +2045,42 @@ const parseBfdb = {
 						}
 
 						sucessfulElements.push(e.outerHTML)
+
+						// if (populateData.isMultiLiteral){
+						// 	populateData.isMultiLiteralCounter = {}
+						// 	// keep a count of how many fields it made for each property, this will be useful later for the interface rendering
+						// 	for (let multiLiteralKey in populateData.userValue){
+								
+						// 		// no @ sign means it's a real property
+						// 		if (!multiLiteralKey.includes('@')){
+						// 			// keep track of the length of the value, which is always an array at this level
+						// 			populateData.isMultiLiteralCounter[multiLiteralKey] = populateData.userValue[multiLiteralKey].length
+
+						// 			// then we need to check one level deeper if it is a blank node because it might be a repeated rdf:label in the blank node
+						// 			// loop through each value of the main property array
+						// 			for (let multiLiteralValue of populateData.userValue[multiLiteralKey]){
+						// 				for (let multiLiteralKey2 in multiLiteralValue){
+
+						// 					// is real property
+						// 					if (!multiLiteralKey2.includes('@')){
+						// 						// at this level we are either in a blank node or just the value level of the main component
+						// 						// so if its an array that means we want to look into this as opposed to it just being a string literal at this level
+						// 						if (Array.isArray(multiLiteralValue[multiLiteralKey2])){
+													
+						// 							// if it is a blank node then delete the count for the parent since its useless
+						// 							if (populateData.isMultiLiteralCounter[multiLiteralKey]){
+						// 								delete populateData.isMultiLiteralCounter[multiLiteralKey]
+						// 							}
+						// 							// make a combined key of the parent property and repeated litearl poperty, this is how we use it in the literal component
+						// 							populateData.isMultiLiteralCounter[multiLiteralKey+'|'+multiLiteralKey2] = multiLiteralValue[multiLiteralKey2].length	
+						// 						}												
+						// 					}
+						// 				}		
+						// 			} 
+						// 		}
+						// 	}							
+						// }
+
 						
 
 						// since we created a brand new populateData we either need to 

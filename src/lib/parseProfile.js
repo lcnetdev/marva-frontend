@@ -1334,9 +1334,10 @@ const parseProfile = {
 
         let results = {newGuid:null}
 
+
         
         console.log(currentState, ptGuid, guid, parentURI, URI, value)
-        
+        // console.log('before:',JSON.parse(JSON.stringify(currentState)))
 
         // find the pt for the value we are editing
         for (let rt in currentState.rt){
@@ -1344,30 +1345,46 @@ const parseProfile = {
             for (let pt in currentState.rt[rt].pt){
                 if (currentState.rt[rt].pt[pt]['@guid'] == ptGuid){
 
-                    console.log("found the existing PTguid",currentState.rt[rt].pt[pt])
+                    // console.log("found the existing PTguid",currentState.rt[rt].pt[pt])
                     let userValue = currentState.rt[rt].pt[pt].userValue
 
                     if (guid){
-                        console.log("here1")
+                        // console.log("here1")
                         // it already has a guid, so we are editing an existing value
                         if (parentURI){
-                            console.log("here2")
+                            // console.log("here2")
                             // if we have the parent URi try to search using both 
                             if (userValue[parentURI]){
-                                console.log("here3")
+                                // console.log("here3")
                                 for (let parentValueArray of userValue[parentURI]){
                                     if (parentValueArray[URI]){          
+                                      // console.log(JSON.parse(JSON.stringify(parentValueArray[URI])))
                                       for (let childValue of parentValueArray[URI]){
                                         if (childValue['@guid'] == guid){
-                                            console.log("here5")
-                                            childValue[URI] = value
+                                            // console.log(JSON.parse(JSON.stringify(childValue)))
+                                            // console.log("here5",childValue,guid,URI)
+                                            childValue[URI] = value                                            
                                             if (value && value.length==0){
-                                                delete parentValueArray[URI]
+                                                // value is null remove the property
+                                                // if it is a multiliteral make sure we remvoe the correct one                                            
+                                                if (parentValueArray[URI].length>1){
+                                                    parentValueArray[URI] = parentValueArray[URI].filter((v)=>{ return (v['@guid'] != guid) })
+                                                }else{
+                                                    delete parentValueArray[URI]    
+                                                }
                                                 results.newGuid=false
+                                                // console.log("here5a")
                                             }else if (!value){
                                                 // value is null remove the property
-                                                delete parentValueArray[URI]
+                                                // if it is a multiliteral make sure we remvoe the correct one
+                                                if (parentValueArray[URI].length>1){
+                                                    parentValueArray[URI] = parentValueArray[URI].filter((v)=>{ return (v['@guid'] != guid) })
+                                                }else{
+                                                    delete parentValueArray[URI]    
+                                                }
+
                                                 results.newGuid=false
+                                                // console.log("here5b")
                                             }
 
                                         }
@@ -1384,12 +1401,25 @@ const parseProfile = {
                                     if (childValue['@guid'] == guid){
                                         childValue[URI] = value
                                         if (value && value.length==0){
-                                            delete userValue[URI]
+
+
+                                            if (userValue[URI].length>1){
+                                                userValue[URI] = userValue[URI].filter((v)=>{ return (v['@guid'] != guid) })
+                                            }else{
+                                                delete userValue[URI]    
+                                            }
+
                                             results.newGuid=false
                                             console.log("here66")
                                         }else if (!value){
                                             // value is null remove the property
-                                            delete userValue[URI]
+                                            if (userValue[URI].length>1){
+                                                userValue[URI] = userValue[URI].filter((v)=>{ return (v['@guid'] != guid) })
+                                            }else{
+                                                delete userValue[URI]    
+                                            }
+
+
                                             results.newGuid=false
                                             console.log("here666")
                                         }
@@ -1400,18 +1430,30 @@ const parseProfile = {
 
                             }
                         }else{
-                            console.log("here7")
+                            // console.log("here7")
                             // not nested
                             if (userValue[URI]){
                               for (let childValue of userValue[URI]){
                                 if (childValue['@guid'] == guid){
                                     childValue[URI] = value
                                     if (value && value.length==0){
-                                        delete userValue[URI]
+
+                                        if (userValue[URI].length>1){
+                                            userValue[URI] = userValue[URI].filter((v)=>{ return (v['@guid'] != guid) })
+                                        }else{
+                                            delete userValue[URI]    
+                                        }
+
                                         results.newGuid=false
                                     }else if (!value){
                                         // value is null remove the property
-                                        delete userValue[URI]
+
+                                        if (userValue[URI].length>1){
+                                            userValue[URI] = userValue[URI].filter((v)=>{ return (v['@guid'] != guid) })
+                                        }else{
+                                            delete userValue[URI]    
+                                        }
+
                                         results.newGuid=false
                                     }
 
@@ -1439,7 +1481,7 @@ const parseProfile = {
 
                         // if there is no type yet and this is not a literal component PT then
                         // it needs to have a type assigned
-                        console.log('creating',currentState.rt[rt].pt[pt])
+                        // console.log('creating',currentState.rt[rt].pt[pt])
                         if (currentState.rt[rt].pt[pt].type != 'literal' && !currentState.rt[rt].pt[pt].userValue['@type']){
 
                             currentState.rt[rt].pt[pt].userValue['@type'] = await exportXML.suggestType(currentState.rt[rt].pt[pt].propertyURI)
@@ -1541,6 +1583,7 @@ const parseProfile = {
         store.state.activeUndoLog.push(`Changed literal value "${value}" on ${exportXML.namespaceUri(pURI)}`)
 
 
+        // console.log('after:',JSON.parse(JSON.stringify(currentState)))
 
         results.currentState = currentState
 
