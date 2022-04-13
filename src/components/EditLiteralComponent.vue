@@ -7,24 +7,22 @@
 
     <div :class="'component-container-title' + ' component-container-title-' + settingsDisplayMode ">{{structure.propertyLabel}}</div>
     <div :class="'component-container-input-container' + ' component-container-input-container-' + settingsDisplayMode">
-<!-- 
 
-        <div v-bind:class="'component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border'">
+        <div v-for="(inputV,idx) in inputValue" :key="`input_${idx}`" v-bind:class="'component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border'">
           <div style="display: flex; position: relative;">
             <div style="flex:1">
               <form autocomplete="off">    
-
                 <div style="position: absolute;" v-if="settingsDisplayMode=='compact'" class="component-nested-container-title">
                   <span>{{structure.propertyLabel}}</span>                  
                 </div>
-                <input  bfeType="EditLiteralComponent-unnested" :id="assignedId" v-on:keydown.enter.prevent="submitField" :name="assignedId" ref="input" v-on:focus="focused" autocomplete="off" type="text" @keydown="nav" @keyup="change" v-model="inputValue"  :class="['input-single', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true), 'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">            
+                <input  bfeType="EditLiteralComponent-unnested" :id="assignedId" :data-guid="inputV.guid" v-on:keydown.enter.prevent="submitField" :name="assignedId" :ref="'input'+ '_' + inputV.guid" v-on:focus="focused" autocomplete="off" type="text" @keydown="nav" @keyup="change($event,inputV)" v-model="inputV.value" :class="['input-single', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true), 'input-accommodate-diacritics': (containsNonLatinCodepoints(inputV.value))}]">            
               </form>
             </div>
-            <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top"  :data-tooltip="'Diacritics [CTRL-ALT-D]'" @click="openDiacriticSelect"></button>
+            <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-guid="inputV.guid" :data-tooltip="'Diacritics [CTRL-ALT-D]'" @click="openDiacriticSelect"></button>
           </div>   
         </div>
 
-         -->
+        <!-- 
 
         <div v-for="(inputV,idx) in inputValue" :key="`input_${idx}`" v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border', { 'component-container-fake-input-note' : isNoteField(structure.propertyLabel)  }]" >
 
@@ -43,7 +41,7 @@
             <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-guid="inputV.guid" :data-tooltip="'Diacritics [CTRL-ALT-SHIFT-D]'" @click="openDiacriticSelect"></button>
           </div>
         </div>
-
+ -->
 
 
 
@@ -421,7 +419,7 @@ export default {
     change: function(event,inputV){
 
 
-      console.log(inputV)
+
 
 
       // find where we are inserting the value into
@@ -431,6 +429,10 @@ export default {
       if (this.$refs[`input_${inputV.guid}`] && this.$refs[`input_${inputV.guid}`][0] && this.$refs[`input_${inputV.guid}`][0].selectionStart){
         insertAt=this.$refs[`input_${inputV.guid}`][0].selectionStart
       }            
+
+      console.log("======================")
+      console.log(event,inputV,insertAt)
+
 
 
       if (diacrticsVoyagerMacroExpress[event.code] && this.settingsDPackVoyager){
@@ -620,7 +622,7 @@ export default {
         event.target.style.height = event.target.scrollHeight + "px"
       }
 
-
+      // ssss
       // if (this.inputValue === null) return false
       // if (this.inputValue.trim() === '') return false
 
@@ -643,6 +645,7 @@ export default {
         // if this is here then we created a new value, store it for future edits
         if(newGuid){
           inputV.guid = newGuid
+
         }
 
         // but if it is explictly set to false that means we just unset the value, so reset the guid here
