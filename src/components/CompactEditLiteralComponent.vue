@@ -262,9 +262,16 @@ export default {
       if (!this.editMode){
         this.editMode=true
         this.$store.dispatch("disableMacroNav")
-        this.$nextTick(()=>{
-          this.$refs.input.focus()
-        })
+        if (this.inputValue[0]){
+          let ref = `input_${this.inputValue[0].guid}`  
+          this.$nextTick(()=>{
+            this.$refs[ref][0].focus()
+          })
+
+        }
+        
+
+
 
         this.setNavAfterClick(event.target.parentNode.id)
 
