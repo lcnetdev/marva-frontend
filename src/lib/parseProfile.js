@@ -630,7 +630,7 @@ const parseProfile = {
 
     duplicateProperty: function(id,profile,activeProfile,dupeData){
 
-        // console.log(id,'|',profile,'|',activeProfile,'|',dupeData)
+        console.log(id,'|',profile,'|',activeProfile,'|',dupeData)
 
         let propertyIndex = activeProfile.rt[profile].ptOrder.indexOf(id)
         let newPropertyId = id + '|'+ (+ new Date())
@@ -658,12 +658,23 @@ const parseProfile = {
 
 
             // let defaults = null
+            let defaultsProperty
 
+
+            let useProfile = profile
+            // if the profile is a multiple, like lc:RT:bf2:Monograph:Item-0 split off the -0 for it to find it in the RT lookup
+            if (!store.state.rtLookup[useProfile]){
+                if (useProfile.includes('-')){
+                    useProfile = useProfile.split('-')[0]
+                }
+            }
             // first check the top level
-            let defaultsProperty = store.state.rtLookup[profile].propertyTemplates.filter((x)=>{ return (x.propertyURI === idPropertyId) ? true : false})
-            if (defaultsProperty.length>0){
-                defaultsProperty=defaultsProperty[0]
+            if (store.state.rtLookup[useProfile]){
+                defaultsProperty = store.state.rtLookup[useProfile].propertyTemplates.filter((x)=>{ return (x.propertyURI === idPropertyId) ? true : false})
+                if (defaultsProperty.length>0){
+                    defaultsProperty=defaultsProperty[0]
 
+                }
             }
 
 
