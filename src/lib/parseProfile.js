@@ -153,8 +153,8 @@ const parseProfile = {
             // remove certin properties from the RTs
             p.json.Profile.resourceTemplates = p.json.Profile.resourceTemplates.filter((rt)=>{
                 rt.propertyTemplates = rt.propertyTemplates.filter((pt)=>{
-                    if (pt.propertyLabel.startsWith('Input RDA relationship designator ter') ||
-                        pt.propertyLabel.startsWith('Input Geographic Coverage (if not on list)')){
+                    if (pt.propertyLabel && (pt.propertyLabel.startsWith('Input RDA relationship designator ter') ||
+                        pt.propertyLabel.startsWith('Input Geographic Coverage (if not on list)'))){
                         return false
                     }
 
@@ -1214,7 +1214,13 @@ const parseProfile = {
 
         let results = {newData:{}}
 
-        
+        console.log("-------------Adding DATA---------------")
+        console.log('currentState',currentState)
+        console.log('ptGuid',ptGuid)
+        console.log('parentURI',parentURI)
+        console.log('URI',URI)
+        console.log('valueURI',valueURI)
+        console.log('valueLabel',valueLabel)
 
 
         // find the pt for the value we are editing
@@ -1229,7 +1235,7 @@ const parseProfile = {
 
                     // top level
                     if (currentState.rt[rt].pt[pt].propertyURI == URI){
-
+                        console.log("--- top level")
                         //s
 
                         let tmpGuid = short.generate()
@@ -1280,11 +1286,12 @@ const parseProfile = {
                             userValue[URI] = []
                         }
 
-                        
+                        console.log("--- not top level")
 
                         let newData = {'@guid': short.generate()}
-
+                        console.log(URI)
                         newData['@type'] = await exportXML.suggestType(URI)
+                        console.log(URI, newData['@type'])
                         if (valueLabel){
                             newData['http://www.w3.org/2000/01/rdf-schema#label'] = []
 
