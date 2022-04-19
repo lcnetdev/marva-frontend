@@ -216,7 +216,8 @@ export default {
    
     openDiacriticSelect: function(event){
 
-      this.showDiacriticsGuid=event.target.dataset.guid
+      console.log(event.target)
+      // this.showDiacriticsGuid=event.target.dataset.guid
       // we are using global dicratics so stop if this is one of the other components and not this one
       if (this.assignedId != this.activeInput){
         return false
