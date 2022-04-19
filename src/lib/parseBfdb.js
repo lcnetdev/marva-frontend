@@ -172,6 +172,22 @@ const parseBfdb = {
 	},
 
 
+	testSeperateRdfTypeProperty: function(pt){
+
+		if (pt.valueConstraint && pt.valueConstraint.valueTemplateRefs){
+			for (let id of pt.valueConstraint.valueTemplateRefs){
+				if (store.state.rtLookup[id]){					
+					for (let p of store.state.rtLookup[id].propertyTemplates){
+						if (p.propertyURI === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'){
+							return true
+						}
+					}
+				}
+			}
+		}		
+		return false
+	},
+
 	// this reutrns a obj that fits into a resource templates pt array
 	// we dont need everything that is already in the processed pt
 	buildCleanPtfromExisting: function(pt){
@@ -1398,6 +1414,9 @@ const parseBfdb = {
 
 							}else if (this.UriNamespace(e.tagName) == 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'){
 								
+								if (this.testSeperateRdfTypeProperty(populateData)){
+									console.warn("Need to account for rdf:type at this level.")
+								}
 								// if there is a RDF type node here it is the parent's type
 								// overwrite the basic type that was set via the bnode type
 								if (e.attributes && e.attributes['rdf:about']){
@@ -1538,18 +1557,40 @@ const parseBfdb = {
 
 
 									if (this.UriNamespace(gChild.tagName) == 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'){
+										
+										if (this.testSeperateRdfTypeProperty(populateData)){
 
-										// if there is a RDF type node here it is the parent's type
-										// overwrite the basic type that was set via the bnode type
-										if (gChild.attributes && gChild.attributes['rdf:about']){
-											populateData.userValue['@type'] = gChild.attributes['rdf:about'].value
-										}else if (gChild.attributes && gChild.attributes['rdf:resource']){
-											populateData.userValue['@type'] = gChild.attributes['rdf:resource'].value
+											// we have a patern, in notes for example, where we are storing the type in a single rdftype 
+											// predicate and the don't want to change the orginal type. so look through the templates and see
+											// if that pt has a standalone rdf:type predicate defined, if so populate just that and don't overwrite
+											let rdfTypeUri = null
+											if (gChild.attributes && gChild.attributes['rdf:resource']){
+												rdfTypeUri = gChild.attributes['rdf:resource'].value
+											}else if (gChild.attributes && gChild.attributes['rdf:about']){
+												rdfTypeUri = gChild.attributes['rdf:about'].value
+											}
+											populateData.userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] = [
+												{
+												"@guid": short.generate(),
+												"@id" : rdfTypeUri
+												}
+											]
+
 										}else{
-											console.warn('---------------------------------------------')
-											console.warn('There was a gChild RDF Type node but could not extract the type')
-											console.warn(gChild)
-											console.warn('---------------------------------------------')
+
+											// if there is a RDF type node here it is the parent's type
+											// overwrite the basic type that was set via the bnode type
+											if (gChild.attributes && gChild.attributes['rdf:about']){
+												populateData.userValue['@type'] = gChild.attributes['rdf:about'].value
+											}else if (gChild.attributes && gChild.attributes['rdf:resource']){
+												populateData.userValue['@type'] = gChild.attributes['rdf:resource'].value
+											}else{
+												console.warn('---------------------------------------------')
+												console.warn('There was a gChild RDF Type node but could not extract the type')
+												console.warn(gChild)
+												console.warn('---------------------------------------------')
+											}
+
 										}
 									}else if (gChild.children.length ==0){
 

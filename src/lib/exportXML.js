@@ -515,6 +515,7 @@ const exportXML = {
 					continue
 				}
 
+				console.log(pt)
 
 				// does it even have any userValues?
 				if (this.hasUserValue(userValue)){
@@ -534,7 +535,7 @@ const exportXML = {
 
 					// }
 
-
+					console.log(userValue)
 
 					// is it a BNODEEEEE
 					if (this.isBnode(userValue)){
@@ -552,11 +553,22 @@ const exportXML = {
 						// loop though the properties
 						for (let key1 of Object.keys(userValue).filter(k => (!k.includes('@') ? true : false ) )){
 
-
+							console.log(key1)
 							let pLvl2 = this.createElByBestNS(key1)
 
 							if (key1 == 'http://www.loc.gov/mads/rdf/v1#componentList'){
 								pLvl2.setAttribute('rdf:parseType', 'Collection')
+							}
+
+							// if we have a rdf:type here build a stand alone type element and move on
+							// TODO: add the label if present(?)
+
+							if (key1 == 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'){
+								let rdftype = this.createElByBestNS(key1)
+								rdftype.setAttributeNS(this.namespace.rdf, 'rdf:resource', userValue[key1][0]['@id'])
+								bnodeLvl1.appendChild(rdftype)
+								continue
+
 							}
 
 
@@ -579,6 +591,8 @@ const exportXML = {
 									let bnodeLvl2 = this.createBnode(value1,key1)
 									pLvl2.appendChild(bnodeLvl2)
 									bnodeLvl1.appendChild(pLvl2)
+
+									console.log('--->',key1,value1)
 
 
 
