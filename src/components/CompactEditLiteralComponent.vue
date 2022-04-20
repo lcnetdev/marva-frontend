@@ -769,8 +769,8 @@ export default {
       }
 
 
-      // if (this.inputValue === null) return false
-      // if (this.inputValue.trim() === '') return false
+      if (inputV.value === null) return false
+      if (inputV.value.trim() === '') return false
 
       let parentURI = null
       if (this.parentStructureObj){
