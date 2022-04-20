@@ -173,6 +173,10 @@ const exportXML = {
 		}
 
 
+		if (result===false){
+			console.warn('Could not @type this ',propertyURI)
+		}
+
 
 
 		// if fails
@@ -381,6 +385,10 @@ const exportXML = {
 
 		// it should be stored under the same key
 		if (userValue[property]){
+			// one last sanity check, don't make empty literals
+			if (userValue[property].trim()==''){
+				return false
+			}
 			p.innerHTML = userValue[property]
 		}
 
@@ -583,7 +591,7 @@ const exportXML = {
 								
 
 								// is it a bnode?
-
+								console.log("is this bnode?",this.isBnode(value1))
 								if (this.isBnode(value1)){
 
 									// yes
@@ -633,7 +641,8 @@ const exportXML = {
 																if (typeof value3[key4] == 'string' || typeof value3[key4] == 'number'){
 																	// its a label or some other literal
 																	let p4 = this.createLiteral(key4, value3)
-																	bnodeLvl3.appendChild(p4)
+																	if (p4!==false) bnodeLvl3.appendChild(p4);
+																	
 
 																}else{
 																	console.error('key4', key4, value3[key4], 'not a literal, should not happen')
@@ -656,7 +665,8 @@ const exportXML = {
 													if (typeof value2[key3] == 'string' || typeof value2[key3] == 'number'){
 														// its a label or some other literal
 														let p3 = this.createLiteral(key3, value2)
-														bnodeLvl2.appendChild(p3)
+														if (p3!==false) bnodeLvl2.appendChild(p3)
+														
 
 													}else{
 														console.error('key3', key3, value2[key3], 'not a literal, should not happen')
@@ -681,13 +691,24 @@ const exportXML = {
 									// loop through its keys and make the values
 									let keys = Object.keys(value1).filter(k => (!k.includes('@') ? true : false ) )
 
+									if (userValue['@type'] &&  key1 ===  userValue['@type']){
+
+										// if the type of the bnode matches the bnode we are in
+										// then it means its a ref template, if it has an id then
+										// set the rdf about on it
+										if (value1['@id']){
+											bnodeLvl1.setAttributeNS(this.namespace.rdf, 'rdf:about', value1['@id'])
+										}
+
+									}
+
 									if (keys.length>0){
 										for (let key2 of keys){
 
 											if (typeof value1[key2] == 'string' || typeof value1[key2] == 'number'){
 												// its a label or some other literal
 												let p2 = this.createLiteral(key2, value1)
-												bnodeLvl1.appendChild(p2)
+												if (p2!==false) bnodeLvl1.appendChild(p2);
 											}else if (Array.isArray(value1[key2])){
 
 												for (let arrayValue of value1[key2]){
@@ -699,7 +720,7 @@ const exportXML = {
 															if (typeof arrayValue[key22] == 'string' || typeof arrayValue[key22] == 'number'){
 																// its a label or some other literal
 																let p2 = this.createLiteral(key22, arrayValue)
-																bnodeLvl1.appendChild(p2)
+																if (p2!==false) bnodeLvl1.appendChild(p2)
 															}else{
 																console.error('key22', key22, arrayValue[key22], 'not a literal, should not happen')
 
@@ -723,8 +744,9 @@ const exportXML = {
 									}else if (keys.length==0 && value1['@id']){
 
 										let p2 = this.createLiteral(key1, value1)
-										bnodeLvl1.appendChild(p2)
+										if (p2!==false) bnodeLvl1.appendChild(p2);
 
+										
 									}else{
 
 										console.error('Unhadled literal situtation')
@@ -818,7 +840,7 @@ const exportXML = {
 										if (typeof value1[key2] == 'string' || typeof value1[key2] == 'number'){
 											// its a label or some other literal
 											let p1 = this.createLiteral(key2, value1)
-											rootEl.appendChild(p1)
+											if (p1!==false) rootEl.appendChild(p1);
 										}else{
 											console.error('key2', key2, value1[key2], 'not a literal, should not happen')
 										}
@@ -842,7 +864,7 @@ const exportXML = {
 										if (typeof value1[key2] == 'string' || typeof value1[key2] == 'number'){
 											// its a label or some other literal
 											let p1 = this.createLiteral(key2, value1)
-											rootEl.appendChild(p1)
+											if (p1!==false) rootEl.appendChild(p1);
 										}else{
 											console.error('key2', key2, value1[key2], 'not a literal, should not happen')
 										}

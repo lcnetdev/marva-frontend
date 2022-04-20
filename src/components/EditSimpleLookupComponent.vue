@@ -214,10 +214,10 @@ export default {
       }
       
 
-
+      console.log(JSON.stringify(currentUserValue,null,2))
 
       let possibleLiteralProperties = ['http://www.w3.org/1999/02/22-rdf-syntax-ns#value', 'http://www.w3.org/2000/01/rdf-schema#label', 'http://id.loc.gov/ontologies/bibframe/code','http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
-      
+      let foundLabelPropertiesTopLevelCount = possibleLiteralProperties.filter((p) => { return (Object.keys(currentUserValue).indexOf(p) > -1) ? true : false }).length
 
       // find the level we are going to work with, it could be the root level or it 
       // could be like Role and stored as a blank node in the data structure
@@ -226,6 +226,7 @@ export default {
 
       if (currentUserValue && currentUserValue['@root'] && currentUserValue['@root'] == this.structure.propertyURI ){
 
+        console.log("---simple component HERE 1")
 
         // it is the root user value, we need to find its URI if it has one and what the label is
         // but the label could be stored all over and the URI might be stored at the label level as well :(
@@ -299,15 +300,17 @@ export default {
 
         
 
-      }else if (currentUserValue && currentUserValue['@type'] && currentUserValue['@type'] == this.structure.propertyURI ){
+      }else if (currentUserValue && currentUserValue['@type'] && currentUserValue['@type'] == this.structure.propertyURI && foundLabelPropertiesTopLevelCount >0 ){
 
-        
+        console.log("---simple component HERE 2",this.parentStructureObj)
+        console.log(currentUserValue['@type'],this.structure.propertyURI )
 
         // it is the root user value, we need to find its URI if it has one and what the label is
         // but the label could be stored all over and the URI might be stored at the label level as well :(
 
         let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(currentUserValue).indexOf(p) > -1) ? true : false })
 
+        console.log('foundLabelProperties',foundLabelProperties)
         // does it have any data?
         if (currentUserValue['@id'] || foundLabelProperties.length > 0){
 
@@ -375,6 +378,7 @@ export default {
 
       }else if (this.parentStructureObj && currentUserValue[this.parentStructureObj.propertyURI]){
 
+        console.log("---simple component HERE 3")
 
 
           for (let childProperty of currentUserValue[this.parentStructureObj.propertyURI]){
@@ -434,6 +438,7 @@ export default {
       }else if (this.parentStructureObj && currentUserValue['@root'] && currentUserValue['@root'] == this.parentStructureObj.propertyURI && currentUserValue[this.structure.propertyURI]) {
 
         // its at the first level
+        console.log("---simple component HERE 4")
 
 
         for (let childProperty of currentUserValue[this.structure.propertyURI]){
@@ -491,6 +496,7 @@ export default {
 
 
       }else{
+                console.log("---simple component HERE 4")
 
         // this.activeLookupValue.push({
         //   'http://www.w3.org/2000/01/rdf-schema#label' : 'No DATA'
@@ -498,7 +504,7 @@ export default {
 
       }
       
-
+      console.log(JSON.stringify(this.activeLookupValue,null,2))
 
 
 
@@ -768,6 +774,7 @@ export default {
 
 
             this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, parentURI: parentURI, URI: this.structure.propertyURI, valueURI: metadata[key].uri, valueLabel:metadata[key].label[idx]}).then((resultData) => {
+              console.log({'http://www.w3.org/2000/01/rdf-schema#label':resultData.valueLabel, uri: resultData.valueURI, uriGuid: resultData.guid, labelGuid:resultData.guid})
               this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':resultData.valueLabel, uri: resultData.valueURI, uriGuid: resultData.guid, labelGuid:resultData.guid})
             })
 
