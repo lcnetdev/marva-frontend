@@ -1078,8 +1078,12 @@ export default {
       window.setTimeout(()=>{
         if (document.querySelector('#container-for-'+id + ' input')){
           document.querySelector('#container-for-'+id + ' input').focus()  
+        }else if (document.querySelector('#container-for-'+id + ' textarea')){
+          document.querySelector('#container-for-'+id + ' textarea').focus()  
         }
         
+
+
       },400)
 
       if (event){
