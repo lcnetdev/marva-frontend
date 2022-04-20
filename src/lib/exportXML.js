@@ -572,11 +572,17 @@ const exportXML = {
 							// TODO: add the label if present(?)
 
 							if (key1 == 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'){
-								let rdftype = this.createElByBestNS(key1)
-								rdftype.setAttributeNS(this.namespace.rdf, 'rdf:resource', userValue[key1][0]['@id'])
-								bnodeLvl1.appendChild(rdftype)
-								continue
-
+								if (userValue[key1] && userValue[key1][0] && userValue[key1][0]['@id']){
+									let rdftype = this.createElByBestNS(key1)
+									rdftype.setAttributeNS(this.namespace.rdf, 'rdf:resource', userValue[key1][0]['@id'])
+									bnodeLvl1.appendChild(rdftype)
+									continue
+								}else if (userValue[key1] && userValue[key1][0] && userValue[key1][0]['http://www.w3.org/2000/01/rdf-schema#label']){
+									let rdftype = this.createElByBestNS(key1)
+									rdftype.innerHTML=userValue[key1][0]['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
+									bnodeLvl1.appendChild(rdftype)
+									continue
+								}
 							}
 
 

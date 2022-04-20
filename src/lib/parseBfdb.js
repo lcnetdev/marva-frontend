@@ -1569,12 +1569,29 @@ const parseBfdb = {
 											}else if (gChild.attributes && gChild.attributes['rdf:about']){
 												rdfTypeUri = gChild.attributes['rdf:about'].value
 											}
-											populateData.userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] = [
-												{
-												"@guid": short.generate(),
-												"@id" : rdfTypeUri
-												}
-											]
+											// if they used a uncontrolled value then there is no uri, just a literal
+											// normally we don't care about the literal even if it exists because we can just load the label
+											if (rdfTypeUri){
+												populateData.userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] = [
+													{
+													"@guid": short.generate(),
+													"@id" : rdfTypeUri
+													}
+												]
+											}else if (gChild.innerHTML && gChild.innerHTML.trim() != ''){
+												// but if there is no uri but there is a label in there build it out so it renders correctly in the interface
+												populateData.userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] = [
+													{
+													"@guid": short.generate(),
+													"http://www.w3.org/2000/01/rdf-schema#label": [
+														{
+														"@guid": short.generate(),
+														"http://www.w3.org/2000/01/rdf-schema#label": gChild.innerHTML
+														}
+													]
+													}
+												]
+											}
 
 										}else{
 
