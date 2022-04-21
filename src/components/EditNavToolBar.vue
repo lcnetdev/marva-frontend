@@ -543,7 +543,40 @@ button[disabled]{
                         <div style="flex:1; background-color: whitesmoke; align-self: center; text-align: center;">
                             <input  type="checkbox" id="switch2" @change="updateLeftMenuEnriched()" v-model="leftMenuEnriched" /><label for="switch2">Toggle</label>
                         </div>
-                    </div>                    
+                    </div>    
+
+
+
+
+                    <div style="display:flex; border: solid 2px whitesmoke;">
+
+                        <div style="flex:1; align-self: center; text-align: center; margin-right: 5px; ">
+                            Large Literal Display
+                        </div>
+                        <div style="flex:1; background-color: whitesmoke;">
+                            <div>
+                                <input type="radio" name="literalOptionRadio" @change="updateLiteralOption('LARGE_FIELDS')" id="literal-option-large-fields" :checked="(settingsTreatLikeNoteFields=='LARGE_FIELDS')">
+                                <label for="literal-option-large-fields">For any large value</label>
+                            </div>
+
+                            <div>
+                                <input type="radio" name="literalOptionRadio" @change="updateLiteralOption('NOTE_FIELDS')" id="literal-option-note-fields" :checked="(settingsTreatLikeNoteFields=='NOTE_FIELDS')">
+                                <label for="literal-option-note-fields">Just Note type fields</label>                                
+                            </div>
+
+                            <div>
+                                <input type="radio" name="literalOptionRadio" @change="updateLiteralOption('ALL_FIELDS')" id="literal-option-all-fields" :checked="(settingsTreatLikeNoteFields=='ALL_FIELDS')">
+                                <label for="literal-option-all-fields">All Fields</label>   
+                            </div>                                                      
+                        </div>                    
+                    </div>
+
+
+
+                    <div>
+                        <button @click="toggleDisplayLiteralOptions()">Litearl options</button>
+
+                    </div>                
                   
                 </div>
 
@@ -673,11 +706,16 @@ button[disabled]{
 
        <div v-if="displayLiteralLanguage === true" class="modaloverlay modal-display select-lanague" style="z-index: 1000000;">
             <div class="modal" style="overflow-y: scroll; overflow-x: hidden;">
-
                   <EditLiteralLanguage ref="literalLanguageModal"></EditLiteralLanguage>
-
             </div>
         </div>
+
+       <div v-if="displayLiteralOptions === true" class="modaloverlay modal-display select-lanague" style="z-index: 1000000;">
+            <div class="modal" style="overflow-y: scroll; overflow-x: hidden;">
+                  <EditNavLiteralDisplayOptions ref="literalDisplayOptionsModal"></EditNavLiteralDisplayOptions>
+            </div>
+        </div>
+
 
 
         <div v-if="showPostModal" style="position: fixed; width: 100vw; height: 100vh; top: 0; left: 0; background-color: rgba(0,0,0,0.6); z-index: 1000">
@@ -794,6 +832,8 @@ import exportXML from "@/lib/exportXML"
 import lookupUtil from "@/lib/lookupUtil"
 import config from "@/lib/config"
 import EditLiteralLanguage from "@/components/EditLiteralLanguage"
+import EditNavLiteralDisplayOptions from "@/components/EditNavLiteralDisplayOptions"
+
 import draggable from 'vuedraggable'
 
 
@@ -802,6 +842,7 @@ export default {
   name: "EditLabelDereference",
   components: {
     EditLiteralLanguage,
+    EditNavLiteralDisplayOptions,
     draggable,
 
     Keypress: () => import('vue-keypress'),
@@ -818,6 +859,8 @@ export default {
         activeProfile: 'activeProfile',
         undoLog: 'undo',
         undoIndex: 'undoIndex',
+
+        settingsTreatLikeNoteFields:'settingsTreatLikeNoteFields',
 
         subjectList: 'subjectList',
 
@@ -856,6 +899,8 @@ export default {
       hideFields: false,
       leftMenuEnriched: false,   
       displayLiteralLanguage: false,
+
+      displayLiteralOptions: false, // Not used currently
       lastMouseY: 10,
       resourceLinks: [],
       displayPreview: false,
@@ -921,6 +966,9 @@ export default {
 
             if (window.pageYOffset>5){
               if (this.displayLiteralLanguage){ return false}
+              if (this.displayLiteralOptions){ return false}
+
+
               if (this.showPostModal){ return false}
               if (this.optionDisplay){ return false}
               if (this.subjectListDisplay){ return false}
@@ -975,6 +1023,9 @@ export default {
 
               if (this.undoDisplay){ return false}
               if (this.displayLiteralLanguage){ return false}
+              if (this.displayLiteralOptions){ return false}
+
+
               if (this.showPostModal){ return false}
               if (this.displayPreview){ return false}
 
@@ -1247,6 +1298,17 @@ export default {
 
     },
 
+
+    updateLiteralOption: async function(mode){
+        
+        this.$store.dispatch("setTreatLikeNoteFields", { self: this, fields: mode }).then(async () => {
+
+
+
+        })
+
+    },
+
     updateLayout: async function(mode){
         
         this.$store.dispatch("settingsDisplayMode", { self: this, settingsDisplayMode: mode }).then(async () => {
@@ -1336,6 +1398,11 @@ export default {
         this.showPostModal = false
       }
 
+      if (this.displayLiteralOptions){
+        this.displayLiteralOptions = false
+      }
+
+
     },
 
     publish: async function(){
@@ -1398,9 +1465,22 @@ export default {
                   this.$refs.literalLanguageModal.refreshDisplay()
               })
           }
-
-
     },
+    toggleDisplayLiteralOptions: function(){
+
+          if (this.displayLiteralOptions){
+              this.displayLiteralOptions=false
+          }else{
+              this.displayLiteralOptions=true
+              // refresh once it is open            
+              // this.$nextTick(()=>{          
+              //     this.$refs.literalLanguageModal.refreshDisplay()
+              // })
+          }
+    },
+
+
+
 
 
     scrollFieldContainerIntoView: function(event,id){

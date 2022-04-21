@@ -15,7 +15,10 @@
                 <div style="position: absolute;" v-if="settingsDisplayMode=='compact'" class="component-nested-container-title">
                   <span>{{structure.propertyLabel}}</span>                  
                 </div>
-                <input  bfeType="EditLiteralComponent-unnested" :id="assignedId" :data-guid="inputV.guid" v-on:keydown.enter.prevent="submitField" :name="assignedId" :ref="'input'+ '_' + inputV.guid" v-on:focus="focused" autocomplete="off" type="text" @keydown="nav" @keyup="change($event,inputV)" v-model="inputV.value" :class="['input-single', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true), 'input-accommodate-diacritics': (containsNonLatinCodepoints(inputV.value))}]">            
+                <input  v-if="!isNoteField(structure.propertyLabel, inputV.value)" bfeType="EditLiteralComponent-unnested" :id="assignedId" :data-guid="inputV.guid" v-on:keydown.enter.prevent="submitField" :name="assignedId" :ref="'input'+ '_' + inputV.guid" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keydown="nav" @keyup="change($event,inputV)" v-model="inputV.value" :class="['input-single', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true), 'input-accommodate-diacritics': (containsNonLatinCodepoints(inputV.value))}]">            
+                <textarea v-if="isNoteField(structure.propertyLabel, inputV.value)" bfeType="EditLiteralComponent-unnested" :id="assignedId" :data-guid="inputV.guid" :name="assignedId" v-on:keydown.enter.prevent="submitField" :ref="'input'+ '_' + inputV.guid" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-single', 'input-textarea-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]"></textarea>
+              
+
               </form>
             </div>
             <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-guid="inputV.guid" :data-tooltip="'Diacritics [CTRL-ALT-D]'" @click="openDiacriticSelect"></button>
@@ -76,13 +79,12 @@
 
 
   <div v-else-if="hideField == false">
-
         <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="openDiacriticSelect" />
 
 
 
 
-        <div v-for="(inputV,idx) in inputValue" :key="`input_${idx}`" v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border', { 'component-container-fake-input-note' : isNoteField(structure.propertyLabel)  }]" >
+        <div v-for="(inputV,idx) in inputValue" :key="`input_${idx}`" v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border', { 'component-container-fake-input-note' : isNoteField(structure.propertyLabel, inputV.value)  }]" >
           <div style="display: flex; position: relative;">
             <div style="flex:1">
               <form autocomplete="off" >
@@ -90,8 +92,8 @@
                   <span v-if="settingsDisplayMode=='compact'">{{parentStructureObj.propertyLabel}} -- </span>
                   <span>{{structure.propertyLabel}}</span>                  
                 </div>
-                <input v-if="!isNoteField(structure.propertyLabel)" :ref="'input'+ '_' + inputV.guid" :data-guid="inputV.guid"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value" :class="['input-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true),'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">
-                <textarea v-if="isNoteField(structure.propertyLabel)"  bfeType="EditLiteralComponent-nested" :id="assignedId" :data-guid="inputV.guid" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-nested', 'input-textarea-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]"></textarea>
+                <input v-if="!isNoteField(structure.propertyLabel, inputV.value)" :ref="'input'+ '_' + inputV.guid" :data-guid="inputV.guid"  bfeType="EditLiteralComponent-nested" :id="assignedId" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value" :class="['input-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true),'input-accommodate-diacritics': (containsNonLatinCodepoints(inputValue))}]">
+                <textarea v-if="isNoteField(structure.propertyLabel, inputV.value)" :ref="'input'+ '_' + inputV.guid" bfeType="EditLiteralComponent-nested" :id="assignedId" :data-guid="inputV.guid" :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-nested', 'input-textarea-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]"></textarea>
               </form>
             </div>
             <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-guid="inputV.guid" :data-tooltip="'Diacritics [CTRL-ALT-SHIFT-D]'" @click="openDiacriticSelect"></button>
@@ -173,14 +175,36 @@ export default {
         return /[^\u0000-\u00ff]/.test(s); // eslint-disable-line
     },
 
+    blured: function(){
+
+      this.$store.dispatch("enableMacroNav")
+
+    },
 
     // this stores the active input at the global var level so it knows how to tab forward
     focused: function(event){     
+
+      
+      // if the input is a text area then we want to turn off the global nav for the element so it behaves like a text area (directional keys mostly)
+      for (let inputV of this.inputValue){
+        let r = 'input'+ '_' + inputV.guid
+        if (this.$refs[r] && this.$refs[r][0] && this.$refs[r][0].tagName == 'TEXTAREA'){
+          this.$store.dispatch("disableMacroNav")
+          setTimeout(()=>{this.$store.dispatch("disableMacroNav")},100)
+        }       
+      }
+
    
       this.$store.dispatch("setActiveInput", { self: this, id: event.target.id, profileCompoent: this.profileCompoent, profileName: this.profileName }).then(()=>{
 
         // now add the highlights to the side bars for this field
         uiUtils.focusSidebars()
+        
+        this.$nextTick(()=>{
+          
+        })
+
+
         // console.log(this.activeInput,event.target.id)
 
 
@@ -192,6 +216,7 @@ export default {
     },
     submitField: uiUtils.globalMoveDown,
 
+
     insertUnicodeHex: function(hex){
 
       this.inputValue = String.fromCodePoint(hex);
@@ -202,12 +227,28 @@ export default {
 
 
 
-    isNoteField: function(label){
+    isNoteField: function(label,value){
 
 
-      if (label == 'Note Text') return true
-      if (label == 'Note') return true
-      if (label == 'Contents note') return true
+
+      if (this.settingsTreatLikeNoteFields && this.settingsTreatLikeNoteFields == 'NOTE_FIELDS'){
+
+        if (label == 'Note Text') return true
+        if (label == 'Note') return true
+        if (label == 'Contents note') return true
+        if (label == 'Summary') return true
+
+      }else if(this.settingsTreatLikeNoteFields && this.settingsTreatLikeNoteFields == 'LARGE_FIELDS'){
+
+        if (value.length>=50) return true
+
+      }else if(this.settingsTreatLikeNoteFields && this.settingsTreatLikeNoteFields == 'ALL_FIELDS'){
+        return true
+      }
+
+
+
+
 
 
       return false
@@ -216,8 +257,12 @@ export default {
    
     openDiacriticSelect: function(event){
 
-      console.log(event.target)
-      // this.showDiacriticsGuid=event.target.dataset.guid
+      
+      if (!event.target && event.event){
+        
+        event = event.event
+      }      
+      this.showDiacriticsGuid=event.target.dataset.guid
       // we are using global dicratics so stop if this is one of the other components and not this one
       if (this.assignedId != this.activeInput){
         return false
@@ -249,12 +294,13 @@ export default {
     },
 
     diacriticSelect: function(event){
-
+      console.log(event)
 
       // depending on where they click the parent maybe the td or it may be the tr where the data-id attrubture is storeing the trigger 
       let pos = (event.target.parentNode.dataset.id) ? event.target.parentNode.dataset.id : event.target.parentNode.parentNode.dataset.id
       let insertAt = false
-      console.log(event,this.$refs[`input_${this.showDiacriticsGuid}`][0].selectionStart)
+      console.log('pos',pos,this.showDiacriticsGuid)
+      // console.log(event,this.$refs[`input_${this.showDiacriticsGuid}`][0].selectionStart)
       for (let inputV of this.inputValue){
 
         if (inputV.guid == this.showDiacriticsGuid){
@@ -263,7 +309,7 @@ export default {
           if (this.$refs[`input_${this.showDiacriticsGuid}`] && this.$refs[`input_${this.showDiacriticsGuid}`][0] && this.$refs[`input_${this.showDiacriticsGuid}`][0].selectionStart){
             insertAt=this.$refs[`input_${this.showDiacriticsGuid}`][0].selectionStart
           }
-
+          console.log(inputV.value)
 
           inputV.value = inputV.value.substring(0, insertAt) + this.diacriticData[pos].letter + inputV.value.substring(insertAt);
 
@@ -284,9 +330,10 @@ export default {
 
       // focus back on the input
       this.$nextTick(()=>{
-
+        console.log('insertAt',insertAt)
         // focus back on the element,  but also set the cursor at the point we inserted
         if (insertAt){
+          console.log('insertAt',insertAt)
           document.getElementById(this.assignedId).setSelectionRange(insertAt+1,insertAt+1)
         }
         document.getElementById(this.assignedId).focus()
@@ -363,6 +410,28 @@ export default {
                 insertAt=this.$refs[`input_${useGuid}`][0].selectionStart
               }
               inputV.value = inputV.value.substring(0, insertAt) + letter + inputV.value.substring(insertAt);
+
+              console.log('insertAt',insertAt)
+              if (insertAt){
+                this.$nextTick(()=>{
+                  this.$refs[`input_${useGuid}`][0].setSelectionRange(insertAt+1,insertAt+1)
+
+                  this.$nextTick(()=>{
+                    this.$refs[`input_${useGuid}`][0].focus()
+                  })
+
+                })
+              }else{
+
+                  this.$nextTick(()=>{
+                    this.$refs[`input_${useGuid}`][0].focus()
+                  })
+
+              }
+              
+
+
+
             }
           }
 
@@ -390,6 +459,26 @@ export default {
                     insertAt=this.$refs[`input_${useGuid}`][0].selectionStart
                   }
                   inputV.value = inputV.value.substring(0, insertAt) + key.letter + inputV.value.substring(insertAt);
+
+                  if (insertAt){
+                    this.$nextTick(()=>{
+                      this.$refs[`input_${useGuid}`][0].setSelectionRange(insertAt+1,insertAt+1)
+
+                      this.$nextTick(()=>{
+                        this.$refs[`input_${useGuid}`][0].focus()
+                      })
+
+                    })
+                  }else{
+
+                      this.$nextTick(()=>{
+                        this.$refs[`input_${useGuid}`][0].focus()
+                      })
+                    
+                  }
+                  
+
+
                 }
               }
 
@@ -497,6 +586,26 @@ export default {
                 inputV.value = inputV.value.substring(0, insertAt) + macro.codeEscape + inputV.value.substring(insertAt);
 
 
+                if (insertAt){
+                  this.$nextTick(()=>{
+                    this.$refs[`input_${inputV.guid}`][0].setSelectionRange(insertAt+1,insertAt+1)
+
+                    this.$nextTick(()=>{
+                      this.$refs[`input_${inputV.guid}`][0].focus()
+                    })
+
+                  })
+                }else{
+
+                    this.$nextTick(()=>{
+                      this.$refs[`input_${inputV.guid}`][0].focus()
+                    })
+                  
+                }
+
+
+
+
               }else{
                 inputV.value = macro.codeEscape
               }
@@ -525,6 +634,27 @@ export default {
               console.log(document.getElementById(this.assignedId).setSelectionRange(insertAt+1,insertAt+1))
               document.getElementById(this.assignedId).setSelectionRange(insertAt+1,insertAt+1)
               document.getElementById(this.assignedId).focus()
+
+
+              if (insertAt){
+                this.$nextTick(()=>{
+                  this.$refs[`input_${inputV.guid}`][0].setSelectionRange(insertAt+1,insertAt+1)
+
+                  this.$nextTick(()=>{
+                    this.$refs[`input_${inputV.guid}`][0].focus()
+                  })
+
+                })
+              }else{
+
+                  this.$nextTick(()=>{
+                    this.$refs[`input_${inputV.guid}`][0].focus()
+                  })
+                
+              }
+              
+
+
 
 
             }
@@ -590,6 +720,41 @@ export default {
       }
 
 
+      let useGuid = inputV.guid
+      if (inputV.guid.startsWith('new_')){
+        useGuid = null
+      }
+
+
+
+
+      //  we are in the text area and the curor is at the end or begging and the are pressing down or up again then navigate to the next field and turn macronav back on
+
+      if (event.key == 'ArrowDown' || event.key == 'ArrowUp'){
+        console.log("HERER0")
+        if (!useGuid && this.disableMacroKeyNav){
+          this.$store.dispatch("enableMacroNav")
+        }
+        let r = 'input'+ '_' + useGuid
+        console.log(this.$refs[r])
+        if (this.$refs[r] && this.$refs[r][0] && this.$refs[r][0].tagName == 'TEXTAREA'){
+
+          console.log("HERER1")
+          if (event.key == 'ArrowDown' && this.$refs[r][0].selectionStart == this.$refs[r][0].value.length){
+            console.log("HERER")
+            this.$store.dispatch("enableMacroNav")
+            uiUtils.globalMoveDown()
+          }
+          if (event.key == 'ArrowUp' && this.$refs[r][0].selectionStart == 0){
+            this.$store.dispatch("enableMacroNav")
+            uiUtils.globalMoveUp()
+          }
+
+
+        }
+      }
+
+
 
 
       // }
@@ -612,9 +777,9 @@ export default {
         return false
       }
 
-      // if (inputV.value == this.inputValueLast){
-      //   return false
-      // }
+      if (JSON.stringify(this.inputValue) == this.inputValueLast){
+        return false
+      }
 
 
       // this resizes the textarea as there is more content
@@ -633,10 +798,7 @@ export default {
       }
 
       console.log(this.inputValue)
-      let useGuid = inputV.guid
-      if (inputV.guid.startsWith('new_')){
-        useGuid = null
-      }
+
 
 
       this.$store.dispatch("setValueLiteral", { self: this, ptGuid: this.ptGuid, guid: useGuid, parentURI:parentURI, URI: this.structure.propertyURI, value: inputV.value }).then((newGuid) => {
@@ -654,29 +816,13 @@ export default {
           inputV.guid = 'new_' + short.generate()
         }
 
-        
-        // if (newGuid===false){
-        //   // remove it from the list of assigned guids
-
-
-        //   let data
-        //   if (this.isMini){
-        //     data = this.activeProfileMini.rt[this.profileName].pt[this.profileCompoent] 
-        //   }else{
-        //     data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]  
-        //   }
-
-        //   let idx = data.assignedGuids.indexOf(this.guid)
-        //   if (idx){
-        //     console.log('found it',data.assignedGuids[idx])
-        //     delete data.assignedGuids[idx]
-        //   }
-        //   this.guid = null
-        // }
-
+        this.inputValueLast = JSON.stringify(this.inputValue)
 
 
       })   
+
+
+
 
 
     },
@@ -848,7 +994,9 @@ export default {
     workingOnMiniProfile: 'workingOnMiniProfile',
     settingsDisplayMode: 'settingsDisplayMode',
     undoCounter: 'undoCounter',
+    disableMacroKeyNav: 'disableMacroKeyNav',
 
+    settingsTreatLikeNoteFields: 'settingsTreatLikeNoteFields',
     settingsDPackVoyager: 'settingsDPackVoyager',
     settingsDPackVoyagerNative: 'settingsDPackVoyagerNative',
     assignedId (){
@@ -894,10 +1042,30 @@ export default {
     this.refreshInputDisplay()
 
 
+
+
     let d = localStorage.getItem('bfeDiacritics')
     if (d){
       this.diacriticData = JSON.parse(d)
     }
+
+
+
+
+      this.$nextTick(()=>{
+
+        for (let inputV of this.inputValue){
+          let r = 'input'+ '_' + inputV.guid
+          if (this.$refs[r] && this.$refs[r][0] && this.$refs[r][0].tagName == 'TEXTAREA'){
+            if (this.$refs[r][0].value.length>0){
+              this.$refs[r][0].style.height = "1px";
+              this.$refs[r][0].style.height = (0+this.$refs[r][0].scrollHeight)+"px";
+            }
+          }       
+        }
+      })
+
+
 
 
   },
@@ -909,6 +1077,8 @@ export default {
     <!-- <pre>{{JSON.stringify(structure,null,2)}}</pre> -->
 
 <style scoped>
+
+
 
 .input-nested{
   width: 95%;
@@ -935,7 +1105,7 @@ export default {
 }
 
 .input-textarea-nested{
-  width: 90%;
+  width: 95%;
 }
 
 .input-accommodate-diacritics{
@@ -1026,11 +1196,12 @@ font-weight: bold;
 
 textarea{
   border: none;
-  overflow: auto;
+  overflow: hidden;
   outline: none;
-
+  font-family: Avenir, Helvetica, Arial, sans-serif;
   height: 1.25em;
-  max-height: 7em;
+  font-size: 1.25em !important;
+  /*max-height: 7em;*/
   width: 100%;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
@@ -1055,7 +1226,7 @@ textarea{
 
 
 .component-container-fake-input-note{
-  max-height: 10em;
+  max-height: 50em;
 
 }
 

@@ -286,8 +286,8 @@ const parseProfile = {
                             pt.propertyURI = 'http://id.loc.gov/ontologies/bibframe/soundCharacteristic'
                         }else if (pt.propertyURI == 'http://id.loc.gov/ontologies/bibframe/BroadcastStandard'){
                             pt.propertyURI = 'http://id.loc.gov/ontologies/bibframe/videoCharacteristic'
-                        }else if (pt.propertyURI == 'http://id.loc.gov/ontologies/bflc/CaptureStorage'){
-                            pt.propertyURI = 'http://id.loc.gov/ontologies/bflc/captureStorage'
+                        // }else if (pt.propertyURI == 'http://id.loc.gov/ontologies/bflc/CaptureStorage'){
+                        //     pt.propertyURI = 'http://id.loc.gov/ontologies/bflc/captureStorage'
 
                         }else if (pt.propertyURI == 'http://id.loc.gov/ontologies/bibframe/ColorContent'){
                             pt.propertyURI = 'http://id.loc.gov/ontologies/bibframe/colorContent'

@@ -113,7 +113,8 @@ button{
 	border-top-right-radius: 0.5em;
 	border-bottom-right-radius: 0.5em;
 	min-height: 3em;
-	max-height: 3em;
+
+	max-height: 30em;
 
 }
 	

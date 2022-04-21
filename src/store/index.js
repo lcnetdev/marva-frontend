@@ -89,6 +89,8 @@ export default new Vuex.Store({
     settingsHideEmptyFields: false,
     settingsLeftMenuEnriched: true,
 
+    settingsTreatLikeNoteFields: "LARGE_FIELDS",
+
 
     // used for auto complete lookups 
     lookupLibrary: {},
@@ -118,6 +120,7 @@ export default new Vuex.Store({
     myRecords: [],
 
     subjectList: [],
+
 
 
     diagramMiniMap: false,
@@ -175,7 +178,7 @@ export default new Vuex.Store({
       })
       
 
-    }, 1000),
+    }, 2000),
 
 
   },
@@ -321,6 +324,13 @@ export default new Vuex.Store({
     SETUNDO(state, val) {
       state.undo = val
     }, 
+
+
+    TREATLIKENOTEFIELDS(state, val) {
+      state.settingsTreatLikeNoteFields = val
+    }, 
+
+
 
     INCREMENTUNDOCOUNTER(state) {
       state.undoCounter = state.undoCounter + 1
@@ -697,6 +707,12 @@ export default new Vuex.Store({
     settingsLeftMenuEnriched({ commit}, data){
       commit('SETTINGSLEFTMENUENRICHED', data.settingsLeftMenuEnriched)
       localStorage.setItem('bfeSettingsLeftMenuEnriched',data.settingsLeftMenuEnriched)
+    },
+
+
+    setTreatLikeNoteFields({ commit}, data){
+      commit('TREATLIKENOTEFIELDS', data.fields)
+      localStorage.setItem('bfeTreatLikeNoteFields',data.fields)
     },
 
 

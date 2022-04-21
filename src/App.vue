@@ -207,6 +207,15 @@ export default {
       })   
     } 
 
+    if (localStorage.getItem('bfeTreatLikeNoteFields')!== null){      
+      this.$store.dispatch("setTreatLikeNoteFields", { self: this, fields: localStorage.getItem('bfeTreatLikeNoteFields') }).then(() => {
+      })   
+    } 
+
+
+
+
+
 
 
 

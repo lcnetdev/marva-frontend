@@ -18,7 +18,7 @@
     <div :class="'component-container-input-container' + ' component-container-input-container-' + settingsDisplayMode">
 
       <template  v-if="structure.valueConstraint.valueTemplateRefs.length > 1">
-        <div class="component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border" style="flex:4;">          
+        <div class="component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border" style="flex:4; max-height: 3em;">          
           <div style="display: flex">
             <div style="flex:1">
               <form autocomplete="off">
@@ -47,7 +47,7 @@
 
   <div v-else-if="nested == true">
       <template v-if="structure.valueConstraint.valueTemplateRefs.length > 1">
-        <div class="component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border" style="flex:4;">          
+        <div class="component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border" style="flex:4;  max-height: 3em">          
           <div style="display: flex">
             <div style="flex:1">
               <form autocomplete="off">

@@ -523,7 +523,7 @@ const exportXML = {
 					continue
 				}
 
-				console.log(pt)
+
 
 				// does it even have any userValues?
 				if (this.hasUserValue(userValue)){
@@ -543,7 +543,7 @@ const exportXML = {
 
 					// }
 
-					console.log(userValue)
+
 
 					// is it a BNODEEEEE
 					if (this.isBnode(userValue)){
@@ -561,7 +561,7 @@ const exportXML = {
 						// loop though the properties
 						for (let key1 of Object.keys(userValue).filter(k => (!k.includes('@') ? true : false ) )){
 
-							console.log(key1)
+
 							let pLvl2 = this.createElByBestNS(key1)
 
 							if (key1 == 'http://www.loc.gov/mads/rdf/v1#componentList'){
@@ -597,7 +597,7 @@ const exportXML = {
 								
 
 								// is it a bnode?
-								console.log("is this bnode?",this.isBnode(value1))
+
 								if (this.isBnode(value1)){
 
 									// yes
@@ -606,7 +606,7 @@ const exportXML = {
 									pLvl2.appendChild(bnodeLvl2)
 									bnodeLvl1.appendChild(pLvl2)
 
-									console.log('--->',key1,value1)
+
 
 
 
@@ -742,7 +742,7 @@ const exportXML = {
 
 
 											}else{
-												console.log( )
+
 												console.error('key2', key2, value1[key2], 'not a literal, should not happen')
 											}
 
