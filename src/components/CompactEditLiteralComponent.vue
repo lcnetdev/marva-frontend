@@ -757,9 +757,9 @@ export default {
         return false
       }
 
-      // if (inputV.value == this.inputValueLast){
-      //   return false
-      // }
+      if (inputV.value == this.inputValueLast){
+        return false
+      }
 
 
       // this resizes the textarea as there is more content
@@ -770,7 +770,7 @@ export default {
 
 
       if (inputV.value === null) return false
-      if (inputV.value.trim() === '') return false
+      if (inputV.value.trim() === '' && (this.inputValueLast === '' || this.inputValueLast === null)) return false
 
       let parentURI = null
       if (this.parentStructureObj){
@@ -787,7 +787,7 @@ export default {
       this.$store.dispatch("setValueLiteral", { self: this, ptGuid: this.ptGuid, guid: useGuid, parentURI:parentURI, URI: this.structure.propertyURI, value: inputV.value }).then((newGuid) => {
         
 
-        // this.inputValueLast = this.inputValue
+        this.inputValueLast = this.inputValue
         // if this is here then we created a new value, store it for future edits
         if(newGuid){
           inputV.guid = newGuid

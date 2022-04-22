@@ -548,7 +548,7 @@ button[disabled]{
 
 
 
-                    <div style="display:flex; border: solid 2px whitesmoke;">
+<!--                     <div style="display:flex; border: solid 2px whitesmoke;">
 
                         <div style="flex:1; align-self: center; text-align: center; margin-right: 5px; ">
                             Large Literal Display
@@ -557,7 +557,7 @@ button[disabled]{
                             <div>
                                 <input type="radio" name="literalOptionRadio" @change="updateLiteralOption('LARGE_FIELDS')" id="literal-option-large-fields" :checked="(settingsTreatLikeNoteFields=='LARGE_FIELDS')">
                                 <label for="literal-option-large-fields">For any large value</label>
-                            </div>
+                            </div> 
 
                             <div>
                                 <input type="radio" name="literalOptionRadio" @change="updateLiteralOption('NOTE_FIELDS')" id="literal-option-note-fields" :checked="(settingsTreatLikeNoteFields=='NOTE_FIELDS')">
@@ -569,14 +569,11 @@ button[disabled]{
                                 <label for="literal-option-all-fields">All Fields</label>   
                             </div>                                                      
                         </div>                    
-                    </div>
+                    </div> -->
 
 
 
-                    <div>
-                        <button @click="toggleDisplayLiteralOptions()">Litearl options</button>
-
-                    </div>                
+          
                   
                 </div>
 

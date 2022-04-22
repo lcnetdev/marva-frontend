@@ -376,6 +376,15 @@ export default {
 
     },
     focused: function(event){
+
+      // just make sure it is turned on so they can nav out of the field
+     
+
+      this.$nextTick(()=>{
+         this.$store.dispatch("enableMacroNav")
+      })
+
+
       
       this.$store.dispatch("setActiveInput", { self: this, id: event.target.id, profileCompoent: this.profileCompoent, profileName: this.profileName }).then(()=>{
 

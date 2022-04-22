@@ -45,6 +45,7 @@ const uiUtils = {
           activeInputIndex = i
         }
       }
+      console.log("activeInputIndex===",activeInputIndex,list[activeInputIndex-1])
       if (activeInputIndex != -1){
         // see if there is a next input
         if (list[activeInputIndex-1]){
