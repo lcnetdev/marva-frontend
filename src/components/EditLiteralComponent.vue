@@ -178,7 +178,9 @@ export default {
    
       this.$store.dispatch("setActiveInput", { self: this, id: event.target.id, profileCompoent: this.profileCompoent, profileName: this.profileName }).then(()=>{
         // now add the highlights to the side bars for this field
-        uiUtils.focusSidebars()
+        this.$nextTick(()=>{
+          uiUtils.focusSidebars()
+        })
       })
       
 

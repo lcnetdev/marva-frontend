@@ -619,7 +619,9 @@ export default {
       this.$store.dispatch("setActiveInput", { self: this, id: event.target.id, profileCompoent: this.profileCompoent, profileName: this.profileName }).then(()=>{
 
         // now focus the side bars
-        uiUtils.focusSidebars()
+        this.$nextTick(()=>{
+          uiUtils.focusSidebars()
+        })
 
 
       })

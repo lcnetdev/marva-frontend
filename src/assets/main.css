@@ -203,6 +203,7 @@ li::before {
 }
 .left-menu-list-item-active{
 	background-color: #6f6f6f;
+	scroll-padding: 0;
 }
 
 .left-menu-list-item{

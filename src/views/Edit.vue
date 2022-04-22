@@ -145,13 +145,13 @@
                                     <div class="enriched-menu-controls">
                                         
                                         <template v-if="!settingsHideEmptyFields || (settingsHideEmptyFields && !activeProfile.rt[profileName].pt[profileCompoent].canBeHidden) ">
-                                            <button title="Add Blank Component" @click="addProperty($event, profileName,profileCompoent)">
+                                            <button title="Add Blank Component [CRTL+SHIFT+PLUS_SIGN(+)]" class="left-menu-button-dupe-blank" @click="addProperty($event, profileName,profileCompoent)">
                                                 <svg width="25px" height="25px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                                                  <path class="enriched-menu-icon" d="m50 2.6797c-26.082 0-47.395 21.23-47.395 47.32 0 26.082 21.238 47.32 47.395 47.32 26.082 0 47.32-21.234 47.32-47.32 0-26.082-21.234-47.32-47.32-47.32zm0 10.996c20.039 0 36.324 16.289 36.324 36.324 0 20.039-16.289 36.324-36.324 36.324-20.039 0-36.324-16.289-36.324-36.324 0-20.039 16.289-36.324 36.324-36.324zm0 9.625c-3.0117 0-5.5352 2.5234-5.5352 5.5352v15.164h-15.16c-3.0117 0-5.5391 2.5234-5.5391 5.5352 0 3.0156 2.5234 5.5352 5.5391 5.5352h15.16v15.16c0 3.0117 2.5234 5.5352 5.5352 5.5352s5.5352-2.5234 5.5352-5.5352v-15.16h15.16c3.0117 0 5.5391-2.5234 5.5391-5.5352 0-3.0156-2.5938-5.457-5.5391-5.457h-15.16v-15.242c0-3.0117-2.5234-5.5352-5.5352-5.5352z"/>
                                                 </svg>
                                             </button>
                                             
-                                            <button title="Remove Component" @click="removeProperty(profileName,profileCompoent)">
+                                            <button title="Remove Component" class="left-menu-button-remove" @click="removeProperty(profileName,profileCompoent)">
                                                 <svg width="25px" height="25px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                                                  <g>
                                                   <path class="enriched-menu-icon" d="m50 0c-27.613 0-50 22.387-50 50s22.387 50 50 50 50-22.387 50-50-22.387-50-50-50zm0 90c-22.059 0-40-17.941-40-40s17.941-40 40-40 40 17.941 40 40-17.941 40-40 40z"/>
@@ -159,7 +159,7 @@
                                                  </g>
                                                 </svg>
                                             </button>
-                                            <button title="Duplicate Component" @click="addProperty($event,profileName,profileCompoent,true)">
+                                            <button title="Duplicate Component" class="left-menu-button-dupe" @click="addProperty($event,profileName,profileCompoent,true)">
                                                 <svg width="25px" height="25px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                                                  <g>
                                                   <path class="enriched-menu-icon" d="m79.5 31.801h-43.398c-1.8008 0-3.3008 1.5-3.3008 3.3008v43.5c0 1.8008 1.5 3.3008 3.3008 3.3008h43.5c1.8008 0 3.3008-1.5 3.3008-3.3008l-0.003906-43.5c-0.097657-1.8008-1.5-3.3008-3.3984-3.3008z"/>
@@ -167,7 +167,7 @@
                                                  </g>
                                                 </svg>
                                             </button>
-                                            <button title="Send To Instance" v-if="canSendToInstance(activeProfile.rt[profileName].pt[profileCompoent].propertyURI,profileName)" @click="sendToInstance($event,profileName,profileCompoent,activeProfile.rt[profileName].pt[profileCompoent])">
+                                            <button title="Send To Instance" class="left-menu-button-send" v-if="canSendToInstance(activeProfile.rt[profileName].pt[profileCompoent].propertyURI,profileName)" @click="sendToInstance($event,profileName,profileCompoent,activeProfile.rt[profileName].pt[profileCompoent])">
                                                 <svg width="25px" height="25px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                                                  <path class="enriched-menu-icon" d="m100 50-100-44.414 9.4961 37.988 34.918 6.4258-34.918 6.4258-9.4961 37.988z" fill-rule="evenodd"/>
                                                 </svg>
