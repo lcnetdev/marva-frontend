@@ -89,7 +89,7 @@ export default new Vuex.Store({
     settingsHideEmptyFields: false,
     settingsLeftMenuEnriched: true,
 
-    settingsTreatLikeNoteFields: "LARGE_FIELDS",
+    settingsTreatLikeNoteFields: "ALL_FIELDS",
 
 
     // used for auto complete lookups 
