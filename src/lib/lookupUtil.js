@@ -165,6 +165,7 @@ const lookupUtil = {
         if (!this.lookupLibrary[url]){
             let data = await this.fetchSimpleLookup(url)
             data = this.simpleLookupProcess(data,uri)
+            console.log(data)
             this.lookupLibrary[url] = data          
             return data 
         }else{
@@ -172,6 +173,49 @@ const lookupUtil = {
         }
 
     },
+
+    loadSimpleLookupKeyword: async function(uri,keyword){
+
+        let orignalURI = uri
+        // build the url
+
+        if (uri.at(-1) == '/'){
+          uri[-1] = ''
+        }
+
+
+        let url = `${uri}/suggest2/?q=${keyword}&count=25`
+
+        let r = await this.fetchSimpleLookup(url)
+
+        if (r.hits && r.hits.length==0){
+          url = `${uri}/suggest2/?q=${keyword}&count=25&searchtype=keyword`
+          r = await this.fetchSimpleLookup(url)
+
+        }
+
+        let results = {metadata:{ uri:orignalURI+'KEYWORD', values:{}  }}
+        if (r.hits && r.hits.length>0){
+          for (let hit of r.hits){
+            results.metadata.values[hit.uri] = {uri:hit.uri, label: [hit.suggestLabel], authLabel:hit.aLabel, code: [], displayLabel: [hit.suggestLabel] }
+            results[hit.uri] = [hit.suggestLabel]
+          }
+
+        }
+
+        console.log(results)
+
+        return results
+
+    },
+
+
+
+
+
+
+
+
 
 
     searchComplex: async function(searchPayload){

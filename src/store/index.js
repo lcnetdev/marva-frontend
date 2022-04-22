@@ -391,7 +391,13 @@ export default new Vuex.Store({
     },
 
     async fetchLookupValues ({ commit },data) {
-      let p = await lookupUtil.loadSimpleLookup(data.url)
+      let p
+      if (data.keyword){
+        p = await lookupUtil.loadSimpleLookupKeyword(data.url, data.keyword)
+      }else{
+        p = await lookupUtil.loadSimpleLookup(data.url)  
+      }
+      console.log('p',p)
       commit('LOOKUP', p)
     },
 

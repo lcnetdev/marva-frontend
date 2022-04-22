@@ -138,7 +138,8 @@ export default {
       activeSelect: '',
       activeValue: '',
       doubleDelete: false,
-      activeLookupValue: []
+      activeLookupValue: [],
+      debounceTimeout: null,
 
 
     }
@@ -539,21 +540,27 @@ export default {
 
     // Takes the list of values from this lookup uri and filters it based on the input
   
-    filter: function(){
+    filter: async function(recursive){
 
       this.displayList = []
       this.activeSelect = ''
+      this.activeKeyword = false
 
+      console.log("looking in ",this.lookupLibrary[this.uri], recursive)
+      let addKeyword = ''
+      if (recursive){
+        addKeyword = 'KEYWORD'
+        this.activeKeyword = true
+      }
 
-
-      Object.keys(this.lookupLibrary[this.uri]).forEach((v)=>{
-
+      Object.keys(this.lookupLibrary[this.uri+addKeyword]).forEach((v)=>{
+        console.log(v)
         // the list has a special key metdata that contains more info
         if (v==='metadata'){return false}
 
         // no filter yet show first 25
         if (this.activeFilter.trim()===''){
-          this.lookupLibrary[this.uri][v].forEach((x)=>{
+          this.lookupLibrary[this.uri+addKeyword][v].forEach((x)=>{
             // if (this.displayList.length<=25){
               if (this.displayList.indexOf(x)==-1){
                 this.displayList.push(x)  
@@ -563,8 +570,8 @@ export default {
         }else{
 
           // loop through each one, each is a array, so each element of array
-          this.lookupLibrary[this.uri][v].forEach((x)=>{
-            
+          this.lookupLibrary[this.uri+addKeyword][v].forEach((x)=>{
+            console.log(x)
             // simple includes value check
             if (x.toLowerCase().startsWith(this.activeFilter.toLowerCase())){
                 if (this.displayList.indexOf(x)==-1){
@@ -597,7 +604,53 @@ export default {
         this.displayAutocomplete = true
       }
       if (this.displayList.length==0){
-        this.displayList.push('No Match - Press [Enter] to add uncontrolled value')
+        
+
+        if (!recursive){
+
+
+
+          if (this.uri.includes('id.loc.gov/vocabulary/')){
+
+            if (this.activeFilter.length>3){
+
+              this.displayList.push('Searching...')
+
+              window.clearTimeout(this.debounceTimeout)
+              this.debounceTimeout = window.setTimeout(()=>{
+
+
+
+                // kick off antoher search, then do the filter again
+                this.$store.dispatch("fetchLookupValues", { self: this, url: this.structure.valueConstraint.useValuesFrom[0], keyword: this.activeFilter }).then(() => {
+                  
+                  this.filter(true)
+
+                })
+
+
+              },500)
+
+              
+
+            }else{
+
+              this.displayList.push('No local match, enter more of the search term')
+            }
+
+
+            // store the current value
+            // let startOfSearchVal = this.activeFilter
+            
+          }
+
+        }else{
+
+          this.displayList.push('No Match - Press [Enter] to add uncontrolled value')
+        }
+        
+
+        
         this.displayAutocomplete = true
       }
       if (this.activeFilter.length==0){
@@ -754,9 +807,12 @@ export default {
 
         let metadata = this.lookupLibrary[this.uri].metadata.values
 
+        if (this.activeKeyword){
+          metadata = this.lookupLibrary[this.uri+'KEYWORD'].metadata.values          
+        }
+
         // find the active selected in the data
         Object.keys(metadata).forEach((key)=>{
-
           let idx = metadata[key].displayLabel.indexOf(this.activeSelect)
           if (idx >-1){
             // this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':metadata[key].label[idx],URI:metadata[key].uri})
@@ -764,19 +820,13 @@ export default {
             this.activeValue = ''
             this.activeSelect = ''
             this.displayAutocomplete=false
-            event.target.value = ''
-            // this.$store.dispatch("addValueLiteral", { self: this, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, value:this.activeLookupValue }).then(() => {
-             
-            // })               
+            event.target.value = ''     
             let parentURI = (this.parentStructureObj) ? this.parentStructureObj.propertyURI : null 
+            let useLabel = (metadata[key].authLabel) ? metadata[key].authLabel : metadata[key].label[idx]
 
-
-            this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, parentURI: parentURI, URI: this.structure.propertyURI, valueURI: metadata[key].uri, valueLabel:metadata[key].label[idx]}).then((resultData) => {
-
+            this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, parentURI: parentURI, URI: this.structure.propertyURI, valueURI: metadata[key].uri, valueLabel:useLabel}).then((resultData) => {
               this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':resultData.valueLabel, uri: resultData.valueURI, uriGuid: resultData.guid, labelGuid:resultData.guid})
             })
-
-
           }
           // let data = this.lookupLibrary[this.uri].metadata[v]
           

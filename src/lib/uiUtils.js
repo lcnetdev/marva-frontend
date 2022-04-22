@@ -102,10 +102,9 @@ const uiUtils = {
 
 
         if (document.getElementsByClassName('left-menu-list-item-active').length==0){
-          console.log("NOT FOUND")
           return false
         }
-        console.log(document.getElementsByClassName('left-menu-list-item-active')[0])
+
         // scroll those elements into view, the left and right
         document.getElementsByClassName('left-menu-list-item-active')[0].scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"})
 

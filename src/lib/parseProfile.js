@@ -1011,7 +1011,15 @@ const parseProfile = {
 
             for (let pp of possibleProperties){
                 if (currentState.rt[activeProfileName].pt[component].refTemplateUserValue[pp]){
-                    currentState.rt[activeProfileName].pt[component].userValue[pp]= JSON.parse(JSON.stringify(currentState.rt[activeProfileName].pt[component].refTemplateUserValue[pp]))
+                    console.log("filling in:",pp,currentState.rt[activeProfileName].pt[component])
+
+                    // don't use http://id.loc.gov/ontologies/bibframe/assigner aka source
+                    // kind of a hackish thing, but the source is really not transferable between
+                    // differnt types of classifications so leave it out, it will get populated with the default so
+                    // we shouldn't loose any data, only if they change it then cycle the options then it will be lost and need to re-add
+                    if (pp != 'http://id.loc.gov/ontologies/bibframe/assigner'){
+                        currentState.rt[activeProfileName].pt[component].userValue[pp]= JSON.parse(JSON.stringify(currentState.rt[activeProfileName].pt[component].refTemplateUserValue[pp]))
+                    }
                     delete currentState.rt[activeProfileName].pt[component].refTemplateUserValue[pp]
                 }
 
