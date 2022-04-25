@@ -777,7 +777,6 @@ export default {
         parentURI = this.parentStructureObj.propertyURI
       }
 
-      console.log(this.inputValue)
       let useGuid = inputV.guid
       if (inputV.guid.startsWith('new_')){
         useGuid = null
@@ -1098,6 +1097,8 @@ export default {
       this.diacriticData = JSON.parse(d)
     }
 
+
+    this.inputValueLast = this.inputValue
 
 
   },

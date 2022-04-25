@@ -750,7 +750,6 @@ export default {
     },
     keyUpEvent: function(event){
 
-      console.log("keyUpEvent",event.key)
 
       if (event && event.key && (event.key!=='ArrowUp' && event.key !=='ArrowDown' && event.key!=='Escape' && event.key!=='Backspace' && event.key!=='Enter' && event.key!=='PageUp' && event.key!=='PageDown' && event.ctrlKey == false)){
         
@@ -762,7 +761,6 @@ export default {
         //   return false
         // }
 
-        console.log("Wwht ever")
 
         this.activeValue = event.target.value.trimStart()
         this.doubleDelete = false
@@ -777,7 +775,6 @@ export default {
 
       }else if (event && event.key && event.key==='Backspace'){
 
-        console.log("HERE")
 
         if (!this.doubleDelete && this.activeValue === ''){
           this.doubleDelete = true          

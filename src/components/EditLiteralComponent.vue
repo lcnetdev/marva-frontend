@@ -763,6 +763,8 @@ export default {
 
 
 
+
+
       // if its empty don't do anytihng, unless its newly empty, meaning they just deleted the whole thing
       if (inputV.value === null) return false
       if (inputV.value.trim() === '' && (this.inputValueLast === '' || this.inputValueLast === null)) return false
@@ -1064,6 +1066,8 @@ export default {
             }
           }       
         }
+
+        this.inputValueLast = this.inputValue
       })
 
 
