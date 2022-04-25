@@ -397,8 +397,9 @@ export default new Vuex.Store({
       }else{
         p = await lookupUtil.loadSimpleLookup(data.url)  
       }
-      console.log('p',p)
+      
       commit('LOOKUP', p)
+      
     },
 
     async fetchLookupValuesComplex ({ commit },data) {   

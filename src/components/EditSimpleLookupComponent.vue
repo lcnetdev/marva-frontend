@@ -545,8 +545,8 @@ export default {
       this.displayList = []
       this.activeSelect = ''
       this.activeKeyword = false
-
-      console.log("looking in ",this.lookupLibrary[this.uri], recursive)
+      console.log("this.activeFilter",this.activeFilter)
+      
       let addKeyword = ''
       if (recursive){
         addKeyword = 'KEYWORD'
@@ -554,7 +554,7 @@ export default {
       }
 
       Object.keys(this.lookupLibrary[this.uri+addKeyword]).forEach((v)=>{
-        console.log(v)
+        
         // the list has a special key metdata that contains more info
         if (v==='metadata'){return false}
 
@@ -571,7 +571,7 @@ export default {
 
           // loop through each one, each is a array, so each element of array
           this.lookupLibrary[this.uri+addKeyword][v].forEach((x)=>{
-            console.log(x)
+            
             // simple includes value check
             if (x.toLowerCase().startsWith(this.activeFilter.toLowerCase())){
                 if (this.displayList.indexOf(x)==-1){
@@ -720,16 +720,45 @@ export default {
 
 
 
+      }else if (event && event.key && event.key==='Backspace'){
+
+
+        if (!this.doubleDelete && this.activeValue === ''){
+          this.doubleDelete = true          
+          return false
+        }
+
+        if (this.activeValue == '' && this.doubleDelete){
+          this.doubleDelete = false
+          // were gonna delete the last one          
+          if (this.activeLookupValue.length>0){                       
+            this.removeValue(-1)
+          }
+          
+          this.doubleDelete = false
+          this.displayAutocomplete = false
+        }else if (this.activeValue == ''){
+          this.activeValue
+        }
+
+
+
+        this.doubleDelete = false
+        this.activeValue = event.target.value.trimStart()
+        this.activeFilter = event.target.value.trimStart()
+
+        this.displayAutocomplete = true
+        this.$store.dispatch("disableMacroNav")
+        this.filter()
+
       }
-
-
 
 
 
     },    
     keyDownEvent: function(event){
       
-
+      console.log("EVENT")
       this.activeValue = event.target.value
 
       if (event && event.key && this.displayAutocomplete == true && (event.key==='ArrowUp' || event.key==='ArrowDown')){
@@ -782,25 +811,7 @@ export default {
         this.activeValue = ''
         this.displayAutocomplete = false
       
-      }else if (event && event.key && event.key==='Backspace'){
 
-        if (!this.doubleDelete && this.activeValue === ''){
-          this.doubleDelete = true
-          return false
-        }
-
-        if (this.activeValue == '' && this.doubleDelete){
-          this.doubleDelete = false
-          // were gonna delete the last one          
-          if (this.activeLookupValue.length>0){                       
-            this.removeValue(-1)
-          }
-          
-          this.doubleDelete = false
-          this.displayAutocomplete = false
-        }else if (this.activeValue == ''){
-          this.activeValue
-        }
 
       }else if (event && event.key && event.key==='Enter'){
         this.doubleDelete = false
@@ -905,55 +916,88 @@ export default {
 
       this.displayAutocomplete=false
 
-      let label = this.displayList[event.target.dataset.idx]
 
       let metadata = this.lookupLibrary[this.uri].metadata.values
 
+      if (this.activeKeyword){
+        metadata = this.lookupLibrary[this.uri+'KEYWORD'].metadata.values          
+      }
+
       // find the active selected in the data
       Object.keys(metadata).forEach((key)=>{
-
-        let idx = metadata[key].displayLabel.indexOf(label)
+        let idx = metadata[key].displayLabel.indexOf(this.activeSelect)
         if (idx >-1){
-          // this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':,URI:})
-          // this.activeFilter = ''
-          // this.activeValue = ''
-          // this.activeSelect = ''
-          // this.displayAutocomplete=false
-          // // this.$store.dispatch("addValueLiteral", { self: this, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, value:this.activeLookupValue }).then(() => {
-           
-          // // })        
-
-          // this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, parentURI: this.parentStructureObj.propertyURI, URI: this.structure.propertyURI, valueURI: metadata[key].uri, valueLabel:metadata[key].label[idx]}).then((resultData) => {
-          //   this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':resultData.valueLabel, uri: resultData.valueURI, uriGuid: resultData.guid, labelGuid:resultData.guid})
-          // })
-
-
-
+          // this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':metadata[key].label[idx],URI:metadata[key].uri})
           this.activeFilter = ''
           this.activeValue = ''
           this.activeSelect = ''
           this.displayAutocomplete=false
-          event.target.value = ''
-          // this.$store.dispatch("addValueLiteral", { self: this, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, value:this.activeLookupValue }).then(() => {
-           
-          // })               
+          event.target.value = ''     
           let parentURI = (this.parentStructureObj) ? this.parentStructureObj.propertyURI : null 
+          let useLabel = (metadata[key].authLabel) ? metadata[key].authLabel : metadata[key].label[idx]
 
-
-          this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, parentURI: parentURI, URI: this.structure.propertyURI, valueURI: metadata[key].uri, valueLabel:metadata[key].label[idx]}).then((resultData) => {
+          this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, parentURI: parentURI, URI: this.structure.propertyURI, valueURI: metadata[key].uri, valueLabel:useLabel}).then((resultData) => {
             this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':resultData.valueLabel, uri: resultData.valueURI, uriGuid: resultData.guid, labelGuid:resultData.guid})
           })
-
-
-
-          this.$store.dispatch("enableMacroNav")    
-
-
-
         }
-
-
+        // let data = this.lookupLibrary[this.uri].metadata[v]
+        
+        // let idx = data.defaultsisplayLabel.indexOf(this.activeSelect)
+        // if (idx > -1){
+        //   this.structure.valueConstraint.defaults.push({defaultLiteral:data.label[idx],defaultURI:data.uri[idx]})
+        // }
       })
+
+
+      // let label = this.displayList[event.target.dataset.idx]
+
+      // let metadata = this.lookupLibrary[this.uri].metadata.values
+
+      // // find the active selected in the data
+      // Object.keys(metadata).forEach((key)=>{
+
+      //   let idx = metadata[key].displayLabel.indexOf(label)
+      //   if (idx >-1){
+      //     // this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':,URI:})
+      //     // this.activeFilter = ''
+      //     // this.activeValue = ''
+      //     // this.activeSelect = ''
+      //     // this.displayAutocomplete=false
+      //     // // this.$store.dispatch("addValueLiteral", { self: this, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, value:this.activeLookupValue }).then(() => {
+           
+      //     // // })        
+
+      //     // this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, parentURI: this.parentStructureObj.propertyURI, URI: this.structure.propertyURI, valueURI: metadata[key].uri, valueLabel:metadata[key].label[idx]}).then((resultData) => {
+      //     //   this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':resultData.valueLabel, uri: resultData.valueURI, uriGuid: resultData.guid, labelGuid:resultData.guid})
+      //     // })
+
+
+
+      //     this.activeFilter = ''
+      //     this.activeValue = ''
+      //     this.activeSelect = ''
+      //     this.displayAutocomplete=false
+      //     event.target.value = ''
+      //     // this.$store.dispatch("addValueLiteral", { self: this, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, value:this.activeLookupValue }).then(() => {
+           
+      //     // })               
+      //     let parentURI = (this.parentStructureObj) ? this.parentStructureObj.propertyURI : null 
+
+
+      //     this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, parentURI: parentURI, URI: this.structure.propertyURI, valueURI: metadata[key].uri, valueLabel:metadata[key].label[idx]}).then((resultData) => {
+      //       this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':resultData.valueLabel, uri: resultData.valueURI, uriGuid: resultData.guid, labelGuid:resultData.guid})
+      //     })
+
+
+
+      //     this.$store.dispatch("enableMacroNav")    
+
+
+
+      //   }
+
+
+      // })
 
       // refocus
       this.$refs.lookupInput.focus()
