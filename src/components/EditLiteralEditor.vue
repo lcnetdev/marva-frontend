@@ -5,7 +5,7 @@
 
     <div id="literal-editor-layout" style="display: flex;">
       <div style="flex:4">
-        <textarea @input="literalChange" v-model="inputValue">لأساس في تعليم العربية للناطقين بغيرها</textarea>
+        <textarea id="literal-editor-textarea" @input="literalChange" ref="textarea" v-model="inputValue"></textarea>
 
 
 
@@ -14,47 +14,19 @@
       </div>
       <div style="flex:1">
 
-      <div style="height: 100%; overflow-y: scroll;">
-        <div class="diacritic-key" v-for="d in diacriticData" :key=d.keycode>
-          <span style="font-size: 1.5em; width: 1em; text-align: center; display: inline-block; border: solid 1px black">{{d.letter}}</span>
-          <span style="padding-left: 1em">{{d.desc}}</span>
+      <div style="height: 100%; overflow-y: scroll; border-bottom: solid 1px lightgray;">
+        <div style="font-weight: bold; background-color: white;">Custom Diacritics</div>
+        <div class="diacritic-key" v-for="(d,idx) in diacriticData" @click="insertDiacritic(d.letter)" :key="d.keycode + '_' + idx">
+          <span style="font-size: 1.5em; width: 1em; text-align: center; display: inline-block; border: solid 1px darkgray;">{{d.letter}}</span>
+          <span style="padding-left: 0.5em">{{d.desc}}</span>
         </div>
-          
-        <div class="diacritic-key" v-for="d in diacriticData" :key=d.keycode>
-          <span style="font-size: 1.5em; width: 1em; text-align: center; display: inline-block; border: solid 1px black">{{d.letter}}</span>
-          <span style="padding-left: 1em">{{d.desc}}</span>
-        </div>
+        <div style="font-weight: bold; background-color: white;">Combining Diacritics</div>
 
-        <div class="diacritic-key" v-for="d in diacriticData" :key=d.keycode>
-          <span style="font-size: 1.5em; width: 1em; text-align: center; display: inline-block; border: solid 1px black">{{d.letter}}</span>
-          <span style="padding-left: 1em">{{d.desc}}</span>
-        </div>
 
-        <div class="diacritic-key" v-for="d in diacriticData" :key=d.keycode>
-          <span style="font-size: 1.5em; width: 1em; text-align: center; display: inline-block; border: solid 1px black">{{d.letter}}</span>
-          <span style="padding-left: 1em">{{d.desc}}</span>
+        <div class="diacritic-key" v-for="d in combiningDiacritics" @click="insertDiacritic(d.symbol)" :key="d.titlt">
+          <span style="font-size: 1.5em; width: 1em; text-align: center; display: inline-block; border: solid 1px darkgray;">{{d.symbol}}</span>
+          <span style="padding-left: 0.5em">{{d.title}}</span>
         </div>
-
-        <div class="diacritic-key" v-for="d in diacriticData" :key=d.keycode>
-          <span style="font-size: 1.5em; width: 1em; text-align: center; display: inline-block; border: solid 1px black">{{d.letter}}</span>
-          <span style="padding-left: 1em">{{d.desc}}</span>
-        </div>
-          
-        <div class="diacritic-key" v-for="d in diacriticData" :key=d.keycode>
-          <span style="font-size: 1.5em; width: 1em; text-align: center; display: inline-block; border: solid 1px black">{{d.letter}}</span>
-          <span style="padding-left: 1em">{{d.desc}}</span>
-        </div>
-
-        <div class="diacritic-key" v-for="d in diacriticData" :key=d.keycode>
-          <span style="font-size: 1.5em; width: 1em; text-align: center; display: inline-block; border: solid 1px black">{{d.letter}}</span>
-          <span style="padding-left: 1em">{{d.desc}}</span>
-        </div>
-
-        <div class="diacritic-key" v-for="d in diacriticData" :key=d.keycode>
-          <span style="font-size: 1.5em; width: 1em; text-align: center; display: inline-block; border: solid 1px black">{{d.letter}}</span>
-          <span style="padding-left: 1em">{{d.desc}}</span>
-        </div>
-
 
       </div>
 
@@ -64,9 +36,9 @@
     </div>
 
     <div  style="display: flex; padding: 5px;">
-      <div style="flex:1; background-color: aliceblue; border-radius: 1em; text-align: center;">
+      <div style="flex:1; background-color: #f0f8ff8f; border-radius: 1em; text-align: center; min-height: 100px;">
           <template v-if="isNonLatin">
-          <div >Romanization (<span style="color:tomato;">Likely not LC/ALA compliant</span>)</div>
+          <div >Romanization / <span style="color:tomato;">Non-LC/ALA compliant</span></div>
           <ul>
             
 
@@ -75,7 +47,7 @@
               <button disabled v-else>Not Supported</button>
             </li>
 
-            
+            <li v-if="activeLanguages.length==0">No auto-suggest, use manual below</li>
 
 
           </ul>
@@ -85,12 +57,27 @@
             <option v-for="l in supportedRomanizations" :key="l">{{l}}</option>
           </select>
         </template>
+        <template v-else>
+          <div >Romanization</div>
+          <div >Enter non-latin text to see options</div>
+        </template>
+
 
       </div>
-      <div style="flex:1"></div>  
-      <div style="flex:1"></div>  
-      <div style="flex:1"></div>  
-      <div style="flex:1"></div>  
+      <div style="flex:1; background-color: #fffff0db; border-radius: 1em; text-align: center; min-height: 100px;">
+          Manual language settings here
+
+      </div>  
+      <div style="flex:1; background-color: #ffe4e161; border-radius: 1em; text-align: center; min-height: 100px;">
+          <div>Toolbox</div>
+          <p>What are common text editing actions that could go here? <a href="https://git.loc.gov/lcnetdev/marva/-/issues/new?issue[title]=Literal%20editor%20toolbox%20suggestion" target="_blank">Add suggestion</a></p>
+      </div>  
+      <div style="flex:1; text-align:center; padding-top:2em">
+
+        <button style="font-size:1.25em; margin-right: 1em;" @click="closeEditor">Cancel</button>
+        <button style="font-size:1.25em;" @click="updateFromEditor">Save</button>
+
+      </div>  
     </div>
     
     <!-- <button @click="test">TEST</button> -->
@@ -108,6 +95,7 @@
       transition-duration: 500ms !important;
       transition: all;
 
+
     }
     .diacritic-key:hover{
       background-color: lightblue;
@@ -116,8 +104,9 @@
       width: 99%; 
       margin-left: auto; 
       margin-right: auto; 
-      height: 470px;
-      background: whitesmoke;
+/*      height: 480px;
+*/      background: whitesmoke;
+      padding: 5px;
     }
 
     #literal-editor-layout{
@@ -189,6 +178,13 @@ export default {
     // HelloWorld
     
   },
+  props: {
+
+    initalValue: String
+
+  },
+
+
 
   data: function() {
     return { 
@@ -199,7 +195,7 @@ export default {
       activeLanguages: [],
       supportedRomanizations: [],
       langs: [], 
-      combiningDiacritics: [{"symbol":"\u0300","title":"Combining Grave Accent"},{"symbol":"\u0301","title":"Combining Acute Accent"},{"symbol":"\u0302","title":"Combining Circumflex Accent"},{"symbol":"\u0303","title":"Combining Tilde"},{"symbol":"\u0304","title":"Combining Macron"},{"symbol":"\u0305","title":"Combining Overline"},{"symbol":"\u0306","title":"Combining Breve"},{"symbol":"\u0307","title":"Combining Dot Above"},{"symbol":"\u0308","title":"Combining Diaeresis"},{"symbol":"\u0309","title":"Combining Hook Above"},{"symbol":"\u030a","title":"Combining Ring Above"},{"symbol":"\u030b","title":"Combining Double Acute Accent"},{"symbol":"\u030c","title":"Combining Caron"},{"symbol":"\u030d","title":"Combining Vertical Line Above"},{"symbol":"\u030e","title":"Combining Double Vertical Line Above"},{"symbol":"\u030f","title":"Combining Double Grave Accent"},{"symbol":"\u0310","title":"Combining Candrabindu"},{"symbol":"\u0311","title":"Combining Inverted Breve"},{"symbol":"\u0312","title":"Combining Turned Comma Above"},{"symbol":"\u0313","title":"Combining Comma Above"},{"symbol":"\u0314","title":"Combining Reversed Comma Above"},{"symbol":"\u0315","title":"Combining Comma Above Right"},{"symbol":"\u0316","title":"Combining Grave Accent Below"},{"symbol":"\u0317","title":"Combining Acute Accent Below"},{"symbol":"\u0318","title":"Combining Left Tack Below"},{"symbol":"\u0319","title":"Combining Right Tack Below"},{"symbol":"\u031a","title":"Combining Left Angle Above"},{"symbol":"\u031b","title":"Combining Horn"},{"symbol":"\u031c","title":"Combining Left Half Ring Below"},{"symbol":"\u031d","title":"Combining Up Tack Below"},{"symbol":"\u031e","title":"Combining Down Tack Below"},{"symbol":"\u031f","title":"Combining Plus Sign Below"},{"symbol":"\u0320","title":"Combining Minus Sign Below"},{"symbol":"\u0321","title":"Combining Palatalized Hook Below"},{"symbol":"\u0322","title":"Combining Retroflex Hook Below"},{"symbol":"\u0323","title":"Combining Dot Below"},{"symbol":"\u0324","title":"Combining Diaeresis Below"},{"symbol":"\u0325","title":"Combining Ring Below"},{"symbol":"\u0326","title":"Combining Comma Below"},{"symbol":"\u0327","title":"Combining Cedilla"},{"symbol":"\u0328","title":"Combining Ogonek"},{"symbol":"\u0329","title":"Combining Vertical Line Below"},{"symbol":"\u032a","title":"Combining Bridge Below"},{"symbol":"\u032b","title":"Combining Inverted Double Arch Below"},{"symbol":"\u032c","title":"Combining Caron Below"},{"symbol":"\u032d","title":"Combining Circumflex Accent Below"},{"symbol":"\u032e","title":"Combining Breve Below"},{"symbol":"\u032f","title":"Combining Inverted Breve Below"},{"symbol":"\u0330","title":"Combining Tilde Below"},{"symbol":"\u0331","title":"Combining Macron Below"},{"symbol":"\u0332","title":"Combining Low Line"},{"symbol":"\u0333","title":"Combining Double Low Line"},{"symbol":"\u0334","title":"Combining Tilde Overlay"},{"symbol":"\u0335","title":"Combining Short Stroke Overlay"},{"symbol":"\u0336","title":"Combining Long Stroke Overlay"},{"symbol":"\u0337","title":"Combining Short Solidus Overlay"},{"symbol":"\u0338","title":"Combining Long Solidus Overlay"},{"symbol":"\u0339","title":"Combining Right Half Ring Below"},{"symbol":"\u033a","title":"Combining Inverted Bridge Below"},{"symbol":"\u033b","title":"Combining Square Below"},{"symbol":"\u033c","title":"Combining Seagull Below"},{"symbol":"\u033d","title":"Combining X Above"},{"symbol":"\u033e","title":"Combining Vertical Tilde"},{"symbol":"\u033f","title":"Combining Double Overline"},{"symbol":"\u0340","title":"Combining Grave Tone Mark"},{"symbol":"\u0341","title":"Combining Acute Tone Mark"},{"symbol":"\u0342","title":"Combining Greek Perispomeni"},{"symbol":"\u0343","title":"Combining Greek Koronis"},{"symbol":"\u0344","title":"Combining Greek Dialytika Tonos"},{"symbol":"\u0345","title":"Combining Greek Ypogegrammeni"},{"symbol":"\u0346","title":"Combining Bridge Above"},{"symbol":"\u0347","title":"Combining Equals Sign Below"},{"symbol":"\u0348","title":"Combining Double Vertical Line Below"},{"symbol":"\u0349","title":"Combining Left Angle Below"},{"symbol":"\u034a","title":"Combining Not Tilde Above"},{"symbol":"\u034b","title":"Combining Homothetic Above"},{"symbol":"\u034c","title":"Combining Almost Equal To Above"},{"symbol":"\u034d","title":"Combining Left Right Arrow Below"},{"symbol":"\u034e","title":"Combining Upwards Arrow Below"},{"symbol":"\u034f","title":"Combining Grapheme Joiner"},{"symbol":"\u0350","title":"Combining Right Arrowhead Above"},{"symbol":"\u0351","title":"Combining Left Half Ring Above"},{"symbol":"\u0352","title":"Combining Fermata"},{"symbol":"\u0353","title":"Combining X Below"},{"symbol":"\u0354","title":"Combining Left Arrowhead Below"},{"symbol":"\u0355","title":"Combining Right Arrowhead Below"},{"symbol":"\u0356","title":"Combining Right Arrowhead and Up Arrowhead Below"},{"symbol":"\u0357","title":"Combining Right Half Ring Above"},{"symbol":"\u0358","title":"Combining Dot Above Right"},{"symbol":"\u0359","title":"Combining Asterisk Below"},{"symbol":"\u035a","title":"Combining Double Ring Below"},{"symbol":"\u035b","title":"Combining Zigzag Above"},{"symbol":"\u035c","title":"Combining Double Breve Below"},{"symbol":"\u035d","title":"Combining Double Breve"},{"symbol":"\u035e","title":"Combining Double Macron"},{"symbol":"\u035f","title":"Combining Double Macron Below"},{"symbol":"\u0360","title":"Combining Double Tilde"},{"symbol":"\u0361","title":"Combining Double Inverted Breve"},{"symbol":"\u0362","title":"Combining Double Rightwards Arrow Below"},{"symbol":"\u0363","title":"Combining Latin Small Letter A"},{"symbol":"\u0364","title":"Combining Latin Small Letter E"},{"symbol":"\u0365","title":"Combining Latin Small Letter I"},{"symbol":"\u0366","title":"Combining Latin Small Letter O"},{"symbol":"\u0367","title":"Combining Latin Small Letter U"},{"symbol":"\u0368","title":"Combining Latin Small Letter C"},{"symbol":"\u0369","title":"Combining Latin Small Letter D"},{"symbol":"\u036a","title":"Combining Latin Small Letter H"},{"symbol":"\u036b","title":"Combining Latin Small Letter M"},{"symbol":"\u036c","title":"Combining Latin Small Letter R"},{"symbol":"\u036d","title":"Combining Latin Small Letter T"},{"symbol":"\u036e","title":"Combining Latin Small Letter V"},{"symbol":"\u036f","title":"Combining Latin Small Letter X"}],
+      combiningDiacritics: [{"symbol":"\u0300","title":"Grave Accent"},{"symbol":"\u0301","title":"Acute Accent"},{"symbol":"\u0302","title":"Circumflex Accent"},{"symbol":"\u0303","title":"Tilde"},{"symbol":"\u0304","title":"Macron"},{"symbol":"\u0305","title":"Overline"},{"symbol":"\u0306","title":"Breve"},{"symbol":"\u0307","title":"Dot Above"},{"symbol":"\u0308","title":"Diaeresis"},{"symbol":"\u0309","title":"Hook Above"},{"symbol":"\u030a","title":"Ring Above"},{"symbol":"\u030b","title":"Double Acute Accent"},{"symbol":"\u030c","title":"Caron"},{"symbol":"\u030d","title":"Vertical Line Above"},{"symbol":"\u030e","title":"Double Vertical Line Above"},{"symbol":"\u030f","title":"Double Grave Accent"},{"symbol":"\u0310","title":"Candrabindu"},{"symbol":"\u0311","title":"Inverted Breve"},{"symbol":"\u0312","title":"Turned Comma Above"},{"symbol":"\u0313","title":"Comma Above"},{"symbol":"\u0314","title":"Reversed Comma Above"},{"symbol":"\u0315","title":"Comma Above Right"},{"symbol":"\u0316","title":"Grave Accent Below"},{"symbol":"\u0317","title":"Acute Accent Below"},{"symbol":"\u0318","title":"Left Tack Below"},{"symbol":"\u0319","title":"Right Tack Below"},{"symbol":"\u031a","title":"Left Angle Above"},{"symbol":"\u031b","title":"Horn"},{"symbol":"\u031c","title":"Left Half Ring Below"},{"symbol":"\u031d","title":"Up Tack Below"},{"symbol":"\u031e","title":"Down Tack Below"},{"symbol":"\u031f","title":"Plus Sign Below"},{"symbol":"\u0320","title":"Minus Sign Below"},{"symbol":"\u0321","title":"Palatalized Hook Below"},{"symbol":"\u0322","title":"Retroflex Hook Below"},{"symbol":"\u0323","title":"Dot Below"},{"symbol":"\u0324","title":"Diaeresis Below"},{"symbol":"\u0325","title":"Ring Below"},{"symbol":"\u0326","title":"Comma Below"},{"symbol":"\u0327","title":"Cedilla"},{"symbol":"\u0328","title":"Ogonek"},{"symbol":"\u0329","title":"Vertical Line Below"},{"symbol":"\u032a","title":"Bridge Below"},{"symbol":"\u032b","title":"Inverted Double Arch Below"},{"symbol":"\u032c","title":"Caron Below"},{"symbol":"\u032d","title":"Circumflex Accent Below"},{"symbol":"\u032e","title":"Breve Below"},{"symbol":"\u032f","title":"Inverted Breve Below"},{"symbol":"\u0330","title":"Tilde Below"},{"symbol":"\u0331","title":"Macron Below"},{"symbol":"\u0332","title":"Low Line"},{"symbol":"\u0333","title":"Double Low Line"},{"symbol":"\u0334","title":"Tilde Overlay"},{"symbol":"\u0335","title":"Short Stroke Overlay"},{"symbol":"\u0336","title":"Long Stroke Overlay"},{"symbol":"\u0337","title":"Short Solidus Overlay"},{"symbol":"\u0338","title":"Long Solidus Overlay"},{"symbol":"\u0339","title":"Right Half Ring Below"},{"symbol":"\u033a","title":"Inverted Bridge Below"},{"symbol":"\u033b","title":"Square Below"},{"symbol":"\u033c","title":"Seagull Below"},{"symbol":"\u033d","title":"X Above"},{"symbol":"\u033e","title":"Vertical Tilde"},{"symbol":"\u033f","title":"Double Overline"},{"symbol":"\u0340","title":"Grave Tone Mark"},{"symbol":"\u0341","title":"Acute Tone Mark"},{"symbol":"\u0342","title":"Greek Perispomeni"},{"symbol":"\u0343","title":"Greek Koronis"},{"symbol":"\u0344","title":"Greek Dialytika Tonos"},{"symbol":"\u0345","title":"Greek Ypogegrammeni"},{"symbol":"\u0346","title":"Bridge Above"},{"symbol":"\u0347","title":"Equals Sign Below"},{"symbol":"\u0348","title":"Double Vertical Line Below"},{"symbol":"\u0349","title":"Left Angle Below"},{"symbol":"\u034a","title":"Not Tilde Above"},{"symbol":"\u034b","title":"Homothetic Above"},{"symbol":"\u034c","title":"Almost Equal To Above"},{"symbol":"\u034d","title":"Left Right Arrow Below"},{"symbol":"\u034e","title":"Upwards Arrow Below"},{"symbol":"\u034f","title":"Grapheme Joiner"},{"symbol":"\u0350","title":"Right Arrowhead Above"},{"symbol":"\u0351","title":"Left Half Ring Above"},{"symbol":"\u0352","title":"Fermata"},{"symbol":"\u0353","title":"X Below"},{"symbol":"\u0354","title":"Left Arrowhead Below"},{"symbol":"\u0355","title":"Right Arrowhead Below"},{"symbol":"\u0356","title":"Right Arrowhead and Up Arrowhead Below"},{"symbol":"\u0357","title":"Right Half Ring Above"},{"symbol":"\u0358","title":"Dot Above Right"},{"symbol":"\u0359","title":"Asterisk Below"},{"symbol":"\u035a","title":"Double Ring Below"},{"symbol":"\u035b","title":"Zigzag Above"},{"symbol":"\u035c","title":"Double Breve Below"},{"symbol":"\u035d","title":"Double Breve"},{"symbol":"\u035e","title":"Double Macron"},{"symbol":"\u035f","title":"Double Macron Below"},{"symbol":"\u0360","title":"Double Tilde"},{"symbol":"\u0361","title":"Double Inverted Breve"},{"symbol":"\u0362","title":"Double Rightwards Arrow Below"},{"symbol":"\u0363","title":"Latin Small Letter A"},{"symbol":"\u0364","title":"Latin Small Letter E"},{"symbol":"\u0365","title":"Latin Small Letter I"},{"symbol":"\u0366","title":"Latin Small Letter O"},{"symbol":"\u0367","title":"Latin Small Letter U"},{"symbol":"\u0368","title":"Latin Small Letter C"},{"symbol":"\u0369","title":"Latin Small Letter D"},{"symbol":"\u036a","title":"Latin Small Letter H"},{"symbol":"\u036b","title":"Latin Small Letter M"},{"symbol":"\u036c","title":"Latin Small Letter R"},{"symbol":"\u036d","title":"Latin Small Letter T"},{"symbol":"\u036e","title":"Latin Small Letter V"},{"symbol":"\u036f","title":"Latin Small Letter X"}],
       nonLatinRegex: /[^\u0000-\u024F\u1E00-\u1EFF\u2C60-\u2C7F\uA720-\uA7FF]/g, // eslint-disable-line
       isNonLatin: false,
 
@@ -218,6 +214,34 @@ export default {
     }),
   methods: {
 
+    loadDataFromInput: function(value){
+
+      this.inputValue = value
+      this.literalChange(null,0)
+    },
+
+    closeEditor: function(){
+      this.$emit('closeEditor', true)
+    },
+
+    updateFromEditor: function(){
+      this.$emit('updateFromEditor', this.inputValue)
+    },
+
+
+
+    insertDiacritic: function(diacritic){
+
+
+      let insertAt = this.$refs.textarea.selectionStart
+
+
+      this.inputValue = this.inputValue.substring(0, insertAt) + diacritic + this.inputValue.substring(insertAt);
+
+
+
+
+    },
 
     romanize: async function(useLang){
         
@@ -250,9 +274,11 @@ export default {
 
     },
 
-    literalChange: async function(){
+    literalChange: async function(event,timeout){
 
-
+      if (!timeout){
+        timeout=500
+      }
 
 
       window.clearTimeout(this.changeTimeout)
@@ -282,9 +308,9 @@ export default {
 
         this.activeLanguages = JSON.parse(JSON.stringify(r))
 
-        console.log(this.activeLanguages)
+        
 
-      },500)
+      },timeout)
 
 
 
@@ -306,13 +332,15 @@ export default {
 
   created: async function () {
 
-    console.log(config.returnUrls().utilLang)
+    
     let d = localStorage.getItem('bfeDiacritics')
     if (d){
       this.diacriticData = JSON.parse(d)
-      console.log(this.diacriticData)
+      
     }
 
+
+    
 
     this.supportedRomanizations = await fetch(config.returnUrls().utilLang+'romanize').then(response => response.json())
 
@@ -322,6 +350,8 @@ export default {
 
 
   mounted: function () {
+
+    
     
   }
 };

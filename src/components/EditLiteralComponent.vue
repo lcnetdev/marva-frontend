@@ -2,7 +2,7 @@
   
   <div v-if="nested == false && hideField == false" :class="'component-container' + ' component-container-' + settingsDisplayMode">
     <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: false}]" @success="openDiacriticSelect" />
-    
+    <Keypress key-event="keydown" :multiple-keys="[{keyCode: 86, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="openDiacriticSelect" />
 
 
     <div :class="'component-container-title' + ' component-container-title-' + settingsDisplayMode ">{{structure.propertyLabel}}</div>
@@ -23,6 +23,8 @@
               </form>
             </div>
             <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-guid="inputV.guid" :data-tooltip="'Diacritics [CTRL-ALT-D]'" @click="openDiacriticSelect"></button>
+            <button tabindex="-1" class="temp-icon-expand fake-real-button simptip-position-top" :data-guid="inputV.guid" :data-tooltip="'Editor [CTRL-ALT-SHIFT-V]'" @click="openEditor"></button>
+
           </div>   
         </div>
 
@@ -60,6 +62,7 @@
 
   <div v-else-if="hideField == false">
         <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="openDiacriticSelect" />
+        <Keypress key-event="keydown" :multiple-keys="[{keyCode: 86, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="openEditor" />
 
 
         <div v-for="(inputV,idx) in inputValue" :key="`input_${idx}`" v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border', { 'component-container-fake-input-note' : isNoteField(structure.propertyLabel, inputV.value)  }]" >
@@ -74,7 +77,9 @@
                 <textarea v-if="isNoteField(structure.propertyLabel, inputV.value)" :ref="'input'+ '_' + inputV.guid"  :data-guid="inputV.guid"  bfeType="EditLiteralComponent-nested" :id="assignedId + '_' + idx"  :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-nested', 'input-textarea-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]"></textarea>
               </form>
             </div>
+            
             <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-guid="inputV.guid" :data-tooltip="'Diacritics [CTRL-ALT-SHIFT-D]'" @click="openDiacriticSelect"></button>
+            <button tabindex="-1" class="temp-icon-expand fake-real-button simptip-position-top" :data-guid="inputV.guid" :data-tooltip="'Editor [CTRL-ALT-SHIFT-V]'" @click="openEditor"></button>
           </div>
         </div>
 
@@ -104,6 +109,26 @@
         </div>
 
 
+
+    <div :id="assignedId"  v-bind:class="['modaloverlay',{'modal-display':showEditor}]">
+      <div v-bind:class="['modal']">
+
+        <div>
+
+
+          <div class="modal-content">
+
+              <EditLiteralEditor ref="literalEditor" :initalValue="showEditorValue" @closeEditor="closeEditor" @updateFromEditor="updateFromEditor"/>
+
+          </div> <!--- end modal-content --->
+          
+
+        </div>
+      </div>
+    </div>
+
+
+
   </div>
 
 
@@ -120,6 +145,9 @@ import uiUtils from "@/lib/uiUtils"
 import config from "@/lib/config"
 import diacrticsVoyagerMacroExpress from "@/lib/diacritics/diacritic_pack_voyager_macro_express.json"
 import diacrticsVoyagerNative from "@/lib/diacritics/diacritic_pack_voyager_native.json"
+import EditLiteralEditor from "@/components/EditLiteralEditor.vue";
+
+
 const short = require('short-uuid');
 
 
@@ -128,6 +156,7 @@ const short = require('short-uuid');
 export default {
   name: "EditLiteralComponent",
   components: {
+    EditLiteralEditor,
     Keypress: () => import('vue-keypress')    
   },
 
@@ -146,6 +175,47 @@ export default {
   },
 
   methods: {
+
+
+    closeEditor: function(){
+
+
+      this.showEditor = false
+      this.$store.dispatch("enableMacroNav")
+
+    },
+
+    updateFromEditor: function(value){
+
+
+
+      if (!this.$refs[`input_${this.showDiacriticsGuid}`]){
+        return false
+      }
+      if (this.$refs[`input_${this.showDiacriticsGuid}`][0].getAttribute('id') != this.activeInput){
+        return false
+      }
+
+
+
+      this.showEditor = false
+
+      this.$store.dispatch("enableMacroNav")
+
+      // also kick off the save function
+      for (let inputV of this.inputValue){
+        
+        if (inputV.guid == this.showDiacriticsGuid){
+          inputV.value = value
+          this.change({}, inputV)
+        }
+      }
+
+
+
+    },
+
+
 
 
 
@@ -227,9 +297,56 @@ export default {
       return false
     },
 
+
+    openEditor: function(event){
+      
+      if (!event.target && event.event){        
+        event = event.event
+      }      
+      this.showDiacriticsGuid=event.target.dataset.guid
+      // console.log(this.showDiacriticsGuid,event.target,this.$refs[`input_${this.showDiacriticsGuid}`])
+      // console.log(this.$refs)
+      // we are using global dicratics so stop if this is one of the other components and not this one
+      if (!this.$refs[`input_${this.showDiacriticsGuid}`]){
+        return false
+      }
+      if (this.$refs[`input_${this.showDiacriticsGuid}`][0].getAttribute('id') != this.activeInput){
+        return false
+      }
+
+      // showDiacriticsGuid
+
+      this.$store.dispatch("disableMacroNav")
+      
+      this.showEditorValue=this.$refs[`input_${this.showDiacriticsGuid}`][0].value
+      console.log('this.showEditorValue',this.showEditorValue)
+      this.showEditor=true
+
+
+
+      this.$nextTick(()=>{
+        document.getElementById('literal-editor-textarea').focus()
+        this.$refs.literalEditor.loadDataFromInput(this.$refs[`input_${this.showDiacriticsGuid}`][0].value)
+      })
+
+
+      // // if they acticated it via button then put the focus back on the input text box to recive key commands
+      // if (event && event.target && event.target.localName && event.target.localName == 'button'){
+      //   if (event.target.parentNode.querySelector('input')){
+      //     event.target.parentNode.querySelector('input').focus()
+      //   }else if (event.target.parentNode.querySelector('textarea')){
+      //     event.target.parentNode.querySelector('textarea').focus()
+      //   }
+      // }
+
+
+
+    },
+
+
    
     openDiacriticSelect: function(event){
-      console.log('yeet',this.assignedId,this.activeInput)
+      
       
       if (!event.target && event.event){        
         event = event.event
@@ -316,7 +433,7 @@ export default {
         this.$store.dispatch("enableMacroNav")
 
         // also kick off the save function
-        for (let inputV of this.activeInput){
+        for (let inputV of this.inputValue){
           if (inputV.guid == this.showDiacriticsGuid){
             this.change(event, inputV)
           }
@@ -773,12 +890,12 @@ export default {
 
       // don't update if nothing changed or havent entered anythign yet...
       if (inputV.value == null){
-        console.log("No value existing")
+        
         return false
       }
 
       if (JSON.stringify(this.inputValue) == this.inputValueLast){
-        console.log("same value a s last time existing")
+        
         return false
       }
 
@@ -1030,6 +1147,8 @@ export default {
       inputValueLast: null,
       inputValueCombiningDiacritic: null,
       showDiacritics: false,
+      showEditor:false,
+      showEditorValue:'',
       showDiacriticsGuid: null,
       diacriticData: [],
       diacriticDataNav: 0,
@@ -1226,11 +1345,29 @@ textarea{
 .temp-icon-keyboard{
   display: none;
   position: absolute;
-  right: 0;
+  right: 45px;
 }
+
+.temp-icon-expand{
+  display: none;
+  position: absolute;
+  right: 0;
+
+}
+
+.temp-icon-expand:hover{
+
+}
+
+
 .component-container-fake-input:focus-within .temp-icon-keyboard {
   /*border: solid 1px #718ec3 !important;*/
   /*padding: 2px !important;*/
+  display: block;
+}
+.component-container-fake-input:focus-within .temp-icon-expand {
+  /*border: solid 1px #718ec3 !important;*/
+  /*padding: 2px !important;*/  
   display: block;
 }
 
