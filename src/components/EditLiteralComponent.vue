@@ -54,6 +54,30 @@
       </div>
     </div>
 
+
+
+    <div :id="assignedId"  v-bind:class="['modaloverlay',{'modal-display':showEditor}]">
+      <div v-bind:class="['modal']">
+
+        <div>
+
+
+          <div class="modal-content">
+
+              <EditLiteralEditor ref="literalEditor" :initalValue="showEditorValue" @closeEditor="closeEditor" @updateFromEditor="updateFromEditor"/>
+
+          </div> <!--- end modal-content --->
+          
+
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
   </div>
 
 
