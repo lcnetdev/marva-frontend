@@ -14,6 +14,7 @@ const config = {
 
 			ldpjs : 'http://localhost:9401/api-staging/',			
 			util  : 'http://localhost:9401/util/',
+			utilLang: 'http://localhost:9401/util-lang/',
 			publish : 'http://localhost:9401/util/publish/staging',
 			bfdb : 'https://preprod-8210.id.loc.gov/',
 			profiles : '/bfe2/editor/profiles.json',
@@ -26,7 +27,8 @@ const config = {
 		staging:{
 
 			ldpjs : 'https://preprod-3001.id.loc.gov/bfe2/api-staging/',
-			util  :  'https://preprod-3001.id.loc.gov/bfe2/util/',
+			util  :  'https://preprod-3001.id.loc.gov/bfe2/util/',			
+			utilLang  :  'https://editor.id.loc.gov/bfe2/util-lang/',
 			publish: 'https://preprod-3001.id.loc.gov/bfe2/util/publish/staging',
 			bfdb : 'https://preprod-8210.id.loc.gov/',
 			profiles : 'https://preprod-3001.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
@@ -38,6 +40,7 @@ const config = {
 
 			ldpjs : 'https://editor.id.loc.gov/bfe2/api-production/',
 			util  :  'https://editor.id.loc.gov/bfe2/util/',
+			utilLang  :  'https://editor.id.loc.gov/bfe2/util-lang/',
 			publish: 'https://editor.id.loc.gov/bfe2/util/publish/production',
 			bfdb : 'https://preprod-8230.id.loc.gov/',
 			profiles : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:profile',

@@ -10,6 +10,8 @@ import TestParseId from "../views/TestParseId.vue";
 import TestParseBfdb from "../views/TestParseBfdb.vue";
 import TestSubject from "../views/TestSubject.vue";
 import TestEditMini from "../views/TestEditMini.vue";
+import TestLiteralEditor from "../views/TestLiteralEditor.vue";
+
 
 
 
@@ -48,6 +50,12 @@ const routes = [
     name: "TestEditMini",
     component: TestEditMini
   },
+  {
+    path: "/TestLiteralEditor",
+    name: "TestLiteralEditor",
+    component: TestLiteralEditor
+  },
+
 
 
 
