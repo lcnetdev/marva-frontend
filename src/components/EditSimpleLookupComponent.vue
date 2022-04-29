@@ -938,10 +938,8 @@ export default {
       if (this.activeKeyword){
         metadata = this.lookupLibrary[this.uri+'KEYWORD'].metadata.values          
       }
-
       // find the active selected in the data
       Object.keys(metadata).forEach((key)=>{
-
         let idx = metadata[key].displayLabel.indexOf(this.activeSelect)
         if (idx >-1){
           // this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':metadata[key].label[idx],URI:metadata[key].uri})

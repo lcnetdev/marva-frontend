@@ -116,9 +116,9 @@ const lookupUtil = {
                             let metadata = {uri:d['@id'], label: [], code: [], displayLabel: [] }
                             label.forEach((l)=>{
                                 labelWithCode.push(`${l} (${d['@id'].split('/').pop()})`)
-                                metadata.displayLabel.push(`${l} (${d['@id'].split('/').pop()})`)
+                                metadata.displayLabel.push(`${l.trim()} (${d['@id'].split('/').pop()})`)
 
-                                metadata.label.push(l)
+                                metadata.label.push(l.trim())
                                 metadata.code.push(d['@id'].split('/').pop())
                                 
                             })                          

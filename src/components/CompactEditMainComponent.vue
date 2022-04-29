@@ -23,6 +23,7 @@
            <!-- <EditAdminComponent v-else-if="returnLookupType(structure) == 'admin'" :ptGuid="ptGuid" :parentURI="parentURI" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditAdminComponent> -->
            
            <CompactEditLiteralComponent v-if="structure.type == 'literal' || structure.type == 'literal-lang'" :key="useKey" :isMini="isMini" :ptGuid="ptGuid" :parentURI="parentURI" :resourceIdx="resourceIdx" :rowIdx="rowIdx" :componentIdx="componentIdx"  :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" :setNavAfterClick="setNavAfterClick" ></CompactEditLiteralComponent>
+
            <CompactEditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" :ptGuid="ptGuid" :key="useKey" :isMini="isMini" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :componentIdx="componentIdx" :resourceIdx="resourceIdx" :rowIdx="rowIdx" :parentStructure="parentStructure" :nested="nested"  :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate" :setNavAfterClick="setNavAfterClick"></CompactEditSimpleLookupComponent>
            <CompactEditComplexLookupComponent v-on="$listeners" v-else-if="returnLookupType(structure) == 'complex'" :key="useKey" :isMini="isMini" @updated="forceUpdate" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure" :componentIdx="componentIdx" :resourceIdx="resourceIdx" :rowIdx="rowIdx"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  :setNavAfterClick="setNavAfterClick" ></CompactEditComplexLookupComponent>          
            <CompactEditTemplateRefComponent v-on="$listeners" v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" :isMini="isMini" :key="useKey" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure" :componentIdx="componentIdx"  :resourceIdx="resourceIdx" :rowIdx="rowIdx" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate" :navLevel="0" :setNavAfterClick="setNavAfterClick" ></CompactEditTemplateRefComponent>
@@ -201,7 +202,7 @@ export default {
       }
       if (cStructure.propertyURI == "http://id.loc.gov/ontologies/bibframe/instanceOf"){
 
-        return "meta"
+        return "hide"
       }
 
       // we handle this structural thing elsewhere
