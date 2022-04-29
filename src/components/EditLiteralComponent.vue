@@ -1397,7 +1397,7 @@ textarea{
 
 
 .component-container-fake-input-note{
-  max-height: 50em;
+  max-height: 500em;
 
 }
 
