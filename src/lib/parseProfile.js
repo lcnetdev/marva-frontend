@@ -1107,12 +1107,17 @@ const parseProfile = {
 
     // eslint-disable-next-line
     removeValueSimple: function(currentState, idGuid, labelGuid){
+
+
+        // console.log('idGuid',idGuid)
+        // console.log('labelGuid',labelGuid)
         // find the pt for the value we are editing
         for (let rt in currentState.rt){
             for (let pt in currentState.rt[rt].pt){
 
 
                 let removed = false
+
 
                 // the root node is the lookup val, reset the uservale to remove
                 if (idGuid != null && currentState.rt[rt].pt[pt].userValue['@guid'] == idGuid){
@@ -1222,13 +1227,13 @@ const parseProfile = {
 
         let results = {newData:{}}
 
-        console.log("-------------Adding DATA---------------")
-        console.log('currentState',currentState)
-        console.log('ptGuid',ptGuid)
-        console.log('parentURI',parentURI)
-        console.log('URI',URI)
-        console.log('valueURI',valueURI)
-        console.log('valueLabel',valueLabel)
+        // console.log("-------------Adding DATA---------------")
+        // console.log('currentState',currentState)
+        // console.log('ptGuid',ptGuid)
+        // console.log('parentURI',parentURI)
+        // console.log('URI',URI)
+        // console.log('valueURI',valueURI)
+        // console.log('valueLabel',valueLabel)
 
 
         // find the pt for the value we are editing
@@ -1243,9 +1248,10 @@ const parseProfile = {
 
                     // top level
                     if (currentState.rt[rt].pt[pt].propertyURI == URI){
-                        console.log("--- top level")
+                        // console.log("--- top level")
                         //s
 
+                        let topLvlTmpGuid = short.generate()
                         let tmpGuid = short.generate()
                         
 
@@ -1264,6 +1270,7 @@ const parseProfile = {
                             }
                                                     
 
+                            userValue['@guid'] = topLvlTmpGuid
                             userValue['http://www.w3.org/2000/01/rdf-schema#label'].push(
 
                                 {
@@ -1283,7 +1290,7 @@ const parseProfile = {
 
 
                         
-                        results.newData = {'guid': tmpGuid, valueLabel: valueLabel, valueURI:valueURI }
+                        results.newData = {'guid': topLvlTmpGuid, valueLabel: valueLabel, valueURI:valueURI }
 
 
 
@@ -1294,7 +1301,7 @@ const parseProfile = {
                             userValue[URI] = []
                         }
 
-                        console.log("--- not top level")
+                        // console.log("--- not top level")
 
                         let newData = {'@guid': short.generate()}
                         console.log(URI)

@@ -18,7 +18,7 @@
             <div style=" display: flex; height: 100%">
             <!-- <input autocomplete="off" v-bind:value="activeSelect"  type="text" disabled style="width: 95%; border:none; height: 90%; font-size: 1.5em; padding: 0.1em; position: relative; background: none; color: lightgray"> -->
               
-              <div v-for="(avl,idx) in activeLookupValue" :key="idx" class="selected-value-container">
+              <div v-for="(avl,idx) in activeLookupValue" ref="added-value" :key="idx" class="selected-value-container">
                   
                   <span v-if="!avl['http://www.w3.org/2000/01/rdf-schema#label'].startsWith('http')" style="padding-right: 0.3em; font-weight: bold">{{avl['http://www.w3.org/2000/01/rdf-schema#label']}}<span class="uncontrolled" v-if="!avl.uri">(uncontrolled)</span></span>
                   <span v-else style="padding-right: 0.3em; font-weight: bold"><EditLabelDereference :URI="avl['http://www.w3.org/2000/01/rdf-schema#label']"/></span>
@@ -60,7 +60,7 @@
 
 
             <div style="display: flex">
-              <div v-for="(avl,idx) in activeLookupValue" :key="idx" class="selected-value-container-nested">
+              <div v-for="(avl,idx) in activeLookupValue" ref="added-value" :key="idx" class="selected-value-container-nested">
                   
 
 
@@ -524,6 +524,7 @@ export default {
 
 
 
+
       this.$store.dispatch("removeValueSimple", { self: this, idGuid: toRemove.uriGuid, labelGuid: toRemove.labelGuid }).then(() => {
        
       })  
@@ -707,6 +708,15 @@ export default {
         //   return false
         // }
 
+        if (this.activeLookupValue.length>0){
+          this.$refs['added-value'][0].classList.add('ani-shake');
+          window.setTimeout(()=>{this.$refs['added-value'][0].classList.remove('ani-shake');},500)
+          event.target.value = ""
+          return false
+        }
+
+
+
 
 
         this.activeValue = event.target.value.trimStart()
@@ -759,6 +769,8 @@ export default {
     keyDownEvent: function(event){
       
       console.log("EVENT")
+
+
       this.activeValue = event.target.value
 
       if (event && event.key && this.displayAutocomplete == true && (event.key==='ArrowUp' || event.key==='ArrowDown')){
@@ -917,6 +929,10 @@ export default {
       this.displayAutocomplete=false
 
 
+      if (event && event.target && event.target.innerText){
+        this.activeSelect = event.target.innerText
+      }
+
       let metadata = this.lookupLibrary[this.uri].metadata.values
 
       if (this.activeKeyword){
@@ -925,6 +941,7 @@ export default {
 
       // find the active selected in the data
       Object.keys(metadata).forEach((key)=>{
+
         let idx = metadata[key].displayLabel.indexOf(this.activeSelect)
         if (idx >-1){
           // this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':metadata[key].label[idx],URI:metadata[key].uri})
@@ -1072,6 +1089,8 @@ input{
   background-color: whitesmoke;
   white-space: nowrap;
 
+
+
 }
 .selected-value-container-nested{
   margin: 0.25em;
@@ -1116,4 +1135,38 @@ a {
 form{
   height: 100%;
 }
+
+.ani-shake{
+  animation: shake 1s 1;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70% {
+    transform: translateX(-10px);
+  }
+
+  20%,
+  40%,
+  60% {
+    transform: translateX(10px);
+  }
+
+  80% {
+    transform: translateX(8px);
+  }
+
+  90% {
+    transform: translateX(-8px);
+  }
+}
+
+
 </style>

@@ -4,7 +4,7 @@
           <form autocomplete="off" v-on:submit.prevent>
             <div style=" display: flex; height: 1.5em;">
               
-              <div v-for="(avl,idx) in activeLookupValue" :key="idx" class="selected-value-container">
+              <div v-for="(avl,idx) in activeLookupValue" ref="added-value" :key="idx" class="selected-value-container">
                   <span style="padding-right: 0.3em; line-height: 1.75em;"><EditLabelDereference :URI="avl['http://www.w3.org/2000/01/rdf-schema#label']"/><span class="uncontrolled" v-if="!avl.uri">(uncontrolled)</span></span>
                   <span @click="removeValue(idx)"   style="font-size: 1em; cursor: pointer;"></span>
               </div>
@@ -24,7 +24,7 @@
 
     <div v-else class="trigger-open">        
           <template v-if="activeLookupValue.length>0">
-            <div v-for="(avl,idx) in activeLookupValue" :key="idx" class="trigger-open">
+            <div v-for="(avl,idx) in activeLookupValue" ref="added-value" :key="idx" class="trigger-open">
                 <span style="background-color: transparent; padding: 0 5px 0 5px; font-size: 0.9em;" class="trigger-open"><EditLabelDereference :URI="avl['http://www.w3.org/2000/01/rdf-schema#label']"/><span class="uncontrolled trigger-open" v-if="!avl.uri">(uncontrolled)</span></span>
             </div>         
           </template>
@@ -762,6 +762,15 @@ export default {
         // }
 
 
+        if (this.activeLookupValue.length>0){
+          this.$refs['added-value'][0].classList.add('ani-shake');
+          window.setTimeout(()=>{this.$refs['added-value'][0].classList.remove('ani-shake');},500)
+          event.target.value = ""
+          return false
+        }
+
+
+
         this.activeValue = event.target.value.trimStart()
         this.doubleDelete = false
         this.activeValue = event.target.value.trimStart()
@@ -973,6 +982,10 @@ export default {
 
       this.displayAutocomplete=false
 
+      
+      if (event && event.target && event.target.innerText){
+        this.activeSelect = event.target.innerText
+      }
 
       let metadata = this.lookupLibrary[this.uri].metadata.values
 
@@ -1173,4 +1186,40 @@ a {
 form{
   height: 100%;
 }
+
+
+.ani-shake{
+  animation: shake 1s 1;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70% {
+    transform: translateX(-10px);
+  }
+
+  20%,
+  40%,
+  60% {
+    transform: translateX(10px);
+  }
+
+  80% {
+    transform: translateX(8px);
+  }
+
+  90% {
+    transform: translateX(-8px);
+  }
+}
+
+
+
 </style>
