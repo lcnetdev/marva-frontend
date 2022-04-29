@@ -225,7 +225,7 @@ export default {
     },
 
     updateFromEditor: function(){
-      this.$emit('updateFromEditor', this.inputValue)
+      this.$emit('updateFromEditor', this.inputValue.replaceAll('\n',' '))
     },
 
 
