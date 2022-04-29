@@ -5,7 +5,7 @@
             <div style=" display: flex; height: 1.5em;">
               
               <div v-for="(avl,idx) in activeLookupValue" ref="added-value" :key="idx" class="selected-value-container">
-                  <span style="padding-right: 0.3em; line-height: 1.75em;"><EditLabelDereference :URI="avl['http://www.w3.org/2000/01/rdf-schema#label']"/><span class="uncontrolled" v-if="!avl.uri">(uncontrolled)</span></span>
+                  <span style="padding-right: 0.3em; line-height: 1.75em;"><EditLabelDereference :URI="avl['http://www.w3.org/2000/01/rdf-schema#label']"/><span class="uncontrolled" v-if="!avl.uri">(uncontrolled)</span><span v-if="avl.uri" title="Controlled Term" class="selected-value-icon" style="margin-left: 5px; border-left: 1px solid black; padding: 0px 5px; font-size: 1em;"></span></span>
                   <span @click="removeValue(idx)"   style="font-size: 1em; cursor: pointer;"></span>
               </div>
               <input bfeType="EditSimpleLookupComponent-unnested" ref="lookupInput"  :id="assignedId" autocomplete="off" v-on:blur="blur" v-bind:value="activeValue"  type="text" @focus="autoFocus($event)" @keydown="keyDownEvent($event)" @keyup="keyUpEvent($event)" :class="['input-single',{'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]">
@@ -1220,6 +1220,9 @@ form{
   }
 }
 
-
+.selected-value-icon{
+  font-family: "validation-icons", "fontello", Avenir, Helvetica, Arial, sans-serif;
+  padding-right: 0.3em;
+}
 
 </style>
