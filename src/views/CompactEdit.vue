@@ -63,7 +63,6 @@
                         </div>
                        
                         <div class="resources-grid-field-list ">
-
                             <template v-for="(profileCompoent,idx) in activeProfile.rt[profileName].ptOrder">
                                 
                                 <template v-if="displayComponentCheck(activeProfile.rt[profileName].pt[profileCompoent]) === true">
@@ -1187,6 +1186,12 @@ export default {
 
         return false;
       }
+
+      if (structure.propertyURI == "http://id.loc.gov/ontologies/bibframe/instanceOf"){
+
+        return false;
+      }
+
 
       return true;
     },
