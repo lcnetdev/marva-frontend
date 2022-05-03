@@ -1868,7 +1868,7 @@ const parseProfile = {
             let relatedEdgecaseParentProperty = -1
 
             if (parentStructure){
-               relatedEdgecaseParentProperty = ['http://id.loc.gov/ontologies/bibframe/relatedTo','http://id.loc.gov/ontologies/bflc/relation'].indexOf(parentStructure.propertyURI)
+               relatedEdgecaseParentProperty = ['http://id.loc.gov/ontologies/bibframe/relatedTo','http://id.loc.gov/ontologies/bflc/relation','http://id.loc.gov/ontologies/bibframe/expressionOf'].indexOf(parentStructure.propertyURI)
             }
 
 
