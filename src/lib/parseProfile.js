@@ -227,6 +227,30 @@ const parseProfile = {
                             }]
 
                 }   
+                if (rt.id == 'lc:RT:bf2:Brief:Instance'){                    
+                    rt.propertyTemplates = [
+                            {
+                                "mandatory": "false",
+                                "propertyLabel": "Lookup",
+                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/Instance",
+                                "repeatable": "true",
+                                "resourceTemplates": [],
+                                "type": "lookup",
+                                "valueConstraint": {
+                                    "defaults": [],
+                                    "useValuesFrom": [
+                                        "https://preprod-8230.id.loc.gov/resources/instances"
+                                    ],
+                                    "valueDataType": {
+                                        "dataTypeURI": ""
+                                    },
+                                    "valueTemplateRefs": []
+                                }
+                            }]
+
+                }   
+
+
 
 
 
