@@ -4,7 +4,7 @@ const config = {
 
 	versionMajor: 0,
 	versionMinor: 9,
-	versionPatch: 11,
+	versionPatch: 12,
 
 
 
@@ -290,7 +290,7 @@ const config = {
 			"All":{"url":"https://preprod-8080.id.loc.gov/resources/instances/suggest2/?q=<QUERY>&count=25", "all":true}, 					
 			}
 		]},
-		
+
 		"https://preprod-8230.id.loc.gov/resources/instances" : {"name":"Instances", "processor" : 'lcAuthorities', "type":"complex", "modes":[
 			{
 			"All":{"url":"https://preprod-8230.id.loc.gov/resources/instances/suggest2/?q=<QUERY>&count=25", "all":true}, 					
