@@ -213,9 +213,16 @@ const lookupUtil = {
 
 
 
+    
+    
 
 
 
+    supportedRomanizations: async function(){
+
+      return fetch(config.returnUrls().utilLang+'romanize').then(response => response.json())
+
+    },
 
 
     searchComplex: async function(searchPayload){

@@ -213,6 +213,13 @@ export default {
     } 
 
 
+    this.$store.dispatch("setSupportedRomanizations", { self: this}).then(() => {
+    
+
+    })  
+
+
+
 
 
 

@@ -109,6 +109,7 @@ export default new Vuex.Store({
 
     contextData: {},
 
+    supportedRomanizations: [],
 
 
     idWorkSearchResults: [],
@@ -357,6 +358,12 @@ export default new Vuex.Store({
     DIAGRAMMINIMAP(state, val) {
       state.diagramMiniMap = val
     }, 
+
+
+    SUPORTEDROMANIZATIONS(state, val) {
+      state.supportedRomanizations = val
+    }, 
+ 
 
  
 
@@ -824,7 +831,20 @@ export default new Vuex.Store({
     },
 
 
+
+    async setSupportedRomanizations ({ commit }) {   
+    
+
+
+      let supportedRomanizations = await lookupUtil.supportedRomanizations() 
+      console.log('supportedRomanizations',supportedRomanizations)
+      commit('SUPORTEDROMANIZATIONS', supportedRomanizations)    
+     
+    },
+
  
+
+
 
 
 

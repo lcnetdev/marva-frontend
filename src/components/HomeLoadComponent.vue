@@ -489,9 +489,11 @@ export default {
 
         // '/bfe2/editor/tests/instances/22395548.editor-pkg.xml', // multiple non-latin literal values in main title and provision activity
 
-        // '/bfe2/editor/tests/instances/21340456.editor-pkg.xml', // multiple non-latin literal values in main title and provision activity
+        // '/bfe2/editor/tests/instances/21340456.editor-pkg.xml', 
+        
+        // '/bfe2/editor/tests/instances/21295922.editor-pkg.xml', 
 
-        '/bfe2/editor/tests/instances/21295922.editor-pkg.xml', // multiple non-latin literal values in main title and provision activity
+        '/bfe2/editor/tests/instances/22519577.editor-pkg.xml', 
 
 
 
