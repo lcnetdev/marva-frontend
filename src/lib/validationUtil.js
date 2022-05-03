@@ -47,6 +47,8 @@ const validationUtil = {
                 // to validate it.
                 var response = await this._doLabelLookup(aLabel, scheme);
                 var lookupStatus = response.status;
+                console.log('response',response)
+                console.log('lookupStatus',lookupStatus)
                 if (lookupStatus == 200) {
                     var newuri = response.x_uri;
                     userData["@id"] = newuri;
@@ -115,7 +117,7 @@ const validationUtil = {
         if (window.location.href.includes('//localhost')){
             url = url.replace('//preprod.id.loc.gov/','//id.loc.gov/');
         }
-        
+        console.log('url',url)
         //try {
             const response = await fetch(url, fetchInit);
             if (response.status == 200) {

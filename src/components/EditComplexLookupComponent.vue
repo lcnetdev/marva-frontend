@@ -791,7 +791,6 @@ export default {
             }
 
             
-
             if (userData !== false) {
                 validationUtil.validateHeading(userData)
                 .then((validationStatus) => {
@@ -822,7 +821,19 @@ export default {
                     if (this.displayContext.title != label) {
                         this.displayContext.title = label;
                     }
-                    
+
+                    // if it is a name then when we validate also make sure that the 
+                    // uservalue is populated with the right stuff
+                    // sometimes a record will come in without a URI but it has a valid label
+                    if (userData["@id"].includes('id.loc.gov/authorities/names/')){
+                      this.$store.dispatch("fetchContext", { self: this, searchPayload: userData["@id"] }).then(() => {                      
+                        this.$store.dispatch("setValueComplex", { self: this, profileComponet: this.profileCompoent, template:this.activeTemplate, structure: this.structure, parentStructure: this.parentStructureObj }).then(() => {
+                          this.componentKey++
+                        })  
+                      })    
+                    }
+
+
 
 
                     
