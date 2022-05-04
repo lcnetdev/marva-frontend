@@ -1896,7 +1896,10 @@ const parseProfile = {
             }
 
 
-
+            if (!activeProfileName){
+                console.warn('setValueComplex no activeProfileName')
+                return currentState
+            }
 
             // console.log('currentState, component, key, activeProfileName, template, value, structure,parentStructure')
             console.log(currentState, component, key, activeProfileName, template, value, structure,parentStructure)
@@ -2593,19 +2596,25 @@ const parseProfile = {
 
     },
 
-    returnUserValues: function(currentState, component, propertyURI){
+    returnUserValues: function(currentState, activeRt, component, propertyURI){
         let results = false
 
         // eslint-disable-next-line
         let temp = propertyURI 
 
-        Object.keys(currentState.rt).forEach((rt)=>{
+        // Object.keys(currentState.rt[activeRt]).forEach((rt)=>{
             // check if this profile has the pt we are looking for
-            if (currentState.rt[rt].pt[component]){
-                results = currentState.rt[rt].pt[component].userValue
+            console.log('currentState',currentState)
+            console.log('activeRt=',activeRt)
+            console.log('activeRt=',activeRt)
+
+
+            if (currentState.rt[activeRt].pt[component]){
+                results = currentState.rt[activeRt].pt[component].userValue
  
             }
-        })
+            console.log('results=',results)
+        // })
         
         return results
 

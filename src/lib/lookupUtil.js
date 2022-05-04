@@ -894,6 +894,7 @@ const lookupUtil = {
                   nodeMap['LC Classification'].push(n['http://www.loc.gov/mads/rdf/v1#code'][0]['@value'])
                 }
 
+                nodeMap['LC Classification'] = nodeMap['LC Classification'].filter((v)=>{(v)})
 
 
               }
