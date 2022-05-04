@@ -840,7 +840,6 @@ const lookupUtil = {
             }
 
 
-            
             var nodeMap = {};
             
             data.forEach(function(n){
@@ -878,11 +877,32 @@ const lookupUtil = {
               if (n['http://www.loc.gov/mads/rdf/v1#isMemberOfMADSCollection']){
                 nodeMap['MADS Collection'] = n['http://www.loc.gov/mads/rdf/v1#isMemberOfMADSCollection'].map(function(d){ return d['@id']})
               } 
+
+
+              
+
+              if (n['@type'].includes('http://id.loc.gov/ontologies/lcc#ClassNumber')>-1){
+
+                if (!nodeMap['LC Classification']){
+                  nodeMap['LC Classification'] = []
+                }
+
+
+                if (n['http://www.loc.gov/mads/rdf/v1#code'] && n['http://id.loc.gov/ontologies/bibframe/assigner']){
+                  nodeMap['LC Classification'].push(`${n['http://www.loc.gov/mads/rdf/v1#code'][0]['@value']} (${n['http://id.loc.gov/ontologies/bibframe/assigner'][0]['@id'].split('/').pop()})`)
+                }else if (n['http://www.loc.gov/mads/rdf/v1#code']){
+                  nodeMap['LC Classification'].push(n['http://www.loc.gov/mads/rdf/v1#code'][0]['@value'])
+                }
+
+
+
+              }
+
+
+
               if (n['http://www.loc.gov/mads/rdf/v1#classification']){
-                
-
                 nodeMap['Classification'] = n['http://www.loc.gov/mads/rdf/v1#classification'].map(function(d){ return d['@value']})
-
+                nodeMap['Classification'] = nodeMap['Classification'].filter((v)=>{(v)})
               } 
 
 
@@ -890,7 +910,6 @@ const lookupUtil = {
 
             })
             // pull out the labels
-
             
             data.forEach(function(n){
 
@@ -907,7 +926,12 @@ const lookupUtil = {
                   }else if (k == 'Classification'){
                     if (nodeMap[k].length>0){
                       results.nodeMap[k]=nodeMap[k]
-                    }                  
+                    }    
+                  }else if (k == 'LC Classification'){
+                    if (nodeMap[k].length>0){
+                      results.nodeMap[k]=nodeMap[k]
+                    }   
+
                   }else if (n['@id'] && n['@id'] == uri){
                    
                     if (n['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
