@@ -481,7 +481,7 @@ export default {
         // '/bfe2/editor/tests/instances/c0214680420001.editor-pkg.xml', // russian book
 
 
-        // '/bfe2/editor/tests/instances/21210374.editor-pkg.xml', // xml error - hebrew book
+        '/bfe2/editor/tests/instances/21210374.editor-pkg.xml', // xml error - hebrew book
 
 
         // '/bfe2/editor/tests/instances/20969670.editor-pkg.xml', // non-latin souble title
@@ -493,7 +493,7 @@ export default {
         
         // '/bfe2/editor/tests/instances/21295922.editor-pkg.xml', 
 
-        '/bfe2/editor/tests/instances/22519577.editor-pkg.xml', 
+        // '/bfe2/editor/tests/instances/22519577.editor-pkg.xml', // non uri auth label dvd example
 
 
 

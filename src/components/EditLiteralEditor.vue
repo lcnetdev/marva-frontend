@@ -5,7 +5,7 @@
 
     <div id="literal-editor-layout" style="display: flex;">
       <div style="flex:4">
-        <textarea id="literal-editor-textarea" @input="literalChange" ref="textarea" v-model="inputValue"></textarea>
+        <textarea dir="auto" id="literal-editor-textarea" @input="literalChange" ref="textarea" v-model="inputValue"></textarea>
 
 
 

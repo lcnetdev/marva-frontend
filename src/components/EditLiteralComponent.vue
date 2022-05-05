@@ -17,7 +17,7 @@
                 </div>
 
                 <input  v-if="!isNoteField(structure.propertyLabel, inputV.value)" bfeType="EditLiteralComponent-unnested" :id="assignedId + '_' + idx" :data-guid="inputV.guid" v-on:keydown.enter.prevent="submitField" :name="assignedId" :ref="'input'+ '_' + inputV.guid" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keydown="nav" @keyup="change($event,inputV)" v-model="inputV.value" :class="['input-single', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true), 'input-accommodate-diacritics': (containsNonLatinCodepoints(inputV.value))}]">            
-                <textarea v-if="isNoteField(structure.propertyLabel, inputV.value)" style="height:36px" bfeType="EditLiteralComponent-unnested" :id="assignedId + '_' + idx" :data-guid="inputV.guid" :name="assignedId" v-on:keydown.enter.prevent="submitField" :ref="'input'+ '_' + inputV.guid" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-single', 'input-textarea-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]"></textarea>
+                <textarea div="auto" v-if="isNoteField(structure.propertyLabel, inputV.value)" style="height:36px" bfeType="EditLiteralComponent-unnested" :id="assignedId + '_' + idx" :data-guid="inputV.guid" :name="assignedId" v-on:keydown.enter.prevent="submitField" :ref="'input'+ '_' + inputV.guid" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-single', 'input-textarea-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]"></textarea>
               
 
               </form>
@@ -98,7 +98,7 @@
                   <span>{{structure.propertyLabel}}</span>                  
                 </div>
                 <input v-if="!isNoteField(structure.propertyLabel, inputV.value)"   :ref="'input'+ '_' + inputV.guid"  :data-guid="inputV.guid"  bfeType="EditLiteralComponent-nested" :id="assignedId + '_' + idx"  :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true),'input-accommodate-diacritics': (containsNonLatinCodepoints(inputV.value))}]">
-                <textarea v-if="isNoteField(structure.propertyLabel, inputV.value)" :ref="'input'+ '_' + inputV.guid"  :data-guid="inputV.guid"  bfeType="EditLiteralComponent-nested" :id="assignedId + '_' + idx"  :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-nested', 'input-textarea-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]"></textarea>
+                <textarea dir="auto" v-if="isNoteField(structure.propertyLabel, inputV.value)" :ref="'input'+ '_' + inputV.guid"  :data-guid="inputV.guid"  bfeType="EditLiteralComponent-nested" :id="assignedId + '_' + idx"  :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-nested', 'input-textarea-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]"></textarea>
               </form>
             </div>
             
@@ -1121,6 +1121,26 @@ export default {
 
 
 
+      // check to make sure if it is a rtl lang that there is room for the buttons, so they don't over lap the text
+      
+      for (let inputV of this.inputValue){
+        
+
+        if (this.rtlRegEx.test(inputV.value)){
+
+          this.$nextTick(()=>{
+            console.log(`input_${inputV.guid}`)
+            console.log(this.$refs[`input_${inputV.guid}`])
+
+
+            this.$refs[`input_${inputV.guid}`][0].classList.add('input-textarea-nested-rtl')
+          })
+
+        } 
+
+      }
+
+
     }
 
 
@@ -1177,6 +1197,7 @@ export default {
       diacriticData: [],
       diacriticDataNav: 0,
       hideField: false,
+      rtlRegEx: /[\u0591-\u07FF]/,
       guid: null,
       initalGuid: null,
       diacrticsVoyagerNativeMode:false,
@@ -1236,8 +1257,9 @@ export default {
   background: none;
   transition-property: color;
   transition-duration: 500ms;
-
 }
+
+
 .input-single{
   width: 95%;
   border:none;
@@ -1254,6 +1276,10 @@ export default {
 
 .input-textarea-nested{
   width: 95%;
+}
+
+.input-textarea-nested-rtl{
+  width: 85%;
 }
 
 .input-accommodate-diacritics{
