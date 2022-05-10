@@ -815,8 +815,9 @@ export default {
 
         let titles = []
         for (let t of templates){
-            console.log()    
-            titles.push(this.rtLookup[t].resourceLabel)
+            if (this.rtLookup[t] && this.rtLookup[t].resourceLabel){
+                titles.push(this.rtLookup[t].resourceLabel)
+            }
         }
         
         return titles
