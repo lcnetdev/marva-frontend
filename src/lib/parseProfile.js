@@ -453,6 +453,29 @@ const parseProfile = {
                 }
             ]
         })
+        this.startingPointData.json.splice(3,0,{
+            "menuGroup": "GPO Serial",
+            "menuItems": [
+                {
+                    "label": "Instance",
+                    "type": [
+                        "http://id.loc.gov/ontologies/bibframe/Instance"
+                    ],
+                    "useResourceTemplates": [
+                        "lc:RT:bf2:GPOSerial:Instance"
+                    ]
+                },
+                {
+                    "label": "Work",
+                    "type": [
+                        "http://id.loc.gov/ontologies/bibframe/Work"
+                    ],
+                    "useResourceTemplates": [
+                        "lc:RT:bf2:GPOSerial:Work"
+                    ]
+                }
+            ]
+        })
 
 
 
