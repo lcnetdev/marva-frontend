@@ -430,7 +430,7 @@ const parseProfile = {
         console.log("starting point data",this.startingPointData)
 
         // HACKHACKHACKHACK
-        this.startingPointData.json.push({
+        this.startingPointData.json.splice(2,0{
             "menuGroup": "GPO Monograph",
             "menuItems": [
                 {
