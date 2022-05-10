@@ -426,6 +426,36 @@ const parseProfile = {
         if (Array.isArray(this.startingPointData)){
             this.startingPointData = this.startingPointData[0]
         }
+
+        console.log("starting point data",this.startingPointData)
+
+        // HACKHACKHACKHACK
+        this.startingPointData.json.push({
+            "menuGroup": "GPO Monograph",
+            "menuItems": [
+                {
+                    "label": "Instance",
+                    "type": [
+                        "http://id.loc.gov/ontologies/bibframe/Instance"
+                    ],
+                    "useResourceTemplates": [
+                        "lc:RT:bf2:GPOMono:Instance"
+                    ]
+                },
+                {
+                    "label": "Work",
+                    "type": [
+                        "http://id.loc.gov/ontologies/bibframe/Work"
+                    ],
+                    "useResourceTemplates": [
+                        "lc:RT:bf2:GPOMono:Work"
+                    ]
+                }
+            ]
+        })
+
+
+
         this.startingPointData.json.forEach((sp)=>{
 
             this.startingPoints[sp.menuGroup] = {name:sp.menuGroup, work: null, instance: null, item: null }
