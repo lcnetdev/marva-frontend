@@ -430,53 +430,54 @@ const parseProfile = {
         console.log("starting point data",this.startingPointData)
 
         // HACKHACKHACKHACK
-        this.startingPointData.json.splice(2,0,{
-            "menuGroup": "GPO Monograph",
-            "menuItems": [
-                {
-                    "label": "Instance",
-                    "type": [
-                        "http://id.loc.gov/ontologies/bibframe/Instance"
-                    ],
-                    "useResourceTemplates": [
-                        "lc:RT:bf2:GPOMono:Instance"
-                    ]
-                },
-                {
-                    "label": "Work",
-                    "type": [
-                        "http://id.loc.gov/ontologies/bibframe/Work"
-                    ],
-                    "useResourceTemplates": [
-                        "lc:RT:bf2:GPOMono:Work"
-                    ]
-                }
-            ]
-        })
-        this.startingPointData.json.splice(3,0,{
-            "menuGroup": "GPO Serial",
-            "menuItems": [
-                {
-                    "label": "Instance",
-                    "type": [
-                        "http://id.loc.gov/ontologies/bibframe/Instance"
-                    ],
-                    "useResourceTemplates": [
-                        "lc:RT:bf2:GPOSerial:Instance"
-                    ]
-                },
-                {
-                    "label": "Work",
-                    "type": [
-                        "http://id.loc.gov/ontologies/bibframe/Work"
-                    ],
-                    "useResourceTemplates": [
-                        "lc:RT:bf2:GPOSerial:Work"
-                    ]
-                }
-            ]
-        })
-
+        if (config.returnUrls().env != 'production'){
+            this.startingPointData.json.splice(2,0,{
+                "menuGroup": "GPO Monograph",
+                "menuItems": [
+                    {
+                        "label": "Instance",
+                        "type": [
+                            "http://id.loc.gov/ontologies/bibframe/Instance"
+                        ],
+                        "useResourceTemplates": [
+                            "lc:RT:bf2:GPOMono:Instance"
+                        ]
+                    },
+                    {
+                        "label": "Work",
+                        "type": [
+                            "http://id.loc.gov/ontologies/bibframe/Work"
+                        ],
+                        "useResourceTemplates": [
+                            "lc:RT:bf2:GPOMono:Work"
+                        ]
+                    }
+                ]
+            })
+            this.startingPointData.json.splice(3,0,{
+                "menuGroup": "GPO Serial",
+                "menuItems": [
+                    {
+                        "label": "Instance",
+                        "type": [
+                            "http://id.loc.gov/ontologies/bibframe/Instance"
+                        ],
+                        "useResourceTemplates": [
+                            "lc:RT:bf2:GPOSerial:Instance"
+                        ]
+                    },
+                    {
+                        "label": "Work",
+                        "type": [
+                            "http://id.loc.gov/ontologies/bibframe/Work"
+                        ],
+                        "useResourceTemplates": [
+                            "lc:RT:bf2:GPOSerial:Work"
+                        ]
+                    }
+                ]
+            })
+        }
 
 
         this.startingPointData.json.forEach((sp)=>{

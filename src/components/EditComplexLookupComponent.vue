@@ -3,7 +3,7 @@
 
 
   <div >
-
+    
     <Keypress key-event="keydown" :key-code="27" @success="closeModal" />
     <Keypress key-event="keydown" :multiple-keys="[{keyCode: 66, modifiers: ['ctrlKey', 'shiftKey'],preventDefault: true}]" @success="togglePreCoordinated" />
 
@@ -752,6 +752,13 @@ export default {
         use = true
       }
 
+
+      if (this.parentStructureObj && this.parentStructureObj.propertyURI=='http://www.loc.gov/mads/rdf/v1#componentList'){
+        use = true
+      }
+
+
+
       if (this.settingsLookupsUseTextSubjectEditor===false){
         use = false
       }
@@ -798,7 +805,7 @@ export default {
                   let orignalUserData = parseProfile.returnUserValues(this.activeProfile, this.profileName, this.profileCompoent, this.structure.propertyURI)
 
 
-                  console.log("USERDATA 3",JSON.parse(JSON.stringify(userData)))
+                  // console.log("USERDATA 3",JSON.parse(JSON.stringify(userData)))
                   this.validated = validationStatus;
                   this.validationMessage = validationUtil.getValidationMessage(validationStatus);
                   
@@ -833,8 +840,8 @@ export default {
                       this.displayContext.title = label;
                   }
 
-                  console.log('userData is ',userData, 'for ', label)
-                  console.log('orignalUserData is ',orignalUserData, 'for ', label)
+                  // console.log('userData is ',userData, 'for ', label)
+                  // console.log('orignalUserData is ',orignalUserData, 'for ', label)
 
 
                   // if it is a name then when we validate also make sure that the 
@@ -843,8 +850,8 @@ export default {
                   if (!orignalUserData['@id']){
                     if (userData["@id"].includes('id.loc.gov/authorities/names/')){
                       this.$store.dispatch("fetchContext", { self: this, searchPayload: userData["@id"] }).then(() => {                      
-                        console.log("SETTING THE VALUE ON",this.profileName)
-                        console.log("USER VALUE WAS:",userData)
+                        // console.log("SETTING THE VALUE ON",this.profileName)
+                        // console.log("USER VALUE WAS:",userData)
                         this.$store.dispatch("setValueComplex", { self: this, profileComponet: this.profileCompoent, template:this.profileName, structure: this.structure, parentStructure: this.parentStructureObj }).then(() => {
                           this.componentKey++
                         })  
@@ -852,9 +859,6 @@ export default {
                     }
                   }
 
-                  console.log('lssddsofl')
-                  console.log('loslss')
-                  console.log('lol')
 
 
                     
@@ -1055,11 +1059,8 @@ export default {
         rootPropertyURI = parseProfile.returnRootPropertyURI(this.activeProfile, this.profileCompoent,this.structure.propertyURI)        
       }
     
-      console.log('checkForUserData',this.activeProfile,this.profileName,this.profileCompoent,this.structure.propertyURI)
-      console.log(userValue)
-      console.log(userValue)
-      console.log(userValue)
-
+      
+      
       if (userValue['http://www.w3.org/2000/01/rdf-schema#label'] || userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'] || userValue['http://id.loc.gov/ontologies/bibframe/code']){
 
         if (userValue['http://www.w3.org/2000/01/rdf-schema#label']){
