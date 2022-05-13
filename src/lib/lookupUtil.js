@@ -561,6 +561,11 @@ const lookupUtil = {
             
           }
 
+          if (jsonuri.includes('gpo_') && jsonuri.includes('preprod') ){
+            jsonuri = jsonuri.replace('8080','8295')
+            jsonuri = jsonuri.replace('8230','8295')
+          }
+
 
           // if were local host then undo it
           if (config.returnUrls().dev){
