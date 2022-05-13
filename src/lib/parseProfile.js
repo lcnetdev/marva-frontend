@@ -29,6 +29,7 @@ const parseProfile = {
     // fetches the profile data from supplied URL or from the config URL if empty
     fetchProfiles: async function(url) {
       url = url || config.returnUrls().profiles
+      
       try{
         let response = await fetch(url);
         let data =  await response.json()
@@ -66,7 +67,7 @@ const parseProfile = {
         this.profileSource = await this.fetchProfiles()
         this.startingPointData = await this.fetchStartingPoints()
 
-        console.log(this.startingPointData)
+        
         // TEMP HACK ADD IN HUBS
         if (this.startingPointData[0]){
             this.startingPointData[0].json.push(
@@ -108,7 +109,7 @@ const parseProfile = {
 
 
 
-        console.log('this.startingPointData',this.startingPointData)
+        
 
         // TEMP HACK, striping RDA fields for some things for the new editor
         for (let p of this.profileSource){
@@ -227,6 +228,36 @@ const parseProfile = {
                             }]
 
                 }   
+
+                if (rt.id == 'lc:RT:bf2:GPORelWorkBrief'){                    
+                    rt.propertyTemplates = [
+                            {
+                                "mandatory": "false",
+                                "propertyLabel": "Lookup",
+                                "propertyURI": "http://id.loc.gov/ontologies/bibframe/Work",
+                                "repeatable": "true",
+                                "resourceTemplates": [],
+                                "type": "lookup",
+                                "valueConstraint": {
+                                    "defaults": [],
+                                    "useValuesFrom": [
+                                        "https://preprod-8295.id.loc.gov/resources/works"
+                                    ],
+                                    "valueDataType": {
+                                        "dataTypeURI": ""
+                                    },
+                                    "valueTemplateRefs": []
+                                }
+                            }]
+
+                } 
+
+
+
+
+
+
+
                 if (rt.id == 'lc:RT:bf2:Brief:Instance'){                    
                     rt.propertyTemplates = [
                             {
@@ -249,6 +280,10 @@ const parseProfile = {
                             }]
 
                 }   
+
+
+
+
 
 
 
@@ -363,9 +398,10 @@ const parseProfile = {
 
         // -------- end HACKKCKCKCKCK
 
-
+        
         this.profileSource.forEach((p)=>{
 
+            
             // build the first level profiles
             if (p.json && p.json.Profile){
                 // for example monograph -> work
@@ -427,7 +463,7 @@ const parseProfile = {
             this.startingPointData = this.startingPointData[0]
         }
 
-        console.log("starting point data",this.startingPointData)
+        
 
         // HACKHACKHACKHACK
         if (config.returnUrls().env != 'production'){
@@ -2942,7 +2978,7 @@ const parseProfile = {
             "defaults": [],
             "useValuesFrom": [],
             "valueDataType": {},
-          "valueTemplateRefs": ['lc:RT:bf2:AdminMetadata:BFDB']
+          "valueTemplateRefs": this.returnAdminMedataToUse(newRdId)
           }
         }
 
@@ -3206,7 +3242,7 @@ const parseProfile = {
             "defaults": [],
             "useValuesFrom": [],
             "valueDataType": {},
-          "valueTemplateRefs": ['lc:RT:bf2:AdminMetadata:BFDB']
+          "valueTemplateRefs": this.returnAdminMedataToUse(newRdId)
           }
         }
 
@@ -3650,6 +3686,17 @@ const parseProfile = {
 
     },
 
+    returnAdminMedataToUse: function(rtName){
+        if (rtName.includes(":GPO")){
+            return ['lc:RT:bf2:GPOMono:AdminMetadata']            
+        }
+        return ['lc:RT:bf2:AdminMetadata:BFDB']
+    },
+
+
+
+
+
     // does all the work to setup a new profile read to be eaded and posted as new
     loadNewTemplate(useStartingPoint,addAdmin){
 
@@ -3659,7 +3706,7 @@ const parseProfile = {
 
 
       let useProfile = JSON.parse(JSON.stringify(store.state.profiles[useStartingPoint]))
-
+      console.log(JSON.parse(JSON.stringify(store.state.profiles)))
       // some profiles have nested components at the root level used in that component
       // so if it doesn't end with one of the main type of resources we want to edit 
       // then we don't want to render it, since it is probably being used in the main RT somewhere
@@ -3794,12 +3841,11 @@ const parseProfile = {
                 "defaults": [],
                 "useValuesFrom": [],
                 "valueDataType": {},
-                "valueTemplateRefs": ['lc:RT:bf2:AdminMetadata:BFDB']
+                "valueTemplateRefs": [  (!rt.includes(':GPO')) ? 'lc:RT:bf2:AdminMetadata:BFDB' :   'lc:RT:bf2:GPOMono:AdminMetadata'   ]
               }
             }
 
           let adminMetadataPropertyLabel = 'http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'
-
 
           
           useProfile.rt[rt].pt[adminMetadataPropertyLabel] = JSON.parse(JSON.stringify(adminMetadataProperty))
@@ -3818,6 +3864,9 @@ const parseProfile = {
 
 
     }
+
+
+
 
 
 
