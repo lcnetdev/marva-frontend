@@ -564,6 +564,7 @@ const lookupUtil = {
           if (jsonuri.includes('gpo_') && jsonuri.includes('preprod') ){
             jsonuri = jsonuri.replace('8080','8295')
             jsonuri = jsonuri.replace('8230','8295')
+            jsonuri = jsonuri.replace('https://id.','https://preprod-8295.id.')
           }
 
 
