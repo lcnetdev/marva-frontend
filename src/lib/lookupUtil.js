@@ -565,7 +565,6 @@ const lookupUtil = {
             jsonuri = jsonuri.replace('8080','8295')
             jsonuri = jsonuri.replace('8230','8295')
             jsonuri = jsonuri.replace('https://id.','https://preprod-8295.id.')
-            console.log("jsonuri",jsonuri)
           }
 
 
@@ -650,9 +649,18 @@ const lookupUtil = {
                   counter++
 
 
+                  let url = i['@id']
+
+                  if (url.includes('gpo_')  ){
+
+                    url = url.replace('https://id.','https://preprod-8295.id.')
+                  }
+
+
+
                   
 
-                  let response = await fetch(i['@id'].replace('http://','https://')+'.nt');
+                  let response = await fetch(url.replace('http://','https://')+'.nt');
                   let text  = await response.text()
 
                   let instanceText = ""
