@@ -654,9 +654,12 @@ const lookupUtil = {
                   if (url.includes('gpo_')  ){
 
                     url = url.replace('https://id.','https://preprod-8295.id.')
+                    console.log(url)
+                    console.log(i['@id'])
                   }
 
-
+                    console.log(url)
+                    console.log(i['@id'])
 
                   
 
