@@ -800,6 +800,13 @@ export default {
             if (uri == 'http://id.loc.gov/ontologies/bibframe/contribution'){
                 return true
             }
+            if (uri == 'http://id.loc.gov/ontologies/bibframe/language'){
+                return true
+            }
+            if (uri == 'http://id.loc.gov/ontologies/bibframe/note'){
+                return true
+            }
+            
         }
 
         return false
