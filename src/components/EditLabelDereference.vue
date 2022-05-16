@@ -69,7 +69,12 @@ export default {
 
                   }
                 }
-              );
+              ).catch(function() {
+                    
+                    // there was something with the request, ignore
+
+
+              });
 
 
           }
@@ -82,7 +87,7 @@ export default {
 
           // some common hardcoded values
           if (this.URI == 'http://id.loc.gov/authorities/subjects'){
-            this.displayLabel = 'LCSH'
+            this.displayLabel = 'Library of Congress subject headings'
           }
 
 

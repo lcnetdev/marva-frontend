@@ -766,7 +766,6 @@ export default {
     },    
     keyDownEvent: function(event){
       
-      console.log("EVENT")
 
 
       this.activeValue = event.target.value
@@ -832,9 +831,17 @@ export default {
           metadata = this.lookupLibrary[this.uri+'KEYWORD'].metadata.values          
         }
 
+
+
         // find the active selected in the data
         Object.keys(metadata).forEach((key)=>{
           let idx = metadata[key].displayLabel.indexOf(this.activeSelect)
+          // a dumb bug here where depending on the vocab the label has extra spaces in it....
+          if (idx==-1){
+            idx = metadata[key].displayLabel.indexOf(this.activeSelect.replace(/\s+/g,' '))
+          }
+
+
           if (idx >-1){
             // this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':metadata[key].label[idx],URI:metadata[key].uri})
             this.activeFilter = ''
