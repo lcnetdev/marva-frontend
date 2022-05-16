@@ -910,9 +910,6 @@ const lookupUtil = {
                   nodeMap['LC Classification'].push(n['http://www.loc.gov/mads/rdf/v1#code'][0]['@value'])
                 }
 
-                nodeMap['LC Classification'] = nodeMap['LC Classification'].filter((v)=>{(v)})
-
-
               }
 
 
@@ -926,8 +923,8 @@ const lookupUtil = {
 
 
             })
+
             // pull out the labels
-            
             data.forEach(function(n){
 
               // loop through all the possible types of row
@@ -991,6 +988,7 @@ const lookupUtil = {
 
 
             })
+
 
             data.forEach((n)=>{
               
@@ -1077,7 +1075,16 @@ const lookupUtil = {
 
 
           }
+
+          // clean up any empty ones so they don't display
+          Object.keys(results.nodeMap).forEach((k)=>{
+            if (results.nodeMap[k].length==0){
+              delete results.nodeMap[k]
+            }
+          })
           
+
+
 
           
           return results;
