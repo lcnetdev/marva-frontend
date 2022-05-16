@@ -762,7 +762,7 @@ export default {
         // }
 
 
-        if (this.activeLookupValue.length>0){
+        if (!this.nested && this.activeLookupValue.length>0){
           this.$refs['added-value'][0].classList.add('ani-shake');
           window.setTimeout(()=>{this.$refs['added-value'][0].classList.remove('ani-shake');},500)
           event.target.value = ""

@@ -1,7 +1,6 @@
 <template>
   <div v-if="nested == false" :class="'component-container' + ' component-container-' + settingsDisplayMode">
 
-
     <div :class="'component-container-title' + ' component-container-title-' + settingsDisplayMode ">{{structure.propertyLabel}}</div>
     <div :class="'component-container-input-container' + ' component-container-input-container-' + settingsDisplayMode">
 
@@ -45,7 +44,6 @@
 
 
   <div v-else style="position: relative;">
-
 
       <div  v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search']" :style="{'background-color': (structure.dynamic) ? 'auto' : 'auto' }">          
         <form autocomplete="off" v-on:submit.prevent style="">
@@ -708,7 +706,7 @@ export default {
         //   return false
         // }
 
-        if (this.activeLookupValue.length>0){
+        if (!this.nested && this.activeLookupValue.length>0){
           this.$refs['added-value'][0].classList.add('ani-shake');
           window.setTimeout(()=>{this.$refs['added-value'][0].classList.remove('ani-shake');},500)
           event.target.value = ""
