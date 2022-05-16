@@ -481,7 +481,13 @@ export default {
         // '/bfe2/editor/tests/instances/c0214680420001.editor-pkg.xml', // russian book
 
 
-        '/bfe2/editor/tests/instances/21210374.editor-pkg.xml', // xml error - hebrew book
+        // '/bfe2/editor/tests/instances/21210374.editor-pkg.xml', // xml error - hebrew book
+
+
+        '/bfe2/editor/tests/instances/21533302.editor-pkg.xml', // subject editing test
+
+
+
 
 
         // '/bfe2/editor/tests/instances/20969670.editor-pkg.xml', // non-latin souble title

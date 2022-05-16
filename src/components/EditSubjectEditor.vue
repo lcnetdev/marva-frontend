@@ -442,6 +442,7 @@ export default {
       lookup: {},
       searchResults: null,
       activeSearch: false,
+      
       pickPostion: 0,
       pickLookup: {},
       activeComponent: null,
@@ -502,6 +503,7 @@ export default {
 
     // some context messing here, pass the debounce func a ref to the vue "this" as that to ref in the function callback
     searchApis: debounce(async (searchString,searchStringFull,that) => {
+      
       that.searchResults=null
       that.x = 'Seaching...'
       that.pickPostion=0
@@ -510,7 +512,7 @@ export default {
       searchStringFull = searchStringFull.trim()
 
       // make the "searching..." text grow
-      let ti = window.setInterval(()=>{ that.activeSearch = that.activeSearch + '.'},100)
+      let ti = window.setInterval(()=>{ that.activeSearch = ((!that.activeSearch) ? '' : that.activeSearch) + '.'},100)
       
       // a backup here just in case the search times out or takes forever
       let tiBackup = window.setTimeout(()=>{
@@ -530,7 +532,21 @@ export default {
       that.searchResults = await lookupUtil.subjectSearch(searchString,searchStringFull,that.searchMode) 
 
 
+      // if they clicked around while it was doing this lookup bail out
+      // if (that.activeSearchInterrupted){
 
+
+
+      //   window.clearInterval(ti)
+      //   window.clearTimeout(tiBackup)
+      //   that.activeSearch = false
+      //   that.activeSearchInterrupted = false
+          
+      //   console.log("that.activeSearchInterrupted",that.activeSearchInterrupted)
+
+      //   return false
+
+      // }
 
 
 
@@ -623,18 +639,11 @@ export default {
 
         that.pickLookup[k].picked = false
 
-        console.log("Comparing",searchString.toLowerCase(),that.pickLookup[k].label.toLowerCase())
         if (searchString.toLowerCase() == that.pickLookup[k].label.toLowerCase() && !that.pickLookup[k].literal ){
-
-          console.log('found match')
-
           // if the labels are the same for the current one selected don't overide it
-          console.log(that.pickLookup[k].label.replaceAll('‑','-'),that.activeComponent.label.replaceAll('‑','-'))
-          console.log(that.activeComponent)
           if (that.pickLookup[k].label.replaceAll('‑','-') == that.activeComponent.label.replaceAll('‑','-') && that.activeComponent.uri){
-            console.log('here')
             if (that.activeComponent.uri == that.pickLookup[k].uri){
-              
+              console.log('that.activeComponent',that.activeComponent)
               that.pickPostion=k
               that.pickLookup[k].picked=true          
               that.selectContext()
@@ -649,6 +658,14 @@ export default {
               break
 
             }
+
+            // do they even have the same label currently, they might be clicking around in the interface
+            // so at this point with the async lookup this is not even the right componen
+            if (that.pickLookup[k].label !=  that.activeComponent.label){
+              break
+
+            }
+            
 
             that.pickPostion=k
             that.pickLookup[k].picked=true          
@@ -737,6 +754,8 @@ export default {
     navString: function(event){
 
       if (event.key == 'ArrowLeft' || event.key == 'ArrowRight' ){
+
+
 
         // don't let them leave a trailing -- when they are clicking around like wild
         // if (this.subjectString.endsWith('--')){
