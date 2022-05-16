@@ -1,2 +1,578 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:bf="http://id.loc.gov/ontologies/bibframe/" xmlns:bflc="http://id.loc.gov/ontologies/bflc/" xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pmo="http://performedmusicontology.org/ontology/" xmlns:streams="info:lc/streams#"><bf:Instance rdf:about="http://id.loc.gov/resources/instances/21533302"><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Print"/><bf:title><bf:Title><bf:mainTitle>Derviš M. Korkut</bf:mainTitle><bf:subtitle>a biography : rescuer of the Sarajevo Haggadah</bf:subtitle></bf:Title></bf:title><bf:responsibilityStatement>Hikmet Karčić</bf:responsibilityStatement><bf:provisionActivity><bf:Publication><bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">2020</bf:date><bf:place><bf:Place rdf:about="http://id.loc.gov/vocabulary/countries/bn"/></bf:place></bf:Publication></bf:provisionActivity><bf:provisionActivity><bf:Publication><bf:place><bf:Place><rdfs:label>Sarajevo</rdfs:label></bf:Place></bf:place><bf:agent><bf:Agent><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Agent"/><rdfs:label>El-Kalem</rdfs:label></bf:Agent></bf:agent><bf:agent><bf:Agent><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Agent"/><rdfs:label>Institute for Islamic Tradition of Bosniaks</rdfs:label></bf:Agent></bf:agent><bf:date>2020</bf:date></bf:Publication></bf:provisionActivity><bf:issuance><bf:Issuance rdf:about="http://id.loc.gov/vocabulary/issuance/mono"/></bf:issuance><bf:identifiedBy><bf:Lccn><rdf:value>  2021373652</rdf:value></bf:Lccn></bf:identifiedBy><bf:identifiedBy><bf:Local><rdf:value>on1182506219</rdf:value><bf:assigner><bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/ocolc"/></bf:assigner></bf:Local></bf:identifiedBy><bf:identifiedBy><bf:Isbn><rdf:value>9958575175</rdf:value></bf:Isbn></bf:identifiedBy><bf:identifiedBy><bf:Isbn><rdf:value>9789958575174</rdf:value><bf:qualifier>Institute for Islamic Tradition of Bosniaks</bf:qualifier></bf:Isbn></bf:identifiedBy><bf:identifiedBy><bf:Isbn><rdf:value>9958235358</rdf:value></bf:Isbn></bf:identifiedBy><bf:identifiedBy><bf:Isbn><rdf:value>9789958235351</rdf:value><bf:qualifier>el-Kalem</bf:qualifier></bf:Isbn></bf:identifiedBy><bf:note><bf:Note><rdf:type rdf:resource="http://id.loc.gov/vocabulary/mnotetype/physical"/><rdfs:label>illustrations</rdfs:label></bf:Note></bf:note><bf:supplementaryContent><bf:SupplementaryContent><rdfs:label>Includes bibliographical references (pages 81-85).</rdfs:label></bf:SupplementaryContent></bf:supplementaryContent><bf:media><bf:Media rdf:about="http://id.loc.gov/vocabulary/mediaTypes/n"><rdfs:label>unmediated</rdfs:label><bf:source><bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdamedia"/></bf:source></bf:Media></bf:media><bf:extent><bf:Extent><rdfs:label>85 pages</rdfs:label></bf:Extent></bf:extent><bf:dimensions>20 cm</bf:dimensions><bf:carrier><bf:Carrier rdf:about="http://id.loc.gov/vocabulary/carriers/nc"><rdfs:label>volume</rdfs:label><bf:source><bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacarrier"/></bf:source></bf:Carrier></bf:carrier><dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/instances" xmlns:dcterms="http://purl.org/dc/terms/"/><bf:instanceOf rdf:resource="http://id.loc.gov/resources/works/21533302"/><bf:hasItem rdf:resource="http://id.loc.gov/resources/items/21533302-050-18"/><bf:hasItem rdf:resource="http://id.loc.gov/resources/items/21533302-050-18"/><bf:adminMetadata><bf:AdminMetadata><bf:generationProcess><bf:GenerationProcess><rdfs:label>DLC marc2bibframe2 v1.7.0</rdfs:label><bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-04-26T16:37:03.314881-04:00</bf:generationDate></bf:GenerationProcess></bf:generationProcess><bf:status><bf:Status rdf:about="http://id.loc.gov/vocabulary/mstatus/c"><rdfs:label>changed</rdfs:label></bf:Status></bf:status><bf:descriptionConventions><bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd"><bf:code>isbd</bf:code></bf:DescriptionConventions></bf:descriptionConventions><bf:descriptionConventions><bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda"><bf:code>rda</bf:code></bf:DescriptionConventions></bf:descriptionConventions><bf:identifiedBy><bf:Local><rdf:value>21533302</rdf:value><bf:assigner><bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"><bf:code>DLC</bf:code></bf:Agent></bf:assigner></bf:Local></bf:identifiedBy><bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-04-26T16:35:51</bf:changeDate><bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2020-05-08</bf:creationDate><lclocal:d906>=906     $a 0 $b ibc $c copycat $d 3 $e ncip $f 20 $g y-gencatlg</lclocal:d906><lclocal:d925>=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925><lclocal:d955>=955     $a ve38 2020-05-15 $b fg23 2021-07-17 $a fg00 2021-07-17 to GS/SEE</lclocal:d955><lclocal:d955>=955     $b fg23 2022-04-26 z-processor $i fg23 2022-04-26 Telework</lclocal:d955><bf:assigner><bf:Agent><bf:code>J9U</bf:code></bf:Agent></bf:assigner><bf:descriptionLanguage><bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/></bf:descriptionLanguage><bf:descriptionModifier><bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"><bf:code>DLC</bf:code></bf:Agent></bf:descriptionModifier><bf:descriptionAuthentication><bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/lccopycat"><bf:code>lccopycat</bf:code></bf:DescriptionAuthentication></bf:descriptionAuthentication><lclocal:d985>=985     $e VENDOR LOAD</lclocal:d985><bflc:catalogerId>cgir</bflc:catalogerId><bflc:procInfo>update instance</bflc:procInfo><bflc:encodingLevel><bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/f"><rdfs:label>full</rdfs:label></bflc:EncodingLevel></bflc:encodingLevel></bf:AdminMetadata></bf:adminMetadata></bf:Instance><bf:Work rdf:about="http://id.loc.gov/resources/works/21533302"><bflc:aap>Karčić, Hikmet Derviš M. Korkut</bflc:aap><bflc:aap-normalized>karčićhikmetdervišmkorkut</bflc:aap-normalized><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Text"/><bf:contribution><bflc:PrimaryContribution><bf:agent><bf:Agent><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/><rdfs:label>Karčić, Hikmet</rdfs:label></bf:Agent></bf:agent><bf:role><bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/aut"><rdfs:label>Author</rdfs:label></bf:Role></bf:role></bflc:PrimaryContribution></bf:contribution><bf:title><bf:Title><bf:mainTitle>Derviš M. Korkut</bf:mainTitle></bf:Title></bf:title><bf:genreForm><bf:GenreForm rdf:about="http://id.loc.gov/authorities/genreForms/gf2014026049"><rdfs:label>biographies</rdfs:label></bf:GenreForm></bf:genreForm><bf:geographicCoverage rdf:resource="http://id.loc.gov/vocabulary/geographicAreas/e-bn"/><bf:contribution><bf:Contribution><bf:agent><bf:Agent><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Organization"/><rdfs:label>El-Kalem (Firm)</rdfs:label></bf:Agent></bf:agent><bf:role><bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/isb"><rdfs:label>Issuing body</rdfs:label></bf:Role></bf:role></bf:Contribution></bf:contribution><bf:contribution><bf:Contribution><bf:agent><bf:Agent><rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Organization"/><rdfs:label>Institut za islamsku tradiciju Bošnjaka</rdfs:label></bf:Agent></bf:agent><bf:role><bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/isb"><rdfs:label>Issuing body</rdfs:label></bf:Role></bf:role></bf:Contribution></bf:contribution><bf:subject><bf:Topic rdf:about="http://id.loc.gov/resources/works/4300988"><rdfs:label>Sarajevo Haggadah</rdfs:label><madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/><madsrdf:authoritativeLabel>Sarajevo Haggadah</madsrdf:authoritativeLabel><bflc:aap-normalized>sarajevohaggadah</bflc:aap-normalized><madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/vocabulary/subjectSchemes/naf"/><bf:source><bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/naf"><rdfs:label>NACO authority file</rdfs:label></bf:Source></bf:source></bf:Topic></bf:subject><bf:subject><madsrdf:ComplexSubject><rdfs:label>Holocaust, Jewish (1939-1945)--Rescue--Manuscripts</rdfs:label><madsrdf:authoritativeLabel>Holocaust, Jewish (1939-1945)--Rescue--Manuscripts</madsrdf:authoritativeLabel><madsrdf:componentList rdf:parseType="Collection"><madsrdf:Topic><madsrdf:authoritativeLabel>Holocaust, Jewish (1939-1945)</madsrdf:authoritativeLabel></madsrdf:Topic><madsrdf:Topic><madsrdf:authoritativeLabel>Rescue</madsrdf:authoritativeLabel></madsrdf:Topic><madsrdf:Topic><madsrdf:authoritativeLabel>Manuscripts</madsrdf:authoritativeLabel></madsrdf:Topic></madsrdf:componentList><madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/vocabulary/subjectSchemes/nli"/><bflc:aap-normalized>holocaustjewish(19391945)rescuemanuscripts</bflc:aap-normalized><bf:source><bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/nli"><bf:code>nli</bf:code></bf:Source></bf:source></madsrdf:ComplexSubject></bf:subject><bf:subject><madsrdf:Title><madsrdf:authoritativeLabel>Sarajevo Haggadah</madsrdf:authoritativeLabel><madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/vocabulary/subjectSchemes/nli"/><bflc:aap-normalized>sarajevohaggadah</bflc:aap-normalized><bf:source><bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/nli"><bf:code>nli</bf:code></bf:Source></bf:source><bf:title><bf:Title><bf:mainTitle>Sarajevo Haggadah</bf:mainTitle></bf:Title></bf:title></madsrdf:Title></bf:subject><bf:subject><madsrdf:PersonalName><rdfs:label>Korkut, Derviš, M., 1888-1969</rdfs:label><madsrdf:authoritativeLabel>Korkut, Derviš, M., 1888-1969</madsrdf:authoritativeLabel><madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/vocabulary/subjectSchemes/nli"/><bflc:aap-normalized>korkutdervišm18881969</bflc:aap-normalized><bf:source><bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/nli"><bf:code>nli</bf:code></bf:Source></bf:source></madsrdf:PersonalName></bf:subject><bf:subject><madsrdf:Temporal><rdfs:label>1939-1945</rdfs:label><madsrdf:authoritativeLabel>1939-1945</madsrdf:authoritativeLabel><madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/vocabulary/subjectSchemes/fast"/><bflc:aap-normalized>19391945</bflc:aap-normalized><bf:source><bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/fast"><bf:code>fast</bf:code></bf:Source></bf:source></madsrdf:Temporal></bf:subject><bf:subject><madsrdf:ComplexSubject><rdfs:label>Bosnia and Herzegovina--Sarajevo</rdfs:label><madsrdf:authoritativeLabel>Bosnia and Herzegovina--Sarajevo</madsrdf:authoritativeLabel><madsrdf:componentList rdf:parseType="Collection"><madsrdf:Geographic><madsrdf:authoritativeLabel>Bosnia and Herzegovina</madsrdf:authoritativeLabel></madsrdf:Geographic><madsrdf:Geographic><madsrdf:authoritativeLabel>Sarajevo</madsrdf:authoritativeLabel></madsrdf:Geographic></madsrdf:componentList><madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/vocabulary/subjectSchemes/fast"/><bflc:aap-normalized>bosniaandherzegovinasarajevo</bflc:aap-normalized><bf:source><bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/fast"><bf:code>fast</bf:code></bf:Source></bf:source></madsrdf:ComplexSubject></bf:subject><bf:subject><madsrdf:Title><madsrdf:authoritativeLabel>Sarajevo Haggadah</madsrdf:authoritativeLabel><madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/vocabulary/subjectSchemes/fast"/><bflc:aap-normalized>sarajevohaggadah</bflc:aap-normalized><bf:source><bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/fast"><bf:code>fast</bf:code></bf:Source></bf:source><bf:title><bf:Title><bf:mainTitle>Sarajevo Haggadah</bf:mainTitle></bf:Title></bf:title></madsrdf:Title></bf:subject><bf:subject><bf:Topic><rdfs:label>Holocaust, Jewish (1939-1945)--Bosnia and Herzegovina--Sarajevo</rdfs:label><madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/><madsrdf:authoritativeLabel>Holocaust, Jewish (1939-1945)--Bosnia and Herzegovina--Sarajevo</madsrdf:authoritativeLabel><madsrdf:componentList rdf:parseType="Collection"><madsrdf:Topic rdf:about="http://id.loc.gov/authorities/subjects/sh85061515"><madsrdf:authoritativeLabel>Holocaust, Jewish (1939-1945)</madsrdf:authoritativeLabel></madsrdf:Topic><madsrdf:Geographic rdf:about="http://id.loc.gov/authorities/names/n80090352-781"><madsrdf:authoritativeLabel>Bosnia and Herzegovina--Sarajevo</madsrdf:authoritativeLabel></madsrdf:Geographic></madsrdf:componentList><bflc:aap-normalized>holocaustjewish(19391945)bosniaandherzegovinasarajevo</bflc:aap-normalized><bf:source rdf:resource="http://id.loc.gov/authorities/subjects"/></bf:Topic></bf:subject><bf:subject><bf:Topic rdf:about="http://id.loc.gov/authorities/names/no2020107861"><rdfs:label>Korkut, Derviš M., 1888-1969</rdfs:label><madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/><madsrdf:authoritativeLabel>Korkut, Derviš M., 1888-1969</madsrdf:authoritativeLabel><bflc:aap-normalized>korkutdervišm18881969</bflc:aap-normalized><bf:source rdf:resource="http://id.loc.gov/authorities/subjects"/></bf:Topic></bf:subject><bf:classification><bf:ClassificationLcc><bf:assigner><bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"/></bf:assigner><bf:classificationPortion>BM674.63.S3</bf:classificationPortion><bf:itemPortion>K37 2020</bf:itemPortion></bf:ClassificationLcc></bf:classification><bf:content><bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/txt"><rdfs:label>text</rdfs:label></bf:Content></bf:content><bf:content><bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/txt"><rdfs:label>text</rdfs:label><bf:source><bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacontent"/></bf:source></bf:Content></bf:content><bf:language><bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/></bf:language><bf:illustrativeContent><bf:Illustration rdf:about="http://id.loc.gov/vocabulary/millus/ill"><rdfs:label>illustrations</rdfs:label></bf:Illustration></bf:illustrativeContent><bf:supplementaryContent><bf:SupplementaryContent rdf:about="http://id.loc.gov/vocabulary/msupplcont/bibliography"><rdfs:label>bibliography</rdfs:label></bf:SupplementaryContent></bf:supplementaryContent><dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/works" xmlns:dcterms="http://purl.org/dc/terms/"/><bf:adminMetadata><bf:AdminMetadata><bf:generationProcess><bf:GenerationProcess><rdfs:label>DLC marc2bibframe2 v1.7.0</rdfs:label><bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-04-26T16:37:03.314881-04:00</bf:generationDate></bf:GenerationProcess></bf:generationProcess><bf:status><bf:Status rdf:about="http://id.loc.gov/vocabulary/mstatus/c"><rdfs:label>changed</rdfs:label></bf:Status></bf:status><bf:descriptionConventions><bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd"><bf:code>isbd</bf:code></bf:DescriptionConventions></bf:descriptionConventions><bf:descriptionConventions><bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda"><bf:code>rda</bf:code></bf:DescriptionConventions></bf:descriptionConventions><bf:identifiedBy><bf:Local><rdf:value>21533302</rdf:value><bf:assigner><bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"><bf:code>DLC</bf:code></bf:Agent></bf:assigner></bf:Local></bf:identifiedBy><bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-04-26T16:35:51</bf:changeDate><bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2020-05-08</bf:creationDate><lclocal:d906>=906     $a 0 $b ibc $c copycat $d 3 $e ncip $f 20 $g y-gencatlg</lclocal:d906><lclocal:d925>=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925><lclocal:d955>=955     $a ve38 2020-05-15 $b fg23 2021-07-17 $a fg00 2021-07-17 to GS/SEE</lclocal:d955><lclocal:d955>=955     $b fg23 2022-04-26 z-processor $i fg23 2022-04-26 Telework</lclocal:d955><bf:assigner><bf:Agent><bf:code>J9U</bf:code></bf:Agent></bf:assigner><bf:descriptionLanguage><bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/></bf:descriptionLanguage><bf:descriptionModifier><bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"><bf:code>DLC</bf:code></bf:Agent></bf:descriptionModifier><bf:descriptionAuthentication><bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/lccopycat"><bf:code>lccopycat</bf:code></bf:DescriptionAuthentication></bf:descriptionAuthentication><lclocal:d985>=985     $e VENDOR LOAD</lclocal:d985><bflc:catalogerId>cgir</bflc:catalogerId><bflc:procInfo>update instance</bflc:procInfo><bflc:encodingLevel><bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/f"><rdfs:label>full</rdfs:label></bflc:EncodingLevel></bflc:encodingLevel></bf:AdminMetadata></bf:adminMetadata></bf:Work><bf:Item rdf:about="http://id.loc.gov/resources/items/21533302-050-18"><bf:heldBy><bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"><bf:code>DLC</bf:code></bf:Agent></bf:heldBy><bf:shelfMark><bf:ShelfMarkLcc><rdfs:label>BM674.63.S3 K37 2020</rdfs:label><bf:assigner><bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"/></bf:assigner></bf:ShelfMarkLcc></bf:shelfMark><dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/items" xmlns:dcterms="http://purl.org/dc/terms/"/><bf:itemOf rdf:resource="http://id.loc.gov/resources/instances/21533302"/><bf:adminMetadata><bf:AdminMetadata><bf:generationProcess><bf:GenerationProcess><rdfs:label>DLC marc2bibframe2 v1.7.0</rdfs:label><bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-04-26T16:37:03.314881-04:00</bf:generationDate></bf:GenerationProcess></bf:generationProcess><bf:status><bf:Status rdf:about="http://id.loc.gov/vocabulary/mstatus/c"><rdfs:label>changed</rdfs:label></bf:Status></bf:status><bf:descriptionConventions><bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd"><bf:code>isbd</bf:code></bf:DescriptionConventions></bf:descriptionConventions><bf:descriptionConventions><bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda"><bf:code>rda</bf:code></bf:DescriptionConventions></bf:descriptionConventions><bf:identifiedBy><bf:Local><rdf:value>21533302</rdf:value><bf:assigner><bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"><bf:code>DLC</bf:code></bf:Agent></bf:assigner></bf:Local></bf:identifiedBy><bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-04-26T16:35:51</bf:changeDate><bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2020-05-08</bf:creationDate><lclocal:d906>=906     $a 0 $b ibc $c copycat $d 3 $e ncip $f 20 $g y-gencatlg</lclocal:d906><lclocal:d925>=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925><lclocal:d955>=955     $a ve38 2020-05-15 $b fg23 2021-07-17 $a fg00 2021-07-17 to GS/SEE</lclocal:d955><lclocal:d955>=955     $b fg23 2022-04-26 z-processor $i fg23 2022-04-26 Telework</lclocal:d955><bf:assigner><bf:Agent><bf:code>J9U</bf:code></bf:Agent></bf:assigner><bf:descriptionLanguage><bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/></bf:descriptionLanguage><bf:descriptionModifier><bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"><bf:code>DLC</bf:code></bf:Agent></bf:descriptionModifier><bf:descriptionAuthentication><bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/lccopycat"><bf:code>lccopycat</bf:code></bf:DescriptionAuthentication></bf:descriptionAuthentication><lclocal:d985>=985     $e VENDOR LOAD</lclocal:d985><bflc:catalogerId>cgir</bflc:catalogerId><bflc:procInfo>update instance</bflc:procInfo><bflc:encodingLevel><bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/f"><rdfs:label>full</rdfs:label></bflc:EncodingLevel></bflc:encodingLevel></bf:AdminMetadata></bf:adminMetadata></bf:Item></rdf:RDF>
+<rdf:RDF xmlns:bf="http://id.loc.gov/ontologies/bibframe/" xmlns:bflc="http://id.loc.gov/ontologies/bflc/" xmlns:lclocal="http://id.loc.gov/ontologies/lclocal/" xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#" xmlns:pmo="http://performedmusicontology.org/ontology/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:streams="info:lc/streams#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<bf:Instance rdf:about="http://id.loc.gov/resources/instances/21533302">
+		<rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Print"/>
+		<bf:title>
+			<bf:Title>
+				<bf:mainTitle>Derviš M. &amp; Korkut</bf:mainTitle>
+				<bf:subtitle>a biography : rescuer of the Sarajevo Haggadah</bf:subtitle>
+			</bf:Title>
+		</bf:title>
+		<bf:responsibilityStatement>Hikmet Karčić</bf:responsibilityStatement>
+		<bf:provisionActivity>
+			<bf:Publication>
+				<bf:date rdf:datatype="http://id.loc.gov/datatypes/edtf">2020</bf:date>
+				<bf:place>
+					<bf:Place rdf:about="http://id.loc.gov/vocabulary/countries/bn"/>
+				</bf:place>
+			</bf:Publication>
+		</bf:provisionActivity>
+		<bf:provisionActivity>
+			<bf:Publication>
+				<bf:place>
+					<bf:Place>
+						<rdfs:label>Sarajevo</rdfs:label>
+					</bf:Place>
+				</bf:place>
+				<bf:agent>
+					<bf:Agent>
+						<rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Agent"/>
+						<rdfs:label>El-Kalem</rdfs:label>
+					</bf:Agent>
+				</bf:agent>
+				<bf:agent>
+					<bf:Agent>
+						<rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Agent"/>
+						<rdfs:label>Institute for Islamic Tradition of Bosniaks</rdfs:label>
+					</bf:Agent>
+				</bf:agent>
+				<bf:date>2020</bf:date>
+			</bf:Publication>
+		</bf:provisionActivity>
+		<bf:issuance>
+			<bf:Issuance rdf:about="http://id.loc.gov/vocabulary/issuance/mono"/>
+		</bf:issuance>
+		<bf:identifiedBy>
+			<bf:Lccn>
+				<rdf:value>2021373652</rdf:value>
+			</bf:Lccn>
+		</bf:identifiedBy>
+		<bf:identifiedBy>
+			<bf:Local>
+				<rdf:value>on1182506219</rdf:value>
+				<bf:assigner>
+					<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/ocolc"/>
+				</bf:assigner>
+			</bf:Local>
+		</bf:identifiedBy>
+		<bf:identifiedBy>
+			<bf:Isbn>
+				<rdf:value>9958575175</rdf:value>
+			</bf:Isbn>
+		</bf:identifiedBy>
+		<bf:identifiedBy>
+			<bf:Isbn>
+				<rdf:value>9789958575174</rdf:value>
+				<bf:qualifier>Institute for Islamic Tradition of Bosniaks</bf:qualifier>
+			</bf:Isbn>
+		</bf:identifiedBy>
+		<bf:identifiedBy>
+			<bf:Isbn>
+				<rdf:value>9958235358</rdf:value>
+			</bf:Isbn>
+		</bf:identifiedBy>
+		<bf:identifiedBy>
+			<bf:Isbn>
+				<rdf:value>9789958235351</rdf:value>
+				<bf:qualifier>el-Kalem</bf:qualifier>
+			</bf:Isbn>
+		</bf:identifiedBy>
+		<bf:note>
+			<bf:Note>
+				<rdf:type rdf:resource="http://id.loc.gov/vocabulary/mnotetype/physical"/>
+				<rdfs:label>illustrations</rdfs:label>
+			</bf:Note>
+		</bf:note>
+		<bf:supplementaryContent>
+			<bf:SupplementaryContent>
+				<rdfs:label>Includes bibliographical references (pages 81-85).</rdfs:label>
+			</bf:SupplementaryContent>
+		</bf:supplementaryContent>
+		<bf:media>
+			<bf:Media rdf:about="http://id.loc.gov/vocabulary/mediaTypes/n">
+				<rdfs:label>unmediated</rdfs:label>
+				<bf:source>
+					<bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdamedia"/>
+				</bf:source>
+			</bf:Media>
+		</bf:media>
+		<bf:extent>
+			<bf:Extent>
+				<rdfs:label>85 pages</rdfs:label>
+			</bf:Extent>
+		</bf:extent>
+		<bf:dimensions>20 cm</bf:dimensions>
+		<bf:carrier>
+			<bf:Carrier rdf:about="http://id.loc.gov/vocabulary/carriers/nc">
+				<rdfs:label>volume</rdfs:label>
+				<bf:source>
+					<bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacarrier"/>
+				</bf:source>
+			</bf:Carrier>
+		</bf:carrier>
+		<dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/instances" xmlns:dcterms="http://purl.org/dc/terms/"/>
+		<bf:instanceOf rdf:resource="http://id.loc.gov/resources/works/21533302"/>
+		<bf:hasItem rdf:resource="http://id.loc.gov/resources/items/21533302-050-18"/>
+		<bf:hasItem rdf:resource="http://id.loc.gov/resources/items/21533302-050-18"/>
+		<bf:adminMetadata>
+			<bf:AdminMetadata>
+				<bf:generationProcess>
+					<bf:GenerationProcess>
+						<rdfs:label>DLC marc2bibframe2 v1.7.0</rdfs:label>
+						<bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-04-26T16:37:03.314881-04:00</bf:generationDate>
+					</bf:GenerationProcess>
+				</bf:generationProcess>
+				<bf:status>
+					<bf:Status rdf:about="http://id.loc.gov/vocabulary/mstatus/c">
+						<rdfs:label>changed</rdfs:label>
+					</bf:Status>
+				</bf:status>
+				<bf:descriptionConventions>
+					<bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd">
+						<bf:code>isbd</bf:code>
+					</bf:DescriptionConventions>
+				</bf:descriptionConventions>
+				<bf:descriptionConventions>
+					<bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda">
+						<bf:code>rda</bf:code>
+					</bf:DescriptionConventions>
+				</bf:descriptionConventions>
+				<bf:identifiedBy>
+					<bf:Local>
+						<rdf:value>21533302</rdf:value>
+						<bf:assigner>
+							<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+								<bf:code>DLC</bf:code>
+							</bf:Agent>
+						</bf:assigner>
+					</bf:Local>
+				</bf:identifiedBy>
+				<bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-04-26T16:35:51</bf:changeDate>
+				<bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2020-05-08</bf:creationDate>
+				<lclocal:d906>=906     $a 0 $b ibc $c copycat $d 3 $e ncip $f 20 $g y-gencatlg</lclocal:d906>
+				<lclocal:d925>=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925>
+				<lclocal:d955>=955     $a ve38 2020-05-15 $b fg23 2021-07-17 $a fg00 2021-07-17 to GS/SEE</lclocal:d955>
+				<lclocal:d955>=955     $b fg23 2022-04-26 z-processor $i fg23 2022-04-26 Telework</lclocal:d955>
+				<bf:assigner>
+					<bf:Agent>
+						<bf:code>J9U</bf:code>
+					</bf:Agent>
+				</bf:assigner>
+				<bf:descriptionLanguage>
+					<bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/>
+				</bf:descriptionLanguage>
+				<bf:descriptionModifier>
+					<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+						<bf:code>DLC</bf:code>
+					</bf:Agent>
+				</bf:descriptionModifier>
+				<bf:descriptionAuthentication>
+					<bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/lccopycat">
+						<bf:code>lccopycat</bf:code>
+					</bf:DescriptionAuthentication>
+				</bf:descriptionAuthentication>
+				<lclocal:d985>=985     $e VENDOR LOAD</lclocal:d985>
+				<bflc:catalogerId>cgir</bflc:catalogerId>
+				<bflc:procInfo>update instance</bflc:procInfo>
+				<bflc:encodingLevel>
+					<bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/f">
+						<rdfs:label>full</rdfs:label>
+					</bflc:EncodingLevel>
+				</bflc:encodingLevel>
+			</bf:AdminMetadata>
+		</bf:adminMetadata>
+	</bf:Instance>
+	<bf:Work rdf:about="http://id.loc.gov/resources/works/21533302">
+		<bflc:aap>Karčić, Hikmet Derviš M. Korkut</bflc:aap>
+		<bflc:aap-normalized>karčićhikmetdervišmkorkut</bflc:aap-normalized>
+		<rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Text"/>
+		<bf:contribution>
+			<bflc:PrimaryContribution>
+				<bf:agent>
+					<bf:Agent>
+						<rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Person"/>
+						<rdfs:label>Karčić, Hikmet</rdfs:label>
+					</bf:Agent>
+				</bf:agent>
+				<bf:role>
+					<bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/aut">
+						<rdfs:label>Author</rdfs:label>
+					</bf:Role>
+				</bf:role>
+			</bflc:PrimaryContribution>
+		</bf:contribution>
+		<bf:title>
+			<bf:Title>
+				<bf:mainTitle>Derviš M. Korkut</bf:mainTitle>
+			</bf:Title>
+		</bf:title>
+		<bf:genreForm>
+			<bf:GenreForm rdf:about="http://id.loc.gov/authorities/genreForms/gf2014026049">
+				<rdfs:label>biographies</rdfs:label>
+			</bf:GenreForm>
+		</bf:genreForm>
+		<bf:geographicCoverage rdf:resource="http://id.loc.gov/vocabulary/geographicAreas/e-bn"/>
+		<bf:contribution>
+			<bf:Contribution>
+				<bf:agent>
+					<bf:Agent>
+						<rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Organization"/>
+						<rdfs:label>El-Kalem (Firm)</rdfs:label>
+					</bf:Agent>
+				</bf:agent>
+				<bf:role>
+					<bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/isb">
+						<rdfs:label>Issuing body</rdfs:label>
+					</bf:Role>
+				</bf:role>
+			</bf:Contribution>
+		</bf:contribution>
+		<bf:contribution>
+			<bf:Contribution>
+				<bf:agent>
+					<bf:Agent>
+						<rdf:type rdf:resource="http://id.loc.gov/ontologies/bibframe/Organization"/>
+						<rdfs:label>Institut za islamsku tradiciju Bošnjaka</rdfs:label>
+					</bf:Agent>
+				</bf:agent>
+				<bf:role>
+					<bf:Role rdf:about="http://id.loc.gov/vocabulary/relators/isb">
+						<rdfs:label>Issuing body</rdfs:label>
+					</bf:Role>
+				</bf:role>
+			</bf:Contribution>
+		</bf:contribution>
+		<bf:subject>
+			<bf:Topic rdf:about="http://id.loc.gov/resources/works/4300988">
+				<rdfs:label>Sarajevo Haggadah</rdfs:label>
+				<madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+				<madsrdf:authoritativeLabel>Sarajevo Haggadah</madsrdf:authoritativeLabel>
+				<bflc:aap-normalized>sarajevohaggadah</bflc:aap-normalized>
+				<madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/vocabulary/subjectSchemes/naf"/>
+				<bf:source>
+					<bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/naf">
+						<rdfs:label>NACO authority file</rdfs:label>
+					</bf:Source>
+				</bf:source>
+			</bf:Topic>
+		</bf:subject>
+		<bf:subject>
+			<madsrdf:ComplexSubject>
+				<rdfs:label>Holocaust, Jewish (1939-1945)--Rescue--Manuscripts</rdfs:label>
+				<madsrdf:authoritativeLabel>Holocaust, Jewish (1939-1945)--Rescue--Manuscripts</madsrdf:authoritativeLabel>
+				<madsrdf:componentList rdf:parseType="Collection">
+					<madsrdf:Topic>
+						<madsrdf:authoritativeLabel>Holocaust, Jewish (1939-1945)</madsrdf:authoritativeLabel>
+					</madsrdf:Topic>
+					<madsrdf:Topic>
+						<madsrdf:authoritativeLabel>Rescue</madsrdf:authoritativeLabel>
+					</madsrdf:Topic>
+					<madsrdf:Topic>
+						<madsrdf:authoritativeLabel>Manuscripts</madsrdf:authoritativeLabel>
+					</madsrdf:Topic>
+				</madsrdf:componentList>
+				<madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/vocabulary/subjectSchemes/nli"/>
+				<bflc:aap-normalized>holocaustjewish(19391945)rescuemanuscripts</bflc:aap-normalized>
+				<bf:source>
+					<bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/nli">
+						<bf:code>nli</bf:code>
+					</bf:Source>
+				</bf:source>
+			</madsrdf:ComplexSubject>
+		</bf:subject>
+		<bf:subject>
+			<madsrdf:Title>
+				<madsrdf:authoritativeLabel>Sarajevo Haggadah</madsrdf:authoritativeLabel>
+				<madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/vocabulary/subjectSchemes/nli"/>
+				<bflc:aap-normalized>sarajevohaggadah</bflc:aap-normalized>
+				<bf:source>
+					<bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/nli">
+						<bf:code>nli</bf:code>
+					</bf:Source>
+				</bf:source>
+				<bf:title>
+					<bf:Title>
+						<bf:mainTitle>Sarajevo Haggadah</bf:mainTitle>
+					</bf:Title>
+				</bf:title>
+			</madsrdf:Title>
+		</bf:subject>
+		<bf:subject>
+			<madsrdf:PersonalName>
+				<rdfs:label>Korkut, Derviš, M., 1888-1969</rdfs:label>
+				<madsrdf:authoritativeLabel>Korkut, Derviš, M., 1888-1969</madsrdf:authoritativeLabel>
+				<madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/vocabulary/subjectSchemes/nli"/>
+				<bflc:aap-normalized>korkutdervišm18881969</bflc:aap-normalized>
+				<bf:source>
+					<bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/nli">
+						<bf:code>nli</bf:code>
+					</bf:Source>
+				</bf:source>
+			</madsrdf:PersonalName>
+		</bf:subject>
+		<bf:subject>
+			<madsrdf:Temporal>
+				<rdfs:label>1939-1945</rdfs:label>
+				<madsrdf:authoritativeLabel>1939-1945</madsrdf:authoritativeLabel>
+				<madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/vocabulary/subjectSchemes/fast"/>
+				<bflc:aap-normalized>19391945</bflc:aap-normalized>
+				<bf:source>
+					<bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/fast">
+						<bf:code>fast</bf:code>
+					</bf:Source>
+				</bf:source>
+			</madsrdf:Temporal>
+		</bf:subject>
+		<bf:subject>
+			<madsrdf:ComplexSubject>
+				<rdfs:label>Bosnia and Herzegovina--Sarajevo</rdfs:label>
+				<madsrdf:authoritativeLabel>Bosnia and Herzegovina--Sarajevo</madsrdf:authoritativeLabel>
+				<madsrdf:componentList rdf:parseType="Collection">
+					<madsrdf:Geographic>
+						<madsrdf:authoritativeLabel>Bosnia and Herzegovina</madsrdf:authoritativeLabel>
+					</madsrdf:Geographic>
+					<madsrdf:Geographic>
+						<madsrdf:authoritativeLabel>Sarajevo</madsrdf:authoritativeLabel>
+					</madsrdf:Geographic>
+				</madsrdf:componentList>
+				<madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/vocabulary/subjectSchemes/fast"/>
+				<bflc:aap-normalized>bosniaandherzegovinasarajevo</bflc:aap-normalized>
+				<bf:source>
+					<bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/fast">
+						<bf:code>fast</bf:code>
+					</bf:Source>
+				</bf:source>
+			</madsrdf:ComplexSubject>
+		</bf:subject>
+		<bf:subject>
+			<madsrdf:Title>
+				<madsrdf:authoritativeLabel>Sarajevo Haggadah</madsrdf:authoritativeLabel>
+				<madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/vocabulary/subjectSchemes/fast"/>
+				<bflc:aap-normalized>sarajevohaggadah</bflc:aap-normalized>
+				<bf:source>
+					<bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/fast">
+						<bf:code>fast</bf:code>
+					</bf:Source>
+				</bf:source>
+				<bf:title>
+					<bf:Title>
+						<bf:mainTitle>Sarajevo Haggadah</bf:mainTitle>
+					</bf:Title>
+				</bf:title>
+			</madsrdf:Title>
+		</bf:subject>
+		<bf:subject>
+			<bf:Topic>
+				<rdfs:label>Holocaust, Jewish (1939-1945)--Bosnia and Herzegovina--Sarajevo</rdfs:label>
+				<madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+				<madsrdf:authoritativeLabel>Holocaust, Jewish (1939-1945)--Bosnia and Herzegovina--Sarajevo</madsrdf:authoritativeLabel>
+				<madsrdf:componentList rdf:parseType="Collection">
+					<madsrdf:Topic rdf:about="http://id.loc.gov/authorities/subjects/sh85061515">
+						<madsrdf:authoritativeLabel>Holocaust, Jewish (1939-1945)</madsrdf:authoritativeLabel>
+					</madsrdf:Topic>
+					<madsrdf:Geographic rdf:about="http://id.loc.gov/authorities/names/n80090352-781">
+						<madsrdf:authoritativeLabel>Bosnia and Herzegovina--Sarajevo</madsrdf:authoritativeLabel>
+					</madsrdf:Geographic>
+				</madsrdf:componentList>
+				<bflc:aap-normalized>holocaustjewish(19391945)bosniaandherzegovinasarajevo</bflc:aap-normalized>
+				<bf:source rdf:resource="http://id.loc.gov/authorities/subjects"/>
+			</bf:Topic>
+		</bf:subject>
+		<bf:subject>
+			<bf:Topic rdf:about="http://id.loc.gov/authorities/names/no2020107861">
+				<rdfs:label>Korkut, Derviš M., 1888-1969</rdfs:label>
+				<madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/authorities/subjects"/>
+				<madsrdf:authoritativeLabel>Korkut, Derviš M., 1888-1969</madsrdf:authoritativeLabel>
+				<bflc:aap-normalized>korkutdervišm18881969</bflc:aap-normalized>
+				<bf:source rdf:resource="http://id.loc.gov/authorities/subjects"/>
+			</bf:Topic>
+		</bf:subject>
+		<bf:classification>
+			<bf:ClassificationLcc>
+				<bf:assigner>
+					<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"/>
+				</bf:assigner>
+				<bf:classificationPortion>BM674.63.S3</bf:classificationPortion>
+				<bf:itemPortion>K37 2020</bf:itemPortion>
+			</bf:ClassificationLcc>
+		</bf:classification>
+		<bf:content>
+			<bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/txt">
+				<rdfs:label>text</rdfs:label>
+			</bf:Content>
+		</bf:content>
+		<bf:content>
+			<bf:Content rdf:about="http://id.loc.gov/vocabulary/contentTypes/txt">
+				<rdfs:label>text</rdfs:label>
+				<bf:source>
+					<bf:Source rdf:about="http://id.loc.gov/vocabulary/genreFormSchemes/rdacontent"/>
+				</bf:source>
+			</bf:Content>
+		</bf:content>
+		<bf:language>
+			<bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/>
+		</bf:language>
+		<bf:illustrativeContent>
+			<bf:Illustration rdf:about="http://id.loc.gov/vocabulary/millus/ill">
+				<rdfs:label>illustrations</rdfs:label>
+			</bf:Illustration>
+		</bf:illustrativeContent>
+		<bf:supplementaryContent>
+			<bf:SupplementaryContent rdf:about="http://id.loc.gov/vocabulary/msupplcont/bibliography">
+				<rdfs:label>bibliography</rdfs:label>
+			</bf:SupplementaryContent>
+		</bf:supplementaryContent>
+		<dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/works" xmlns:dcterms="http://purl.org/dc/terms/"/>
+		<bf:adminMetadata>
+			<bf:AdminMetadata>
+				<bf:generationProcess>
+					<bf:GenerationProcess>
+						<rdfs:label>DLC marc2bibframe2 v1.7.0</rdfs:label>
+						<bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-04-26T16:37:03.314881-04:00</bf:generationDate>
+					</bf:GenerationProcess>
+				</bf:generationProcess>
+				<bf:status>
+					<bf:Status rdf:about="http://id.loc.gov/vocabulary/mstatus/c">
+						<rdfs:label>changed</rdfs:label>
+					</bf:Status>
+				</bf:status>
+				<bf:descriptionConventions>
+					<bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd">
+						<bf:code>isbd</bf:code>
+					</bf:DescriptionConventions>
+				</bf:descriptionConventions>
+				<bf:descriptionConventions>
+					<bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda">
+						<bf:code>rda</bf:code>
+					</bf:DescriptionConventions>
+				</bf:descriptionConventions>
+				<bf:identifiedBy>
+					<bf:Local>
+						<rdf:value>21533302</rdf:value>
+						<bf:assigner>
+							<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+								<bf:code>DLC</bf:code>
+							</bf:Agent>
+						</bf:assigner>
+					</bf:Local>
+				</bf:identifiedBy>
+				<bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-04-26T16:35:51</bf:changeDate>
+				<bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2020-05-08</bf:creationDate>
+				<lclocal:d906>=906     $a 0 $b ibc $c copycat $d 3 $e ncip $f 20 $g y-gencatlg</lclocal:d906>
+				<lclocal:d925>=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925>
+				<lclocal:d955>=955     $a ve38 2020-05-15 $b fg23 2021-07-17 $a fg00 2021-07-17 to GS/SEE</lclocal:d955>
+				<lclocal:d955>=955     $b fg23 2022-04-26 z-processor $i fg23 2022-04-26 Telework</lclocal:d955>
+				<bf:assigner>
+					<bf:Agent>
+						<bf:code>J9U</bf:code>
+					</bf:Agent>
+				</bf:assigner>
+				<bf:descriptionLanguage>
+					<bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/>
+				</bf:descriptionLanguage>
+				<bf:descriptionModifier>
+					<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+						<bf:code>DLC</bf:code>
+					</bf:Agent>
+				</bf:descriptionModifier>
+				<bf:descriptionAuthentication>
+					<bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/lccopycat">
+						<bf:code>lccopycat</bf:code>
+					</bf:DescriptionAuthentication>
+				</bf:descriptionAuthentication>
+				<lclocal:d985>=985     $e VENDOR LOAD</lclocal:d985>
+				<bflc:catalogerId>cgir</bflc:catalogerId>
+				<bflc:procInfo>update instance</bflc:procInfo>
+				<bflc:encodingLevel>
+					<bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/f">
+						<rdfs:label>full</rdfs:label>
+					</bflc:EncodingLevel>
+				</bflc:encodingLevel>
+			</bf:AdminMetadata>
+		</bf:adminMetadata>
+	</bf:Work>
+	<bf:Item rdf:about="http://id.loc.gov/resources/items/21533302-050-18">
+		<bf:heldBy>
+			<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+				<bf:code>DLC</bf:code>
+			</bf:Agent>
+		</bf:heldBy>
+		<bf:shelfMark>
+			<bf:ShelfMarkLcc>
+				<rdfs:label>BM674.63.S3 K37 2020</rdfs:label>
+				<bf:assigner>
+					<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc"/>
+				</bf:assigner>
+			</bf:ShelfMarkLcc>
+		</bf:shelfMark>
+		<dcterms:isPartOf rdf:resource="http://id.loc.gov/resources/items" xmlns:dcterms="http://purl.org/dc/terms/"/>
+		<bf:itemOf rdf:resource="http://id.loc.gov/resources/instances/21533302"/>
+		<bf:adminMetadata>
+			<bf:AdminMetadata>
+				<bf:generationProcess>
+					<bf:GenerationProcess>
+						<rdfs:label>DLC marc2bibframe2 v1.7.0</rdfs:label>
+						<bf:generationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-04-26T16:37:03.314881-04:00</bf:generationDate>
+					</bf:GenerationProcess>
+				</bf:generationProcess>
+				<bf:status>
+					<bf:Status rdf:about="http://id.loc.gov/vocabulary/mstatus/c">
+						<rdfs:label>changed</rdfs:label>
+					</bf:Status>
+				</bf:status>
+				<bf:descriptionConventions>
+					<bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/isbd">
+						<bf:code>isbd</bf:code>
+					</bf:DescriptionConventions>
+				</bf:descriptionConventions>
+				<bf:descriptionConventions>
+					<bf:DescriptionConventions rdf:about="http://id.loc.gov/vocabulary/descriptionConventions/rda">
+						<bf:code>rda</bf:code>
+					</bf:DescriptionConventions>
+				</bf:descriptionConventions>
+				<bf:identifiedBy>
+					<bf:Local>
+						<rdf:value>21533302</rdf:value>
+						<bf:assigner>
+							<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+								<bf:code>DLC</bf:code>
+							</bf:Agent>
+						</bf:assigner>
+					</bf:Local>
+				</bf:identifiedBy>
+				<bf:changeDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-04-26T16:35:51</bf:changeDate>
+				<bf:creationDate rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2020-05-08</bf:creationDate>
+				<lclocal:d906>=906     $a 0 $b ibc $c copycat $d 3 $e ncip $f 20 $g y-gencatlg</lclocal:d906>
+				<lclocal:d925>=925  0  $a acquire $b 1 shelf copy $x policy default</lclocal:d925>
+				<lclocal:d955>=955     $a ve38 2020-05-15 $b fg23 2021-07-17 $a fg00 2021-07-17 to GS/SEE</lclocal:d955>
+				<lclocal:d955>=955     $b fg23 2022-04-26 z-processor $i fg23 2022-04-26 Telework</lclocal:d955>
+				<bf:assigner>
+					<bf:Agent>
+						<bf:code>J9U</bf:code>
+					</bf:Agent>
+				</bf:assigner>
+				<bf:descriptionLanguage>
+					<bf:Language rdf:about="http://id.loc.gov/vocabulary/languages/eng"/>
+				</bf:descriptionLanguage>
+				<bf:descriptionModifier>
+					<bf:Agent rdf:about="http://id.loc.gov/vocabulary/organizations/dlc">
+						<bf:code>DLC</bf:code>
+					</bf:Agent>
+				</bf:descriptionModifier>
+				<bf:descriptionAuthentication>
+					<bf:DescriptionAuthentication rdf:about="http://id.loc.gov/vocabulary/marcauthen/lccopycat">
+						<bf:code>lccopycat</bf:code>
+					</bf:DescriptionAuthentication>
+				</bf:descriptionAuthentication>
+				<lclocal:d985>=985     $e VENDOR LOAD</lclocal:d985>
+				<bflc:catalogerId>cgir</bflc:catalogerId>
+				<bflc:procInfo>update instance</bflc:procInfo>
+				<bflc:encodingLevel>
+					<bflc:EncodingLevel rdf:about="http://id.loc.gov/vocabulary/menclvl/f">
+						<rdfs:label>full</rdfs:label>
+					</bflc:EncodingLevel>
+				</bflc:encodingLevel>
+			</bf:AdminMetadata>
+		</bf:adminMetadata>
+	</bf:Item>
+</rdf:RDF>

@@ -328,8 +328,6 @@ export default {
         event = event.event
       }      
       this.showDiacriticsGuid=event.target.dataset.guid
-      // console.log(this.showDiacriticsGuid,event.target,this.$refs[`input_${this.showDiacriticsGuid}`])
-      // console.log(this.$refs)
       // we are using global dicratics so stop if this is one of the other components and not this one
       if (!this.$refs[`input_${this.showDiacriticsGuid}`]){
         return false
@@ -343,7 +341,7 @@ export default {
       this.$store.dispatch("disableMacroNav")
       
       this.showEditorValue=this.$refs[`input_${this.showDiacriticsGuid}`][0].value
-      console.log('this.showEditorValue',this.showEditorValue)
+      
       this.showEditor=true
 
 
@@ -904,25 +902,16 @@ export default {
 
 
       // find the previous value
-      console.log('this.inputValueLast',this.inputValueLast)
       let previousValue = null
       if (this.inputValueLast && this.inputValueLast.length>0){
         for (let preval of this.inputValueLast){
-          console.log('preval',preval)
-          console.log(inputV.guid,preval.guid)
           if (preval.guid == inputV.guid){
             previousValue = preval.value
           }
         }
       }
 
-      console.log('BEFORE inputV.value',inputV.value)
-      console.log('BEFORE inputV.guid',inputV.guid)
-
-      console.log('BEFORE inputV.inputValueLast',this.inputValueLast)
-      console.log('BEFORE previousValue',previousValue)
-
-
+ 
 
 
       // if its empty don't do anytihng, unless its newly empty, meaning they just deleted the whole thing
@@ -1144,15 +1133,15 @@ export default {
       // check to make sure if it is a rtl lang that there is room for the buttons, so they don't over lap the text
       
       for (let inputV of this.inputValue){
+
+
+        // and also clean up any escape chars here
+        inputV.value= inputV.value.replace(/&amp;/g, '&');
         
 
         if (this.rtlRegEx.test(inputV.value)){
 
           this.$nextTick(()=>{
-            console.log(`input_${inputV.guid}`)
-            console.log(this.$refs[`input_${inputV.guid}`])
-
-
             this.$refs[`input_${inputV.guid}`][0].classList.add('input-textarea-nested-rtl')
           })
 

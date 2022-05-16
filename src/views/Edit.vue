@@ -762,11 +762,6 @@ export default {
 
       }
 
-
-
-
-
-
     },
 
 
@@ -1309,12 +1304,14 @@ export default {
         if (r.length == 0 && userValue['@id']){
           r.push(userValue['@id'])
         }
-        // console.log('--------')
-        // console.log(r)
-        // console.log(userValue)
 
 
         r = [...new Set(r)];
+
+        for (let x of r){
+            x = x.replace(/&amp;/g, '&'); 
+        }
+
 
       }catch{
         return "error"

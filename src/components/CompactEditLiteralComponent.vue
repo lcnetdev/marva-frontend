@@ -244,7 +244,13 @@ export default {
       }
 
 
+      for (let inputV of this.inputValue){
 
+        // and also clean up any escape chars here
+        inputV.value= inputV.value.replace(/&amp;/g, '&');
+        
+
+      }
 
 
 
