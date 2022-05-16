@@ -906,11 +906,15 @@ const parseProfile = {
 
         // just does a little yellow flash animation
         setTimeout(()=>{
-            document.getElementById(profile+'|'+newPropertyId).style.backgroundColor="yellow"    
-            document.getElementById(profile+'|'+newPropertyId).scrollIntoView({ behavior: 'smooth', block: 'center' })
-            setTimeout(()=>{
-                document.getElementById(profile+'|'+newPropertyId).style.removeProperty('background-color');       
-            },500)                    
+            if (document.getElementById(profile+'|'+newPropertyId)){
+                document.getElementById(profile+'|'+newPropertyId).style.backgroundColor="yellow"    
+                document.getElementById(profile+'|'+newPropertyId).scrollIntoView({ behavior: 'smooth', block: 'center' })
+                setTimeout(()=>{
+                    document.getElementById(profile+'|'+newPropertyId).style.removeProperty('background-color');       
+                },500)   
+                
+            }
+                 
         },0)
 
         
@@ -1125,8 +1129,6 @@ const parseProfile = {
 
             for (let pp of possibleProperties){
                 if (currentState.rt[activeProfileName].pt[component].refTemplateUserValue[pp]){
-                    console.log("filling in:",pp,currentState.rt[activeProfileName].pt[component])
-
                     // don't use http://id.loc.gov/ontologies/bibframe/assigner aka source
                     // kind of a hackish thing, but the source is really not transferable between
                     // differnt types of classifications so leave it out, it will get populated with the default so
@@ -1418,9 +1420,7 @@ const parseProfile = {
                         // console.log("--- not top level")
 
                         let newData = {'@guid': short.generate()}
-                        console.log(URI)
                         newData['@type'] = await exportXML.suggestType(URI)
-                        console.log(URI, newData['@type'])
                         if (valueLabel){
                             newData['http://www.w3.org/2000/01/rdf-schema#label'] = []
 
@@ -1483,7 +1483,7 @@ const parseProfile = {
 
 
         
-        console.log(currentState, ptGuid, guid, parentURI, URI, value)
+        // console.log(currentState, ptGuid, guid, parentURI, URI, value)
         // console.log('before:',JSON.parse(JSON.stringify(currentState)))
 
         // find the pt for the value we are editing
@@ -1540,10 +1540,10 @@ const parseProfile = {
                                 }
                             }else{
 
-                                console.log("here6")
+                                // console.log("here6")
                                 // just search using the propertyURI
                                 if (userValue[URI]){
-                                  console.log("here611")  
+                                  // console.log("here611")  
                                   for (let childValue of userValue[URI]){
                                     if (childValue['@guid'] == guid){
                                         childValue[URI] = value
@@ -1557,7 +1557,7 @@ const parseProfile = {
                                             }
 
                                             results.newGuid=false
-                                            console.log("here66")
+                                            // console.log("here66")
                                         }else if (!value){
                                             // value is null remove the property
                                             if (userValue[URI].length>1){
@@ -1568,7 +1568,7 @@ const parseProfile = {
 
 
                                             results.newGuid=false
-                                            console.log("here666")
+                                            // console.log("here666")
                                         }
 
                                     }
@@ -1743,7 +1743,7 @@ const parseProfile = {
     reorderSubjects: function(profile, subjects){
 
 
-        console.log(subjects)
+        
         for (let rt of profile.rtOrder){
 
             if (rt.includes(':Work')){
@@ -1760,12 +1760,9 @@ const parseProfile = {
 
                 let ptOrderNoSubjects = profile.rt[rt].ptOrder.filter((p)=>{ return (!p.includes('http://id.loc.gov/ontologies/bibframe/subject')) })
 
-                console.log('subjectsStartAtIndex',subjectsStartAtIndex)
-                console.log(ptOrderNoSubjects)
-
+                
+                
                 let subjectNewOrder = subjects.map((s)=>{return s.pt})
-
-                console.log(subjectNewOrder)
 
                 // add them in 
                 ptOrderNoSubjects.splice(subjectsStartAtIndex, 0, ...subjectNewOrder);
@@ -1789,7 +1786,7 @@ const parseProfile = {
                 for (let pt of profile.rt[rt].ptOrder){
 
                     if (pt.includes('id.loc.gov/ontologies/bibframe/subject')){
-                        console.log("SUBJECT!!!",profile.rt[rt].pt[pt])
+                        
 
                         let label = "!Unkown Subject Label!"
                         let source = ''
@@ -1896,7 +1893,7 @@ const parseProfile = {
                     "@guid": short.generate(),
                     "http://www.w3.org/2000/01/rdf-schema#label": subjectComponents[0].label
                 }]
-                console.log("Adding single")
+                
                 store.state.activeUndoLog.push(`Added subject heading ${subjectComponents[0].label}`)
 
 
@@ -1992,7 +1989,7 @@ const parseProfile = {
             }
 
             // console.log('currentState, component, key, activeProfileName, template, value, structure,parentStructure')
-            console.log(currentState, component, key, activeProfileName, template, value, structure,parentStructure)
+            // console.log(currentState, component, key, activeProfileName, template, value, structure,parentStructure)
 
             // clearing a value works by clearing the context in the store,
             // if it is an empy object then the context was clered before 
@@ -2074,7 +2071,7 @@ const parseProfile = {
 
                 // need tofigure out what property to store this under the in the userValue
                 if (parentStructure && key == 'http://www.w3.org/2002/07/owl#sameAs' && currentState.rt[activeProfileName].pt[component].propertyURI != parentStructure.propertyURI){
-                    console.log('case 1')
+                    // console.log('case 1')
                     if (!currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI]){
                         currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI] = []
                     }
@@ -2185,7 +2182,6 @@ const parseProfile = {
 
                 }else if (structure.type == 'lookup' && parentStructure && relatedEdgecaseParentProperty > -1){
 
-                    console.log('hurrr Triggerd')
                     // thre are some very nested template, which we are just checking for
                     if (!currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI]){
                         currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI] = []
@@ -2226,7 +2222,7 @@ const parseProfile = {
 
 
                 }else if (currentState.rt[activeProfileName].pt[component].valueConstraint && currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs && currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs.length > 1){
-                    console.log('case 4')
+                    // console.log('case 4')
                     // this is ref template, so they select what Type it is from the refTemeplate selector
 
                     // does it have it set? otherwise we need to set it to the default, first refTempalte
@@ -2234,7 +2230,7 @@ const parseProfile = {
                        currentState.rt[activeProfileName].pt[component].activeType =  this.rtLookup[currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs[0]].resourceURI
                     }
                     
-                    console.log(value)
+
                     
                     currentState.rt[activeProfileName].pt[component].userValue = {
                             '@guid': short.generate(),
@@ -2556,9 +2552,9 @@ const parseProfile = {
                                 continue
                             }
 
-                            console.log('doing',val,pt)
+                            
 
-                            console.log(config.literalLangOptions.ignorePtURIs.indexOf(pt.propertyURI))
+                            
                             if (config.literalLangOptions.ignorePtURIs.indexOf(pt.propertyURI)>-1){
                                 continue
                             }
@@ -2694,16 +2690,15 @@ const parseProfile = {
 
         // Object.keys(currentState.rt[activeRt]).forEach((rt)=>{
             // check if this profile has the pt we are looking for
-            console.log('currentState',currentState)
-            console.log('activeRt=',activeRt)
-            console.log('activeRt=',activeRt)
+            // console.log('currentState',currentState)
+            // console.log('activeRt=',activeRt)
 
 
             if (currentState.rt[activeRt].pt[component]){
                 results = currentState.rt[activeRt].pt[component].userValue
  
             }
-            console.log('results=',results)
+
         // })
         
         return results
@@ -2816,7 +2811,7 @@ const parseProfile = {
                     }
                 }
             }
-            console.log(instanceCount, instanceURIbasedOnWork)
+            
 
             // if there are no instances yet use the instanceURIbasedOnWork
             if (instanceCount==0){
@@ -2892,7 +2887,7 @@ const parseProfile = {
         let items = Object.keys(profile.rt).filter(i => i.includes(":Item"))
         itemCount = items.length
         
-        console.log(items)
+        
         for (let i of items){
             if (i.includes('-')){
                 let nid = parseInt(i.split('-')[1])
@@ -3309,7 +3304,7 @@ const parseProfile = {
                 for (let key in profile.rt[newRdId].pt){
 
                     if (profile.rt[newRdId].pt[key].propertyURI == 'http://id.loc.gov/ontologies/bibframe/adminMetadata'){
-                        // console.log('hooooo',profile.rt[newRdId].pt[key])
+                        // 
 
                         // replace with our id
                         profile.rt[newRdId].pt[key].userValue['http://id.loc.gov/ontologies/bflc/catalogerId'] = [
@@ -3442,8 +3437,8 @@ const parseProfile = {
 
       }
 
-      console.log('useProfile useProfile')
-      console.log(useProfile)
+      
+      
       if (!useProfile.log){
         useProfile.log = []
       
@@ -3504,7 +3499,7 @@ const parseProfile = {
 
             if (rt.includes(':Instance')){
 
-                console.log(rt)
+                
                 // add itself in 
                 newOrder.push(rt)
                 let thisInstanceURI = profile.rt[rt].URI
@@ -3512,7 +3507,7 @@ const parseProfile = {
                 // then look for its items
                 for (let k in itemLookup){
                     if (itemLookup[k] == thisInstanceURI){
-                        console.log('--',k)
+                        
                         newOrder.push(k)                        
                     }
                 }
@@ -3608,7 +3603,7 @@ const parseProfile = {
     returnDiagramMiniMap: function(activeProfile){
 
 
-        console.log('returnDiagramMiniMapreturnDiagramMiniMapreturnDiagramMiniMapreturnDiagramMiniMap')
+        
         console.log(activeProfile)
 
         // this.hasInstance = []
@@ -3706,7 +3701,7 @@ const parseProfile = {
 
 
       let useProfile = JSON.parse(JSON.stringify(store.state.profiles[useStartingPoint]))
-      console.log(JSON.parse(JSON.stringify(store.state.profiles)))
+      
       // some profiles have nested components at the root level used in that component
       // so if it doesn't end with one of the main type of resources we want to edit 
       // then we don't want to render it, since it is probably being used in the main RT somewhere

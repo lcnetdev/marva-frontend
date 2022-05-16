@@ -903,24 +903,45 @@ export default {
       }
 
 
+      // find the previous value
+      console.log('this.inputValueLast',this.inputValueLast)
+      let previousValue = null
+      if (this.inputValueLast && this.inputValueLast.length>0){
+        for (let preval of this.inputValueLast){
+          console.log('preval',preval)
+          console.log(inputV.guid,preval.guid)
+          if (preval.guid == inputV.guid){
+            previousValue = preval.value
+          }
+        }
+      }
+
+      console.log('BEFORE inputV.value',inputV.value)
+      console.log('BEFORE inputV.guid',inputV.guid)
+
+      console.log('BEFORE inputV.inputValueLast',this.inputValueLast)
+      console.log('BEFORE previousValue',previousValue)
+
 
 
 
       // if its empty don't do anytihng, unless its newly empty, meaning they just deleted the whole thing
       if (inputV.value === null) return false
-      if (inputV.value.trim() === '' && (this.inputValueLast === '' || this.inputValueLast === null)) return false
+      if (inputV.value.trim() === '' && (previousValue === '' || previousValue === null)) return false
 
-
-
+      
       // don't update if nothing changed or havent entered anythign yet...
       if (inputV.value == null){
-        
+           return false
+      }
+
+      if (JSON.stringify(this.inputValue) == this.inputValueLast){        
         return false
       }
 
-      if (JSON.stringify(this.inputValue) == this.inputValueLast){
-        
-        return false
+      // if they "blank" out the value by just puttin a space for some reason then make it empty string
+      if (inputV.value.trim() === '' && previousValue !== ''){
+        inputV.value = inputV.value.trim()
       }
 
 
@@ -937,7 +958,6 @@ export default {
         parentURI = this.parentStructureObj.propertyURI
       }
 
-      
 
 
       this.$store.dispatch("setValueLiteral", { self: this, ptGuid: this.ptGuid, guid: useGuid, parentURI:parentURI, URI: this.structure.propertyURI, value: inputV.value }).then((newGuid) => {
@@ -955,7 +975,7 @@ export default {
           inputV.guid = 'new_' + short.generate()
         }
 
-        this.inputValueLast = JSON.stringify(this.inputValue)
+        this.inputValueLast = JSON.parse(JSON.stringify(this.inputValue))
 
 
       })   
@@ -1231,7 +1251,7 @@ export default {
           }       
         }
 
-        this.inputValueLast = this.inputValue
+        this.inputValueLast = JSON.parse(JSON.stringify(this.inputValue))
       })
 
 
