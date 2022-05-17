@@ -133,6 +133,7 @@ const exportXML = {
 		}
 
 		let profileLookup = parseProfile.suggestType(propertyURI)
+		console.log('profileLookup0',profileLookup)
 		if (profileLookup != false){
 			result = profileLookup
 		}

@@ -154,51 +154,77 @@ const lookupUtil = {
         return dataProcessed
     },
 
-    loadSimpleLookup: async function(uri){
-        let url = uri
+    loadSimpleLookup: async function(uris){
 
-        // TODO more checks here
-        if (!uri.includes('.json')){
-            url = url + '.json'
+        // TODO make this better for multuple lookup list (might not be needed)
+
+        if (!Array.isArray(uris)){
+          uris=[uris]
         }
 
-        if (!this.lookupLibrary[url]){
-            let data = await this.fetchSimpleLookup(url)
-            data = this.simpleLookupProcess(data,uri)
-            console.log(data)
-            this.lookupLibrary[url] = data          
-            return data 
-        }else{
-            return this.lookupLibrary[url]
+
+        for (let uri of uris){
+
+
+          let url = uri
+
+          // TODO more checks here
+          if (!uri.includes('.json')){
+              url = url + '.json'
+          }
+
+          if (!this.lookupLibrary[url]){
+              let data = await this.fetchSimpleLookup(url)
+              data = this.simpleLookupProcess(data,uri)
+              this.lookupLibrary[url] = data          
+              return data 
+          }else{
+              return this.lookupLibrary[url]
+          }
+
         }
+
+
 
     },
 
-    loadSimpleLookupKeyword: async function(uri,keyword){
+    loadSimpleLookupKeyword: async function(uris,keyword){
 
-        let orignalURI = uri
-        // build the url
 
-        if (uri.at(-1) == '/'){
-          uri[-1] = ''
+        if (!Array.isArray(uris)){
+          uris=[uris]
         }
 
+        let results = {metadata:{ uri:uris[0]+'KEYWORD', values:{}  }}
 
-        let url = `${uri}/suggest2/?q=${keyword}&count=25`
+        for (let uri of uris){
 
-        let r = await this.fetchSimpleLookup(url)
 
-        if (r.hits && r.hits.length==0){
-          url = `${uri}/suggest2/?q=${keyword}&count=25&searchtype=keyword`
-          r = await this.fetchSimpleLookup(url)
+          // let orignalURI = uri
+          // build the url
 
-        }
+          if (uri.at(-1) == '/'){
+            uri[-1] = ''
+          }
 
-        let results = {metadata:{ uri:orignalURI+'KEYWORD', values:{}  }}
-        if (r.hits && r.hits.length>0){
-          for (let hit of r.hits){
-            results.metadata.values[hit.uri] = {uri:hit.uri, label: [hit.suggestLabel], authLabel:hit.aLabel, code: [], displayLabel: [hit.suggestLabel] }
-            results[hit.uri] = [hit.suggestLabel]
+
+          let url = `${uri}/suggest2/?q=${keyword}&count=25`
+
+          let r = await this.fetchSimpleLookup(url)
+
+          if (r.hits && r.hits.length==0){
+            url = `${uri}/suggest2/?q=${keyword}&count=25&searchtype=keyword`
+            r = await this.fetchSimpleLookup(url)
+
+          }
+
+          
+          if (r.hits && r.hits.length>0){
+            for (let hit of r.hits){
+              results.metadata.values[hit.uri] = {uri:hit.uri, label: [hit.suggestLabel], authLabel:hit.aLabel, code: [], displayLabel: [hit.suggestLabel] }
+              results[hit.uri] = [hit.suggestLabel]
+            }
+
           }
 
         }

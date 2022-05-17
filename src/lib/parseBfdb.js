@@ -1326,11 +1326,11 @@ const parseBfdb = {
 								isPrimaryContribXML = true
 							}
 
-							console.log("isPrimaryContribXML",isPrimaryContribXML)
 
 
 							if (ptk.valueConstraint.valueDataType.dataTypeURI && ptk.valueConstraint.valueDataType.dataTypeURI == "http://id.loc.gov/ontologies/bflc/PrimaryContribution"){
 								// the ptk says yes, if the xml doesn't jump to next
+								console.log("HERE")
 								if (!isPrimaryContribXML){
 									console.log("Skipping the ptk says yes, if the xml doesn't jump to next")
 									continue

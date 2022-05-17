@@ -1455,6 +1455,7 @@ const parseProfile = {
                     // always make sure there is a type
                     if (!userValue['@type']){
                         userValue['@type'] = await exportXML.suggestType(currentState.rt[rt].pt[pt].propertyURI)
+                        
                     }
 
                 }
@@ -2062,9 +2063,6 @@ const parseProfile = {
 
 
             
-            
-            
-            
             if (currentState.rt[activeProfileName].pt[component]){
                     
                 // console.log('>>>>',structure.type, parentStructure)
@@ -2111,56 +2109,7 @@ const parseProfile = {
                         // just make sure it has a type
                         currentState.rt[activeProfileName].pt[component].userValue['@type'] = await exportXML.suggestType(currentState.rt[activeProfileName].pt[component].propertyURI)
 
-
                     }
-
-
-
-                    // // make sure we have the @type if this is ref template select component
-                    // console.log(currentState.rt[activeProfileName].pt[component].valueConstraint)
-                    // console.log(currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs)
-                    // console.log(currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs.length)
-
-                    // if (currentState.rt[activeProfileName].pt[component].valueConstraint && currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs && currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs.length > 1){
-                    //     console.log('here')
-                    //     if (!currentState.rt[activeProfileName].pt[component].activeType){
-                    //        currentState.rt[activeProfileName].pt[component].activeType =  this.rtLookup[currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs[0]].resourceURI
-                    //     }
-                    //     currentState.rt[activeProfileName].pt[component].userValue['@type'] = currentState.rt[activeProfileName].pt[component].activeType
-                    // }
-
-
-                    // console.log(structure)
-                    // console.log(structure.valueConstraint)
-                    // console.log(structure.valueConstraint.valueTemplateRefs)
-                    // console.log(structure.valueConstraint.valueTemplateRefs.length)
-
-                    // // also check at the current level if it is a ref template
-                    // if (structure.valueConstraint && structure.valueConstraint.valueTemplateRefs && structure.valueConstraint.valueTemplateRefs.length > 1){
-                    //     console.log('here')
-                    //     if (!currentState.rt[activeProfileName].pt[component].activeType){
-                    //        currentState.rt[activeProfileName].pt[component].activeType =  this.rtLookup[structure.valueConstraint.valueTemplateRefs[0]].resourceURI
-                    //     }
-                    //     currentState.rt[activeProfileName].pt[component].userValue['@type'] = currentState.rt[activeProfileName].pt[component].activeType
-                    // }
-
-
-
-                    // if (parentStructure){
-                    //     console.log(parentStructure)
-                    //     console.log(parentStructure.valueConstraint)
-                    //     console.log(parentStructure.valueConstraint.valueTemplateRefs)
-                    //     console.log(parentStructure.valueConstraint.valueTemplateRefs.length)
-
-                    //     // also check at the current level if it is a ref template
-                    //     if (parentStructure.valueConstraint && parentStructure.valueConstraint.valueTemplateRefs && parentStructure.valueConstraint.valueTemplateRefs.length > 1){
-                    //         console.log('here')
-                    //         if (!currentState.rt[activeProfileName].pt[component].activeType){
-                    //            currentState.rt[activeProfileName].pt[component].activeType =  this.rtLookup[parentStructure.valueConstraint.valueTemplateRefs[0]].resourceURI
-                    //         }
-                    //         currentState.rt[activeProfileName].pt[component].userValue['@type'] = currentState.rt[activeProfileName].pt[component].activeType
-                    //     }
-                    // }
 
 
 
@@ -2192,6 +2141,7 @@ const parseProfile = {
 
                     if (!currentState.rt[activeProfileName].pt[component].userValue['@type']){
                         currentState.rt[activeProfileName].pt[component].userValue['@type'] = await exportXML.suggestType(currentState.rt[activeProfileName].pt[component].propertyURI)
+                  
                     }
 
 
@@ -2297,127 +2247,6 @@ const parseProfile = {
 
             }
 
-            // // check if this profile has the pt we are looking for
-            // if (currentState.rt[activeProfileName].pt[component]){
-
-            //     // is this a lookup entitiy or a literal / simple value
-            //     if (value.contextValue){
-                    
-            //         
-
-            //         // currentState.rt[activeProfileName].pt[component].userValue['http://www.w3.org/2002/07/owl#sameAs'] = {'http://www.w3.org/2000/01/rdf-schema#label': value.title,URI:value.uri, '@type': value.typeFull, context: value}
-
-            //         // // is it precoordinated
-            //         // if (value.precoordinated){
-            //         //     currentState.rt[activeProfileName].pt[component].userValue['http://www.w3.org/2002/07/owl#sameAs']['http://www.loc.gov/mads/rdf/v1#componentList'] = []
-            //         //     for (let pc of value.precoordinated){                            
-            //         //         currentState.rt[activeProfileName].pt[component].userValue['http://www.w3.org/2002/07/owl#sameAs']['http://www.loc.gov/mads/rdf/v1#componentList'].push({
-            //         //             'http://www.w3.org/2000/01/rdf-schema#label': pc.label,
-            //         //             '@type': pc.typeFull,
-            //         //             'URI': pc.uri
-            //         //         })
-            //         //     }
-
-            //         // }
-
-            //         //
-
-
-            //         // is it a nested lookup entitiy or a standa alone component
-            //         // if (template && !template.nested){
-            //         //     currentState.rt[activeProfileName].pt[component].userValue[key] = {'http://www.w3.org/2000/01/rdf-schema#label': value.title,URI:value.uri, '@type': value.type, context: value}
-            //         //     currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI
-            //         // }else if (template && template.nested){
-            //         //     currentState.rt[activeProfileName].pt[component].userValue[key] = {'http://www.w3.org/2000/01/rdf-schema#label': value.title,URI:value.uri, '@type': value.type, context: value}
-            //         //     currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI
-                        
-            //         //     // currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI
-            //         //     // currentState.rt[activeProfileName].pt[component].userValue[currentState.rt[activeProfileName].pt[component].propertyURI] = {literal: value.title,URI:value.uri, '@type': value.type}
-            //         //     // currentState.rt[activeProfileName].pt[component].userValue.context = value
-            //         // }
-            //     }
-
-            //     // else{
-
-                    
-            //     //     // are we clearing the state
-            //     //     if (typeof value === 'object' && Object.keys(value).length==0){
-            //     //         // if (currentState.rt[activeProfileName].pt[component].userValue[key]) delete currentState.rt[activeProfileName].pt[component].userValue[key]                        
-            //     //         // if (currentState.rt[activeProfileName].pt[component].userValue['http://www.w3.org/2000/01/rdf-schema#label']) delete currentState.rt[activeProfileName].pt[component].userValue['http://www.w3.org/2000/01/rdf-schema#label'] 
-            //     //         // if (currentState.rt[activeProfileName].pt[component].userValue['@type']) delete currentState.rt[activeProfileName].pt[component].userValue['@type'] 
-            //     //         // if (currentState.rt[activeProfileName].pt[component].userValue['uri']) delete currentState.rt[activeProfileName].pt[component].userValue['uri'] 
-
-            //     //         if (currentState.rt[activeProfileName].pt[component].userValue['http://www.w3.org/2002/07/owl#sameAs']) delete currentState.rt[activeProfileName].pt[component].userValue['http://www.w3.org/2002/07/owl#sameAs']
-            //     //     }else{
-                        
-
-            //     //         // when we a storing a literal we want to store it under the URI of its componet, not just a label, since all properties are co-mingling
-            //     //         // bad idea
-            //     //         // if (key === 'http://www.w3.org/2000/01/rdf-schema#label'){
-            //     //         //     key = currentState.rt[activeProfileName].pt[component].propertyURI
-            //     //         // }
-
-            //     //         // notes hit differently
-            //     //         if (template.resourceURI == 'http://id.loc.gov/ontologies/bibframe/Note'){
-                            
-            //     //             // doing a first level note, not a nested note
-            //     //             if (currentState.rt[activeProfileName].pt[component].propertyURI == 'http://id.loc.gov/ontologies/bibframe/note'){
-
-            //     //                 currentState.rt[activeProfileName].pt[component].userValue[key] = value
-
-            //     //             }else{
-            //     //                 // doing a bnode
-            //     //                 if (!currentState.rt[activeProfileName].pt[component].userValue['http://id.loc.gov/ontologies/bibframe/note']){
-            //     //                     currentState.rt[activeProfileName].pt[component].userValue['http://id.loc.gov/ontologies/bibframe/note'] = {'@type':'http://id.loc.gov/ontologies/bibframe/Note'}
-            //     //                 }
-            //     //                 currentState.rt[activeProfileName].pt[component].userValue['http://id.loc.gov/ontologies/bibframe/note'][key] = value
-
-            //     //             }
-            //     //         }else{
-
-            //     //             // get the class/prdicate
-            //     //             let keySegment = key.split('/')[key.split('/').length-1]
-            //     //             if (keySegment.charAt(0) === keySegment.charAt(0).toUpperCase()){
-
-            //     //                 // make the property version of it                                
-            //     //                 keySegment = setCharAt(keySegment,0,keySegment.charAt(0).toLowerCase())
-            //     //                 let url = key.split('/')
-            //     //                 url.splice(url.length-1,1)
-            //     //                 url.push(keySegment)
-            //     //                 url = url.join('/')
-                                
-            //     //                 // does it exist in our ontology
-            //     //                 if (lookupUtil.ontologyPropertyExists(url)){
-            //     //                     currentState.rt[activeProfileName].pt[component].userValue[url] = value
-            //     //                     // currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI                                    
-
-            //     //                 }else{
-
-            //     //                     currentState.rt[activeProfileName].pt[component].userValue[key] = value
-            //     //                     currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI                                
-            //     //                 }
-
-                                
-
-            //     //             }else{
-            //     //                 currentState.rt[activeProfileName].pt[component].userValue[key] = value
-            //     //                 currentState.rt[activeProfileName].pt[component].userValue['@type'] = template.resourceURI                                
-            //     //             }
-
-
-            //     //         }
-
-
-
-            //     //     }
-
-
-            //     // }
-                
-                
-            // }
-
-        // })
         let pValue = (value && value.title) ? ` (${value.title})` : "";
         let pURI = (parentStructure) ? parentStructure.propertyURI : structure.propertyURI;
         store.state.activeUndoLog.push(`Added lookup value${pValue} to ${exportXML.namespaceUri(pURI)}`)

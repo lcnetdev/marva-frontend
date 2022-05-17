@@ -44,7 +44,6 @@
 
 
   <div v-else style="position: relative;">
-
       <div  v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search']" :style="{'background-color': (structure.dynamic) ? 'auto' : 'auto' }">          
         <form autocomplete="off" v-on:submit.prevent style="">
           <div style="">
@@ -621,7 +620,7 @@ export default {
 
 
                 // kick off antoher search, then do the filter again
-                this.$store.dispatch("fetchLookupValues", { self: this, url: this.structure.valueConstraint.useValuesFrom[0], keyword: this.activeFilter }).then(() => {
+                this.$store.dispatch("fetchLookupValues", { self: this, url: this.structure.valueConstraint.useValuesFrom, keyword: this.activeFilter }).then(() => {
                   
                   this.filter(true)
 
