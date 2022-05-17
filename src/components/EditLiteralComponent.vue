@@ -15,9 +15,8 @@
                 <div style="position: absolute;" v-if="settingsDisplayMode=='compact'" class="component-nested-container-title">
                   <span>{{structure.propertyLabel}}</span>                  
                 </div>
-
                 <input  v-if="!isNoteField(structure.propertyLabel, inputV.value)" bfeType="EditLiteralComponent-unnested" :id="assignedId + '_' + idx" :data-guid="inputV.guid" v-on:keydown.enter.prevent="submitField" :name="assignedId" :ref="'input'+ '_' + inputV.guid" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keydown="nav" @keyup="change($event,inputV)" v-model="inputV.value" :class="['input-single', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true), 'input-accommodate-diacritics': (containsNonLatinCodepoints(inputV.value))}]">            
-                <textarea div="auto" v-if="isNoteField(structure.propertyLabel, inputV.value)" style="height:36px" bfeType="EditLiteralComponent-unnested" :id="assignedId + '_' + idx" :data-guid="inputV.guid" :name="assignedId" v-on:keydown.enter.prevent="submitField" :ref="'input'+ '_' + inputV.guid" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-single', 'input-textarea-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]"></textarea>
+                <textarea div="auto" v-if="isNoteField(structure.propertyLabel, inputV.value)" style="height:36px" bfeType="EditLiteralComponent-unnested" :id="assignedId + '_' + idx" :data-guid="inputV.guid" :name="assignedId" v-on:keydown.enter.prevent="submitField" :ref="'input'+ '_' + inputV.guid" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-single', 'input-textarea-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true),'input-accommodate-diacritics-textarea': (containsNonLatinCodepoints(inputV.value))}]"></textarea>
               
 
               </form>
@@ -98,7 +97,7 @@
                   <span>{{structure.propertyLabel}}</span>                  
                 </div>
                 <input v-if="!isNoteField(structure.propertyLabel, inputV.value)"   :ref="'input'+ '_' + inputV.guid"  :data-guid="inputV.guid"  bfeType="EditLiteralComponent-nested" :id="assignedId + '_' + idx"  :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true),'input-accommodate-diacritics': (containsNonLatinCodepoints(inputV.value))}]">
-                <textarea dir="auto" v-if="isNoteField(structure.propertyLabel, inputV.value)" :ref="'input'+ '_' + inputV.guid"  :data-guid="inputV.guid"  bfeType="EditLiteralComponent-nested" :id="assignedId + '_' + idx"  :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-nested', 'input-textarea-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true)}]"></textarea>
+                <textarea dir="auto" v-if="isNoteField(structure.propertyLabel, inputV.value)" :ref="'input'+ '_' + inputV.guid"  :data-guid="inputV.guid"  bfeType="EditLiteralComponent-nested" :id="assignedId + '_' + idx"  :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-nested', 'input-textarea-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true),'input-accommodate-diacritics-textarea': (containsNonLatinCodepoints(inputV.value))}]"></textarea>
               </form>
             </div>
             
@@ -1294,6 +1293,9 @@ export default {
 .input-accommodate-diacritics{
   line-height: 1.6em; /* this allows for diacritic ligatures to be visible */
 
+}
+.input-accommodate-diacritics-textarea{
+  padding: 5px;
 }
 
 

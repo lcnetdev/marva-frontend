@@ -1969,6 +1969,8 @@ const parseProfile = {
 
     setValueComplex: async function(currentState, component, key, activeProfileName, template, value, structure,parentStructure){
 
+            console.log("setvaluecomplex")
+            console.log(currentState, component, key, activeProfileName, template, value, structure,parentStructure)
             // if it is a top level Work uri don't let them change it
             if (!parentStructure && structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/Work'){
 
@@ -2081,6 +2083,20 @@ const parseProfile = {
                         // testing just making sure there is only one value in there
                         userValue = []
 
+                        if (!value.typeFull && value.type == "Literal Value"){
+
+                            if (structure && structure.propertyURI == "http://id.loc.gov/ontologies/bibframe/agent"){
+                                value.typeFull = 'http://id.loc.gov/ontologies/bibframe/Agent'
+                            }else if (parentStructure && parentStructure.propertyURI == "http://id.loc.gov/ontologies/bibframe/agent"){
+                                value.typeFull = 'http://id.loc.gov/ontologies/bibframe/Agent'
+                            }
+
+                            // if its looking up from an agent 
+
+                        }
+
+
+
                         userValue.push({
                             '@guid': short.generate(),
                             '@type': value.typeFull,
@@ -2093,6 +2109,7 @@ const parseProfile = {
                                 }
                             ]
                         })
+
 
                     }
 
@@ -2114,7 +2131,7 @@ const parseProfile = {
 
 
                 }else if (parentStructure && key == 'http://www.w3.org/2002/07/owl#sameAs' && currentState.rt[activeProfileName].pt[component].propertyURI == parentStructure.propertyURI){
-                    console.log('case 2')
+                    // console.log('case 2')
                     currentState.rt[activeProfileName].pt[component].userValue = {
                             '@guid': short.generate(),
                             '@type': await exportXML.suggestType(parentStructure.propertyURI),
@@ -2130,7 +2147,7 @@ const parseProfile = {
                         }
 
                 }else if (structure.type == 'lookup' && parentStructure && relatedEdgecaseParentProperty > -1){
-
+                    // console.log('case 3')
                     // thre are some very nested template, which we are just checking for
                     if (!currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI]){
                         currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI] = []
@@ -2202,7 +2219,7 @@ const parseProfile = {
                 
                 }else{
 
-
+                    console.log('case 5')
 
                     // dunno, use the root level
                     currentState.rt[activeProfileName].pt[component].userValue = {
