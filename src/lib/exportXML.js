@@ -133,7 +133,6 @@ const exportXML = {
 		}
 
 		let profileLookup = parseProfile.suggestType(propertyURI)
-		console.log('profileLookup0',profileLookup)
 		if (profileLookup != false){
 			result = profileLookup
 		}
@@ -1300,12 +1299,51 @@ const exportXML = {
 		}
 
 
+		if (rdfBasic.getElementsByTagName("bf:Instance").length>0){
+			let i = rdfBasic.getElementsByTagName("bf:Instance")[0]
 
-		if (rdfBasic.getElementsByTagName("bf:Lccn").length>0){
-			xmlVoidDataLccn = rdfBasic.getElementsByTagName("bf:Lccn")[0].innerText || rdfBasic.getElementsByTagName("bf:Lccn")[0].textContent
-		}else{
-			console.warn('no bf:Lccn found for db')
+			// then find all the lccns and living in the bf:identifiedBy
+			for (let c of i.children){
+				if (c.tagName === 'bf:identifiedBy'){
+
+					// grab the lccn bnode
+					if (c.getElementsByTagName("bf:Lccn").length>0){
+						let lccnEl = c.getElementsByTagName("bf:Lccn")[0]
+
+						// does it have a status
+						if (lccnEl.getElementsByTagName("bf:Status").length==0){
+							// no status element, so this is it
+							xmlVoidDataLccn = lccnEl.innerText || lccnEl.textContent
+							//break
+						}else if (lccnEl.getElementsByTagName("bf:Status").length>0){
+							// it does have a status, if it is canceled then we dont wnat to use it
+							// so check if it is NOT canceld and if so use it
+							if (lccnEl.getElementsByTagName("bf:Status")[0].hasAttribute('rdf:about') && lccnEl.getElementsByTagName("bf:Status")[0].attributes['rdf:about'].value == 'http://id.loc.gov/vocabulary/mstatus/cancinv'){
+								continue
+							}
+							// otherwise use this one, it has a status but thats fine
+							for (let cc of lccnEl.children){
+								if (cc.tagName == 'rdf:value'){
+									xmlVoidDataLccn = cc.innerText || cc.textContent
+								}
+							}
+
+						}
+					}
+				}
+				
+			}
+
+
+
 		}
+
+		// this was the old way we pulled out LCCN before above
+		// if (rdfBasic.getElementsByTagName("bf:Lccn").length>0){
+		// 	xmlVoidDataLccn = rdfBasic.getElementsByTagName("bf:Lccn")[0].innerText || rdfBasic.getElementsByTagName("bf:Lccn")[0].textContent
+		// }else{
+		// 	console.warn('no bf:Lccn found for db')
+		// }
 
 
 		// create the holder
