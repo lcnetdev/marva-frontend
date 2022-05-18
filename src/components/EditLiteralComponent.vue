@@ -88,6 +88,7 @@
 
         <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="openDiacriticSelect" />
         <Keypress key-event="keydown" :multiple-keys="[{keyCode: 86, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="openEditor" />
+       <Keypress key-event="keydown" :multiple-keys="[{keyCode: 90, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="addAnotherLiteral" />
 
 
         <div v-for="(inputV,idx) in inputValue" :key="`input_${idx}`" v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border', { 'component-container-fake-input-note' : isNoteField(structure.propertyLabel, inputV.value)  }]" >
@@ -105,6 +106,10 @@
             
             <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-guid="inputV.guid" :data-tooltip="'Diacritics [CTRL-ALT-SHIFT-D]'" @click="openDiacriticSelect"></button>
             <button tabindex="-1" class="temp-icon-expand fake-real-button simptip-position-top" :data-guid="inputV.guid" :data-tooltip="'Editor [CTRL-ALT-SHIFT-V]'" @click="openEditor"></button>
+     
+            <button v-if="showAddAddditonalLiteralButton" tabindex="-1" class="temp-icon-add fake-real-button simptip-position-top" :data-guid="inputV.guid" :data-tooltip="'Add Literal [CTRL-ALT-SHIFT-Z]'" @click="addAnotherLiteral"></button>
+
+
           </div>
         </div>
 
@@ -201,6 +206,10 @@ export default {
 
   methods: {
 
+    addAnotherLiteral: function(){
+
+      this.inputValue.push({value:'',guid:'new_' + short.generate()})
+    },
 
     closeEditor: function(){
 
@@ -1170,11 +1179,32 @@ export default {
     settingsDPackVoyager: 'settingsDPackVoyager',
     settingsDPackVoyagerNative: 'settingsDPackVoyagerNative',
     assignedId (){
-
-
       return uiUtils.assignID(this.structure,this.parentStructure)
-
     },    
+
+    showAddAddditonalLiteralButton (){
+
+
+      // does the profile have a literal lang somewhere
+      for (let rt in this.activeProfile.rt){
+        if (this.activeProfile.rt[rt].hasLiteralLangFields){
+          if (config.allowLiteralRepeatForNonRomain.includes(this.structure.propertyURI)){
+            return true
+          }
+          if (this.parentStructureObj && config.allowLiteralRepeatForNonRomain.includes(this.parentStructureObj.propertyURI)){
+            return true
+          }
+
+        }
+      }
+      
+
+      return false
+
+
+    },
+
+
   }), 
 
   watch: {
@@ -1217,7 +1247,6 @@ export default {
   created: function(){
 
     this.refreshInputDisplay()
-    console.log("activeProfile",this.activeProfile)
 
     // this.settingsTreatLikeNoteFieldsInital = this.settingsTreatLikeNoteFields
 
@@ -1289,7 +1318,7 @@ export default {
 }
 
 .input-textarea-nested-rtl{
-  width: 85%;
+  width: 80%;
 }
 
 .input-accommodate-diacritics{
@@ -1415,12 +1444,13 @@ textarea{
   display: none;
   position: absolute;
   right: 0;
-
+}
+.temp-icon-add{
+  display: none;
+  position: absolute;
+  right: 90px;
 }
 
-.temp-icon-expand:hover{
-
-}
 
 
 .component-container-fake-input:focus-within .temp-icon-keyboard {
@@ -1429,6 +1459,11 @@ textarea{
   display: block;
 }
 .component-container-fake-input:focus-within .temp-icon-expand {
+  /*border: solid 1px #718ec3 !important;*/
+  /*padding: 2px !important;*/  
+  display: block;
+}
+.component-container-fake-input:focus-within .temp-icon-add {
   /*border: solid 1px #718ec3 !important;*/
   /*padding: 2px !important;*/  
   display: block;

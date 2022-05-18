@@ -122,6 +122,16 @@ const config = {
 	],
 
 
+	// these are the predicate fields that allow you to add another literal value
+	// for the literals in the component if the proifle has literal-lang somewhere in it
+	allowLiteralRepeatForNonRomain: [
+		'http://id.loc.gov/ontologies/bibframe/title',
+		'http://id.loc.gov/ontologies/bibframe/provisionActivity',
+		'http://id.loc.gov/ontologies/bibframe/agent'
+
+	],
+
+
 
 	lookupConfig: {
 
