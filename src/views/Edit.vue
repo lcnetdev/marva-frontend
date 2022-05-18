@@ -819,6 +819,10 @@ export default {
             if (uri == 'http://id.loc.gov/ontologies/bibframe/note'){
                 return true
             }
+            if (uri == 'http://id.loc.gov/ontologies/bibframe/genreForm'){
+                return true
+            }
+
             
         }
 
