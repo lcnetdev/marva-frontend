@@ -1300,9 +1300,13 @@ const lookupUtil = {
           url = url + '.rdf'
         }
         
-        
-        let r = await this.fetchSimpleLookup(url)
+        let r
 
+        try{
+          r = await this.fetchSimpleLookup(url)
+        }catch{
+          return false
+        }
         
 
 

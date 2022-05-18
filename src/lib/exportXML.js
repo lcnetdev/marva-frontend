@@ -118,6 +118,13 @@ const exportXML = {
 
 		let result = false
 
+
+		// some very common hardcoded options
+		if (propertyURI==='http://www.w3.org/2000/01/rdf-schema#label'){
+			return 'http://www.w3.org/2000/01/rdf-schema#Literal'
+		}
+
+
 		// at this point we have a well cached lookup of the whole onotlogy in localstorage
 		// ask for this one, if it idoesnt have it, it will relookup (or if it is expired)
 		let propXml = await lookupUtil.fetchOntology(propertyURI)
