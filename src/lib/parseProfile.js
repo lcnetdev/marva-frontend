@@ -425,6 +425,9 @@ const parseProfile = {
                                 pt['@guid'] = short.generate()
                                 pt.canBeHidden = false
                                 
+                                if (pt.type === 'literal-lang'){
+                                    this.profiles[p.json.Profile.id].rt[rt.id].hasLiteralLangFields = true
+                                }
 
                                 let key = pt.propertyURI + '|' + ((pt.propertyLabel) ? pt.propertyLabel : "plabel")
                                 this.profiles[p.json.Profile.id].rt[rt.id].ptOrder.push(key)

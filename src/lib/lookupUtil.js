@@ -685,6 +685,12 @@ const lookupUtil = {
                   }
 
 
+                  if (url.includes('/instances/') || url.includes('/works/') || url.includes('/hubs/')){
+                    if (config.returnUrls().env === 'production'){
+                      url = url.replace('https://id.','https://preprod-8080.id.')
+                      url = url.replace('http://id.','http://preprod-8080.id.')
+                    }
+                  }
                   
 
                   let response = await fetch(url.replace('http://','https://')+'.nt');

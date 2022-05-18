@@ -84,6 +84,8 @@
 
 
   <div v-else-if="hideField == false">
+
+
         <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="openDiacriticSelect" />
         <Keypress key-event="keydown" :multiple-keys="[{keyCode: 86, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="openEditor" />
 
@@ -1215,7 +1217,7 @@ export default {
   created: function(){
 
     this.refreshInputDisplay()
-
+    console.log("activeProfile",this.activeProfile)
 
     // this.settingsTreatLikeNoteFieldsInital = this.settingsTreatLikeNoteFields
 

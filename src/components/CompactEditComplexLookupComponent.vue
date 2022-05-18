@@ -1668,10 +1668,18 @@ export default {
       }
 
       if (this.searchValue.length<3){
-        // but do just init the search options since they are computed
-        // so they can display
-        this.modalSelectOptions
-        return false
+        // check the config, some vocabs have very short codes, like the marc geo
+        // so if it is configed to allow short search overtide the < 3 rule
+        let minCharBeforeSearch = 3
+        this.modalSelectOptions.forEach((a)=>{
+          if (a.minCharBeforeSearch && a.minCharBeforeSearch < minCharBeforeSearch){
+            minCharBeforeSearch = a.minCharBeforeSearch
+          }
+        })
+
+        if (this.searchValue.length<minCharBeforeSearch){
+          return false
+        }
       }
       window.clearTimeout(this.searchTimeout)
 
