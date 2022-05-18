@@ -3,8 +3,8 @@
 const config = {
 
 	versionMajor: 0,
-	versionMinor: 9,
-	versionPatch: 14,
+	versionMinor: 10,
+	versionPatch: 0,
 
 
 
