@@ -62,6 +62,7 @@
           <Keypress key-event="keydown" :key-code="33" @success="movePageUp" />
 
           <Keypress key-event="keydown" :multiple-keys="[{keyCode: 187, modifiers: ['ctrlKey','shiftKey'],preventDefault: true}]" @success="dupeProperty" />
+          <Keypress key-event="keydown" :multiple-keys="[{keyCode: 189, modifiers: ['ctrlKey','shiftKey'],preventDefault: true}]" @success="removeProperty" />
 
 
 
@@ -151,7 +152,7 @@
                                                 </svg>
                                             </button>
                                             
-                                            <button title="Remove Component" class="left-menu-button-remove" @click="removeProperty(profileName,profileCompoent)">
+                                            <button  class="left-menu-button-remove" title="Remove Component [CRTL+SHIFT+MINUS_SIGN(-)]" @click="removeProperty(profileName,profileCompoent)">
                                                 <svg width="25px" height="25px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                                                  <g>
                                                   <path class="enriched-menu-icon" d="m50 0c-27.613 0-50 22.387-50 50s22.387 50 50 50 50-22.387 50-50-22.387-50-50-50zm0 90c-22.059 0-40-17.941-40-40s17.941-40 40-40 40 17.941 40 40-17.941 40-40 40z"/>
@@ -749,6 +750,18 @@ export default {
 
     removeProperty: function(profileName, profileCompoent){
 
+        // if they use the keyboard shortcut we can't just pass the right info so lookitup
+        if (!profileName || !profileCompoent){
+            for (let rt in this.activeProfile.rt){
+                for (let pt in this.activeProfile.rt[rt].pt){
+                    if (pt == this.activeComponent){
+                        profileName = rt
+                    }
+                }
+            }
+            profileCompoent = this.activeComponent
+        }
+        
 
       const answer = window.confirm('Are you sure you want to remove the property?')
       if (answer) {
