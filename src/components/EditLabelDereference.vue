@@ -56,10 +56,18 @@ export default {
           }else{
 
             let self = this
-            fetch(URL, {method: 'HEAD', redirect: "follow" }).then(
+            fetch(URL, {method: 'HEAD' }).then(
               function(response)
                 {
+
+                  // an id upgrade enables a ecoded pref-label to be exposed 
+                  // since the old x-preflabel is not encoded and header vars are not unicode supporting
+                  // so use it if avialable
                   let preflabel = response.headers.get("x-preflabel");
+                  if (response.headers.get("x-preflabel-encoded")){
+                    preflabel = decodeURIComponent(response.headers.get("x-preflabel-encoded"));
+                  }
+
                   if (preflabel){
                     self.displayLabel = preflabel
 

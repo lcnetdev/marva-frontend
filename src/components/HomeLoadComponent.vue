@@ -490,7 +490,7 @@ export default {
 
 
 
-        '/bfe2/editor/tests/instances/20969670.editor-pkg.xml', // non-latin souble title
+        // '/bfe2/editor/tests/instances/20969670.editor-pkg.xml', // non-latin souble title
 
 
         // '/bfe2/editor/tests/instances/22395548.editor-pkg.xml', // multiple non-latin literal values in main title and provision activity
@@ -503,7 +503,7 @@ export default {
 
 
 
-        // '/bfe2/editor/tests/instances/22471751.editor-pkg.xml', // DVD fields not populating
+        '/bfe2/editor/tests/instances/22471751.editor-pkg.xml', // DVD fields not populating
 
 
 
