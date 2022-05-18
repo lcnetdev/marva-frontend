@@ -2,6 +2,7 @@
   
   <div tabindex="-1" @click="displayModeClick($event)" @keydown="displayModeElementKeydown($event)"  :class="['resource-grid-field-list-navable', `resource-${resourceIdx}`]" :id="`navable-${resourceIdx}-1-${rowIdx}-${componentIdx}`" v-if="hideField == false">
     <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: false}]" @success="openDiacriticSelect" />
+    <Keypress key-event="keydown" :multiple-keys="[{keyCode: 90, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="addAnotherLiteral" />
 
 
 
@@ -10,7 +11,7 @@
         <div style="position: relative;">
           <div style="">
             <form autocomplete="off">            
-              <input :placeholder="structure.propertyLabel" @blur="literalBlur() "  bfeType="EditLiteralComponent-unnested" :id="assignedId" v-on:keydown.enter.prevent="submitField" :name="assignedId" :ref="'input'+ '_' + inputV.guid" v-on:focus="focused" autocomplete="off" type="text" @keydown="nav" @keyup="change($event,inputV)" v-model="inputV.value"  :class="['input-single', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true), 'input-accommodate-diacritics': (containsNonLatinCodepoints(inputV.value))}]">            
+              <input :placeholder="structure.propertyLabel" @blur="literalBlur($event) "  bfeType="EditLiteralComponent-unnested" :id="assignedId" v-on:keydown.enter.prevent="submitField" :name="assignedId" :ref="'input'+ '_' + inputV.guid" v-on:focus="focused" autocomplete="off" type="text" @keydown="nav" @keyup="change($event,inputV)" v-model="inputV.value"  :class="['input-single', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true), 'input-accommodate-diacritics': (containsNonLatinCodepoints(inputV.value))}]">            
             </form>
           </div>
           <button tabindex="-1" class="temp-icon-keyboard fake-real-button simptip-position-top" :data-tooltip="'Diacritics [CTRL-ALT-D]'" @click="openDiacriticSelect"></button>
@@ -90,6 +91,13 @@ export default {
   },
 
   methods: {
+
+
+    addAnotherLiteral: function(){
+
+      this.inputValue.push({value:'',guid:'new_' + short.generate()})
+    },
+
 
     refreshInputDisplay: function(){
 
@@ -257,6 +265,11 @@ export default {
     },
 
     literalBlur: function(){
+
+      // quick fix, if they are clicking into the other literal field don't blur
+      if (this.inputValue.length>1){
+        return false
+      }
 
       this.editMode=false
       this.$store.dispatch("enableMacroNav")
