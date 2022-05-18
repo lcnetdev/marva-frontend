@@ -250,9 +250,7 @@
 				<bflc:aap-normalized>sarajevohaggadah</bflc:aap-normalized>
 				<madsrdf:isMemberOfMADSScheme rdf:resource="http://id.loc.gov/vocabulary/subjectSchemes/naf"/>
 				<bf:source>
-					<bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/naf">
-						<rdfs:label>NACO authority file</rdfs:label>
-					</bf:Source>
+					<bf:Source rdf:about="http://id.loc.gov/vocabulary/subjectSchemes/rvm"/>
 				</bf:source>
 			</bf:Topic>
 		</bf:subject>

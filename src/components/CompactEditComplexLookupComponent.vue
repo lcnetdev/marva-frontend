@@ -432,7 +432,7 @@ export default {
           this.lookupConfig[l].modes.forEach((mode)=>{
             
             Object.keys(mode).forEach((k)=>{
-              options.push({label: k, urls:mode[k].url, processor:this.lookupConfig[l].processor, all:mode[k].all })
+              options.push({label: k, urls:mode[k].url, processor:this.lookupConfig[l].processor, minCharBeforeSearch: (this.lookupConfig[l].minCharBeforeSearch ? this.lookupConfig[l].minCharBeforeSearch : false), all:mode[k].all })
               // mark the first All one we find as the first one
               if (!this.modeSelect && mode[k].all){
                 this.modeSelect = k
