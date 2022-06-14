@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import parseProfile from "@/lib/parseProfile"
 import lookupUtil from "@/lib/lookupUtil"
 import exportXML from "@/lib/exportXML"
+// import exportXMLWorker from "@/lib/exportXMLWorker"
 
 Vue.use(Vuex);
 
@@ -144,6 +145,7 @@ export default new Vuex.Store({
 
       // console.log(state, commit,exportXML)
       // state.lastActiveProfile = JSON.parse(JSON.stringify(state.activeProfile))
+      // exportXMLWorker.test()
       
       exportXML.toBFXML(state.activeProfile)
       .then((xml)=>{
