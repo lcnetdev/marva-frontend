@@ -251,6 +251,13 @@ const lookupUtil = {
     },
 
 
+    userTemplates: async function(user){
+
+      return fetch(config.returnUrls().util+'templates/'+user).then(response => response.json())
+
+    },
+
+
     searchComplex: async function(searchPayload){
         
         let urlTemplate = searchPayload.url

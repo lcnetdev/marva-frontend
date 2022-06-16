@@ -675,6 +675,40 @@ export default new Vuex.Store({
 
     }, 
 
+
+    setTemplateDataFlow({ commit, state }, data) { 
+
+
+
+      if (!state.activeProfile.templateDataFlow){
+        state.activeProfile.templateDataFlow={}
+      }
+
+      if (data.value == 'both'){
+        // if the value is both then it is the default behavior, we don't need to store it
+        delete state.activeProfile.templateDataFlow[data.id]
+      }else{
+        state.activeProfile.templateDataFlow[data.id] = data.value
+      }
+
+      // don't even keep it around if there are no values
+      if (Object.keys(state.activeProfile.templateDataFlow)==0){
+        delete state.activeProfile.templateDataFlow
+      }
+
+      commit('ACTIVEPROFILE', state.activeProfile)
+
+    },
+
+
+    setTemplateName({ commit, state }, data) { 
+      state.activeProfile.templateLabel = data.value
+      commit('ACTIVEPROFILE', state.activeProfile)
+    },
+
+
+    
+
     async setValueSubject({ commit, state }, data) { 
 
       let nap = await parseProfile.setValueSubject(state.activeProfile, data.profileComponet, state.activeProfileName, data.subjectComponents)

@@ -374,6 +374,11 @@ button[disabled]{
 
 
 
+.template-td:hover{
+    background-color: #f8fec6;
+    cursor: pointer;
+}
+
 </style>
 
 <template>
@@ -760,11 +765,11 @@ button[disabled]{
             <div style="flex: 1; position: relative; height:100%;">
                 
                 <div style="font-weight:bold">Create Template</div>
-                <input type="" class="input" style="font-size:1.25em; width:95%" name="" placeholder="Name of Template">
+                <input type="" class="input" style="font-size:1.25em; width:95%" @change="templateNameChange" v-model="templateLabel" name="" placeholder="Name of Template">
                 
                 <div style="margin-top: 25%">
                     <button style="font-size: 1.5em;  margin: 0.25em;" @click="displayTemplate===false">Cancel</button>
-                    <button style="font-size: 1.5em;  margin: 0.25em;" @click="displayTemplate===false">Create</button>
+                    <button style="font-size: 1.5em;  margin: 0.25em;" @click="saveTemplate(false)">Create</button>
                 </div>
 
 
@@ -774,9 +779,9 @@ button[disabled]{
 
                 <div style="height:100%; background-color: transparent; overflow: scroll">
                     <div>
-                        How should data flow into the template?<br>
+                        How should data flow into the template when merging with a resource record?<br>
                         Template = Data from template should overwrite resource<br>
-                        Source = Data from resource should overwrite template data<br>
+                        Resource = Data from resource should overwrite template data<br>
                         Both = Keep both on import<br>
                     </div>
                     <table>
@@ -791,30 +796,39 @@ button[disabled]{
                         <tbody>
                             
                             <template v-for="rt in Object.keys(activeProfile.rt)">
-                                <tr :key="rt">
-                                    <td colspan="4">
-                                        <span v-if="rt.includes(':Work')" style="font-weight:bold;">Work</span>
-                                        <span v-if="rt.includes(':Instance')" style="font-weight:bold;">Instance</span>
-                                    </td>
-                                </tr>
-                                <tr v-for="pt in activeProfile.rt[rt].ptOrder" :key="rt+pt">
-                                    <template v-if="Object.keys(activeProfile.rt[rt].pt[pt].userValue).length>1">
-                                        <td>
-                                        <span style="padding-left: 10px">{{pt.split('|')[1]}}</span>
+                                <template v-if="!rt.match(/-[0-9]+$/)">
+                                    
+                                    
+                                    <tr :key="rt">
+                                        <td colspan="4">
+                                            <span v-if="rt.includes(':Work')" style="font-weight:bold;">Work</span>
+                                            <span v-if="rt.includes(':Instance')" style="font-weight:bold;">Instance</span>
+                                            <span v-if="rt.includes(':Item')" style="font-weight:bold;">Item</span>
+                                            <span v-if="rt.includes(':Hub')" style="font-weight:bold;">Hub</span>
+
                                         </td>
-                                        <td style="text-align: center;">
-                                            <input type="radio" :name="rt+pt" value="template">
-                                        </td>
-                                        <td style="text-align: center;">
-                                            <input type="radio" :name="rt+pt" value="resource">
-                                        </td>
-                                        <td style="text-align: center;">
-                                            <input type="radio" :name="rt+pt" value="both" checked="checked">
-                                        </td>
-                                    </template>
+                                    </tr>
+                                    <tr v-for="pt in activeProfile.rt[rt].ptOrder" :key="rt+pt">
 
 
-                                </tr>
+                                        <template v-if="Object.keys(activeProfile.rt[rt].pt[pt].userValue).length>1 && templatesDataFlowHide.filter((v)=> { return pt.includes(v) }).length==0">
+                                            <td>
+                                            <span style="padding-left: 10px">{{pt.split('|')[1]}}</span>
+                                            </td>
+                                            <td class="template-td" style="text-align: center;" @click="templatesTDClick">
+                                                <input type="radio" :name="buildPropFlowId(rt,pt)" value="template" @change="templatesPropFlowChange" :checked="templatesPropertyIsChecked(buildPropFlowId(rt,pt),'template')">
+                                            </td>
+                                            <td class="template-td" style="text-align: center;" @click="templatesTDClick">
+                                                <input type="radio" :name="buildPropFlowId(rt,pt)" value="resource" @change="templatesPropFlowChange" :checked="templatesPropertyIsChecked(buildPropFlowId(rt,pt),'resource')">
+                                            </td>
+                                            <td class="template-td" style="text-align: center;" @click="templatesTDClick" v-if="templatesDataFlowCantBeBoth.filter((v)=> { return pt.includes(v) }).length==0">
+                                                <input type="radio" :name="buildPropFlowId(rt,pt)" value="both" @change="templatesPropFlowChange" :checked="templatesPropertyIsChecked(buildPropFlowId(rt,pt),'both')">
+                                            </td>
+                                        </template>
+
+
+                                    </tr>
+                                </template>
                             </template>
                             
 
@@ -973,6 +987,8 @@ import { mapState } from 'vuex'
 
 import exportXML from "@/lib/exportXML"
 import lookupUtil from "@/lib/lookupUtil"
+import parseProfile from "@/lib/parseProfile"
+
 import config from "@/lib/config"
 import EditLiteralLanguage from "@/components/EditLiteralLanguage"
 import EditNavLiteralDisplayOptions from "@/components/EditNavLiteralDisplayOptions"
@@ -1051,7 +1067,21 @@ export default {
       displayPreview: false,
       xmlPreview: 'Loading...',
       showPostModal: false,
-      showPostModalErrorMsg: false,      
+      showPostModalErrorMsg: false,
+
+      templateLabel: "",
+
+      templatesDataFlowCantBeBoth: [
+        'id.loc.gov/ontologies/bibframe/adminMetadata',
+
+
+      ],
+      templatesDataFlowHide: [
+        'id.loc.gov/ontologies/bibframe/instanceOf',
+        
+
+      ],  
+
 
       list: [],
       drag: false
@@ -1115,6 +1145,7 @@ export default {
 
 
               if (this.showPostModal){ return false}
+              if (this.displayTemplate){ return false}
               if (this.optionDisplay){ return false}
               if (this.subjectListDisplay){ return false}
 
@@ -1172,6 +1203,7 @@ export default {
 
 
               if (this.showPostModal){ return false}
+              if (this.displayTemplate){ return false}
               if (this.displayPreview){ return false}
 
                 
@@ -1197,6 +1229,109 @@ export default {
 
 
   methods:{
+
+
+
+    buildPropFlowId: function(rt,pt){
+
+        // the id will be the profile, the property URI and the primary data type dataTypeURI
+        let id = rt + '|' + this.activeProfile.rt[rt].pt[pt].propertyURI
+        if (this.activeProfile.rt[rt].pt[pt].valueConstraint && this.activeProfile.rt[rt].pt[pt].valueConstraint.valueDataType && this.activeProfile.rt[rt].pt[pt].valueConstraint.valueDataType.dataTypeURI && this.activeProfile.rt[rt].pt[pt].valueConstraint.valueDataType.dataTypeURI.trim() != ''){
+            id = id + '|' + this.activeProfile.rt[rt].pt[pt].valueConstraint.valueDataType.dataTypeURI
+        }
+
+
+        return id
+
+    },
+
+    templatesPropFlowChange: function(event){
+        this.$store.dispatch("setTemplateDataFlow",{ id: event.target.name, value: event.target.value   }).then(() => {   
+        });   
+    },
+
+    templateNameChange: function(){
+
+        this.$store.dispatch("setTemplateName",{ value: this.templateLabel  }).then(() => {   
+        });  
+    },
+
+    templatesTDClick: function(event){
+
+        if (event.target.tagName=='TD'){
+            event.target.children[0].checked="checked"
+            this.templatesPropFlowChange({target:event.target.children[0]})
+        }
+        
+
+
+    },
+
+    templatesPropertyIsChecked: function(property,checkingFor){
+
+        // if there is no data stored then its a "both"
+        // unless its on the the ones that cant be both then its a resource
+        if (this.templatesDataFlowCantBeBoth.filter((v)=> { return property.includes(v) }).length>0){            
+            if (!this.activeProfile.templateDataFlow){
+                if (checkingFor == 'resource'){
+                    return "checked"            
+                }else{
+                    return false
+                }
+            }else if (this.activeProfile.templateDataFlow[property]){
+                if (checkingFor == this.activeProfile.templateDataFlow[property]){
+                    console.log("IT WORKED")
+                    return "checked"
+                }else{
+                    return false
+                }
+            }else{
+                return false // just say no
+            }            
+        }else{
+
+            if (!this.activeProfile.templateDataFlow){
+                
+                // the default return val is both
+                if (checkingFor == 'both'){
+                    return "checked"
+                }else{
+                    return false
+                }
+
+            }else if (this.activeProfile.templateDataFlow[property]){
+                if (checkingFor == this.activeProfile.templateDataFlow[property]){
+                    return "checked"
+                }else{
+                    return false
+                }
+            }else{
+                
+                // the default return val is both
+                if (checkingFor == 'both'){
+                    return "checked"
+                }else{
+                    return false
+                }
+            }  
+
+
+        }
+
+
+    },
+
+    async saveTemplate(overwrite){
+
+        if (this.templateLabel.trim()==''){
+            alert("Please name the template")
+            return false
+        }
+
+        await parseProfile.prepareTemplate(this.activeProfile,overwrite)
+
+
+    },
 
     subjectDragEnd: function(){
 
@@ -1560,6 +1695,9 @@ export default {
       if (this.showPostModal){
         this.showPostModal = false
       }
+
+    if (this.displayTemplate){ this.displayTemplate = false}
+
 
       if (this.displayLiteralOptions){
         this.displayLiteralOptions = false

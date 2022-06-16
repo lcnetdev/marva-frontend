@@ -37,8 +37,8 @@ const parseBfdb = {
 		'datatypes': 'http://id.loc.gov/datatypes/',
 		'xsd': 'http://www.w3.org/2001/XMLSchema#',
 		'mstatus': 'https://id.loc.gov/vocabulary/mstatus/',
-		'mnotetype': 'http://id.loc.gov/vocabulary/mnotetype/'
-
+		'mnotetype': 'http://id.loc.gov/vocabulary/mnotetype/',
+		'dcterms': 'http://purl.org/dc/terms/'
 	},
 
 

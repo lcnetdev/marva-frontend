@@ -25,7 +25,8 @@ const exportXML = {
 		'void':'http://rdfs.org/ns/void#',
 		'mstatus': 'https://id.loc.gov/vocabulary/mstatus/',
 		'mnotetype': 'http://id.loc.gov/vocabulary/mnotetype/',
-		'owl': 'http://www.w3.org/2002/07/owl#'
+		'owl': 'http://www.w3.org/2002/07/owl#',
+		'dcterms': 'http://purl.org/dc/terms/'
 
 	},
 

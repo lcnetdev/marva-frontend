@@ -22,9 +22,7 @@
             <tr>
                 <th scope="col">Name</th>
                 <th scope="col">Based on profile</th>
-                <th scope="col">Type</th>
                 <th scope="col">Modified</th>
-                <th scope="col">Hot Key</th>
                 <th scope="col">
 
 
@@ -35,17 +33,25 @@
                 </th>                
             </tr>
         </thead>
-        <tbody>
+
+        <tbody v-if="userTemplates.length==0">
             <tr>
-                <td>No templates yet</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            
+                <td colspan="4">Loading templates...</td>
+            </tr>            
         </tbody>
+        <tbody v-else>
+            <tr v-for="t in userTemplates" :key="t.id">
+
+
+                <td v-bind:class="['selectable-template']" @click="loadUserTemplate(t)">{{t.label}}</td>
+                <td>{{t.basedOnProfile.map(v => v.replace('lc:RT:bf2:','') ).join(', ')}}</td>
+                <td>{{new Date(t.timestamp*1000).toISOString().slice(0,10)}}</td>
+                <td></td>
+
+
+            </tr>            
+        </tbody>
+
     </table>    
 
 
@@ -144,6 +150,7 @@
 import { mapState } from 'vuex'
 // import uiUtils from "@/lib/uiUtils"
 import parseProfile from "@/lib/parseProfile"
+import lookupUtil from "@/lib/lookupUtil"
 
 
 
@@ -196,20 +203,47 @@ export default {
 
     loadTemplate: parseProfile.loadNewTemplate,
 
+    loadUserTemplate(profile){
 
+      this.$store.dispatch("clearUndo", { self: this}).then(()=>{
+        this.$store.dispatch("setActiveUndo", { self: this, msg:'Created blank record'})
+      })
+
+      // the profile is stored as string json in the db due to key naming conflicts in mongo
+      let useProfile = JSON.parse(profile.profile)
+
+      useProfile = this.loadTemplate(null, this.catInitials,useProfile)
+
+      this.$store.dispatch("setActiveProfile", { self: this, profile: useProfile, useDefaultValues: false }).then(() => {
+        
+        if (this.settingsDisplayMode == 'spreadsheet'){
+          this.$router.push({ name: 'CompactEdit', params: { recordId: useProfile.eId } })
+        }else{
+          this.$router.push({ name: 'Edit', params: { recordId: useProfile.eId } })
+        }
+
+        this.$store.dispatch("forceSave", { self: this}, true).then(() => {
+          this.$store.dispatch("setActiveRecordSaved", { self: this}, true).then(() => {
+
+            window.scrollTo(0, 0);
+
+
+          })    
+        })   
+      })
+
+
+    },
 
     selectTemplateClick(event){
 
 
       let useStartingPoint = this.returnSpByTemplateId(event.target.id)
-      
+      console.log('useStartingPoint',useStartingPoint)
       let useProfile = this.loadTemplate(useStartingPoint, this.catInitials)
 
       this.$store.dispatch("clearUndo", { self: this}).then(()=>{
-
         this.$store.dispatch("setActiveUndo", { self: this, msg:'Created blank record'})
-
-
       })
 
 
@@ -229,11 +263,6 @@ export default {
 
           })    
         })   
-
-
-        
-        
-
       })
 
 
@@ -296,11 +325,15 @@ export default {
     return {
 
       activeTemplateId: null,
-      actibveTemplateIdCount:0
+      actibveTemplateIdCount:0,
+      userTemplates: [],
 
     }
   },
-  created: function(){
+  created: async function(){
+
+
+    
 
 
     setTimeout(()=>{
@@ -308,6 +341,8 @@ export default {
       console.log(this.startingPoints)
     },1000)
 
+    this.userTemplates = await lookupUtil.userTemplates(this.catInitials)
+    console.log(this.userTemplates)
 
   },
 };

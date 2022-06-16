@@ -3542,14 +3542,20 @@ const parseProfile = {
 
 
     // does all the work to setup a new profile read to be eaded and posted as new
-    loadNewTemplate(useStartingPoint,addAdmin){
+    loadNewTemplate(useStartingPoint,addAdmin,userTemplateSupplied){
 
       if (typeof addAdmin === 'undefined'){
         addAdmin=true
       } 
 
+      let useProfile
 
-      let useProfile = JSON.parse(JSON.stringify(store.state.profiles[useStartingPoint]))
+      if (userTemplateSupplied){
+        useProfile = userTemplateSupplied
+      }else{
+        useProfile = JSON.parse(JSON.stringify(store.state.profiles[useStartingPoint]))  
+      }
+      
       
       // some profiles have nested components at the root level used in that component
       // so if it doesn't end with one of the main type of resources we want to edit 
@@ -3557,7 +3563,7 @@ const parseProfile = {
       let toRemove = []
       let toKeep = []
       for (let rt of useProfile.rtOrder){
-        if (!rt.endsWith(':Work')&&!rt.endsWith(':Item')&&!rt.endsWith(':Instance')&&!rt.endsWith(':Hub')){
+        if (!rt.includes(':Work')&&!rt.includes(':Item')&&!rt.includes(':Instance')&&!rt.includes(':Hub')){
           toRemove.push(rt)
         }else{
           toKeep.push(rt)
@@ -3707,15 +3713,77 @@ const parseProfile = {
       return useProfile
 
 
-    }
+    },
+
+
+    prepareTemplate: async function(profile,overwrite){
+
+        console.log(overwrite)
+        console.log( profile   )
+
+
+        profile = JSON.parse(JSON.stringify(profile))
+
+
+        // we clean up the profile some removing things that are 
+        delete profile.eId
+        delete profile.log
+        delete profile.procInfo
+        delete profile.status
+
+        for (let rt in profile.rt){
+            delete profile.rt[rt].URI
+            delete profile.rt[rt].instanceOf
+            delete profile.rt[rt].propertyLoadRatio
+            delete profile.rt[rt].propertyLoadReport        
+            delete profile.rt[rt].unusedXml
+            delete profile.rt[rt].status
+        }
+
+        let savedTemplate = {
+
+            id: (profile.templateId) ? (profile.templateId) : md5(profile.user+new Date().toLocaleString()),
+            profile: JSON.stringify(profile),
+            user:profile.user,
+            label:profile.templateLabel,
+            basedOnProfile: Object.keys(profile.rt),
+            timestamp: parseInt(Date.now()/1000)
+
+        }
+
+        // if the overwrite flag is set then make a new md5 id always
+
+        if (overwrite && profile.templateId){
+            savedTemplate.id = md5(profile.user+new Date().toLocaleString())
+        }
+
+        let utilUrl = config.returnUrls().util
+
+        let url = `${utilUrl}templates/`
+
+        console.log("savedTemplate",savedTemplate)
+
+        const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(savedTemplate)
+        });
+
+
+        if (!response.ok) {
+
+            const content = await JSON.stringify(response.json());
+
+            alert('Could not save template' + content)
+
+        }
 
 
 
-
-
-
-
-
+    },
 
 
 
