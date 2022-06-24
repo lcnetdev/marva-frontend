@@ -768,7 +768,7 @@ button[disabled]{
                 <input type="" class="input" style="font-size:1.25em; width:95%" @change="templateNameChange" v-model="templateLabel" name="" placeholder="Name of Template">
                 
                 <div style="margin-top: 25%">
-                    <button style="font-size: 1.5em;  margin: 0.25em;" @click="displayTemplate===false">Cancel</button>
+                    <button style="font-size: 1.5em;  margin: 0.25em;" @click="toggleTemplate()">Cancel</button>
                     <button style="font-size: 1.5em;  margin: 0.25em;" @click="saveTemplate(false)">Create</button>
                 </div>
 
@@ -1329,7 +1329,7 @@ export default {
         }
 
         await parseProfile.prepareTemplate(this.activeProfile,overwrite)
-
+        this.toggleTemplate()
 
     },
 

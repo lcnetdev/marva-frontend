@@ -17,8 +17,8 @@ const config = {
 			utilLang: 'http://localhost:9401/util-lang/',
 			publish : 'http://localhost:9401/util/publish/staging',
 			bfdb : 'https://preprod-8210.id.loc.gov/',
-			profiles : '/bfe2/editor/profiles.json',
-			starting: '/bfe2/editor/starting.json',
+			profiles : 'http://localhost:9401/util/profiles/profile/prod',
+			starting: 'http://localhost:9401/util/profiles/starting/prod',
 			env : 'staging',
 			dev: true
 
@@ -31,8 +31,8 @@ const config = {
 			utilLang  :  'https://editor.id.loc.gov/bfe2/util-lang/',
 			publish: 'https://preprod-3001.id.loc.gov/bfe2/util/publish/staging',
 			bfdb : 'https://preprod-8210.id.loc.gov/',
-			profiles : 'https://preprod-3001.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
-			starting : 'https://preprod-3001.id.loc.gov/api/listconfigs?where=index.resourceType:startingPoints&where=index.label:config',
+			profiles : '/bfe2/util/profiles/stage',
+			starting : '/bfe2/util/starting/stage',
 			env : 'staging'
 		},
 
@@ -46,6 +46,20 @@ const config = {
 			profiles : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
 			starting : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:startingPoints&where=index.label:config',
 			env : 'production'
+		},
+
+		public:{
+
+			ldpjs : 'https://editor.id.loc.gov/bfe2/api-production/',
+			util  :  'https://editor.id.loc.gov/bfe2/util/',
+			utilLang  :  'https://editor.id.loc.gov/bfe2/util-lang/',
+			publish: 'https://editor.id.loc.gov/bfe2/util/publish/production',
+			bfdb : 'https://preprod-8230.id.loc.gov/',
+			profiles : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
+			starting : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:startingPoints&where=index.label:config',
+			env : 'public'
+
+
 		}
 
 
