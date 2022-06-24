@@ -55,8 +55,8 @@ const config = {
 			utilLang  :  'https://bibframe.org/marva/util-lang/',
 			publish: 'https://bibframe.org/marva/util/publish/production',
 			bfdb : 'https://id.loc.gov/',
-			profiles : 'https://bibframe.org/marva/util/profiles/stage',
-			starting : 'https://bibframe.org/marva/util/starting/stage',
+			profiles : 'https://bibframe.org/marva/util/profiles/profile/prod',
+			starting : 'https://bibframe.org/marva/util/profiles/starting/prod',
 			env : 'bibframeDotOrg'
 
 
