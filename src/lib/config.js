@@ -48,16 +48,16 @@ const config = {
 			env : 'production'
 		},
 
-		public:{
+		bibframeDotOrg:{
 
-			ldpjs : 'https://editor.id.loc.gov/bfe2/api-production/',
+			ldpjs : 'https://id.loc.gov/bfe2/api-production/',
 			util  :  'https://editor.id.loc.gov/bfe2/util/',
 			utilLang  :  'https://editor.id.loc.gov/bfe2/util-lang/',
 			publish: 'https://editor.id.loc.gov/bfe2/util/publish/production',
 			bfdb : 'https://preprod-8230.id.loc.gov/',
 			profiles : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
 			starting : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:startingPoints&where=index.label:config',
-			env : 'public'
+			env : 'bibframe'
 
 
 		}
@@ -76,6 +76,9 @@ const config = {
 			return this.regionUrls.staging
 		}else if (window.location.href.startsWith('https://editor.id')){
 			return this.regionUrls.production
+		}else if (window.location.href.includes('bibframe.org/marva')){
+			alert("Its bibframe.org")
+			return this.regionUrls.bibframeDotOrg
 		}
 	},
 
