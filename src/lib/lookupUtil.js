@@ -706,6 +706,16 @@ const lookupUtil = {
                       url = url.replace('http://id.','http://preprod-8080.id.')
                     }
                   }
+
+                  if (config.returnUrls().dev || config.returnUrls().publicEndpoints){
+                    url = url.replace('http://preprod.id.','https://id.')
+                    url = url.replace('https://preprod-8230.id.loc.gov','https://id.loc.gov')
+                    url = url.replace('https://test-8080.id.lctl.gov','https://id.loc.gov')
+                    url = url.replace('https://preprod-8080.id.loc.gov','https://id.loc.gov')
+                    url = url.replace('https://preprod-8288.id.loc.gov','https://id.loc.gov')
+                  }
+
+                  
                   
 
                   let response = await fetch(url.replace('http://','https://')+'.nt');
