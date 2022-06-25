@@ -715,8 +715,8 @@ const lookupUtil = {
                     url = url.replace('https://preprod-8288.id.loc.gov','https://id.loc.gov')
                   }
 
-                  
-                  
+
+                  console.log("URL is",url)
 
                   let response = await fetch(url.replace('http://','https://')+'.nt');
                   let text  = await response.text()
