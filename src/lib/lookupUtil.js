@@ -290,8 +290,6 @@ const lookupUtil = {
               url = url.replace('https://test-8080.id.lctl.gov','https://id.loc.gov')
               url = url.replace('https://preprod-8080.id.loc.gov','https://id.loc.gov')
               url = url.replace('https://preprod-8288.id.loc.gov','https://id.loc.gov')
-
-
             }
 
 
@@ -566,6 +564,16 @@ const lookupUtil = {
     },
 
     fetchContextData: async function(uri){
+
+
+          if (config.returnUrls().dev || config.returnUrls().publicEndpoints){
+            uri = uri.replace('http://preprod.id.','https://id.')
+            uri = uri.replace('https://preprod-8230.id.loc.gov','https://id.loc.gov')
+            uri = uri.replace('https://test-8080.id.lctl.gov','https://id.loc.gov')
+            uri = uri.replace('https://preprod-8080.id.loc.gov','https://id.loc.gov')
+            uri = uri.replace('https://preprod-8288.id.loc.gov','https://id.loc.gov')
+          }
+
 
 
           if ((uri.startsWith('http://id.loc.gov') || uri.startsWith('https://id.loc.gov')) && uri.match(/(authorities|vocabularies)/)) {
