@@ -284,7 +284,7 @@ const lookupUtil = {
         for (let url of urlTemplate) {
 
             // kind of hack, change to the public endpoint if we are in dev or public mode
-            if (config.returnUrls().dev){
+            if (config.returnUrls().dev || config.returnUrls().publicEndpoints){
               url = url.replace('http://preprod.id.','https://id.')
               url = url.replace('https://preprod-8230.id.loc.gov','https://id.loc.gov')
               url = url.replace('https://test-8080.id.lctl.gov','https://id.loc.gov')

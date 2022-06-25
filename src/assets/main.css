@@ -548,12 +548,12 @@ color: rgb(42, 42, 42);
 @font-face {
   font-family: 'fontello';
 
-  src: url('/bfe2/editor/fonts/fontello.eot?40152799');
+  src: url('<REPLACE>fonts/fontello.eot?40152799');
   src: 
-       url('/bfe2/editor/fonts/fontello.eot?40152799#iefix') format('embedded-opentype'),
-       url('/bfe2/editor/fonts/fontello.woff?40152799') format('woff'),
-       url('/bfe2/editor/fonts/fontello.ttf?40152799') format('truetype'),
-       url('/bfe2/editor/fonts/fontello.svg?40152799#fontello') format('svg'),
+       url('<REPLACE>fonts/fontello.eot?40152799#iefix') format('embedded-opentype'),
+       url('<REPLACE>fonts/fontello.woff?40152799') format('woff'),
+       url('<REPLACE>fonts/fontello.ttf?40152799') format('truetype'),
+       url('<REPLACE>fonts/fontello.svg?40152799#fontello') format('svg'),
 
        url('/fonts/fontello.eot?40152799'),
   	   url('/fonts/fontello.eot?40152799#iefix') format('embedded-opentype'),
@@ -570,11 +570,11 @@ color: rgb(42, 42, 42);
   font-family: 'validation-icons';
 
   src: 
-       url('/bfe2/editor/fonts/validation-icons.eot?10592045'),
-       url('/bfe2/editor/fonts/validation-icons.eot?10592045#iefix') format('embedded-opentype'),
-       url('/bfe2/editor/fonts/validation-icons.woff?10592045') format('woff'),
-       url('/bfe2/editor/fonts/validation-icons.ttf?10592045') format('truetype'),
-       url('/bfe2/editor/fonts/validation-icons.svg?10592045#fontello') format('svg'),
+       url('<REPLACE>fonts/validation-icons.eot?10592045'),
+       url('<REPLACE>fonts/validation-icons.eot?10592045#iefix') format('embedded-opentype'),
+       url('<REPLACE>fonts/validation-icons.woff?10592045') format('woff'),
+       url('<REPLACE>fonts/validation-icons.ttf?10592045') format('truetype'),
+       url('<REPLACE>fonts/validation-icons.svg?10592045#fontello') format('svg'),
 
        url('/fonts/validation-icons.eot?10592045'),
   	   url('/fonts/validation-icons.eot?10592045#iefix') format('embedded-opentype'),

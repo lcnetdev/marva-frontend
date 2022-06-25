@@ -57,7 +57,8 @@ const config = {
 			bfdb : 'https://id.loc.gov/',
 			profiles : 'https://bibframe.org/marva/util/profiles/profile/prod',
 			starting : 'https://bibframe.org/marva/util/profiles/starting/prod',
-			env : 'bibframeDotOrg'
+			env : 'production',
+			publicEndpoints:true,
 
 
 		}
