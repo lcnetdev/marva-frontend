@@ -566,13 +566,6 @@ const lookupUtil = {
     fetchContextData: async function(uri){
 
 
-          if (config.returnUrls().dev || config.returnUrls().publicEndpoints){
-            uri = uri.replace('http://preprod.id.','https://id.')
-            uri = uri.replace('https://preprod-8230.id.loc.gov','https://id.loc.gov')
-            uri = uri.replace('https://test-8080.id.lctl.gov','https://id.loc.gov')
-            uri = uri.replace('https://preprod-8080.id.loc.gov','https://id.loc.gov')
-            uri = uri.replace('https://preprod-8288.id.loc.gov','https://id.loc.gov')
-          }
 
 
 
@@ -602,16 +595,22 @@ const lookupUtil = {
             
           }
 
+
+          // unless we are in a dev or public mode
+          if (config.returnUrls().dev || config.returnUrls().publicEndpoints){
+            uri = uri.replace('http://preprod.id.','https://id.')
+            uri = uri.replace('https://preprod-8230.id.loc.gov','https://id.loc.gov')
+            uri = uri.replace('https://test-8080.id.lctl.gov','https://id.loc.gov')
+            uri = uri.replace('https://preprod-8080.id.loc.gov','https://id.loc.gov')
+            uri = uri.replace('https://preprod-8288.id.loc.gov','https://id.loc.gov')
+          }
+
+
+
           if (jsonuri.includes('gpo_') && jsonuri.includes('preprod') ){
             jsonuri = jsonuri.replace('8080','8295')
             jsonuri = jsonuri.replace('8230','8295')
             jsonuri = jsonuri.replace('https://id.','https://preprod-8295.id.')
-          }
-
-
-          // if were local host then undo it
-          if (config.returnUrls().dev){
-            jsonuri = jsonuri.replace('https://preprod-8080.id.','https://id.')
           }
 
 
