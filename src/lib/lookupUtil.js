@@ -597,12 +597,13 @@ const lookupUtil = {
 
 
           // unless we are in a dev or public mode
+
           if (config.returnUrls().dev || config.returnUrls().publicEndpoints){
-            uri = uri.replace('http://preprod.id.','https://id.')
-            uri = uri.replace('https://preprod-8230.id.loc.gov','https://id.loc.gov')
-            uri = uri.replace('https://test-8080.id.lctl.gov','https://id.loc.gov')
-            uri = uri.replace('https://preprod-8080.id.loc.gov','https://id.loc.gov')
-            uri = uri.replace('https://preprod-8288.id.loc.gov','https://id.loc.gov')
+            jsonuri = jsonuri.replace('http://preprod.id.','https://id.')
+            jsonuri = jsonuri.replace('https://preprod-8230.id.loc.gov','https://id.loc.gov')
+            jsonuri = jsonuri.replace('https://test-8080.id.lctl.gov','https://id.loc.gov')
+            jsonuri = jsonuri.replace('https://preprod-8080.id.loc.gov','https://id.loc.gov')
+            jsonuri = jsonuri.replace('https://preprod-8288.id.loc.gov','https://id.loc.gov')
           }
 
 
