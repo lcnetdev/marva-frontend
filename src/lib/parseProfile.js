@@ -12,6 +12,9 @@ const translator = short();
 const decimalTranslator = short("0123456789");
 var md5 = require('md5');
 
+const hashCode = s => s.split('').reduce((a,b) => (((a << 5) - a) + b.charCodeAt(0))|0, 0)
+
+
 // function setCharAt(str,index,chr) {
 //     if(index > str.length-1) return str;
 //     return str.substring(0,index) + chr + str.substring(index+1);
@@ -564,11 +567,32 @@ const parseProfile = {
         })
 
 
+
+
         
-        
+
+        for (let p in this.profiles){
+            this.profiles[p].hash = hashCode(JSON.stringify(this.profiles[p]))
+            this.profiles[p].hashPts = {}
+
+            for (let rt in this.profiles[p].rt){
+                if (this.profiles[p].rt[rt] && this.profiles[p].rt[rt].pt){
+                    for (let pt in this.profiles[p].rt[rt].pt){
+                        // build the key to the property
+                        let id = rt + '|' + this.profiles[p].rt[rt].pt[pt].propertyURI
+                        if (this.profiles[p].rt[rt].pt[pt].valueConstraint && this.profiles[p].rt[rt].pt[pt].valueConstraint.valueDataType && this.profiles[p].rt[rt].pt[pt].valueConstraint.valueDataType.dataTypeURI && this.profiles[p].rt[rt].pt[pt].valueConstraint.valueDataType.dataTypeURI.trim() != ''){
+                            id = id + '|' + this.profiles[p].rt[rt].pt[pt].valueConstraint.valueDataType.dataTypeURI
+                        }                        
+                        // builds an id like this: lc:RT:bf2:35mmFeatureFilm:Work|http://id.loc.gov/ontologies/bibframe/contribution|http://id.loc.gov/ontologies/bflc/PrimaryContribution
+                        this.profiles[p].hashPts[id] = hashCode(JSON.stringify(this.profiles[p].rt[rt].pt[pt]))
+                    }
+
+
+                }
+            }
+        }
         // console.log("this.profiles")
         // console.log(this.profiles)
-
         return { profiles: this.profiles, lookup: this.rtLookup, startingPoints: this.startingPoints}
     },
 
@@ -3544,8 +3568,9 @@ const parseProfile = {
     // does all the work to setup a new profile read to be eaded and posted as new
     loadNewTemplate(useStartingPoint,addAdmin,userTemplateSupplied){
 
+      // should be the catinitals to insert into admin if being passed
       if (typeof addAdmin === 'undefined'){
-        addAdmin=true
+        addAdmin=false
       } 
 
       let useProfile
@@ -3697,9 +3722,33 @@ const parseProfile = {
 
           let adminMetadataPropertyLabel = 'http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'
 
+
+
+          if (useProfile.rt[rt].pt[adminMetadataPropertyLabel]){
+            // it already exists, so update the catalogerId and use the existing userValue
+
+            if (useProfile.rt[rt].pt[adminMetadataPropertyLabel]["http://id.loc.gov/ontologies/bflc/catalogerId"]){
+                useProfile.rt[rt].pt[adminMetadataPropertyLabel]["http://id.loc.gov/ontologies/bflc/catalogerId"] =  [
+                  {
+                  "@guid": short.generate(),
+                  "http://id.loc.gov/ontologies/bflc/catalogerId": addAdmin
+                  }
+                ]
+            }
+
+            // TODO remove local system number
+
+          }else{
+            // doesn't exist, add it to the ptOrder and pt
+            useProfile.rt[rt].ptOrder.push(adminMetadataPropertyLabel)
+            useProfile.rt[rt].pt[adminMetadataPropertyLabel] = JSON.parse(JSON.stringify(adminMetadataProperty))
+          }
+
+
+          // add it to the pt
+
+
           
-          useProfile.rt[rt].pt[adminMetadataPropertyLabel] = JSON.parse(JSON.stringify(adminMetadataProperty))
-          useProfile.rt[rt].ptOrder.push(adminMetadataPropertyLabel)
         }
       }
 

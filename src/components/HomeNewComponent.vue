@@ -34,7 +34,13 @@
             </tr>
         </thead>
 
-        <tbody v-if="userTemplates.length==0">
+        <tbody v-if="userTemplates===null">
+            <tr>
+                <td colspan="4">You have no templates in the system.</td>
+            </tr>            
+        </tbody>
+
+        <tbody v-else-if="userTemplates.length==0">
             <tr>
                 <td colspan="4">Loading templates...</td>
             </tr>            
@@ -46,7 +52,7 @@
                 <td v-bind:class="['selectable-template']" @click="loadUserTemplate(t)">{{t.label}}</td>
                 <td>{{t.basedOnProfile.map(v => v.replace('lc:RT:bf2:','') ).join(', ')}}</td>
                 <td>{{new Date(t.timestamp*1000).toISOString().slice(0,10)}}</td>
-                <td></td>
+                <td><button @click="deleteUserTemplate(t)">delete</button></td>
 
 
             </tr>            
@@ -151,6 +157,7 @@ import { mapState } from 'vuex'
 // import uiUtils from "@/lib/uiUtils"
 import parseProfile from "@/lib/parseProfile"
 import lookupUtil from "@/lib/lookupUtil"
+import config from "@/lib/config"
 
 
 
@@ -202,6 +209,37 @@ export default {
 
 
     loadTemplate: parseProfile.loadNewTemplate,
+
+    deleteUserTemplate(profile){
+
+
+      let utilUrl = config.returnUrls().util
+
+      fetch(`${utilUrl}/templates/${profile.id}`, {
+        method: 'DELETE',
+      })
+      .then(async res => {
+
+
+        if (res.status==200){
+
+          this.userTemplates = []
+
+          this.userTemplates = await lookupUtil.userTemplates(this.catInitials)
+          if (this.userTemplates.length==0){
+            this.userTemplates = null
+          }
+
+        }else{
+          alert('Was an error deleteing')
+        }
+      }) 
+      .then(data => console.log(data))
+
+
+
+
+    },
 
     loadUserTemplate(profile){
 
@@ -342,8 +380,19 @@ export default {
     },1000)
 
     this.userTemplates = await lookupUtil.userTemplates(this.catInitials)
+    if (this.userTemplates.length==0){
+      this.userTemplates = null
+    }
+
     console.log(this.userTemplates)
 
+  },
+
+  mounted: async function(){
+    this.userTemplates = await lookupUtil.userTemplates(this.catInitials)
+    if (this.userTemplates.length==0){
+      this.userTemplates = null
+    }
   },
 };
 </script>
