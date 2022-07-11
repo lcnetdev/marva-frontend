@@ -5,7 +5,7 @@
     <Keypress key-event="keydown" :multiple-keys="[{keyCode: 86, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="openDiacriticSelect" />
 
 
-    <div :class="'component-container-title' + ' component-container-title-' + settingsDisplayMode ">{{structure.propertyLabel}}</div>
+    <div :class="'component-container-title' + ' component-container-title-' + settingsDisplayMode ">{{structure.propertyLabel}} <EditLabelRemark :remark="structure.remark" /></div>
     <div :class="'component-container-input-container' + ' component-container-input-container-' + settingsDisplayMode">
 
         <div v-for="(inputV,idx) in inputValue" :key="`input_${idx}`" v-bind:class="'component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border'">
@@ -176,6 +176,7 @@ import config from "@/lib/config"
 import diacrticsVoyagerMacroExpress from "@/lib/diacritics/diacritic_pack_voyager_macro_express.json"
 import diacrticsVoyagerNative from "@/lib/diacritics/diacritic_pack_voyager_native.json"
 import EditLiteralEditor from "@/components/EditLiteralEditor.vue";
+import EditLabelRemark from "@/components/EditLabelRemark.vue";
 
 
 const short = require('short-uuid');
@@ -187,6 +188,7 @@ export default {
   name: "EditLiteralComponent",
   components: {
     EditLiteralEditor,
+    EditLabelRemark,
     Keypress: () => import('vue-keypress')    
   },
 

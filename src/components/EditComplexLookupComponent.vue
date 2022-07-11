@@ -399,6 +399,7 @@ import config from "@/lib/config"
 import parseProfile from "@/lib/parseProfile"
 import EditSubjectEditor from "@/components/EditSubjectEditor.vue";
 import EditLabelDereference from "@/components/EditLabelDereference.vue";
+// import EditLabelRemark from "@/components/EditLabelRemark.vue";
 
 
 
@@ -408,6 +409,7 @@ export default {
   components: {    
     Keypress: () => import('vue-keypress'),
     EditSubjectEditor,
+    // EditLabelRemark,
     EditLabelDereference
 
   },  

@@ -427,22 +427,47 @@ button[disabled]{
                 </router-link>
 
 
-                  <div  style="display:inline-block; cursor: pointer" @click="miniMapClick(diagramMiniMap)">
+                  <div  style="display:inline-block; cursor: pointer;">
 
                     <template v-if="diagramMiniMap.type != 'Hub'">
-                        <svg v-if="activeMiniMap.URI != diagramMiniMap.URI" width="2.1em" height="3.1em" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                        <svg v-if="activeMiniMap.URI != diagramMiniMap.URI" @click="miniMapClick(diagramMiniMap)" width="2.1em" height="3.1em" version="1.1" xmlns="http://www.w3.org/2000/svg">
                             <circle fill="#7badad" cx="1em" cy="1.5em" r="0.9em"/>
                         </svg>
 
-                        <svg v-else  width="2.1em" height="3.1em" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                        <svg v-else @click="miniMapClick(diagramMiniMap)"  width="2.1em" height="3.1em" version="1.1" xmlns="http://www.w3.org/2000/svg">
                             <circle stroke="rgb(255 49 49)" stroke-width="2" fill="#7badad" cx="1em" cy="1.5em" r="0.9em"/>
                         </svg>
                     </template>
                     <template v-else>
 
-                        <svg width="50px" height="50px"  version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+
+
+
+                        <svg width="50px" height="50px" @click="miniMapClick(diagramMiniMap)"  version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                          <path fill="royalblue" d="m62.113 24.66 1.9023-15.238 18.875 32.691-7.5469 20.004 15.238 1.9023-32.691 18.875-20.004-7.5469-1.9023 15.238-18.875-32.691 7.5469-20.004-15.238-1.9023 32.691-18.875zm-17.684 15.695-4.0781 15.215 15.215 4.0781 4.0781-15.215z" fill-rule="evenodd"/>
                         </svg>   
+
+
+                        <!-- If there is a hub and a work draw the hub first then the work connected -->
+                        <template v-if="diagramMiniMap.work">
+
+                            <div style="display:inline-block; width: 25px;">
+                              <svg  viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <line x1="0" y1="0" x2="100" y2="0" stroke="black" stroke-width="10" />
+                              </svg>
+                            </div>
+
+                            <svg v-if="activeMiniMap.URI != diagramMiniMap.work.URI" @click="miniMapClick(diagramMiniMap.work)" width="2.1em" height="3.1em" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                <circle fill="#7badad" cx="1em" cy="1.5em" r="0.9em"/>
+                            </svg>
+
+                            <svg v-else @click="miniMapClick(diagramMiniMap.work)" width="2.1em" height="3.1em" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                <circle stroke="rgb(255 49 49)" stroke-width="2" fill="#7badad" cx="1em" cy="1.5em" r="0.9em"/>
+                            </svg>
+                        </template>
+
+
+
 
 
                     </template>
@@ -1463,6 +1488,8 @@ export default {
     },
 
     miniMapClick: function(value){
+
+      console.log(value)
 
       let rtName = value.rt
 

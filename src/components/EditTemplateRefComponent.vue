@@ -14,7 +14,7 @@
 
   <div v-else-if="nested == false" :class="'component-container' + ' component-container-' + settingsDisplayMode">
 
-    <div :class="'component-container-title' + ' component-container-title-' + settingsDisplayMode ">{{structure.propertyLabel}}</div>
+    <div :class="'component-container-title' + ' component-container-title-' + settingsDisplayMode ">{{structure.propertyLabel}}<EditLabelRemark :remark="structure.remark" /></div>
     <div :class="'component-container-input-container' + ' component-container-input-container-' + settingsDisplayMode">
 
       <template  v-if="structure.valueConstraint.valueTemplateRefs.length > 1">
@@ -87,13 +87,14 @@
 import { mapState } from 'vuex'
 import uiUtils from "@/lib/uiUtils"
 import labels from "@/lib/labels"
-
+import EditLabelRemark from "@/components/EditLabelRemark.vue";
 
 
 
 export default {
   name: "EditTemplateRefComponent",
   components: {
+    EditLabelRemark,
     EditMainComponent : () => import('@/components/EditMainComponent.vue')
   },   
   props: {

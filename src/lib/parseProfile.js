@@ -549,19 +549,34 @@ const parseProfile = {
 
             // create a "profile" for this starting point in our profiles
             this.profiles[sp.menuGroup] ={ id: sp.menuGroup, rt: {}, rtOrder : [] }
+            if (this.startingPoints[sp.menuGroup].hub){
+                this.profiles[sp.menuGroup].rt[this.startingPoints[sp.menuGroup].hub] = plookup[this.startingPoints[sp.menuGroup].hub]
+                this.profiles[sp.menuGroup].rtOrder.push(this.startingPoints[sp.menuGroup].hub)
+            }
+            if (this.startingPoints[sp.menuGroup].work){
+                this.profiles[sp.menuGroup].rt[this.startingPoints[sp.menuGroup].work] = plookup[this.startingPoints[sp.menuGroup].work]
+                this.profiles[sp.menuGroup].rtOrder.push(this.startingPoints[sp.menuGroup].work)
+            }
+
+
             if (this.startingPoints[sp.menuGroup].instance){
                 this.profiles[sp.menuGroup].rt[this.startingPoints[sp.menuGroup].instance] = plookup[this.startingPoints[sp.menuGroup].instance]
                 this.profiles[sp.menuGroup].rtOrder.push(this.startingPoints[sp.menuGroup].instance)
             }
 
-            if (this.startingPoints[sp.menuGroup].work){
-                this.profiles[sp.menuGroup].rt[this.startingPoints[sp.menuGroup].work] = plookup[this.startingPoints[sp.menuGroup].work]
-                this.profiles[sp.menuGroup].rtOrder.push(this.startingPoints[sp.menuGroup].work)
-            }
-            if (this.startingPoints[sp.menuGroup].hub){
-                this.profiles[sp.menuGroup].rt[this.startingPoints[sp.menuGroup].hub] = plookup[this.startingPoints[sp.menuGroup].hub]
+            // if there is a hub and work and instance then always put the hub at the start
+            if (this.startingPoints[sp.menuGroup].hub && this.startingPoints[sp.menuGroup].work && this.startingPoints[sp.menuGroup].instance){
+
+                this.profiles[sp.menuGroup].rtOrder = []
                 this.profiles[sp.menuGroup].rtOrder.push(this.startingPoints[sp.menuGroup].hub)
+                this.profiles[sp.menuGroup].rtOrder.push(this.startingPoints[sp.menuGroup].work)
+                this.profiles[sp.menuGroup].rtOrder.push(this.startingPoints[sp.menuGroup].instance)
+
+
             }
+
+
+
 
 
         })
@@ -3396,7 +3411,15 @@ const parseProfile = {
         // as a backup if there is anything in the old order than is not present just toss it in
         for (let rt of profile.rtOrder){
             if (newOrder.indexOf(rt)===-1){
-                newOrder.push(rt)
+
+                // if its a hub put it up front
+                if (rt.includes(':Hub')){
+                    newOrder.unshift(rt);
+                }else{
+                    newOrder.push(rt)
+                }
+
+
             }
 
 
@@ -3507,7 +3530,7 @@ const parseProfile = {
 
             // // there is only one hub
             if (rt.endsWith(':Hub')){              
-                miniMapHub = {type:'Hub',URI:activeProfile.rt[rt].URI, rt:rt, counter:0, jumpTo:activeProfile.rt[rt].ptOrder[1],  details: activeProfile.rt[rt].pt[activeProfile.rt[rt].ptOrder[1]], works:[]}
+                miniMapHub = {type:'Hub',URI:activeProfile.rt[rt].URI, rt:rt, counter:0, jumpTo:activeProfile.rt[rt].ptOrder[1],  details: activeProfile.rt[rt].pt[activeProfile.rt[rt].ptOrder[1]]}
             }
 
 
@@ -3546,7 +3569,15 @@ const parseProfile = {
             miniMapWork.instances = miniMapInstance
         }
 
+
+        if (miniMapWork && miniMapHub){
+            miniMapHub.work = miniMapWork     
+            miniMapHub.instances = miniMapInstance
+        }
+
+
         if(miniMapHub){
+            console.log("miniMapHub",miniMapHub)
             return miniMapHub
         }
 

@@ -10,7 +10,7 @@
           <form autocomplete="off" v-on:submit.prevent>
 
                 <div style="position: absolute;" v-if="settingsDisplayMode=='compact'" class="component-nested-container-title">
-                  <span>{{structure.propertyLabel}}</span>                  
+                  <span>{{structure.propertyLabel}}<EditLabelRemark :remark="structure.remark" /></span>                  
                 </div>
 
 
@@ -104,7 +104,7 @@
 import { mapState } from 'vuex'
 import uiUtils from "@/lib/uiUtils"
 import EditLabelDereference from "@/components/EditLabelDereference.vue";
-
+import EditLabelRemark from "@/components/EditLabelRemark.vue";
 
 export default {
   name: "EditSimpleLookupComponent",
@@ -121,7 +121,8 @@ export default {
 
   },
   components: {    
-    EditLabelDereference
+    EditLabelDereference,
+    EditLabelRemark
   }, 
 
 
