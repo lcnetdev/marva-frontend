@@ -81,6 +81,8 @@ const exportXML = {
 			elStr = 'http://www.loc.gov/mads/rdf/v1#Authority'
 		} 
 
+		elStr=elStr.replace('https://','http://')
+
 
 		// if the elString is not a expanded URI
 		if (!elStr.startsWith('http')){
@@ -100,7 +102,7 @@ const exportXML = {
 			//rdf.setAttributeNS("http://www.w3.org/2000/xmlns/", `xmlns:${ns}`, this.namespace[ns])
 
 		}
-
+		console.log(this.namespace)
 		console.error('could not find namespace for ', elStr)
 		return null
 	},
