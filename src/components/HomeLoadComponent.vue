@@ -503,11 +503,11 @@ export default {
 
 
 
-        '/bfe2/editor/tests/instances/22471751.editor-pkg.xml', // DVD fields not populating
+        // '/bfe2/editor/tests/instances/22471751.editor-pkg.xml', // DVD fields not populating
 
 
 
-        // '/bfe2/editor/tests/instances/20898769.editor-pkg.xml', // new production activity
+        '/bfe2/editor/tests/instances/20898769.editor-pkg.xml', // new production activity
 
 
 

@@ -15,11 +15,6 @@ var md5 = require('md5');
 const hashCode = s => s.split('').reduce((a,b) => (((a << 5) - a) + b.charCodeAt(0))|0, 0)
 
 
-// function setCharAt(str,index,chr) {
-//     if(index > str.length-1) return str;
-//     return str.substring(0,index) + chr + str.substring(index+1);
-// }
-
 const parseProfile = {
 
     profileSource: {},
@@ -587,10 +582,15 @@ const parseProfile = {
         
 
         for (let p in this.profiles){
-            this.profiles[p].hash = hashCode(JSON.stringify(this.profiles[p]))
+            this.profiles[p].hashRts = {}
             this.profiles[p].hashPts = {}
 
             for (let rt in this.profiles[p].rt){
+                if (this.profiles[p].rt[rt]){
+                    this.profiles[p].hashRts[rt] = this.hashRt(this.profiles[p].rt[rt])
+
+                }   
+
                 if (this.profiles[p].rt[rt] && this.profiles[p].rt[rt].pt){
                     for (let pt in this.profiles[p].rt[rt].pt){
                         // build the key to the property
@@ -599,7 +599,9 @@ const parseProfile = {
                             id = id + '|' + this.profiles[p].rt[rt].pt[pt].valueConstraint.valueDataType.dataTypeURI
                         }                        
                         // builds an id like this: lc:RT:bf2:35mmFeatureFilm:Work|http://id.loc.gov/ontologies/bibframe/contribution|http://id.loc.gov/ontologies/bflc/PrimaryContribution
-                        this.profiles[p].hashPts[id] = hashCode(JSON.stringify(this.profiles[p].rt[rt].pt[pt]))
+                        let ptVal = JSON.parse(JSON.stringify(this.profiles[p].rt[rt].pt[pt]))
+                        delete ptVal['@guid']
+                        this.profiles[p].hashPts[id] = hashCode(JSON.stringify(ptVal))
                     }
 
 
@@ -609,6 +611,16 @@ const parseProfile = {
         // console.log("this.profiles")
         // console.log(this.profiles)
         return { profiles: this.profiles, lookup: this.rtLookup, startingPoints: this.startingPoints}
+    },
+
+
+    // remove the things that change in rts to get a consitant hash
+    hashRt: function(rt){
+        rt = JSON.parse(JSON.stringify(rt))
+        for (let pt in rt.pt){
+            delete rt.pt[pt]['@guid']
+        }
+        return hashCode(JSON.stringify(rt))
     },
 
 
@@ -3595,6 +3607,59 @@ const parseProfile = {
 
 
 
+    userTemplatesValidate: function(templates){
+        
+        // loop through the user templates an comapre the hashes of each, if there is a problem flag the user template as bad
+
+        // if the profiles aren't even processed yet don't do anything
+        if (!store.state.profiles) return templates
+        if (store.state.profiles && Object.keys(store.state.profiles).length==0) return templates
+
+        // return 
+        if (!templates) return templates
+
+        let hashes = {}
+        // build a quick lookup of the RTs hashes
+        for (let p in store.state.profiles){
+            for (let rt in store.state.profiles[p].hashRts){
+                hashes[rt] = store.state.profiles[p].hashRts[rt]
+            }
+        }
+
+
+
+        console.log('hashes',hashes)
+        for (let t of templates){
+
+            let template = JSON.parse(t.profile)
+            console.log(template)
+            for (let rt in template.hashRts){
+                
+                // when multuple RTs are added of the same RT it has a numerical suffix like "xxx-1"
+                let rtOrginal = rt.split('-')[0]
+
+                console.log('hash rtOrginal',rtOrginal,hashes[rtOrginal])
+                console.log('hash rt',rt,template.hashRts[rt])
+
+                if (hashes[rtOrginal] != template.hashRts[rt]){
+                    t.invalid = true
+                }
+
+
+
+            }
+
+
+        }
+
+
+
+
+
+        return templates
+    },
+
+
 
     // does all the work to setup a new profile read to be eaded and posted as new
     loadNewTemplate(useStartingPoint,addAdmin,userTemplateSupplied){
@@ -3805,6 +3870,18 @@ const parseProfile = {
         profile = JSON.parse(JSON.stringify(profile))
 
 
+        let hashesProfiles = {}
+        let hashesProfilesPts = {}
+        // build a quick lookup of the RTs hashes
+        for (let p in store.state.profiles){
+            for (let rt in store.state.profiles[p].hashRts){
+                hashesProfiles[rt] = store.state.profiles[p].hashRts[rt]
+                hashesProfilesPts[rt] = store.state.profiles[p].hashPts
+            }
+        }
+
+
+
         // we clean up the profile some removing things that are 
         delete profile.eId
         delete profile.log
@@ -3818,7 +3895,18 @@ const parseProfile = {
             delete profile.rt[rt].propertyLoadReport        
             delete profile.rt[rt].unusedXml
             delete profile.rt[rt].status
+
+            //update the hash from what is acutally used in the template
+            let useRt = rt.split('-')[0]
+            profile.hashRts[useRt] = hashesProfiles[useRt]
+            for (let pt in hashesProfilesPts[useRt]){
+                 profile.hashPts[pt] = hashesProfilesPts[useRt][pt] 
+            }
+
+
         }
+
+
 
         let savedTemplate = {
 
