@@ -3821,10 +3821,11 @@ const parseProfile = {
 
 
           if (useProfile.rt[rt].pt[adminMetadataPropertyLabel]){
+            console.log("Admin already exists for ", rt, 'chahhing userid')
             // it already exists, so update the catalogerId and use the existing userValue
 
-            if (useProfile.rt[rt].pt[adminMetadataPropertyLabel]["http://id.loc.gov/ontologies/bflc/catalogerId"]){
-                useProfile.rt[rt].pt[adminMetadataPropertyLabel]["http://id.loc.gov/ontologies/bflc/catalogerId"] =  [
+            if (useProfile.rt[rt].pt[adminMetadataPropertyLabel].userValue["http://id.loc.gov/ontologies/bflc/catalogerId"]){
+                useProfile.rt[rt].pt[adminMetadataPropertyLabel].userValue["http://id.loc.gov/ontologies/bflc/catalogerId"] =  [
                   {
                   "@guid": short.generate(),
                   "http://id.loc.gov/ontologies/bflc/catalogerId": addAdmin
@@ -3835,6 +3836,7 @@ const parseProfile = {
             // TODO remove local system number
 
           }else{
+            console.log("Admin does not exists for ", rt, 'adding it')
             // doesn't exist, add it to the ptOrder and pt
             useProfile.rt[rt].ptOrder.push(adminMetadataPropertyLabel)
             useProfile.rt[rt].pt[adminMetadataPropertyLabel] = JSON.parse(JSON.stringify(adminMetadataProperty))
