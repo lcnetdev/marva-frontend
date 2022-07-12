@@ -790,7 +790,7 @@ button[disabled]{
             <div style="flex: 1; position: relative; height:100%;">
                 
                 <div style="font-weight:bold">Create Template</div>
-                <input type="" class="input" style="font-size:1.25em; width:95%" @change="templateNameChange" v-model="templateLabel" name="" placeholder="Name of Template">
+                <input type="" class="input" ref="templateNameInput" style="font-size:1.25em; width:95%" @change="templateNameChange" v-model="templateLabel" name="" placeholder="Name of Template">
                 
                 <div style="margin-top: 25%">
                     <button style="font-size: 1.5em;  margin: 0.25em;" @click="toggleTemplate()">Cancel</button>
@@ -1699,7 +1699,9 @@ export default {
       if (!this.displayTemplate){
             this.displayTemplate=true
 
-
+            this.$nextTick(()=>{          
+              this.$refs.templateNameInput.focus()
+            })
 
       }else{
         this.displayTemplate=false
