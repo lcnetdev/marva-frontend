@@ -1749,18 +1749,32 @@ export default {
 
       if (this.searchValue.length<3){
 
-        // check the config, some vocabs have very short codes, like the marc geo
-        // so if it is configed to allow short search overtide the < 3 rule
-        let minCharBeforeSearch = 3
-        this.modalSelectOptions.forEach((a)=>{
-          if (a.minCharBeforeSearch && a.minCharBeforeSearch < minCharBeforeSearch){
-            minCharBeforeSearch = a.minCharBeforeSearch
-          }
-        })
+        // if it is non-latin 
+        if (this.searchValue.match(/[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/)){
 
-        if (this.searchValue.length<minCharBeforeSearch){
-          return false
+          // if it is a CJK language don't impose that limit
+          
+        }else{
+
+          // check the config, some vocabs have very short codes, like the marc geo
+          // so if it is configed to allow short search overtide the < 3 rule
+          let minCharBeforeSearch = 3
+          this.modalSelectOptions.forEach((a)=>{
+            if (a.minCharBeforeSearch && a.minCharBeforeSearch < minCharBeforeSearch){
+              minCharBeforeSearch = a.minCharBeforeSearch
+            }
+          })
+
+          if (this.searchValue.length<minCharBeforeSearch){
+            return false
+          }
+
+
+
         }
+
+
+
 
       }
       window.clearTimeout(this.searchTimeout)
