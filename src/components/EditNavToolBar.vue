@@ -833,12 +833,14 @@ button[disabled]{
 
                                         </td>
                                     </tr>
-                                    <tr v-for="pt in activeProfile.rt[rt].ptOrder" :key="rt+pt">
+                                    <tr v-for="pt in templatesDedupePts(rt)" :key="rt+pt">
 
 
                                         <template v-if="Object.keys(activeProfile.rt[rt].pt[pt].userValue).length>1 && templatesDataFlowHide.filter((v)=> { return pt.includes(v) }).length==0">
                                             <td>
-                                            <span style="padding-left: 10px">{{pt.split('|')[1]}}</span>
+                                            <span style="padding-left: 10px; font-weight: bold;">{{pt.split('|')[1]}}</span>
+
+                                            <span style="font-style:italic;"> {{namespaceUri(activeProfile.rt[rt].pt[pt].propertyURI)}} </span>
                                             </td>
                                             <td class="template-td" style="text-align: center;" @click="templatesTDClick">
                                                 <input type="radio" :name="buildPropFlowId(rt,pt)" value="template" @change="templatesPropFlowChange" :checked="templatesPropertyIsChecked(buildPropFlowId(rt,pt),'template')">
@@ -1255,7 +1257,29 @@ export default {
 
   methods:{
 
+    namespaceUri: function(uri){ return exportXML.namespaceUri(uri)},
 
+    templatesDedupePts: function(rt){
+
+        let alreadyAdded = []
+        let returnVal = []
+
+        for (let pt of this.activeProfile.rt[rt].ptOrder){
+
+            let id = this.buildPropFlowId(rt,pt)
+
+            if (alreadyAdded.indexOf(id)===-1){
+
+                alreadyAdded.push(id)
+                returnVal.push(pt)
+
+            }
+
+        }
+
+        return returnVal
+
+    },
 
     buildPropFlowId: function(rt,pt){
 
