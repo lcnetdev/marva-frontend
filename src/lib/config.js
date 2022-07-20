@@ -31,8 +31,8 @@ const config = {
 			utilLang  :  'https://editor.id.loc.gov/bfe2/util-lang/',
 			publish: 'https://preprod-3001.id.loc.gov/bfe2/util/publish/staging',
 			bfdb : 'https://preprod-8210.id.loc.gov/',
-			//profiles : '/bfe2/util/profiles/profile/stage',
-			profiles: 'https://preprod-3001.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
+			profiles : '/bfe2/util/profiles/profile/stage',
+			// profiles: 'https://preprod-3001.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
 			starting : '/bfe2/util/profiles/starting/stage',
 			env : 'staging'
 
