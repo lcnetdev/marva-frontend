@@ -25,7 +25,7 @@
     </ol>
 
     <div>
-      <input style="margin-left:2em; width: 75%;" class="editor-link-input" v-model="instanceEditorLink" type="text" id="instance-editor-link" placeholder="Paste Editor Link URL">
+      <input style="margin-left:2em; width: 75%;" class="editor-link-input" ref="urlToLoad" v-model="instanceEditorLink" type="text" id="instance-editor-link" placeholder="Paste Editor Link URL">
     </div>
 
     <div>
@@ -210,6 +210,11 @@ export default {
 
 
     loadUsingUserTemplate: async function(profile){
+
+      if (this.$refs.urlToLoad.value.trim() === ''){
+        alert('You must enter a resource address first above.')
+        return false
+      }
 
       let profileParsed = JSON.parse(profile.profile)
       profileParsed.isTemplate=true

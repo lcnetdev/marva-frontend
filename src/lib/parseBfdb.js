@@ -1281,7 +1281,13 @@ const parseBfdb = {
 							checkIt = false
 						}
 
-						// infered both since it was not defined but it does have user data
+						
+					}else if (profile.templateDataFlow && profile.templateDataFlow[propFlowId] && (profile.templateDataFlow[propFlowId] === 'template' || profile.templateDataFlow[propFlowId] === 'resource' ) ){
+
+						checkIt = false
+
+
+					// infered both since it was not defined but it does have user data
 					}else if (Object.keys(pt[k].userValue).length>1){
 						checkIt = true
 
