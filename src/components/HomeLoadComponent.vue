@@ -27,6 +27,7 @@
     <div>
       <input style="margin-left:2em; width: 75%;" class="editor-link-input" v-model="instanceEditorLink" type="text" id="instance-editor-link" placeholder="Paste Editor Link URL">
     </div>
+
     <div>
 
     <div>
@@ -55,7 +56,9 @@
 
 
     </div>
-  <hr style="width: 25%;margin-left: 2.5em;margin-top: 2em;">
+
+
+    <hr style="width: 25%;margin-left: 2.5em;margin-top: 2em;">
 
     <select style="margin-left:2em; width: 76%;" class="editor-link-input" v-model="instanceSelected">
       <option v-for="key in rtLookupInstances" :key="key"  :selected="(key === 'lc:RT:bf2:Monograph:Instance') ? true : false"  >{{key}}</option>
@@ -65,6 +68,17 @@
     </div>
 
   </div>
+
+
+    
+    <div style="margin-left: 2em;">
+      <hr style="margin-top:2em">
+
+      <h3>Load into Template</h3>
+
+      <HomeUserTemplateList parentComponent="HomeLoadComponent" @loadUsingUserTemplate="loadUsingUserTemplate"/>
+    </div>
+
 <!-- 
     <hr style="margin-top:2em">
 
@@ -116,13 +130,13 @@ const short = require('short-uuid');
 const decimalTranslator = short("0123456789");
 
 
-// import MiscLoaderAnimation from "@/components/MiscLoaderAnimation.vue";
+import HomeUserTemplateList from "@/components/HomeUserTemplateList.vue";
 
 export default {
-  name: "HomeNewComponent",
+  name: "HomeLoadComponent",
   components: {
       // Keypress: () => import('vue-keypress')
-      // MiscLoaderAnimation
+      HomeUserTemplateList
   },
   props: {
   },
@@ -194,6 +208,17 @@ export default {
 
     },
 
+
+    loadUsingUserTemplate: async function(profile){
+
+      let profileParsed = JSON.parse(profile.profile)
+      profileParsed.isTemplate=true
+      
+      this.instanceSelected = profileParsed
+      await this.loadInstance()
+
+    },
+
     loadInstance: async function(){
 
       // if not provided load a test one for testing
@@ -207,19 +232,28 @@ export default {
       this.$store.dispatch("fetchBfdbXML", { self: this, url: this.instanceEditorLink }).then(async () => {
       // 
 
-
+        console.log(this.instanceSelected)
         parseBfdb.parse(this.bfdbXML)
 
         // alert(parseBfdb.hasItem)
 
         let useProfile = null
-        // find the right profile to feed it
-        for (let key in this.profiles){
-          if (this.profiles[key].rtOrder.indexOf(this.instanceSelected)>-1){
-            useProfile = JSON.parse(JSON.stringify(this.profiles[key]))
-            
+
+
+        if (this.instanceSelected && this.instanceSelected.isTemplate){
+          useProfile = JSON.parse(JSON.stringify(this.instanceSelected))
+        }else{
+
+          // find the right profile to feed it
+          for (let key in this.profiles){
+            if (this.profiles[key].rtOrder.indexOf(this.instanceSelected)>-1){
+              useProfile = JSON.parse(JSON.stringify(this.profiles[key]))
+              
+            }
           }
+
         }
+
 
         // console.log("==========loadInstance")
         // console.log(JSON.parse(JSON.stringify(useProfile)))
@@ -232,9 +266,16 @@ export default {
           Array.from(Array(parseBfdb.hasItem)).map((_,i) => {
             
 
+            let useItemRtLabel
 
             // look for the RT for this item
-            let useItemRtLabel = this.instanceSelected.replace(':Instance',':Item')
+            if (this.instanceSelected && this.instanceSelected.isTemplate){
+              // we need to build the Rtlabel for what an instance would look like for this template, so we need to find the instance first
+              let instanceRtLabel = this.instanceSelected.rtOrder.filter((v)=>{ return v.includes(':Instance') })[0]
+              useItemRtLabel = instanceRtLabel.replace(':Instance',':Item')
+            }else{
+              useItemRtLabel = this.instanceSelected.replace(':Instance',':Item')
+            }
             console.log('looking for useItemRtLabel',useItemRtLabel)
 
             let foundCorrectItemProfile = false

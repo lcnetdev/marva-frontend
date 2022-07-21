@@ -20,7 +20,9 @@ const config = {
 			profiles : 'http://localhost:9401/util/profiles/profile/prod',
 			starting: 'http://localhost:9401/util/profiles/starting/prod',
 			env : 'staging',
-			dev: true
+			dev: true,
+			displayLCOnlyFeatures: true,
+
 
 		},
 
@@ -34,7 +36,8 @@ const config = {
 			profiles : '/bfe2/util/profiles/profile/stage',
 			// profiles: 'https://preprod-3001.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
 			starting : '/bfe2/util/profiles/starting/stage',
-			env : 'staging'
+			env : 'staging',
+			displayLCOnlyFeatures: true,
 
 		},
 
@@ -47,7 +50,8 @@ const config = {
 			bfdb : 'https://preprod-8230.id.loc.gov/',
 			profiles : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
 			starting : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:startingPoints&where=index.label:config',
-			env : 'production'
+			env : 'production',
+			displayLCOnlyFeatures: true,
 		},
 
 		bibframeDotOrg:{
@@ -61,8 +65,7 @@ const config = {
 			starting : 'https://bibframe.org/marva/util/profiles/starting/prod',
 			env : 'production',
 			publicEndpoints:true,
-
-
+			displayLCOnlyFeatures: false
 		}
 
 
@@ -149,6 +152,20 @@ const config = {
 		'http://id.loc.gov/ontologies/bibframe/agent'
 
 	],
+
+
+
+	// these are properties that aren't allowed to be both when merging data with template
+	templatesDataFlowCantBeBoth: [
+		'id.loc.gov/ontologies/bibframe/adminMetadata',
+	],
+
+	// these are not template-able properties
+	templatesDataFlowHide: [
+		'id.loc.gov/ontologies/bibframe/instanceOf',
+		'http://id.loc.gov/ontologies/bibframe/hasInstance',
+	], 
+
 
 
 

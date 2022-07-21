@@ -1098,16 +1098,8 @@ export default {
 
       templateLabel: "",
 
-      templatesDataFlowCantBeBoth: [
-        'id.loc.gov/ontologies/bibframe/adminMetadata',
-
-
-      ],
-      templatesDataFlowHide: [
-        'id.loc.gov/ontologies/bibframe/instanceOf',
-        
-
-      ],  
+      templatesDataFlowCantBeBoth: config.templatesDataFlowCantBeBoth,
+      templatesDataFlowHide: config.templatesDataFlowHide,  
 
 
       list: [],
@@ -1288,8 +1280,6 @@ export default {
         if (this.activeProfile.rt[rt].pt[pt].valueConstraint && this.activeProfile.rt[rt].pt[pt].valueConstraint.valueDataType && this.activeProfile.rt[rt].pt[pt].valueConstraint.valueDataType.dataTypeURI && this.activeProfile.rt[rt].pt[pt].valueConstraint.valueDataType.dataTypeURI.trim() != ''){
             id = id + '|' + this.activeProfile.rt[rt].pt[pt].valueConstraint.valueDataType.dataTypeURI
         }
-
-
         return id
 
     },
@@ -1316,10 +1306,20 @@ export default {
 
     },
 
+    // setDefaultTemplateValues: function(){
+
+    //     if (!this.activeProfile.templateDataFlow){
+
+
+
+    //     }
+
+    // },
+
     templatesPropertyIsChecked: function(property,checkingFor){
 
         // if there is no data stored then its a "both"
-        // unless its on the the ones that cant be both then its a resource
+        // unless its on the the ones that cant be  then its a resource
         if (this.templatesDataFlowCantBeBoth.filter((v)=> { return property.includes(v) }).length>0){            
             if (!this.activeProfile.templateDataFlow){
                 if (checkingFor == 'resource'){
@@ -1721,6 +1721,8 @@ export default {
     toggleTemplate: async function(){
 
       if (!this.displayTemplate){
+
+            // this.setDefaultTemplateValues()
             this.displayTemplate=true
 
             this.$nextTick(()=>{          

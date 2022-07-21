@@ -621,11 +621,45 @@ const parseBfdb = {
 		// TODO replace this later with more advanced/dynamic approch
 		for (let rt in profile.rt){
 
-			let adminMetadataProperty = this.buildDynamicProperty('http://id.loc.gov/ontologies/bibframe/adminMetadata')
-			let adminMetadataPropertyLabel = 'http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'
 
-			profile.rt[rt].pt[adminMetadataPropertyLabel] = adminMetadataProperty
-			profile.rt[rt].ptOrder.push(adminMetadataPropertyLabel)
+			// don't build an admin profile if it is a template, that is coming from the template
+			if (profile.isTemplate){
+
+
+				// don't build it, the logic below will utilize the existing adminmetadata in the profile 
+
+
+				// remove any hypenated rt names
+				// let dataFlowId = rt.split('-')[0] + '|http://id.loc.gov/ontologies/bibframe/adminMetadata'
+				// // does the template want to use the template adminmetadata?
+				// if (profile.templateDataFlow && profile.templateDataFlow[dataFlowId] && profile.templateDataFlow[dataFlowId] === 'template'){
+
+				// 	// dont build itt
+
+				// }else{
+
+				// 	// remove it from the profile and build it 
+
+				// 	let adminMetadataProperty = this.buildDynamicProperty('http://id.loc.gov/ontologies/bibframe/adminMetadata')
+				// 	let adminMetadataPropertyLabel = 'http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'
+
+				// 	profile.rt[rt].pt[adminMetadataPropertyLabel] = adminMetadataProperty
+				// 	profile.rt[rt].ptOrder.push(adminMetadataPropertyLabel)
+
+
+				// }
+
+			}else{
+
+
+				// always build it for non-template profiles
+
+				let adminMetadataProperty = this.buildDynamicProperty('http://id.loc.gov/ontologies/bibframe/adminMetadata')
+				let adminMetadataPropertyLabel = 'http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'
+
+				profile.rt[rt].pt[adminMetadataPropertyLabel] = adminMetadataProperty
+				profile.rt[rt].ptOrder.push(adminMetadataPropertyLabel)
+			}
 		}
 
 
@@ -1050,7 +1084,7 @@ const parseBfdb = {
 		let toDeleteNoData = []
 
 				
-		console.log("USING profile",profile)
+		console.log(`test run?: ${testRun}`, " USING profile",JSON.parse(JSON.stringify(profile)))
 		for (const pkey in profile.rt) {
 
 
@@ -1204,6 +1238,136 @@ const parseBfdb = {
 
 			let sucessfulElements  = []
 
+			// keep track what Pts are processed is the profile is a template
+			let didTemplateCheckForThesePts = {}
+
+			// before we loop through all the pts and load data into them we need to preview them to see if we are using a template
+			// and if we are then we need to check each property that has data populated from the template
+			// if the template specifies that we want both data from the template and data from the resource to populate the record
+			// we need to make an empty pt for as a place where that data can flow into it
+
+			let needToAdd = []
+
+			if (profile.isTemplate){
+				console.log("PROFILE IS TEMPLATE", profile)
+				for (let k in pt){
+
+
+
+
+					if (config.templatesDataFlowHide.indexOf(pt[k].propertyURI)>-1){
+						continue
+					}
+
+					let propFlowId = pkey.split('-')[0]  + '|' + pt[k].propertyURI
+					if (pt[k].valueConstraint && pt[k].valueConstraint.valueDataType && pt[k].valueConstraint.valueDataType.dataTypeURI && pt[k].valueConstraint.valueDataType.dataTypeURI.trim() != ''){
+						propFlowId = propFlowId + '|' + pt[k].valueConstraint.valueDataType.dataTypeURI
+					}	
+
+					// if there is no setting says "both" then both is the default behvior for pts that alredy have userValue populated
+					let checkIt = false
+
+					// directly listed as both
+					if (profile.templateDataFlow && profile.templateDataFlow[propFlowId] && profile.templateDataFlow[propFlowId] === 'both'){
+						checkIt = true
+					}
+
+					if (pt[k].propertyURI == 'http://id.loc.gov/ontologies/bibframe/adminMetadata'){
+						
+						// if it is admin make sure they really said use the template or resource otherwise it cannot be both
+						if (profile.templateDataFlow && profile.templateDataFlow[propFlowId] && profile.templateDataFlow[propFlowId] != 'both'){
+							checkIt = true
+						}else{
+							checkIt = false
+						}
+
+						// infered both since it was not defined but it does have user data
+					}else if (Object.keys(pt[k].userValue).length>1){
+						checkIt = true
+
+						// just to make life eaiser below modify the template to specificlly say this is a both, so we don't have to keep inerfing it
+						if (!profile.templateDataFlow){
+							profile.templateDataFlow = {}
+						}
+						if (!profile.templateDataFlow[propFlowId]){
+							profile.templateDataFlow[propFlowId] = 'both'
+						}
+
+					}
+
+
+
+
+
+
+
+					// only do each unique property (not pts) once
+					// also make sure its not a property that might have userValue but is not something we want to be templateable (config.templatesDataFlowHide)
+					if (checkIt && !didTemplateCheckForThesePts[propFlowId]){
+
+						let ptk = JSON.parse(JSON.stringify(pt[k]))
+						// make sure each new one has a unique guid and clear out the userValue if populated
+						ptk['@guid'] = short.generate()
+						if (ptk.userValue['@root']){
+
+							ptk.userValue = { '@root' : ptk.userValue['@root'] }
+						}else{
+
+							ptk.userValue = {}
+						}
+
+						// a flag for the next process to know this is the right property to load all the elements from the record into
+						ptk.isEmptyForTemplate = true
+
+						// we also want to put this pt in at the end of the templates pts, so look through all the pts for the last pt for this type
+						// and save that name as the palce to insert after
+
+						let lastLabel = null
+						for (let kk in pt){
+
+							let propFlowIdInsertAfter = pkey.split('-')[0]  + '|' + pt[kk].propertyURI
+							if (pt[k].valueConstraint && pt[kk].valueConstraint.valueDataType && pt[kk].valueConstraint.valueDataType.dataTypeURI && pt[kk].valueConstraint.valueDataType.dataTypeURI.trim() != ''){
+								propFlowIdInsertAfter = propFlowIdInsertAfter + '|' + pt[kk].valueConstraint.valueDataType.dataTypeURI
+							}	
+
+							// so it is the same TYPE of pt, not the exact same pt
+							if (propFlowIdInsertAfter == propFlowId){
+								lastLabel = kk
+							}
+
+						}
+
+
+
+						needToAdd.push({
+							pt: JSON.parse(JSON.stringify(ptk)),
+							ptLabel: k + '|'  + short.generate(), // create a new random label for it
+							insertAfter: lastLabel
+						})
+
+
+						// mark that we did it for this property don't do it if the same proeprty pts are repeated
+						didTemplateCheckForThesePts[propFlowId] = true
+
+					}
+
+
+				}
+			}
+
+
+			console.log("!!!!!!!!! ------ needToAddneedToAddneedToAddneedToAdd")
+			console.log(needToAdd)
+
+			for (let nta of needToAdd){
+				pt[nta.ptLabel] = nta.pt
+				// add it in the correct position
+				let insertAt = profile.rt[pkey].ptOrder.indexOf(nta.insertAfter) + 1
+				profile.rt[pkey].ptOrder.splice(insertAt, 0, nta.ptLabel)
+
+				
+
+			}
 
 
 
@@ -1212,9 +1376,94 @@ const parseBfdb = {
 
 			for (let k in pt){
 
+
 				let ptk = JSON.parse(JSON.stringify(pt[k]))
 				// make sure each new one has a unique guid
 				ptk['@guid'] = short.generate()
+
+
+
+				let propFlowId // eslint-disable-line
+				let skipThisElementDataFromTemplate = false
+
+				if (profile.isTemplate && config.templatesDataFlowHide.indexOf(pt[k].propertyURI) === -1){
+
+
+					// // build the propflow id for this pt				
+					// if the rt name has a "-1" or whatver in it, remove that
+					propFlowId = pkey.split('-')[0]  + '|' + pt[k].propertyURI
+					if (pt[k].valueConstraint && pt[k].valueConstraint.valueDataType && pt[k].valueConstraint.valueDataType.dataTypeURI && pt[k].valueConstraint.valueDataType.dataTypeURI.trim() != ''){
+						propFlowId = propFlowId + '|' + pt[k].valueConstraint.valueDataType.dataTypeURI
+					}					
+					// this creates a key that looks like lc:RT:bf2:Monograph:Work|http://id.loc.gov/ontologies/bibframe/subject|http://www.loc.gov/mads/rdf/v1#SimpleType
+					// which is how the preference of how data flows into the profile lives in templateDataFlow, to know to use the template data or from the resource or both
+
+					console.log("TEMPLATE",propFlowId)
+					console.log(profile)
+
+
+					// admin info is always a special case, unless it sepciffcly says template then it comes from the resource always
+					// if (ptk.propertyURI == 'http://id.loc.gov/ontologies/bibframe/adminMetadata'){
+
+					// 	if (profile.templateDataFlow[propFlowId] && profile.templateDataFlow[propFlowId] === 'template'){
+					// 		skipThisElementDataFromTemplate = true
+					// 	}else{
+					// 		if (ptk.userValue['@root']){
+					// 			ptk.userValue = { '@root' : ptk.userValue['@root'] }
+					// 		}else{
+					// 			ptk.userValue = {}
+					// 		}
+
+					// 		console.log("AdminMetadata ---- ",ptk)
+
+					// 	}
+					
+					// // look to see if we are doing anything with this property from a template persepctive
+					// }else 
+
+					if (profile.templateDataFlow[propFlowId]){
+
+
+						// if the template says use the values from the template then we don't care about the data in the record
+						if (profile.templateDataFlow[propFlowId] === 'template'){
+							skipThisElementDataFromTemplate = true
+
+						}else if (profile.templateDataFlow[propFlowId] === 'resource'){
+
+							// this means we want to load the data from the resource, so there really shouldnt be any userValue data in the template if
+							// they specified this option, but just to make sure reset the userValue
+							if (ptk.userValue['@root']){
+								ptk.userValue = { '@root' : ptk.userValue['@root'] }
+							}else{
+								ptk.userValue = {}
+							}
+
+
+						}else if (profile.templateDataFlow[propFlowId] === 'both'){
+
+
+
+
+
+							// if they say both it means that we need to populate both but this is not the right pt to put it into
+							// use the template data for this one unless its is flagged as the special pt we create to allow resource data to flow into the record
+							if (!ptk.isEmptyForTemplate){
+								skipThisElementDataFromTemplate = true
+							}
+
+
+
+						}
+
+						console.log("YES TEMPLATE HERE")
+
+					}
+
+
+
+				}
+
+
 				
 				
 
@@ -1275,10 +1524,17 @@ const parseBfdb = {
 
 				}
 
+
+				// we already have the data loaded from the template so skip the element processing part
+				if (skipThisElementDataFromTemplate){
+					continue
+				}
 				
 
 				if (el.length>0){
 
+					console.log("Putting ", el)
+					console.log("Into ", ptk)
 
 					// we have that element
 					sucessfulProperties.push(prefixURI)
