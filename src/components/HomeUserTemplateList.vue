@@ -32,8 +32,6 @@
             <tbody v-else>
 
                 <tr v-for="t in userTemplates" :key="t.id">
-
-
                     <td v-bind:class="['selectable-template']" @click="loadUserTemplate(t)">
                       <span v-if="t.invalid">
 
@@ -42,7 +40,7 @@
                         </svg>
 
                       </span>
-                      <a href="#" @click="loadUserTemplate(t)" style="text-decoration: none; color: inherit;">{{t.label}}</a>
+                      <a href="#" :id="`template-${t.id}`" @click="loadUserTemplate(t)" style="text-decoration: none; color: inherit;">{{t.label}}</a>
                     </td>
                     <td>
                       <span v-for="v in t.basedOnProfile" v-bind:key="v" >
@@ -74,6 +72,15 @@
                     <td>
                       <button @click="deleteUserTemplate(t)">delete</button>
                       <button @click="copyTemplateId($event,t)" style="margin-left:0.25em">copy ID</button>
+
+
+                      <input v-if="parentComponent === 'HomeLoadComponent'" @input="toggleIsFavorite('template',t.id,t.label)" type="checkbox" :checked="isAlreadyFavorite('template',t.id)" :name="'template-'+t.id" :id="'template-'+t.id"><label :for="'template-'+t.id">Add to favorites</label>
+
+                      
+
+
+
+
                     </td>
 
 
@@ -118,28 +125,68 @@ export default {
     loadTemplate: parseProfile.loadNewTemplate,
 
 
-    copyTemplate(){
 
-      console.log(this.$refs.copyTemplateId.value)
+    /**
+    * Sets a profile or template as a favorite which is stored in the state
+    * @param {string} type - the favorite catagory / type, template or profile
+    * @param {string} name - the unique name the favorite is stored as
+    * @param {string} label - the dispaly label to use, sometimes starting points have better labels than just the profile idenfiter
+    * @return {void}
+    */
+    toggleIsFavorite: function(type, name, label){
+      // check to add or remove
+      if (this.isAlreadyFavorite(type,name)){
+        this.$store.dispatch("removeLoadResourceFavorite", { self: this, type: type, name: name, label: label })
+      }else{
+        this.$store.dispatch("addLoadResourceFavorite", { self: this, type: type, name: name, label: label })
+      }      
+    },
+
+
+    /**
+    * Tests if a profile type and name is already a favorite
+    * @param {string} type - the favorite catagory / type, template or profile
+    * @param {string} name - the unique name the favorite is stored as
+    * @return {boolean} - returns true if it is and false if not
+    */
+    isAlreadyFavorite: function(type, name){
+
+      // see if the requested is in the favorites list
+      if (this.loadResourceFavorites.filter((f)=>{ return (f.type === type && f.name === name)}).length>0){
+        return true
+      }else{
+        return false
+      }
+
+    },
+
+    /**
+    * makes a fetch call to the api to kick off a copy request, it passes the active template id in the input box
+    * it then refreshes and validates the templates
+    * @return {void}
+    */    
+    copyTemplate(){      
       let utilUrl = config.returnUrls().util
       fetch(`${utilUrl}/copytemplate/${this.catInitials}/${this.$refs.copyTemplateId.value}`, {
         method: 'GET',
       })
-      .then(async res => {
-
-        console.log(res.status)
-        console.log(await res.text())
-
+      .then(async res => { // eslint-disable-line
+        // console.log(res.status)
+        // console.log(await res.text())
         this.userTemplates = await lookupUtil.userTemplates(this.catInitials)
         this.validateUserTemplates()
-
       })
 
     },
 
+
+    /**
+    * copies the template id to the clip board so the user can share it
+    * @param {event} event - from the dom, we use modify the target style
+    * @param {string} profile.id - we use the id from the profile object 
+    * @return {void}
+    */    
     copyTemplateId(event, profile){
-
-
       event.target.innerHTML="copied"
       event.target.style.color="yellow"
       event.target.style.fontWeight="bold"
@@ -152,90 +199,68 @@ export default {
     },
 
 
+    /**
+    * Sends API request to to remove template from the user acct
+    * @param {string} profile.id - we use the id from the profile object 
+    * @return {void}
+    */   
     deleteUserTemplate(profile){
-
-
       let utilUrl = config.returnUrls().util
-
       fetch(`${utilUrl}/templates/${profile.id}`, {
         method: 'DELETE',
       })
       .then(async res => {
-
-
         if (res.status==200){
-
           this.userTemplates = []
-
           this.userTemplates = await lookupUtil.userTemplates(this.catInitials)
           if (this.userTemplates.length==0){
             this.userTemplates = null
           }
-
         }else{
           alert('Was an error deleteing')
         }
       }) 
       .then(data => console.log(data))
 
-
-
-
     },
 
+    /**
+    * validates property using the parseProfile library
+    * @return {void}
+    */   
     validateUserTemplates(){
       this.userTemplates = parseProfile.userTemplatesValidate(this.userTemplates) 
     },    
 
-
+    /**
+    * Depending if this component was loaded from the home create new screen or the load resource screen it will
+    * make the state ready for a new blank record or it will emit a trigger to the load component to load a resource with a template
+    * @param {string} profile - profile object from the API
+    * @return {void}
+    */   
     loadUserTemplate(profile){
-
-
-
       if (this.parentComponent === 'HomeNewComponent'){
-
         this.$store.dispatch("clearUndo", { self: this}).then(()=>{
           this.$store.dispatch("setActiveUndo", { self: this, msg:'Created blank record'})
         })
-
         // the profile is stored as string json in the db due to key naming conflicts in mongo
         let useProfile = JSON.parse(profile.profile)
-
         useProfile = this.loadTemplate(null, this.catInitials,useProfile)
-
         this.$store.dispatch("setActiveProfile", { self: this, profile: useProfile, useDefaultValues: false }).then(() => {
-          
           if (this.settingsDisplayMode == 'spreadsheet'){
             this.$router.push({ name: 'CompactEdit', params: { recordId: useProfile.eId } })
           }else{
             this.$router.push({ name: 'Edit', params: { recordId: useProfile.eId } })
           }
-
           this.$store.dispatch("forceSave", { self: this}, true).then(() => {
             this.$store.dispatch("setActiveRecordSaved", { self: this}, true).then(() => {
-
               window.scrollTo(0, 0);
-
-
             })    
           })   
         })
-
-
-
       }else{
-
-
         this.$emit('loadUsingUserTemplate', profile)
-
-
-
-
       }
-
-
-
-
     }
 
 
@@ -246,6 +271,7 @@ export default {
     profiles: 'profiles',
     profilesLoaded: 'profilesLoaded',
     catInitials: 'catInitials',
+    loadResourceFavorites: 'loadResourceFavorites',
 
     
    

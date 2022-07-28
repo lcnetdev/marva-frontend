@@ -219,6 +219,14 @@ export default {
     })  
 
 
+    if (localStorage.getItem('bfeLoadResourceFavorites')!== null){      
+
+      for (let f of JSON.parse(localStorage.getItem('bfeLoadResourceFavorites'))){
+        this.$store.dispatch("addLoadResourceFavorite", { self: this, type: f.type, name: f.name, label: f.label   }).then(() => {
+        })
+      }
+    } 
+
 
 
 

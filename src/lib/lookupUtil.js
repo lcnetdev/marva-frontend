@@ -258,6 +258,57 @@ const lookupUtil = {
     },
 
 
+
+    /**
+    * A result from searching ID by LCCN
+    * @typedef {lccnSearchResult} lccnSearchResult
+    * @property {string} lccn - the lccn searched
+    * @property {string} label - the label to display in a search result
+    * @property {string} bfdbURL - the http url to the bfdb url\
+    * @property {string} idURL - the http url to the id.loc.gov page for instance
+    * @property {string} bfdbPackageURL - the http url to the data package for this instance
+    */
+
+    /**
+    * Looks for instances by LCCN against ID, returns into for them to be displayed and load the resource
+    * @param {string} lccn - the lccn to search for
+    * @return {array} - An array of {@link lccnSearchResult} results
+    */
+    searchInstanceByLCCN: async function(lccn){
+
+      lccn = lccn.replaceAll(' ','')
+      try{
+        let req = await fetch(config.returnUrls().id + `resources/instances/suggest2?q=${lccn}&searchtype=keyword` )
+        let results = await req.json()
+        let returnVal = []
+
+        for (let r of results.hits){
+
+          returnVal.push({
+            lccn: lccn,
+            label: r.aLabel,
+            bfdbURL: config.returnUrls().bfdb + r.uri.split('id.loc.gov/')[1],
+            idURL: config.returnUrls().id + r.uri.split('id.loc.gov/')[1],
+            bfdbPackageURL: config.returnUrls().bfdb + r.uri.split('id.loc.gov/')[1] + '.editor-pkg.xml'
+          })
+
+        }
+
+
+        return returnVal
+
+
+      }catch{
+        return ["Error searching LCCN"]
+      }
+
+    },
+
+
+
+
+
+
     searchComplex: async function(searchPayload){
         
         let urlTemplate = searchPayload.url

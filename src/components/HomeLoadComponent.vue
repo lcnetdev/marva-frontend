@@ -11,67 +11,143 @@
     <Keypress key-event="keydown" :multiple-keys="[{keyCode: 187, modifiers: ['ctrlKey'],preventDefault: true}]" @success="dupeProperty" />
  -->
 
+
+
+
+
+
+
     <h1>Load existing records</h1>
 
     <hr>
+ 
+    <div v-if="config.returnUrls().displayLCOnlyFeatures" style="background-color: whitesmoke; padding: 5px;">
+      <h3>Search Instance by LCCN</h3>
+      <p style="">Enter LCCN to search for instance to load.</p>
+      <input style=" width: 75%;" class="editor-link-input" ref="lccnToSearch" @input="searchByLccn" v-model="lccnToSearch" type="text" id="lccn-search-val" placeholder="Enter LCCN">
+
+      <ol>
+
+        <li v-if="searchByLccnResults && searchByLccnResults.length === 0">No results...</li>
+
+        <template v-if="searchByLccnResults && typeof searchByLccnResults === 'string'">
+
+          <li>Searching...</li>
+
+        </template>
+        <template v-else>
+          <li v-for="(r,idx) in searchByLccnResults" :key="r.idURL">
+            <div style="display:flex">
+              <div style="flex:1;">{{++idx}}. <span style="font-weight:bold">{{r.label}}</span></div>
+              <div style="flex:1"><a :href="r.bfdbURL" target="_blank">View on BFDB</a></div>
+              <div style="flex:1"><a href="#" target="_blank" @click.prevent="instanceEditorLink = r.bfdbPackageURL; testInstance()">Fetch Record</a></div>
+            </div>
+          </li>      
+        </template>
+
+
+      </ol>
+
+
+    </div>
+
+
 
     
-    <h3>Load data from BFDB</h3>
 
-    <ol>
-      <li>1. Go to the <a href="https://preprod-8230.id.loc.gov" target="_blank">BFDB</a> and find and instance to load.</li>
-      <li>2. Copy the URL from the "Editor Link" section</li>
-      <li>3. Paste URL below, select template and click load.</li>
-    </ol>
+    <template v-if="config.returnUrls().displayLCOnlyFeatures">
+      <h3 style="margin-top: 1em">Load data from BFDB</h3>
+        <p style="">Go to the <a href="https://preprod-8230.id.loc.gov" target="_blank">BFDB</a> and find an instance to load. Use the editor link button to load into Marva.</p>
+    </template>
+    <template v-else>
+      <h3>Load data from resource package</h3>
+
+
+    </template>
 
     <div>
-      <input style="margin-left:2em; width: 75%;" class="editor-link-input" ref="urlToLoad" v-model="instanceEditorLink" type="text" id="instance-editor-link" placeholder="Paste Editor Link URL">
+      <input style="width: 75%;" class="editor-link-input" ref="urlToLoad" v-model="instanceEditorLink" type="text" id="instance-editor-link" placeholder="Paste Editor Link URL">
     </div>
 
+
+
+
+
+
+
     <div>
 
-    <div>
-
-    <button style="font-size: 1.25em; margin-left: 2em; margin-top: 0.5em;" @click="testInstance()">Suggest Profile</button> 
-
-    <div v-if="suggestHardCoded.length>0" style="margin-left: 5em;margin-top: 2em;background-color: aliceblue;padding: 1em;">
-      <div>This record was saved using this profile:</div>
-      <button style="font-size: 1.25em" v-bind:key="pname" @click="loadSuggestd(pname)" v-for="pname  in suggestHardCoded">Load using: {{pname}}</button>
-    </div>
-    <div v-else-if="suggestScore.length>0">
+      <div style="display:flex;">
 
 
-      <div style="margin-left: 5em;margin-top: 2em;background-color: aliceblue;padding: 1em;">
-        <div style="margin-bottom: 1em;font-weight: bold;">These profiles best fit this data (best to worst):</div>
-        <div v-bind:key="idx" v-for="(pname,idx) in suggestScore" style="margin-bottom: 1em">
-          <button style="font-size: 1.25em" @click="loadSuggestd(pname.id)">Load using: {{pname.profile}}</button>
+        <div style="flex:1; border-right: solid 1px lightgray; margin:5px; padding-right: 5px;">
+          
+          <button style="font-size: 1.25em; margin-top: 0.5em;" @click="testInstance()">Suggest Profile</button> 
+
+          
+
+          <div v-if="suggestHardCoded.length>0" style="margin-top: 2em;background-color: aliceblue;padding: 1em;">
+            <div>This record was saved using this profile:</div>
+              <button style="font-size: 1.25em" v-bind:key="pname" @click="loadSuggestd(pname)" v-for="pname  in suggestHardCoded">Load using: {{pname}}</button>
+          </div>
+          <div v-else-if="suggestScore.length>0">
+
+
+            <div style="margin-top: 2em;background-color: aliceblue;padding: 1em;">
+              <div style="margin-bottom: 1em;font-weight: bold;">These profiles best fit this data (best to worst):</div>
+              <div v-bind:key="idx" v-for="(pname,idx) in suggestScore" style="margin-bottom: 1em">
+                <button style="font-size: 1.25em" @click="loadSuggestd(pname.id)">{{++idx}}. {{pname.profile}}</button><input @input="toggleIsFavorite('profile',pname.id,pname.profile)" type="checkbox" :checked="isAlreadyFavorite('profile',pname.id)" :name="'profile-'+pname.id" :id="'profile-'+pname.id"><label :for="'profile-'+pname.id">Add to favorites</label>
+              </div>
+            </div>
+
+          </div>
+
+
         </div>
+        <div style="flex:2; position: relative; min-height: 100px;">
+          <div style="font-weight:bold">Favorites:</div>
+
+
+          <div v-for="(f,idx) in loadResourceFavorites" :key="f.name" style="margin-left: 0.5em; display: inline-block; margin-top: 0.5em">
+            <button style="font-size: 1.25em" @click="loadFromFavorite(f.type,f.name)">
+              <span>{{++idx+suggestScore.length}}.</span>
+              <span v-if="f.label">{{f.label}}</span>
+              <span v-else>{{f.name}}</span>
+            </button>
+            <div v-if="showManageFavoriteCheckBoxes">
+              <input @input="toggleIsFavorite(f.type,f.name,f.label)" type="checkbox" :checked="isAlreadyFavorite(f.type,f.name)" :name="'profile-'+f.name" :id="'profile-'+f.name"><label :for="'profile-'+f.name">Favorite</label>
+            </div>
+          </div>
+
+
+          <div v-if="loadResourceFavorites.length>0" style="position: absolute; bottom: 0;">
+            <a href="#" style="color:inherit; margin-left: 1em;" @click.prevent="showManageFavoriteCheckBoxes = (showManageFavoriteCheckBoxes) ? false : true">Manage Favorites</a>
+          </div>
+          <div v-else>
+            No favorites added yet...
+          </div>
+
+        </div>
+
+
       </div>
 
-      
-      
 
 
-    </div>
 
-
-    </div>
-
-
-    <hr style="width: 25%;margin-left: 2.5em;margin-top: 2em;">
-
-    <select style="margin-left:2em; width: 76%;" class="editor-link-input" v-model="instanceSelected">
-      <option v-for="key in rtLookupInstances" :key="key"  :selected="(key === 'lc:RT:bf2:Monograph:Instance') ? true : false"  >{{key}}</option>
-    </select>
-    <div>
-    <button style="font-size: 1.25em; margin-left: 2em; margin-top: 0.5em;" @click="loadInstance()">Manually Select Profile</button> 
-    </div>
+      <select style="width: 76%;" class="editor-link-input" v-model="instanceSelected">
+        <option v-for="key in rtLookupInstances" :key="key"  :selected="(key === 'lc:RT:bf2:Monograph:Instance') ? true : false"  >{{key}}</option>
+      </select>
+      <div>
+      <button style="font-size: 1.25em; margin-top: 0.5em;" @click="loadInstance()">Manually Select Profile</button> 
+      <a href="#" style="color:inherit; margin-left: 1em;" @click.prevent="toggleIsFavorite('profile',instanceSelected)">Add selected to favorites</a>
+      </div>
 
   </div>
 
 
     
-    <div style="margin-left: 2em;">
+    <div style="">
       <hr style="margin-top:2em">
 
       <h3>Load into Template</h3>
@@ -79,7 +155,15 @@
       <HomeUserTemplateList parentComponent="HomeLoadComponent" @loadUsingUserTemplate="loadUsingUserTemplate"/>
     </div>
 
+
+
+
+    <!-- Old code below, there used to be a feature to load works from id.loc.gov -->
+
+
+
 <!-- 
+
     <hr style="margin-top:2em">
 
     <h3>Load Work record from BFDB</h3>
@@ -120,11 +204,14 @@
 
 
 import { mapState } from 'vuex'
-// import uiUtils from "@/lib/uiUtils"
 import parseId from '@/lib/parseId'
 import parseBfdb from '@/lib/parseBfdb'
+import config from "@/lib/config"
+
+
+// import uiUtils from "@/lib/uiUtils"
 // import exportXML from "@/lib/exportXML"
-// import lookupUtil from "@/lib/lookupUtil"
+import lookupUtil from "@/lib/lookupUtil"
 
 const short = require('short-uuid');
 const decimalTranslator = short("0123456789");
@@ -143,136 +230,181 @@ export default {
   methods: {
 
 
-    search: function(event){
-      window.clearTimeout(this.searchTimeout)
-      this.searchActive=true
-      this.searchTimeout = window.setTimeout(()=>{
-        this.$store.dispatch("fetchIdWorkSearch", { self: this, searchValue: event.target.value }).then(() => {
-          this.searchActive=false
-        })
+
+    /**
+    * Loads a resource using the favorite, just passes it to the other load mechanisms based on the favoite type 
+    * @param {string} type - the favorite catagory / type, template or profile
+    * @param {string} name - the unique name the favorite is stored as
+    * @return {void}
+    */
+    loadFromFavorite: function(type, name){
+      // check to add or remove
+
+      if (type === 'profile'){
+        this.loadSuggestd(name)
+      }else if (type === 'template'){
+        document.getElementById(`template-${name}`).click()
+      }
+    },
+
+
+
+
+
+
+    /**
+    * Triggers a lccn search based on the data in lccnToSearch variable
+    * @async
+    * @return {void}
+    */    
+    searchByLccn: async function(){
+
+      // lccns are not short
+      if (this.lccnToSearch.length < 8){ return false}
+
+      window.clearTimeout(this.lccnToSearchTimeout)
+      this.searchByLccnResults = 'Searching...'
+      this.lccnToSearchTimeout = window.setTimeout(async ()=>{
+
+        this.searchByLccnResults = await lookupUtil.searchInstanceByLCCN(this.lccnToSearch)
+        console.log(this.searchByLccnResults)
+
       },500)
     },
 
-    rtChange: function(event){
-      this.useRtSelected = event.target.value
+    /**
+    * Sets a profile or template as a favorite which is stored in the state
+    * @param {string} type - the favorite catagory / type, template or profile
+    * @param {string} name - the unique name the favorite is stored as
+    * @param {string} label - the dispaly label to use, sometimes starting points have better labels than just the profile idenfiter
+    * @return {void}
+    */
+    toggleIsFavorite: function(type, name, label){
+      // check to add or remove
+      if (this.isAlreadyFavorite(type,name)){
+        this.$store.dispatch("removeLoadResourceFavorite", { self: this, type: type, name: name, label: label })
+      }else{
+        this.$store.dispatch("addLoadResourceFavorite", { self: this, type: type, name: name, label: label })
+      }      
     },
+
+
+    /**
+    * Tests if a profile type and name is already a favorite
+    * @param {string} type - the favorite catagory / type, template or profile
+    * @param {string} name - the unique name the favorite is stored as
+    * @return {boolean} - returns true if it is and false if not
+    */
+    isAlreadyFavorite: function(type, name){
+
+      // see if the requested is in the favorites list
+      if (this.loadResourceFavorites.filter((f)=>{ return (f.type === type && f.name === name)}).length>0){
+        return true
+      }else{
+        return false
+      }
+
+    },
+
+
+    /**
+    * Triggers a parseBfdb.testProfiles call that will return profiles that best match the data
+    * the results are stored in the data as suggestHardCoded which are any profiles that were encoded in the adminMetadata
+    * and suggestScore which holds all the results
+    * @return {void}
+    */
 
     testInstance: async function(){
 
       this.suggestHardCoded= []
-
       if (this.instanceEditorLink==''||this.instanceEditorLink==null){
         this.instanceEditorLink = this.instanceTests[Math.floor(Math.random() * this.instanceTests.length)];
 
       }
 
       this.$store.dispatch("fetchBfdbXML", { self: this, url: this.instanceEditorLink }).then(async () => {
-      // 
-
-
         parseBfdb.parse(this.bfdbXML)
-
         let results = parseBfdb.testProfiles(this.profiles)
-
         if (results.hardCoded){
-            // if it found the work and the instance just sow the instace
+            // if it found the work and the instance just show the instance
             if (results.hardCoded.filter((v)=>{ return (v.includes(":Work"))}).length>0 && results.hardCoded.filter((v)=>{ return (v.includes(":Instance"))}).length>0 ){
               results.hardCoded = results.hardCoded.filter((v)=>{ return (v.includes(":Instance"))})
             }
-
             this.suggestHardCoded = results.hardCoded
-
         }
-        console.log(results.scoreResults)
-
+        // console.log(results.scoreResults)
+        // HACK - manually exclude some profiles based on keywords in their name
         results.scoreResults = results.scoreResults.filter((v)=>{return (v.id)})
-
         results.scoreResults = results.scoreResults.filter((v)=>{return (!v.id.includes("test"))})
         results.scoreResults = results.scoreResults.filter((v)=>{return (!v.profile.includes("test"))})
         results.scoreResults = results.scoreResults.filter((v)=>{return (!v.profile.includes("lc:profile"))})
-
-
-
-
         this.suggestScore = results.scoreResults.slice(0, 5)
-
-
       })
-
-
     },
 
+    /**
+    * Simple triggers the loadInstance after setting  instanceSelected based on what pass passed to it
+    * @async
+    * @param {object} pname - the name of the profile being selected to use to parse the data
+    * @return {void}
+    */
     loadSuggestd: async function(pname){
       this.instanceSelected = pname
       this.loadInstance()
-
     },
 
 
+    /**
+    * Simple triggers the loadInstance apulling the profile out of the template storage
+    * @async
+    * @param {object} profile - the template saved object from the API
+    * @return {void}
+    */
     loadUsingUserTemplate: async function(profile){
-
       if (this.$refs.urlToLoad.value.trim() === ''){
         alert('You must enter a resource address first above.')
         return false
       }
-
       let profileParsed = JSON.parse(profile.profile)
       profileParsed.isTemplate=true
-      
       this.instanceSelected = profileParsed
       await this.loadInstance()
 
     },
 
+    /**
+    * fetches the XML, asks parseBfdb to parse it then prepares the profile to be worked on
+    * and finally sets the app state to edit it 
+    * @async
+    * @return {void}
+    */
     loadInstance: async function(){
-
       // if not provided load a test one for testing
       if (this.instanceEditorLink==''||this.instanceEditorLink==null){
         this.instanceEditorLink = this.instanceTests[Math.floor(Math.random() * this.instanceTests.length)];
-
-      }
-      
-
-
+      }    
       this.$store.dispatch("fetchBfdbXML", { self: this, url: this.instanceEditorLink }).then(async () => {
-      // 
 
-        console.log(this.instanceSelected)
         parseBfdb.parse(this.bfdbXML)
 
-        // alert(parseBfdb.hasItem)
-
         let useProfile = null
-
-
         if (this.instanceSelected && this.instanceSelected.isTemplate){
           useProfile = JSON.parse(JSON.stringify(this.instanceSelected))
         }else{
-
           // find the right profile to feed it
           for (let key in this.profiles){
             if (this.profiles[key].rtOrder.indexOf(this.instanceSelected)>-1){
               useProfile = JSON.parse(JSON.stringify(this.profiles[key]))
-              
             }
           }
 
         }
 
-
-        // console.log("==========loadInstance")
-        // console.log(JSON.parse(JSON.stringify(useProfile)))
         // we might need to load in a item
-
         if (parseBfdb.hasItem>0){ 
-
-
           // loop the number of ITEMS there are in the XML
           Array.from(Array(parseBfdb.hasItem)).map((_,i) => {
-            
-
             let useItemRtLabel
-
             // look for the RT for this item
             if (this.instanceSelected && this.instanceSelected.isTemplate){
               // we need to build the Rtlabel for what an instance would look like for this template, so we need to find the instance first
@@ -281,7 +413,7 @@ export default {
             }else{
               useItemRtLabel = this.instanceSelected.replace(':Instance',':Item')
             }
-            console.log('looking for useItemRtLabel',useItemRtLabel)
+            // console.log('looking for useItemRtLabel',useItemRtLabel)
 
             let foundCorrectItemProfile = false
 
@@ -297,43 +429,30 @@ export default {
                   }
 
 
-                  console.log('uysing',this.profiles[pkey].rt[rtkey])
+                  // console.log('using',this.profiles[pkey].rt[rtkey])
                   foundCorrectItemProfile = true
                   useProfile.rtOrder.push(useRtLabel)
                   useProfile.rt[useRtLabel] = useItem     
-                  console.log(JSON.parse(JSON.stringify(useProfile)))           
+                  // console.log(JSON.parse(JSON.stringify(useProfile)))           
                 }
               }
             }
 
 
             if (!foundCorrectItemProfile){
-              console.log('---------')
-              console.log(this.rtLookup[useItemRtLabel])
+              console.warn('error: foundCorrectItemProfile not set ---------')
+              console.warn(this.rtLookup[useItemRtLabel])
             }
-
-
-
-
           });
-
-
-
-
-
-
-
         }
-
-        console.log("USING NWWW",useProfile)
 
         if (!useProfile.log){
           useProfile.log = []
-        
         }
+
+        // setup the log and set the procinfo so the post process knows what to do with this record
         useProfile.log.push({action:'loadInstance',from:this.instanceEditorLink})
         useProfile.procInfo= "update instance"
-
 
         // also give it an ID for storage
         if (!useProfile.eId){
@@ -350,49 +469,17 @@ export default {
         if (!useProfile.status){
           useProfile.status = 'unposted'
         }
-
-        // console.log("==========loadInstance2")
-        // console.log(JSON.parse(JSON.stringify(useProfile)))
-        
         this.transformResults  = await parseBfdb.transform(useProfile)
 
-
-        // console.log("==========loadInstance3")
-        // console.log(JSON.parse(JSON.stringify(this.transformResults)))
-
-        // let workkey = this.transformResults.rtOrder.filter((k)=> k.endsWith(":Instance"))[0]
-        // this.transformResultsDisplay = this.transformResults.rt[workkey]
-
-
-
-        await this.$store.dispatch("setActiveRecordSaved", { self: this}, false)
-
-        // this.$store.dispatch("setActiveRecordSaved", { self: this}, false).then(() => {
-
-        // })
-
-
-        // let xml = await exportXML.toBFXML(this.transformResults)
-        // console.log(xml)
-        // console.log('here')
-
-
-        
-        
+        await this.$store.dispatch("setActiveRecordSaved", { self: this}, false)      
         this.$store.dispatch("clearUndo", { self: this})
-
         this.$store.dispatch("setActiveProfile", { self: this, profile: this.transformResults }).then(async () => {
 
           if (this.settingsDisplayMode == 'spreadsheet'){
             this.$router.push({ name: 'CompactEdit', params: { recordId: useProfile.eId } })
           }else{
             this.$router.push({ name: 'Edit', params: { recordId: useProfile.eId } })
-
           }
-
-
-          
-
 
           this.$store.dispatch("setActiveUndo", { self: this, msg:'Loaded record'})
 
@@ -403,22 +490,36 @@ export default {
             this.$store.dispatch("setActiveRecordSaved", { self: this}, true).then(() => {
             })    
           })     
-
-      
-
-
-
-
         })
-
-
-
-
-
-
       })
+    },
 
 
+
+
+
+
+
+    /**
+    * CURRENTLY UNUSED
+    * Triggers a search request to ID for work search. 
+    *
+    * @param {Object} event - dom event, uses the target.value of the event
+    * @return {void}
+    */
+    search: function(event){
+      window.clearTimeout(this.searchTimeout)
+      this.searchActive=true
+      this.searchTimeout = window.setTimeout(()=>{
+        this.$store.dispatch("fetchIdWorkSearch", { self: this, searchValue: event.target.value }).then(() => {
+          this.searchActive=false
+        })
+      },500)
+    },
+
+
+    rtChange: function(event){
+      this.useRtSelected = event.target.value
     },
 
     load: function(useId,goEdit){
@@ -445,20 +546,11 @@ export default {
 
         this.transformResultsDisplay = this.transformResults.rt[workkey]
 
-
-
-
         if (goEdit){
           this.$store.dispatch("setActiveProfile", { self: this, profile: this.transformResults }).then(() => {
-
             this.$router.push({ path: 'edit' })
           })
         }
-
-        // this.$router.push({ path: 'edit' })
-
-        // 
-        // 
 
       })
 
@@ -477,6 +569,7 @@ export default {
     settingsDisplayMode: 'settingsDisplayMode',
     rtLookup:'rtLookup',
     idXML:'idXML',
+    loadResourceFavorites: 'loadResourceFavorites',
     bfdbXML:'bfdbXML',
     catInitials:'catInitials',
     // to access local state with `this`, a normal function must be used
@@ -497,13 +590,7 @@ export default {
         }
       }
       return r
-    }    
-    // assignedId (){
-
-
-    //   return uiUtils.assignID(this.structure,this.parentStructure)
-
-    // },    
+    }      
   }), 
 
   data: function() {
@@ -517,10 +604,25 @@ export default {
       searchActive: true,
       instanceSelected: 'lc:RT:bf2:Monograph:Instance',
       instanceEditorLink: null,
+
+      // used in lccn search
+      lccnToSearch: null,
+      lccnToSearchTimeout: false,
+      searchByLccnResults: null,
+
+      // in the favorites list shows the checkboxes to remove them
+      showManageFavoriteCheckBoxes: false,
+
+      config: config,
+
+      // stores results of testInstance if any profiles were found hard coded in adminMetadata
       suggestHardCoded: [],
+      // stores the result of testInstance comparing the profiles to the active parsed xml doc
       suggestScore: [],
 
 
+
+      // hard coded paths to test records
       instanceTests:[
         // '/bfe2/editor/tests/instances/c0010058400001.editor-pkg.xml', //book
         
@@ -627,22 +729,23 @@ export default {
 
     }
   },
-  created: function(){
 
+
+  created: function(){
+   // // kicks off a ID work search on load
    // this.$store.dispatch("fetchIdWorkSearch", { self: this, searchValue: 'Woolf, Virginia, 1882-1941. To the lighthouse' }).then(() => {
    //    this.searchActive=false
    //  })
 
 
-
+   // does an interval that checks until the profiles are loaded
+   // once loaded it checks the URL to see if info was passed to populate the input box to load with
+   // &action can be loadwork or loadibc
+   // &url is the http path to the resource to load
    let inerval = window.setInterval(()=>{
 
       if (this.profilesLoaded){
-
-
        if (this.$router.currentRoute && this.$router.currentRoute.query && this.$router.currentRoute.query.url){
-
-
         let url = this.$router.currentRoute.query.url
         if (this.$router.currentRoute && this.$router.currentRoute.query && this.$router.currentRoute.query.action && this.$router.currentRoute.query.action == 'loadwork'){
           url = url.replace('.jsonld','.rdf')
@@ -650,21 +753,11 @@ export default {
         if (this.$router.currentRoute && this.$router.currentRoute.query && this.$router.currentRoute.query.action && this.$router.currentRoute.query.action == 'loadibc'){
           url = url.replace('.jsonld','.xml')
         }
-
         this.instanceEditorLink = url
-
         this.testInstance()
-        console.log('ccickckckck')
-
         window.clearInterval(inerval)
-
        }
-
-
-
       }
-
-
    },500)
 
 
@@ -687,6 +780,10 @@ export default {
     margin: 0;
     font-weight: bold;
     font-size:2em;
+  }
+
+  h3{
+    margin: 0;
   }
   #home-load{
     padding:1em 2em 1em 2em;

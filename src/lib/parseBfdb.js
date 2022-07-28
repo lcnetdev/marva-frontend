@@ -2708,32 +2708,39 @@ const parseBfdb = {
 	},
 
 
+	/**
+	* The result of a testProfiles call
+	* @typedef {TestProfilesResult} TestProfileResult
+	* @property {array} hardCoded - if the xml doc has defined in it what profile was used that will be reurned here otherwise false
+	* @property {array} scoreResults - An array of objects that has 3 properties {score: 27, id: 'lc:RT:bf2:MonographNR:Instance', profile: 'lc:profile:bf2:MonographNR'} 
+	*/
 
+	/**
+	* Takes the profiles and looks at the active XML doc and tests each profile against it
+	* it scores each profile against the active xml and returns those resuts as an {@link TestProfilesResult} object
+	* @param {object} profiles - the profiles object with all profile parsed
+	* @return {TestProfilesResult} - {@link TestProfilesResult} test results
+	*/
 	testProfiles: function(profiles){
 
-		// console.log(profiles)
+		// this.activeDom is the current resource that was parsed, in this class it is the active xml doc open
+		// so at the time this method is called the xml doc has been parsed and ready to be access to pull stuff out
 
 		let workEl = this.activeDom.getElementsByTagName('bf:Work')
 		let instanceEl = this.activeDom.getElementsByTagName('bf:Instance')
-
 
 		// before we do all that test to see if it is a hub
 		if (workEl.length==1){
 			for (let c of workEl[0].children){
 				if (c.tagName === 'rdf:type'){
-
 					if (c.attributes['rdf:resource']){
 						if (c.attributes['rdf:resource'].value === 'http://id.loc.gov/ontologies/bibframe/Hub'){
-
 							let results = {
 								hardCoded: false,
 								scoreResults: []
 							}
-
 							let already = []
 							for (let rtName in profiles){
-
-
 								let rts = Object.keys(profiles[rtName].rt)
 								console.log(rts)
 								if (rts[0] && rts[0].endsWith(':Hub')){
@@ -2742,8 +2749,6 @@ const parseBfdb = {
 										already.push(rts[0])
 									}
 								}
-								
-
 							}
 							return results
 						}
@@ -2751,11 +2756,6 @@ const parseBfdb = {
 				}
 			}
 		} 
-
-
-// hardCoded: false
-// scoreResults: Array(52)
-// 0: {score: -5, id: null, profile: 'lc:profile:bf2:Hub'}
 
 
 		let toWork = []
@@ -2838,37 +2838,28 @@ const parseBfdb = {
 					score=score-1
 				}
 			}
-
-
 			// console.log(pName)
 			// console.log(pts)
 			// console.log("dataProperties",dataProperties.length)			
 			// console.log("pts",pts.length)			
 			// console.log(score)
-
 			scoreResults.push({score:score,id:instanceID, profile:pName})
-
 		}
-
-
-
 
 		scoreResults.sort((a, b) => b.score - a.score);
 
 		if (suggestedProfileNameByTag.length==0){
 			suggestedProfileNameByTag=false
 		}
-console.log({
-			hardCoded: suggestedProfileNameByTag,
-			scoreResults: scoreResults
 
-		})
-
+		// console.log({
+		// 	hardCoded: suggestedProfileNameByTag,
+		// 	scoreResults: scoreResults
+		// })
 
 		return {
 			hardCoded: suggestedProfileNameByTag,
 			scoreResults: scoreResults
-
 		}
 
 	},

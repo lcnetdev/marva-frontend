@@ -134,6 +134,9 @@ export default new Vuex.Store({
     activeUndoLog: [],
 
 
+    loadResourceFavorites: [], 
+
+
 
 
     saveRecord : debounce((state,commit) => {
@@ -368,6 +371,11 @@ export default new Vuex.Store({
  
 
  
+    LOADRESOURCEFAVORITES(state, val) {
+      state.loadResourceFavorites = val
+    }, 
+
+
 
     
     
@@ -1025,6 +1033,75 @@ export default new Vuex.Store({
       }
 
     },
+
+
+
+    /**
+    * Add a favorite method to the loadResourceFavorites state
+    * It will also save the state to the localstorage for later use
+    * @param {string} data.type - the type of favorite either "profile" or "template"
+    * @param {string} data.name - the name of the profile or template
+    * @param {string} data.label - the display label to use
+    * @return {void}
+    */
+    addLoadResourceFavorite: ({commit, state}, data) => {
+        
+      let currentFavorites = JSON.parse(JSON.stringify(state.loadResourceFavorites)) 
+      // if it doesn't have it addd it
+      if (currentFavorites.filter((cf)=>{ return (cf.type === data.type && cf.name === data.name)}).length==0){
+        currentFavorites.push({
+          type: data.type,
+          name: data.name,
+          label: data.label
+        })
+      }
+      commit('LOADRESOURCEFAVORITES', currentFavorites)
+      localStorage.setItem('bfeLoadResourceFavorites',JSON.stringify(currentFavorites))
+    
+    },
+
+
+    /**
+    * remove a favorite method to the loadResourceFavorites state
+    * It will also save the state to the localstorage for later use
+    * @param {string} data.type - the type of favorite either "profile" or "template"
+    * @param {string} data.name - the name of the profile or template
+    * @return {void}
+    */
+    removeLoadResourceFavorite: ({commit, state}, data) => {
+        
+      let currentFavorites = JSON.parse(JSON.stringify(state.loadResourceFavorites)).filter((cf)=>{ return (`${cf.name}${cf.type}` != `${data.name}${data.type}`)}) 
+
+
+      commit('LOADRESOURCEFAVORITES', currentFavorites)
+      localStorage.setItem('bfeLoadResourceFavorites',JSON.stringify(currentFavorites))
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   },
