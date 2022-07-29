@@ -3507,13 +3507,26 @@ const parseProfile = {
 
 
 
+    /**
+    * The minimap object
+    * @typedef {diagramMiniMap} diagramMiniMap
+    * @property {string} type - the top level of the minimap is probably a "work" or "hub"
+    * @property {string} URI - the URI created for that resource
+    * @property {string} rt - the resoruce template id for that resource
+    * @property {interger} counter - the position number for that resource out of all of the same type
+    * @property {string} jumpTo - the id used to navigate when user clicks on the minimap icon for that resource
+    * @property {string} details - also used to navigate when clicking on the minimap, the first component of the resource to jump to
+    * @property {array} instances - if type is work then this will be at the top level with all of the instances with the same diagramMiniMap properties
+    * @property {array} items - if at the instance level it will be an array of diagramMiniMap for the items 
+    * @property {array} work - if type is hub then this will be at the top level with all of the instances with the same diagramMiniMap properties
+    */
 
+    /**
+    * Takes the active profile and builds a minimap representation of its structure to be used in the navigation bar
+    * @param {object} profiles - a profile object
+    * @return {TestProfilesResult} - {@link diagramMiniMap} test results
+    */
     returnDiagramMiniMap: function(activeProfile){
-
-
-        
-        console.log(activeProfile)
-
         // this.hasInstance = []
         // this.hasItem = []
         // this.instanceOf = null
@@ -3544,32 +3557,15 @@ const parseProfile = {
             if (rt.endsWith(':Hub')){              
                 miniMapHub = {type:'Hub',URI:activeProfile.rt[rt].URI, rt:rt, counter:0, jumpTo:activeProfile.rt[rt].ptOrder[1],  details: activeProfile.rt[rt].pt[activeProfile.rt[rt].ptOrder[1]]}
             }
-
-
-
-            // if (rt.includes(':Instance') ){
-
-            //   let thisURI = activeProfile.rt[rt].URI
-              
-            //   for (let rt2 of Object.keys(activeProfile.rt)){
-            //     if (activeProfile.rt[rt2].itemOf && activeProfile.rt[rt2].itemOf == thisURI){
-            //       this.hasItem.push(activeProfile.rt[rt2].URI)
-            //     }
-            //   }
-            // }
         }
 
         for (let instanceData of miniMapInstance){
 
             instanceData.parent = miniMapWork.URI
-
-
             let thisURI = instanceData.URI
 
             for (let rt2 of Object.keys(activeProfile.rt)){
                 if (activeProfile.rt[rt2].itemOf && activeProfile.rt[rt2].itemOf == thisURI){
-                  
-
                     instanceData.items.push({type:'Item', parent:thisURI,URI:activeProfile.rt[rt2].URI, rt:rt2, counter:itemCounter, jumpTo:activeProfile.rt[rt2].ptOrder[1],  details: activeProfile.rt[rt2].pt[activeProfile.rt[rt2].ptOrder[1]]})
                     // itemCounter++
                 }
@@ -3581,20 +3577,16 @@ const parseProfile = {
             miniMapWork.instances = miniMapInstance
         }
 
-
         if (miniMapWork && miniMapHub){
             miniMapHub.work = miniMapWork     
             miniMapHub.instances = miniMapInstance
         }
 
-
         if(miniMapHub){
-            console.log("miniMapHub",miniMapHub)
             return miniMapHub
         }
 
         return miniMapWork
-
     },
 
     returnAdminMedataToUse: function(rtName){

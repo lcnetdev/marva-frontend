@@ -74,7 +74,7 @@
                       <button @click="copyTemplateId($event,t)" style="margin-left:0.25em">copy ID</button>
 
 
-                      <input v-if="parentComponent === 'HomeLoadComponent'" @input="toggleIsFavorite('template',t.id,t.label)" type="checkbox" :checked="isAlreadyFavorite('template',t.id)" :name="'template-'+t.id" :id="'template-'+t.id"><label :for="'template-'+t.id">Add to favorites</label>
+                      <input v-if="parentComponent === 'HomeLoadComponent'" @input="toggleIsFavorite('template',t.id,t.label)" type="checkbox" :checked="isAlreadyFavorite('template',t.id)" :name="'template-'+t.id" :id="'template-'+t.id"><label v-if="parentComponent === 'HomeLoadComponent'" :for="'template-'+t.id">Add to favorites</label>
 
                       
 

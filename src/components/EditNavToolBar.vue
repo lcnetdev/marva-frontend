@@ -1112,14 +1112,14 @@ export default {
 
   watch: {
 
-    // watch when the undoindex changes, means they are undoing redoing, so refresh the
-    // value in the acutal input box
+    /**
+    * watch when the undoindex changes, means they are undoing redoing, so refresh the
+    * value in the acutal input box
+    * @return {void}
+    */
     subjectList: function(){
-
       this.list = this.subjectList.map((value, index) => {
-
         return { label: value.label, source: value.source, guid:value.guid, index:index, pt:value.pt };
-
       })
     }
 
@@ -1128,15 +1128,13 @@ export default {
 
 
   created: function(){
+
+      // this watches the mouse to see when it gets close to the top to show the nav bar
       
       this.hideFields = this.settingsHideEmptyFields
       this.leftMenuEnriched = this.settingsLeftMenuEnriched
 
-
-
-
       this.$nextTick(function () {
-      
           window.addEventListener( 'scroll', () => {         
 
             // if they clicked it with their mouse at the top don't hide it  
@@ -1155,9 +1153,6 @@ export default {
               return false
             }
 
-
-
-
             if (window.pageYOffset>5){
               if (this.displayLiteralLanguage){ return false}
               if (this.displayLiteralOptions){ return false}
@@ -1171,8 +1166,6 @@ export default {
 
               if (this.undoDisplay){ return false}             
               if (this.displayPreview){ return false}
-
-
 
               this.headerState='retracted'
               if (this.$refs.header){
@@ -1251,73 +1244,82 @@ export default {
 
     namespaceUri: function(uri){ return exportXML.namespaceUri(uri)},
 
-    templatesDedupePts: function(rt){
 
+    /**
+    * We dont want to display the same property X times for each time its component is displayed, so dedupe the list by its unique id
+    * @param {string} rt - the rt key name of the resource template to loop throught its pts
+    * @return {array} - An array of the pts, but only occuring once
+    */
+    templatesDedupePts: function(rt){
         let alreadyAdded = []
         let returnVal = []
-
         for (let pt of this.activeProfile.rt[rt].ptOrder){
-
             let id = this.buildPropFlowId(rt,pt)
-
             if (alreadyAdded.indexOf(id)===-1){
-
                 alreadyAdded.push(id)
                 returnVal.push(pt)
-
             }
-
         }
-
         return returnVal
-
     },
 
+    /**
+    * This builds a ID based on the rt name, the property URI and the valueDataType if it has one
+    * the goal is to build a id that can help identifiy a property, since for example bf:contributor can be both the pirmary contributor or just contributor
+    * so this process makes an id that can uniquly identifiy each combination
+    * @param {string} rt - the name of the rt, the profile name
+    * @param {string} pt - the name of the pt, the property
+    * @return {string} id - The unqiue ID for the property
+    */
     buildPropFlowId: function(rt,pt){
-
         // the id will be the profile, the property URI and the primary data type dataTypeURI
         let id = rt + '|' + this.activeProfile.rt[rt].pt[pt].propertyURI
         if (this.activeProfile.rt[rt].pt[pt].valueConstraint && this.activeProfile.rt[rt].pt[pt].valueConstraint.valueDataType && this.activeProfile.rt[rt].pt[pt].valueConstraint.valueDataType.dataTypeURI && this.activeProfile.rt[rt].pt[pt].valueConstraint.valueDataType.dataTypeURI.trim() != ''){
             id = id + '|' + this.activeProfile.rt[rt].pt[pt].valueConstraint.valueDataType.dataTypeURI
         }
         return id
-
     },
 
+    /**
+    * trigger when a change is made to the property data flow options, sets the state
+    * @param {event} event - the event we use the target info from the dom element
+    * @return {void}
+    */
     templatesPropFlowChange: function(event){
         this.$store.dispatch("setTemplateDataFlow",{ id: event.target.name, value: event.target.value   }).then(() => {   
         });   
     },
 
+    /**
+    * trigger when a change is made to the property name, the value is v-model on the input
+    * @return {void}
+    */
     templateNameChange: function(){
-
         this.$store.dispatch("setTemplateName",{ value: this.templateLabel  }).then(() => {   
         });  
     },
 
-    templatesTDClick: function(event){
 
+    /**
+    * allows clicking on the TD to allso check the checbox
+    * @param {event} event - the event we use the target info from the dom element
+    * @return {void}
+    */
+    templatesTDClick: function(event){
         if (event.target.tagName=='TD'){
             event.target.children[0].checked="checked"
             this.templatesPropFlowChange({target:event.target.children[0]})
         }
-        
-
-
     },
 
-    // setDefaultTemplateValues: function(){
-
-    //     if (!this.activeProfile.templateDataFlow){
-
-
-
-    //     }
-
-    // },
-
+    /**
+    * This sets the checked property for all the radio inputs in the data flow control system
+    * it looks to see what is set 
+    * @param {string} property - the property to check for
+    * @param {string} checkingFor - the radio input we are looking to see is checked or not, resource, template, or both
+    * @return {void} 
+    */
     templatesPropertyIsChecked: function(property,checkingFor){
-
         // if there is no data stored then its a "both"
         // unless its on the the ones that cant be  then its a resource
         if (this.templatesDataFlowCantBeBoth.filter((v)=> { return property.includes(v) }).length>0){            
@@ -1329,7 +1331,6 @@ export default {
                 }
             }else if (this.activeProfile.templateDataFlow[property]){
                 if (checkingFor == this.activeProfile.templateDataFlow[property]){
-                    console.log("IT WORKED")
                     return "checked"
                 }else{
                     return false
@@ -1338,16 +1339,13 @@ export default {
                 return false // just say no
             }            
         }else{
-
             if (!this.activeProfile.templateDataFlow){
-                
                 // the default return val is both
                 if (checkingFor == 'both'){
                     return "checked"
                 }else{
                     return false
                 }
-
             }else if (this.activeProfile.templateDataFlow[property]){
                 if (checkingFor == this.activeProfile.templateDataFlow[property]){
                     return "checked"
@@ -1362,82 +1360,81 @@ export default {
                 }else{
                     return false
                 }
-            }  
-
-
+            }
         }
-
-
     },
 
-    async saveTemplate(overwrite){
 
+    /**
+    * Sends the active profile off to a parseProfile process that cleans up the profile and saves it as a template
+    * @async
+    * @param {boolean} overwrite - NOT USED, possible feature to allow "overwritting" if you are "editing" a te
+    * @return {void}
+    */
+    async saveTemplate(overwrite){
         if (this.templateLabel.trim()==''){
             alert("Please name the template")
             return false
         }
-
         await parseProfile.prepareTemplate(this.activeProfile,overwrite)
         this.toggleTemplate()
-
     },
 
+    /**
+    * Triggered when the drag and drop on the subjects is completed, sets state of the current order of the subjects
+    * @return {void}
+    */
     subjectDragEnd: function(){
-
       this.$store.dispatch("setSubjectOrder",this.list).then(() => {   
-
-        console.log("YEAH")
-      });    
-
-
+      });
     },
 
+    /**
+    * Kicks off an undo or redo action
+    * @param {string} type - options are redo undo or goto
+    * @param {interget} steps - how many to un/redo or which step to jump to if its a goto command
+    * @return {void}
+    */
     undoRedo: function(type,steps){
-
-    let action = {undo:steps}
-
-    if (type === 'redo'){
-      action = {redo:steps}
-    }
-
-    if (type === 'goto'){
-      action = {goto:steps}
-    }
-
-
-
-
-    this.$store.dispatch("undoRedoAction",action).then(() => {   
-
-          
-      this.$store.dispatch("incrementUndoCounter") 
-    
-
-    })
-
-
-
+        let action = {undo:steps}
+        if (type === 'redo'){
+          action = {redo:steps}
+        }
+        if (type === 'goto'){
+          action = {goto:steps}
+        }
+        this.$store.dispatch("undoRedoAction",action).then(() => {   
+          this.$store.dispatch("incrementUndoCounter") 
+        })
     },
 
+
+    /**
+    * sorts the subject list
+    * @return {void}
+    */
     sort() {
       this.list = this.list.sort((a, b) => a.order - b.order);
     },
 
+    /**
+    * When you click on the subject heading in the subject reorder tool it finds the subject heading edit in the dom and clicks it so you can edit the heading
+    * @param {string} guid - the @guid for that subject heading property
+    * @return {void}
+    */
     editSubjectClick: function(guid){
-
       document.getElementById(guid+'_subjectButton').click()
       this.subjectListDisplay=false
     },
 
-
+    /**
+    * When an action is selected from the option input in the mini map
+    * @return {void}
+    */
     miniMapAction: function(){
-
-
       if (this.miniMapActionValue == 'addItem'){
-
         // console.log(this.activeMiniMap.parent)
         // console.log(this.activeMiniMap)
-
         if (!this.activeMiniMap.URI || (this.activeMiniMap.type && this.activeMiniMap.type == 'Work')){
             // console.log('no instance selected')
             // find the first instance            
@@ -1449,118 +1446,80 @@ export default {
                     break
                 }
             }
-            
-
         }else{
             // console.log('normal')
             this.$store.dispatch("addItem",{uri:this.activeMiniMap.URI}).then(() => {        
               console.log(this.activeProfile)
             })
-
         }
-
-
-
       }
       if (this.miniMapActionValue == 'deleteItem'){
-
-
         this.$store.dispatch("deleteItem",{uri:this.activeMiniMap.URI}).then(() => {        
-
         })
-
       }
       if (this.miniMapActionValue == 'cloneInstance'){
-
-
         this.$store.dispatch("cloneInstance",{uri:this.activeMiniMap.URI}).then(() => {        
-
         }) 
       }
       if (this.miniMapActionValue == 'cloneItem'){
-
-
         this.$store.dispatch("duplicateItem",{uri:this.activeMiniMap.URI}).then(() => {        
-
         }) 
       }      
       if (this.miniMapActionValue == 'deleteItem'){
-
-
         this.$store.dispatch("deleteItem",{uri:this.activeMiniMap.URI}).then(() => {        
-
         }) 
       } 
       if (this.miniMapActionValue == 'deleteInstance'){
-
-
         this.$store.dispatch("deleteInstance",{uri:this.activeMiniMap.URI}).then(() => {        
-
         }) 
       } 
       if (this.miniMapActionValue == 'addInstance'){
-
-
         this.$store.dispatch("addInstance",{uri:this.activeMiniMap.URI}).then(() => {        
-
         }) 
       } 
-
-
       this.miniMapActionValue='Actions'
-
     },
 
+    /** 
+    * When the minimap is clicked 
+    * @param {string} guid - the @guid for that subject heading property
+    * @return {void}
+    */    
     miniMapClick: function(value){
-
-      console.log(value)
-
       let rtName = value.rt
-
       if (value.counter == 0){
         rtName=rtName+'1'      
       }else if (value.counter>0){
-
         rtName=rtName+'1'
       }
-
-      
-
-
       let id = rtName.replace(/\(|\)|\s|\/|:|\.|\|/g,'_') + value.jumpTo.replace(/\(|\)|\s|\/|:|\.|\|/g,'_')
-
-      console.log(value)
-      console.log(id)
 
       if (this.settingsDisplayMode!='spreadsheet'){
         this.scrollFieldContainerIntoView(null,id)
       }
-
-
-      
-
       this.activeMiniMap = value
-
-
-
-
     },
 
-    toggleOptionDisplay: function(){
-        this.optionDisplay = (this.optionDisplay) ? false : true;  
 
+    /** 
+    * Open/closes the option menu
+    * @return {void}
+    */    
+    toggleOptionDisplay: function(){
+        this.optionDisplay = (this.optionDisplay) ? false : true;
         if (this.optionDisplay){
           this.undoDisplay = false
           this.subjectListDisplay = false
         }  
     },
 
+    /** 
+    * Open/closes the subject reorder menu
+    * @return {void}
+    */    
     toggleSubjectListDisplay: function(){
-
         this.$store.dispatch("setSubjectList")
-
         this.subjectListDisplay = (this.subjectListDisplay) ? false : true;  
-
         if (this.subjectListDisplay){
           this.undoDisplay = false
           this.optionDisplay = false
@@ -1568,7 +1527,10 @@ export default {
     },
 
     
-
+    /** 
+    * Open/closes the undo/redo restore menu
+    * @return {void}
+    */    
     toggleUndoDisplay: function(){
         this.undoDisplay = (this.undoDisplay) ? false : true;        
         if (this.undoDisplay){
@@ -1580,14 +1542,19 @@ export default {
 
     
 
+    /** 
+    * Changes the state on the left menu enriched mode
+    * @return {void}
+    */    
     updateLeftMenuEnriched: async function(){
         this.$store.dispatch("settingsLeftMenuEnriched", { self: this, settingsLeftMenuEnriched: this.leftMenuEnriched }).then(async () => {
-
         })
-
     },
 
-
+    /** 
+    * Changes the state on the left menu hide empty fields mode
+    * @return {void}
+    */
     updateHideEmptyFields: async function(){
         this.$store.dispatch("settingsHideEmptyFields", { self: this, settingsHideEmptyFields: this.hideFields }).then(async () => {
             console.log('after',this.settingsHideEmptyFields)
@@ -1596,130 +1563,99 @@ export default {
     },
 
 
-
+    /** 
+    * Do the acutal hiding of compoents when they switch modes
+    * @return {void}
+    */
     updateHideEmptyFieldsReDraw: function(){
-
         if (this.hideFields){
-
             // loop through all of the properties and
-
             for (let rt in this.activeProfile.rt){
                 for (let pt in this.activeProfile.rt[rt].pt){
-
                     let p = this.activeProfile.rt[rt].pt[pt]
-                    console.log(p)
-
                     p.canBeHidden = true
                     if (Object.keys(p.userValue).length>1){
                         p.canBeHidden = false
                     }
-
                 }
             }
-
-
         }
-
-
         // this.keyCounter++
         this.forceComponentRedraw()
-
-
-
-
     },
 
 
+    /** 
+    * Not really used anymore, there are options to change how literal values behave but now they all behave like note fields
+    * @return {void}
+    */
     updateLiteralOption: async function(mode){
-        
         this.$store.dispatch("setTreatLikeNoteFields", { self: this, fields: mode }).then(async () => {
-
-
-
         })
-
     },
 
+    /** 
+    * When they change the layout mode this redirects them to the right path for that layout
+    * @return {void}
+    */
     updateLayout: async function(mode){
-        
         this.$store.dispatch("settingsDisplayMode", { self: this, settingsDisplayMode: mode }).then(async () => {
-            console.log(this.activeProfile)
-
             if (window.location.pathname.includes('/compactedit/')){
               if (mode == 'default'){
                   await this.triggerSave()
                   this.$router.push('/edit/'+this.activeProfile.eId).then(()=>{
-
-
-                    // window.location.reload();
-
                   }) 
                   
               }
               if (mode == 'compact'){
                   await this.triggerSave()
                   this.$router.push('/edit/'+this.activeProfile.eId).then(()=>{
-
-
-                    // window.location.reload();
-
                   }) 
               }
             }
-
-
             if (window.location.pathname.includes('/edit/')){
               if (mode == 'spreadsheet'){
                   await this.triggerSave()
                   this.$router.push('/compactedit/'+this.activeProfile.eId).then(()=>{
-
-
-                    // window.location.reload();
-
                   }) 
               }
             }
-
         })
-
-
     },
     
-    triggerSave: async function(){
+    /** 
+    * Triggers the save of the xml to the backend
+    * @async
+    * @return {void}
+    */
 
+    triggerSave: async function(){
       let xml = await exportXML.toBFXML(this.activeProfile)
       lookupUtil.saveRecord(xml.xlmStringBasic, this.activeProfile.eId)
-
       this.$store.dispatch("setActiveRecordSaved", { self: this}, true).then(() => {
-
       })
-
     },
 
+    /** 
+    * Shows/hides the preview display window
+    * @return {void}
+    */
     togglePreview: async function(){
-
       if (this.displayPreview){
-
         this.displayPreview = false
-
-
         this.xmlPreview = 'Loading...'
-
-
-
       }else{
-
         let xml = await exportXML.toBFXML(this.activeProfile)
         this.xmlPreview = xml.xmlStringFormatted
-        
         this.displayPreview = true
       }
-
-
     },
 
+    /** 
+    * Shows/hides the template display window
+    * @return {void}
+    */
     toggleTemplate: async function(){
-
       if (!this.displayTemplate){
 
             // this.setDefaultTemplateValues()
@@ -1728,18 +1664,17 @@ export default {
             this.$nextTick(()=>{          
               this.$refs.templateNameInput.focus()
             })
-
       }else{
         this.displayTemplate=false
-       
-
       }
 
 
     },
 
-    
-
+    /** 
+    * If they press ESC then close all the windows
+    * @return {void}
+    */
     escapeKey: function(){
 
       if (this.displayPreview){
@@ -1761,6 +1696,12 @@ export default {
 
     },
 
+
+    /** 
+    * Triggers the save of the xml to the endpoint (BFDB)
+    * @async
+    * @return {void}
+    */
     publish: async function(){
 
       this.showPostModal = true
@@ -1810,6 +1751,10 @@ export default {
 
     },
 
+    /** 
+    * Shows/hides the language set window
+    * @return {void}
+    */
     toggleLiteralLanguage: function(){
 
           if (this.displayLiteralLanguage){
@@ -1822,6 +1767,12 @@ export default {
               })
           }
     },
+
+    /** 
+    * Shows/hides the toggleDisplayLiteralOptions display 
+    * @return {void}
+    */
+
     toggleDisplayLiteralOptions: function(){
 
           if (this.displayLiteralOptions){
@@ -1838,9 +1789,11 @@ export default {
 
 
 
-
+    /** 
+    * Helper used to navigate the page into view for the desired element
+    * @return {void}
+    */
     scrollFieldContainerIntoView: function(event,id){
-      console.log(document.getElementById('container-for-'+id))
       document.getElementById('container-for-'+id).scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"})
       window.setTimeout(()=>{
         if (document.querySelector('#container-for-'+id + ' input')){
@@ -1848,23 +1801,20 @@ export default {
         }
         
       },400)
-
       if (event){
         event.preventDefault()
         return false
       }
-
-
     },
 
+    /** 
+    * Helper to make the XML preview display nicer
+    * @return {void}
+    */
     cleanUpErrorResponse: function(msg){
-
         msg = JSON.stringify(msg,null,2)
-
         msg = msg.replace(/\\n|\\t/g, '').replace(/\\"/g,'"').replace(/&lt;/g,'<').replace(/&gt;/g,'>')
-
         return msg
-
     },
 
 
