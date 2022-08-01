@@ -379,6 +379,42 @@ button[disabled]{
     cursor: pointer;
 }
 
+
+
+#nav-left{
+    flex:1; 
+    position:relative;
+}
+#nav-center{
+    flex:1; 
+    position:relative;
+}
+#nav-right{
+    flex:1; 
+    position:relative;
+    text-align: right;
+}
+
+
+@media only screen and (max-width:1220px) { 
+
+
+    #nav-right{
+        flex:2; 
+        position:relative;
+        text-align: right;
+    }
+    #nav-center{
+        flex:none; 
+        position:relative;
+}
+
+
+}
+
+
+
+
 </style>
 
 <template>
@@ -393,7 +429,7 @@ button[disabled]{
 
 
 
-            <div style="flex:1">
+            <div id="nav-left">
 
 
 
@@ -581,7 +617,8 @@ button[disabled]{
             </div>
 
 
-            <div style="flex:1; position:relative;">
+
+            <div id="nav-center">
                 
                 <button class="subject-list-button" name="subject-list" title="subject-list" @click="toggleSubjectListDisplay()" style="">
 
@@ -712,7 +749,7 @@ button[disabled]{
 
 
             </div>
-            <div style="flex:1; text-align: right;">
+            <div id="nav-right">
 
 
               <div style="display:inline-block; margin-right:1em;">
