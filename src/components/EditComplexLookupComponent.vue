@@ -580,6 +580,29 @@ export default {
 
 
 
+
+    /**
+    * return the active profile if we are editing a mini inline profile or the normal active profile
+    * @return {object} profile
+    */
+
+    returnCorrectActiveProfile: function(){
+
+      if (this.isMini){
+        return this.activeProfileMini
+      }else if (this.workingOnMiniProfile){
+        return this.activeProfileMini
+      }else{
+        return this.activeProfile
+      }
+    },
+
+
+
+
+
+
+
     showMiniHubEdit: function(){
 
 
@@ -600,7 +623,7 @@ export default {
 
 
         // this.$store.dispatch("setWorkingOnMiniProfile", { self: this, value: true }).then(() => {
-          // this.displayMini = true
+        //   this.displayMini = true
         // })
 
 
@@ -624,7 +647,7 @@ export default {
 
       if (this.displayLabel.startsWith('http:')){
 
-        let userData = parseProfile.returnUserValues(this.activeProfile, this.profileName, this.profileCompoent, this.structure.propertyURI)
+        let userData = parseProfile.returnUserValues(this.returnCorrectActiveProfile(), this.profileName, this.profileCompoent, this.structure.propertyURI)
         
 
         // look for a @context in any of the properties
@@ -789,7 +812,7 @@ export default {
             //console.log("the this")
             //console.log(this)
 
-            let userData = parseProfile.returnUserValues(this.activeProfile, this.profileName, this.profileCompoent, this.structure.propertyURI)
+            let userData = parseProfile.returnUserValues(this.returnCorrectActiveProfile(), this.profileName, this.profileCompoent, this.structure.propertyURI)
             // dis connect it from the source so it doesnt update the value, read only
             userData = JSON.parse(JSON.stringify(userData))
 
@@ -804,7 +827,7 @@ export default {
                 validationUtil.validateHeading(userData)
                 .then((validationStatus) => {
 
-                  let orignalUserData = parseProfile.returnUserValues(this.activeProfile, this.profileName, this.profileCompoent, this.structure.propertyURI)
+                  let orignalUserData = parseProfile.returnUserValues(this.returnCorrectActiveProfile(), this.profileName, this.profileCompoent, this.structure.propertyURI)
 
 
                   // console.log("USERDATA 3",JSON.parse(JSON.stringify(userData)))
@@ -1053,13 +1076,13 @@ export default {
 
 
 
-      if (this.isMini){
-        userValue = parseProfile.returnUserValues(this.activeProfileMini, this.profileName, this.profileCompoent,this.structure.propertyURI)
-        rootPropertyURI = parseProfile.returnRootPropertyURI(this.activeProfileMini, this.profileCompoent,this.structure.propertyURI)        
-      }else{
-        userValue = parseProfile.returnUserValues(this.activeProfile, this.profileName, this.profileCompoent,this.structure.propertyURI)
-        rootPropertyURI = parseProfile.returnRootPropertyURI(this.activeProfile, this.profileCompoent,this.structure.propertyURI)        
-      }
+      // if (this.isMini){
+      //   userValue = parseProfile.returnUserValues(this.activeProfileMini, this.profileName, this.profileCompoent,this.structure.propertyURI)
+      //   rootPropertyURI = parseProfile.returnRootPropertyURI(this.activeProfileMini, this.profileCompoent,this.structure.propertyURI)        
+      // }else{
+        userValue = parseProfile.returnUserValues(this.returnCorrectActiveProfile(), this.profileName, this.profileCompoent,this.structure.propertyURI)
+        rootPropertyURI = parseProfile.returnRootPropertyURI(this.returnCorrectActiveProfile(), this.profileCompoent,this.structure.propertyURI)        
+      // }
     
       
       

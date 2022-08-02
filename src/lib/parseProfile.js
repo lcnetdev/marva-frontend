@@ -2583,6 +2583,8 @@ const parseProfile = {
     },
 
     returnUserValues: function(currentState, activeRt, component, propertyURI){
+        console.log(currentState, activeRt, component, propertyURI)
+
         let results = false
 
         // eslint-disable-next-line
@@ -2594,9 +2596,11 @@ const parseProfile = {
             // console.log('activeRt=',activeRt)
 
 
-            if (currentState.rt[activeRt].pt[component]){
+            if (currentState.rt[activeRt] && currentState.rt[activeRt].pt[component]){
                 results = currentState.rt[activeRt].pt[component].userValue
  
+            }else{
+                console.warn('Trying to reference rt',activeRt, 'and pt',component,'but one or both not found.')
             }
 
         // })
