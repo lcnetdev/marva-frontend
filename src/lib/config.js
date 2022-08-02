@@ -3,7 +3,7 @@
 const config = {
 
 	versionMajor: 0,
-	versionMinor: 11,
+	versionMinor: 12,
 	versionPatch: 0,
 
 
@@ -50,8 +50,11 @@ const config = {
 			utilLang  :  'https://editor.id.loc.gov/bfe2/util-lang/',
 			publish: 'https://editor.id.loc.gov/bfe2/util/publish/production',
 			bfdb : 'https://preprod-8230.id.loc.gov/',
-			profiles : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
-			starting : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:startingPoints&where=index.label:config',
+			// profiles : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
+			// starting : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:startingPoints&where=index.label:config',
+			profiles : '/bfe2/util/profiles/profile/prod',
+			starting : '/bfe2/util/profiles/starting/prod',
+
 			id: 'https://preprod-8080.id.loc.gov/',
 			env : 'production',
 			displayLCOnlyFeatures: true,
