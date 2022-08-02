@@ -1,6 +1,7 @@
 <template>
   
   <div v-if="nested == false && hideField == false" :class="'component-container' + ' component-container-' + settingsDisplayMode">
+   
     <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: false}]" @success="openDiacriticSelect" />
     <Keypress key-event="keydown" :multiple-keys="[{keyCode: 86, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="openDiacriticSelect" />
 
@@ -718,11 +719,13 @@ export default {
 
       if (diacrticsVoyagerMacroExpress[event.code] && this.settingsDPackVoyager){
 
+        console.log("diacrticsVoyagerMacroExpress[event.code]",diacrticsVoyagerMacroExpress[event.code])
 
         for (let macro of diacrticsVoyagerMacroExpress[event.code]){
 
           if (event.ctrlKey == macro.ctrlKey && event.altKey == macro.altKey && event.shiftKey == macro.shiftKey){
 
+            console.log("DOIBNG",macro)
             event.preventDefault();
 
             this.$refs["input"+ '_' + inputV.guid][0].style.color="blue"

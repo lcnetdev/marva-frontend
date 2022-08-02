@@ -78,7 +78,7 @@
                 <div v-for="profileName in activeProfile.rtOrder" :key="profileName">
 
                     <div v-if="activeProfile.rt[profileName].noData != true">
-                        <div class="container-type-icon" style="color: #ffffff">
+                        <div class="container-type-icon" style="color: #ffffff; width: inherit; text-align: left;">
                             <div>   
                                 <svg v-if="profileName.split(':').slice(-1)[0] == 'Work'" width="1.5em" height="1.1em" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                     <circle fill="#7badad" cx="0.55em" cy="0.6em" r="0.45em"/>

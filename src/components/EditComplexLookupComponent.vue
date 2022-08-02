@@ -262,7 +262,7 @@
                   </div>
 
                   <select size="10"  class="modal-entity-select" :id="assignedId+'select'" @change="selectChange($event)"  style="height: 100%" @keydown="selectNav($event)">
-                    <option v-for="(r,idx) in activeComplexSearch" :data-label="r.label" :value="r.uri" v-bind:key="idx" class="complex-lookup-result" v-html="returnAuthIcon(r) + ' ' + r.label + ((r.literal) ? ' [Literal]' : '')">
+                    <option v-for="(r,idx) in activeComplexSearch" :data-label="r.label" :value="r.uri" v-bind:key="idx" :style="(r.depreciated) ? 'color:red' : ''" class="complex-lookup-result" v-html="returnAuthIcon(r) + ' ' + r.label + ((r.literal) ? ' [Literal]' : '')">
                     </option>
                   </select>
 
@@ -281,6 +281,11 @@
                   <h3><span class="modal-context-icon simptip-position-top" :data-tooltip="'Type: ' + contextData.type" v-html="returnAuthIcon(contextData.type)"></span>{{contextData.title}}</h3>
 
                   <div class="modal-context-data-title">{{contextData.type}}</div>
+
+                  <div v-if="contextData.depreciated" style="background: pink;">
+                    DEPRECIATED AUTHORITY
+                  </div>
+
 
                   <a style="color:#2c3e50; float: none;    border: none;border-radius: 0;background-color: transparent;font-size: 1em;padding: 0;" :href="rewriteURI(contextData.uri)" target="_blank">view on id.loc.gov</a>
 
@@ -613,6 +618,7 @@ export default {
           sourceId: this.assignedId,
           component: this
         }
+
         
         this.$emit('showMiniEditorEdit',payload);
         this.$parent.$emit('showMiniEditorEdit',payload);

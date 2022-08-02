@@ -305,11 +305,35 @@ const lookupUtil = {
     },
 
 
+    /**
+    * Payload to pass to searchComplex
+    * @typedef {searchPayload} searchPayload
+    * @property {string} processor - flag to tell how to process the results, can be "lcAuthorities" or "wikidataAPI"
+    * @property {string} searchValue - the search value being searched for
+    * @property {array} url - array of urls to use 
+    */
+
+    /**
+    * A single result from searchComplex
+    * @typedef {searchComplexResult} searchComplexResult
+    * @property {string} label - the authorative label
+    * @property {string} suggestLabel - the suggest label
+    * @property {string} uri - the URI to the resource
+    * @property {boolean} literal - if its a literal response or not, the literal is often added in there as an option
+    * @property {boolean} depreciated - if true the term is depreciated according to the service
+    * @property {string} extra - any other extra info to make available in the interface
+    */
 
 
-
-
+    /**
+    * Looks for instances by LCCN against ID, returns into for them to be displayed and load the resource
+    * @param {searchPayload} searchPayload - the {@link searchPayload} to look for
+    * @return {array} - An array of {@link searchComplexResult} results
+    */
     searchComplex: async function(searchPayload){
+
+
+      console.log("searchPayload",searchPayload)
         
         let urlTemplate = searchPayload.url
         if (!Array.isArray(urlTemplate)){
@@ -356,14 +380,24 @@ const lookupUtil = {
                 // process the results as a LC suggest service
                 
                 for (let hit of r.hits){
-                  results.push({
+
+
+                  let hitAdd = { 
                     label: hit.aLabel,
                     suggestLabel: hit.suggestLabel,
                     uri: hit.uri,
                     literal:false,
+                    depreciated: false,
                     extra: ''
+                  }
 
-                  })
+                  if (hitAdd.label=='' && hitAdd.suggestLabel.includes('DEPRECATED')){
+                    hitAdd.label  = hitAdd.suggestLabel.split('(DEPRECATED')[0] + ' DEPRECATED'
+                    hitAdd.depreciated = true
+                  }
+
+
+                  results.push(hitAdd)
 
 
                 }
@@ -383,6 +417,7 @@ const lookupUtil = {
                 //       })
                 //   }
                 // }
+
             }else if (searchPayload.processor == 'wikidataAPI'){
 
                 for (let hit of r.search){
@@ -1150,6 +1185,11 @@ const lookupUtil = {
                           results.typeFull = t
                       }
                   })
+
+                  if (n['@type'].includes("http://www.loc.gov/mads/rdf/v1#DeprecatedAuthority")){
+                    results.depreciated = true
+                  
+                  }
                 
               }
               
