@@ -1,148 +1,229 @@
 <template>
 
-  <div :class="['subject-editor-container', {'subject-editor-container-lowres':lowResMode}]">
+  <div style="position: relative;">
+
+    <div style="position:absolute; right:2em; top:  0.25em; z-index: 100;">
+      <button @click="editorModeSwitch('build')" class="subjectEditorModeButtons" style="margin-right: 1em;">
+<!--         <svg fill="#F2F2F2" width="20px" height="20px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+         <g>
+          <path d="m30 86.664c0 1.8359-1.5 3.3359-3.332 3.3359h-13.332c-1.8359 0-3.3359-1.5-3.3359-3.3359v-13.332c0-1.832 1.5-3.332 3.3359-3.332h13.332c1.832 0 3.332 1.5 3.332 3.332z"/>
+          <path d="m56.664 86.664c0 1.832-1.5 3.3359-3.332 3.3359h-13.332c-1.832 0-3.3359-1.5-3.3359-3.3359v-13.332c0-1.832 1.5039-3.332 3.3359-3.332h13.332c1.832 0 3.332 1.5 3.332 3.332z"/>
+          <path d="m83.332 86.664c0 1.832-1.5 3.3359-3.332 3.3359h-13.336c-1.832 0-3.3359-1.5-3.3359-3.3359l0.003906-13.332c0-1.832 1.5-3.332 3.3359-3.332h13.332c1.832 0 3.332 1.5 3.332 3.332z"/>
+          <path d="m30 60c0 1.832-1.5 3.332-3.332 3.332h-13.332c-1.8359 0-3.3359-1.5-3.3359-3.332v-13.332c0-1.832 1.5-3.332 3.3359-3.332h13.332c1.832 0 3.332 1.5 3.332 3.332z"/>
+          <path d="m56.664 60c0 1.832-1.5 3.332-3.332 3.332h-13.332c-1.832 0-3.3359-1.5-3.3359-3.332v-13.332c0-1.832 1.5-3.332 3.3359-3.332h13.332c1.832 0 3.332 1.5 3.332 3.332z"/>
+          <path d="m74.336 65.125c-1.6953 0.69922-3.6562-0.10938-4.3555-1.8047l-5.1055-12.316c-0.69922-1.6914 0.10938-3.6523 1.8047-4.3555l12.32-5.1055c1.6914-0.70312 3.6523 0.10938 4.3516 1.8047l5.1055 12.32c0.69922 1.6914-0.10938 3.6523-1.8047 4.3516z"/>
+          <path d="m30 33.336c0 1.832-1.5 3.332-3.332 3.332h-13.332c-1.832 0-3.3359-1.5-3.3359-3.332v-13.336c0-1.832 1.5-3.332 3.3359-3.332h13.332c1.832 0 3.332 1.5 3.332 3.332z"/>
+          <path d="m53.352 36.652c-0.69922 1.6914-2.6641 2.5078-4.3555 1.8047l-12.316-5.1016c-1.6914-0.69922-2.5078-2.6641-1.8047-4.3555l5.1016-12.316c0.70313-1.6914 2.6641-2.5078 4.3555-1.8047l12.32 5.1055c1.6914 0.69922 2.5039 2.6641 1.8047 4.3555z"/>
+          <path d="m89.027 20.402c1.2969 1.2969 1.2969 3.418 0 4.7148l-9.4258 9.4297c-1.2969 1.2969-3.418 1.2969-4.7148 0l-9.4297-9.4297c-1.2969-1.2969-1.2969-3.418 0-4.7148l9.4297-9.4297c1.2969-1.2969 3.418-1.2969 4.7148 0z"/>
+         </g>
+        </svg> -->
+
+        <svg fill="#F2F2F2" width="20px" height="20px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+         <g>
+          <path d="m45.898 79.102h-38c-0.80078 0-1.5 0.69922-1.5 1.5v15.398c0 0.80078 0.69922 1.5 1.5 1.5h38c0.80078 0 1.5-0.69922 1.5-1.5v-15.398c-0.097657-0.80078-0.69922-1.5-1.5-1.5z"/>
+          <path d="m92.199 79.102h-38c-0.80078 0-1.5 0.69922-1.5 1.5v15.398c0 0.80078 0.69922 1.5 1.5 1.5h38c0.80078 0 1.5-0.69922 1.5-1.5v-15.398c0-0.80078-0.69922-1.5-1.5-1.5z"/>
+          <path d="m92.199 31.602h-38c-0.80078 0-1.5 0.69922-1.5 1.5v15.5c0 0.80078 0.69922 1.5 1.5 1.5h38c0.80078 0 1.5-0.69922 1.5-1.5v-15.5c0-0.90234-0.69922-1.5-1.5-1.5z"/>
+          <path d="m7.8008 73.699h14.398c0.80078 0 1.5-0.69922 1.5-1.5v-15.398c0-0.80078-0.69922-1.5-1.5-1.5h-14.398c-0.80078 0-1.5 0.69922-1.5 1.5v15.5c0 0.80078 0.69922 1.3984 1.5 1.3984z"/>
+          <path d="m30.5 73.699h39.102c0.80078 0 1.5-0.69922 1.5-1.5v-15.398c0-0.80078-0.69922-1.5-1.5-1.5h-39.102c-0.80078 0-1.5 0.69922-1.5 1.5v15.5c0 0.80078 0.69922 1.3984 1.5 1.3984z"/>
+          <path d="m92.199 55.301h-14.398c-0.80078 0-1.5 0.69922-1.5 1.5v15.5c0 0.80078 0.69922 1.5 1.5 1.5h14.398c0.80078 0 1.5-0.69922 1.5-1.5v-15.5c0-0.80078-0.69922-1.5-1.5-1.5z"/>
+          <path d="m24.199 26.199v15.199l-2.1016-2.1016c-0.80078-0.80078-2.1016-0.80078-3 0-0.80078 0.80078-0.80078 2.1016 0 3l5.6016 5.6016c0.39844 0.39844 0.89844 0.60156 1.5 0.60156 0.5 0 1.1016-0.19922 1.5-0.60156l5.6016-5.6016c0.80078-0.80078 0.80078-2.1016 0-3-0.80078-0.80078-2.1016-0.80078-3 0l-2.1016 2.1016v-15.199z"/>
+          <path d="m7.8008 20.898h38c0.80078 0 1.5-0.69922 1.5-1.5v-15.398c0-0.80078-0.69922-1.5-1.5-1.5h-38c-0.80078 0-1.5 0.69922-1.5 1.5v15.5c0 0.69922 0.69922 1.3984 1.5 1.3984z"/>
+         </g>
+        </svg>
+
+        <span :class="[{ 'subjectEditorModeTextEnabled': (subjectEditorMode==='build') }]">Build Mode</span>
+      </button>  
+      <button @click="editorModeSwitch('link')" class="subjectEditorModeButtons">
+
+        <svg fill="#F2F2F2" width="20px" height="20px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+         <g fill-rule="evenodd">
+          <path d="m45.867 41.266-4.6016 4.6016c-4.6211-2.6719-10.633-2.0312-14.586 1.9219l-16.891 16.891c-4.7188 4.7188-4.7188 12.367 0 17.086l8.4453 8.4453c4.7188 4.7188 12.367 4.7188 17.086 0l16.891-16.891c3.9531-3.9531 4.5938-9.9648 1.9219-14.586l4.6016-4.6016c4.6211 2.6719 10.633 2.0312 14.586-1.9219l16.891-16.891c4.7188-4.7188 4.7188-12.367 0-17.086l-8.4453-8.4453c-4.7188-4.7188-12.367-4.7188-17.086 0l-16.891 16.891c-3.9531 3.9531-4.5938 9.9648-1.9219 14.586zm-6.6211 23.512-12.469 12.473-4.0273-4.0273 12.473-12.469zm6.7305-14.777 4.0234 4.0234 4.0234-4.0234-4.0234-4.0234zm31.273-23.223-12.473 12.469-4.0234-4.0234 12.469-12.473z"/>
+          <path d="m23.484 27.902 4.418 4.418c1.2227 1.2227 3.1992 1.2227 4.4219 0 1.2188-1.2188 1.2188-3.1992 0-4.418l-4.4219-4.418c-1.2188-1.2227-3.1992-1.2227-4.418 0-1.2188 1.2188-1.2188 3.1992 0 4.418z"/>
+          <path d="m76.516 72.098-4.418-4.418c-1.2188-1.2227-3.1992-1.2227-4.418 0-1.2227 1.2188-1.2227 3.1992 0 4.418l4.418 4.418c1.2188 1.2227 3.1992 1.2227 4.418 0 1.2227-1.2188 1.2227-3.1992 0-4.418z"/>
+          <path d="m38.086 17.605 1.6172 6.0352c0.44531 1.668 2.1602 2.6562 3.8281 2.2109 1.6641-0.44531 2.6562-2.1602 2.207-3.8281l-1.6172-6.0352c-0.44531-1.668-2.1602-2.6562-3.8281-2.2109-1.6641 0.44531-2.6562 2.1602-2.207 3.8281z"/>
+          <path d="m61.914 82.395-1.6172-6.0352c-0.44531-1.668-2.1602-2.6562-3.8281-2.2109-1.6641 0.44531-2.6562 2.1602-2.207 3.8281l1.6172 6.0352c0.44531 1.668 2.1602 2.6562 3.8242 2.2109 1.668-0.44531 2.6562-2.1602 2.2109-3.8281z"/>
+          <path d="m15.988 44.121 6.0352 1.6172c1.668 0.44531 3.3828-0.54297 3.8281-2.2109 0.44531-1.6641-0.54297-3.3789-2.2109-3.8242l-6.0352-1.6172c-1.668-0.44922-3.3828 0.54297-3.8281 2.207-0.44531 1.668 0.54297 3.3828 2.2109 3.8281z"/>
+          <path d="m84.012 55.879-6.0352-1.6172c-1.668-0.44531-3.3828 0.54297-3.8281 2.2109-0.44922 1.6641 0.54297 3.3789 2.207 3.8242l6.0391 1.6172c1.6641 0.44922 3.3789-0.54297 3.8281-2.207 0.44531-1.668-0.54297-3.3828-2.2109-3.8281z"/>
+         </g>
+        </svg>
+
+        <span :class="[{ 'subjectEditorModeTextEnabled': (subjectEditorMode==='link') }]">Link Mode</span>
+
+
+      </button>  
+
+
+    </div>
     
 
-    <div :class="['subject-editor-container-left', {'subject-editor-container-left-lowres':lowResMode}]">
-
-      <div id="search-in-holder" style="position: absolute; top:0">
-        <span>Search In:</span>
+    <template v-if="subjectEditorMode=='build'">
 
 
-        <button @click="searchModeSwitch('LCSHNAF')" :data-tooltip="'Shortcut: CTRL+ALT+1'" :class="['simptip-position-bottom',{'active':(searchMode==='LCSHNAF')}]">LCSH/NAF</button>
-        <button @click="searchModeSwitch('GEO')" :data-tooltip="'Shortcut: CTRL+ALT+2'" :class="['simptip-position-bottom',{'active':(searchMode==='GEO')}]">Indirect Geo</button>
-        <button @click="searchModeSwitch('WORKS')" :data-tooltip="'Shortcut: CTRL+ALT+3'" :class="['simptip-position-bottom',{'active':(searchMode==='WORKS')}]">Works</button>
-        <button @click="searchModeSwitch('HUBS')" :data-tooltip="'Shortcut: CTRL+ALT+4'" :class="['simptip-position-bottom',{'active':(searchMode==='HUBS')}]">Hubs</button>
+      <div :class="['subject-editor-container', {'subject-editor-container-lowres':lowResMode}]">
+        
 
-      </div>
+        <div :class="['subject-editor-container-left', {'subject-editor-container-left-lowres':lowResMode}]">
+
+          <div id="search-in-holder" style="position: absolute; top:0">
+            <span>Search In:</span>
 
 
-      <div style="flex:1; align-self: flex-end;">
+            <button @click="searchModeSwitch('LCSHNAF')" :data-tooltip="'Shortcut: CTRL+ALT+1'" :class="['simptip-position-bottom',{'active':(searchMode==='LCSHNAF')}]">LCSH/NAF</button>
+            <button @click="searchModeSwitch('GEO')" :data-tooltip="'Shortcut: CTRL+ALT+2'" :class="['simptip-position-bottom',{'active':(searchMode==='GEO')}]">Indirect Geo</button>
+            <button @click="searchModeSwitch('WORKS')" :data-tooltip="'Shortcut: CTRL+ALT+3'" :class="['simptip-position-bottom',{'active':(searchMode==='WORKS')}]">Works</button>
+            <button @click="searchModeSwitch('HUBS')" :data-tooltip="'Shortcut: CTRL+ALT+4'" :class="['simptip-position-bottom',{'active':(searchMode==='HUBS')}]">Hubs</button>
 
-        <div v-if="activeSearch!==false">{{activeSearch}}</div>
-        <div v-if="searchResults !== null">
-          <div v-if="searchResults.names.length>0">
+          </div>
 
-            <div v-for="(name,idx) in searchResults.names" @click="selectContext((searchResults.names.length - idx)*-1)" @mouseover="loadContext((searchResults.names.length - idx)*-1)" :data-id="(searchResults.names.length - idx)*-1" :key="name.uri" :class="['fake-option', {'unselected':(pickPostion != (searchResults.names.length - idx)*-1 ), 'selected':(pickPostion == (searchResults.names.length - idx)*-1 ),'picked': (pickLookup[(searchResults.names.length - idx)*-1] && pickLookup[(searchResults.names.length - idx)*-1].picked)}]">
-                <span v-if="name.suggestLabel.length>41">{{name.suggestLabel.substring(0,41)}}...</span>
-                <span v-else>{{name.suggestLabel}}</span>
-                <span> [LCNAF]</span>
+
+          <div style="flex:1; align-self: flex-end;">
+
+            <div v-if="activeSearch!==false">{{activeSearch}}</div>
+            <div v-if="searchResults !== null">
+              <div v-if="searchResults.names.length>0">
+
+                <div v-for="(name,idx) in searchResults.names" @click="selectContext((searchResults.names.length - idx)*-1)" @mouseover="loadContext((searchResults.names.length - idx)*-1)" :data-id="(searchResults.names.length - idx)*-1" :key="name.uri" :class="['fake-option', {'unselected':(pickPostion != (searchResults.names.length - idx)*-1 ), 'selected':(pickPostion == (searchResults.names.length - idx)*-1 ),'picked': (pickLookup[(searchResults.names.length - idx)*-1] && pickLookup[(searchResults.names.length - idx)*-1].picked)}]">
+                    <span v-if="name.suggestLabel.length>41">{{name.suggestLabel.substring(0,41)}}...</span>
+                    <span v-else>{{name.suggestLabel}}</span>
+                    <span> [LCNAF]</span>
+                  </div>
+                <hr>
               </div>
-            <hr>
+
+              <div v-if="searchResults.subjectsComplex.length>0">
+                <div v-for="(subjectC,idx) in searchResults.subjectsComplex" @click="selectContext(idx)" @mouseover="loadContext(idx)" :data-id="idx" :key="subjectC.uri" :class="['fake-option', {'unselected':(pickPostion != idx), 'selected':(pickPostion == idx), 'picked': (pickLookup[idx] && pickLookup[idx].picked)}]">{{subjectC.suggestLabel}}<span></span></div>
+                <hr>
+              </div>
+
+              <div v-if="searchResults.subjectsSimple.length>0">
+                <div v-for="(subject,idx) in searchResults.subjectsSimple" @click="selectContext(searchResults.subjectsComplex.length + idx)" @mouseover="loadContext(searchResults.subjectsComplex.length + idx)" :data-id="searchResults.subjectsComplex.length + idx" :key="subject.uri" :class="['fake-option', {'unselected':(pickPostion != searchResults.subjectsComplex.length + idx ), 'selected':(pickPostion == searchResults.subjectsComplex.length + idx ), 'picked': (pickLookup[searchResults.subjectsComplex.length + idx] && pickLookup[searchResults.subjectsComplex.length + idx].picked), 'literal-option':(subject.literal)}]" >{{subject.suggestLabel}}<span  v-if="subject.literal">{{subject.label}}</span> <span  v-if="subject.literal">[Literal]</span></div>
+              </div>
+
+
+
+
+            </div>
           </div>
 
-          <div v-if="searchResults.subjectsComplex.length>0">
-            <div v-for="(subjectC,idx) in searchResults.subjectsComplex" @click="selectContext(idx)" @mouseover="loadContext(idx)" :data-id="idx" :key="subjectC.uri" :class="['fake-option', {'unselected':(pickPostion != idx), 'selected':(pickPostion == idx), 'picked': (pickLookup[idx] && pickLookup[idx].picked)}]">{{subjectC.suggestLabel}}<span></span></div>
-            <hr>
+
+          <div :class="['subject-editor-container-right', {'subject-editor-container-right-lowres':lowResMode}]">
+
+
+
+            <div v-if="contextRequestInProgress" style="font-weight: bold;">Retrieving data...</div>
+            <div class="modal-context" :style="{ }" v-if="Object.keys(contextData).length>0">
+
+              
+              <h3><span class="modal-context-icon simptip-position-top" :data-tooltip="'Type: ' + contextData.type" v-html="returnAuthIcon(contextData.type)"></span>{{contextData.title}}</h3>
+
+              <div class="modal-context-data-title">{{contextData.type}}</div>
+              <a style="color:#2c3e50" :href="contextData.uri" target="_blank">view on id.loc.gov</a>
+              <div v-if="contextData.variant && contextData.variant.length>0">
+                <div class="modal-context-data-title">Variants:</div>
+                <ul>
+                  <li class="modal-context-data-li" v-for="(v,idx) in contextData.variant" v-bind:key="'var' + idx">{{v}}</li>
+                </ul>
+
+
+              </div>
+
+              <div v-for="key in Object.keys(contextData.nodeMap)" :key="key">
+                <div class="modal-context-data-title">{{key}}:</div>
+                  <ul>
+                    <li class="modal-context-data-li" v-for="v in contextData.nodeMap[key]" v-bind:key="v">{{v}}</li>
+                  </ul>
+              </div>
+
+
+              <div v-if="contextData.source && contextData.source.length>0">
+                <div class="modal-context-data-title">Sources:</div>
+                <ul>
+                  <li class="modal-context-data-li" v-for="v in contextData.source" v-bind:key="v">{{v}}</li>
+                </ul>
+              </div>
+
+
+
+
+
+
+            </div>  
+
+
+
+
+
+
+
+
           </div>
-
-          <div v-if="searchResults.subjectsSimple.length>0">
-            <div v-for="(subject,idx) in searchResults.subjectsSimple" @click="selectContext(searchResults.subjectsComplex.length + idx)" @mouseover="loadContext(searchResults.subjectsComplex.length + idx)" :data-id="searchResults.subjectsComplex.length + idx" :key="subject.uri" :class="['fake-option', {'unselected':(pickPostion != searchResults.subjectsComplex.length + idx ), 'selected':(pickPostion == searchResults.subjectsComplex.length + idx ), 'picked': (pickLookup[searchResults.subjectsComplex.length + idx] && pickLookup[searchResults.subjectsComplex.length + idx].picked), 'literal-option':(subject.literal)}]" >{{subject.suggestLabel}}<span  v-if="subject.literal">{{subject.label}}</span> <span  v-if="subject.literal">[Literal]</span></div>
-          </div>
-
-
-
+          
 
         </div>
-      </div>
 
-
-      <div :class="['subject-editor-container-right', {'subject-editor-container-right-lowres':lowResMode}]">
-
-
-
-        <div v-if="contextRequestInProgress" style="font-weight: bold;">Retrieving data...</div>
-        <div class="modal-context" :style="{ }" v-if="Object.keys(contextData).length>0">
-
-          
-          <h3><span class="modal-context-icon simptip-position-top" :data-tooltip="'Type: ' + contextData.type" v-html="returnAuthIcon(contextData.type)"></span>{{contextData.title}}</h3>
-
-          <div class="modal-context-data-title">{{contextData.type}}</div>
-          <a style="color:#2c3e50" :href="contextData.uri" target="_blank">view on id.loc.gov</a>
-          <div v-if="contextData.variant && contextData.variant.length>0">
-            <div class="modal-context-data-title">Variants:</div>
-            <ul>
-              <li class="modal-context-data-li" v-for="(v,idx) in contextData.variant" v-bind:key="'var' + idx">{{v}}</li>
-            </ul>
-
-
-          </div>
-
-          <div v-for="key in Object.keys(contextData.nodeMap)" :key="key">
-            <div class="modal-context-data-title">{{key}}:</div>
-              <ul>
-                <li class="modal-context-data-li" v-for="v in contextData.nodeMap[key]" v-bind:key="v">{{v}}</li>
-              </ul>
-          </div>
-
-
-          <div v-if="contextData.source && contextData.source.length>0">
-            <div class="modal-context-data-title">Sources:</div>
-            <ul>
-              <li class="modal-context-data-li" v-for="v in contextData.source" v-bind:key="v">{{v}}</li>
-            </ul>
-          </div>
+        <div class="">
 
 
 
+            <div class="component-container-fake-input">
+              <div  style="display: flex;">
+                <div  style="flex:1; position: relative;">
+                  <form autocomplete="off" style="height: 3em;">            
+                    <input v-on:keydown.enter.prevent="navInput" placeholder="Enter Subject Headings Here" ref="subjectInput"  autocomplete="off" type="text" v-model="subjectString" @input="subjectStringChanged" @keydown="navInput" @keyup="navString" @click="navStringClick"  class="input-single-subject subject-input">            
+                  </form>
 
+                  <div v-for="(c, idx) in components" :ref="'cBackground' + idx" :class="['color-holder',{'color-holder-okay':(c.uri !== null || c.literal)},{'color-holder-type-okay':(c.type !== null || showTypes===false)}]" v-bind:key="idx" >
+                    {{c.label}}
+                  </div>
+                </div>
+              </div>          
+            </div>
+            <div ref="toolbar" style="display: flex;">          
+              <div style="flex:2">
+                <ol v-if="showTypes" :class="['type-list-ol',{'type-list-ol-lowres':lowResMode}]">
+                  <li :class="['type-item', {'type-item-selected':(type.selected)}]" v-for="type in activeTypes" :key="type.value" @click="setTypeClick($event,type.value)">{{type.label}}</li>
+                </ol>
+              </div>
+              <div style="flex:1">
 
+                <button v-if="lowResMode" @click="closeEditor" style="float: right;margin: 0.6em; background-color: white; border: solid 1px rgb(42,42,42); color: rgb(42,42,42);" :class="[{'add-button-lowres':lowResMode}]">Close</button>
+                <button v-if="okayToAdd==true" style="float: right;margin: 0.6em;" @click="add" :class="[{'add-button-lowres':lowResMode}]">Add [SHIFT+Enter]</button>
+                <button v-else-if="okayToAdd==false && subjectString.length==0" disabled style="float: right;margin: 0.6em; display: none;" :class="[{'add-button-lowres':lowResMode}]">Can't Add</button>
+                <button v-else-if="okayToAdd==false" disabled style="float: right;margin: 0.6em;" :class="[{'add-button-lowres':lowResMode}]">Can't Add</button>
 
-        </div>  
-
-
-
-
-
-
-
-
-      </div>
-      
-
-    </div>
-
-    <div class="">
-
-
-
-        <div class="component-container-fake-input">
-          <div  style="display: flex;">
-            <div  style="flex:1; position: relative;">
-              <form autocomplete="off" style="height: 3em;">            
-                <input v-on:keydown.enter.prevent="navInput" placeholder="Enter Subject Headings Here" ref="subjectInput"  autocomplete="off" type="text" v-model="subjectString" @input="subjectStringChanged" @keydown="navInput" @keyup="navString" @click="navStringClick"  class="input-single-subject subject-input">            
-              </form>
-
-              <div v-for="(c, idx) in components" :ref="'cBackground' + idx" :class="['color-holder',{'color-holder-okay':(c.uri !== null || c.literal)},{'color-holder-type-okay':(c.type !== null || showTypes===false)}]" v-bind:key="idx" >
-                {{c.label}}
+                
+                
               </div>
             </div>
-          </div>          
-        </div>
-        <div ref="toolbar" style="display: flex;">          
-          <div style="flex:2">
-            <ol v-if="showTypes" :class="['type-list-ol',{'type-list-ol-lowres':lowResMode}]">
-              <li :class="['type-item', {'type-item-selected':(type.selected)}]" v-for="type in activeTypes" :key="type.value" @click="setTypeClick($event,type.value)">{{type.label}}</li>
-            </ol>
-          </div>
-          <div style="flex:1">
 
-            <button v-if="lowResMode" @click="closeEditor" style="float: right;margin: 0.6em; background-color: white; border: solid 1px rgb(42,42,42); color: rgb(42,42,42);" :class="[{'add-button-lowres':lowResMode}]">Close</button>
-            <button v-if="okayToAdd==true" style="float: right;margin: 0.6em;" @click="add" :class="[{'add-button-lowres':lowResMode}]">Add [SHIFT+Enter]</button>
-            <button v-else-if="okayToAdd==false && subjectString.length==0" disabled style="float: right;margin: 0.6em; display: none;" :class="[{'add-button-lowres':lowResMode}]">Can't Add</button>
-            <button v-else-if="okayToAdd==false" disabled style="float: right;margin: 0.6em;" :class="[{'add-button-lowres':lowResMode}]">Can't Add</button>
 
-            
-            
-          </div>
+
+
         </div>
 
+       
+
+      </div>
+    </template>
+    <template v-else>
+        
+        <div style="padding: 5px;">
 
 
 
-    </div>
+            <div class="component-container-fake-input" style="margin-top:2em">
+              <div  style="display: flex;">
+                <div  style="flex:1; position: relative;">
+                  <form autocomplete="off" style="height: 3em;">   
+                    <input @input="linkModeTextChange" placeholder="Enter MARC encoded LCSH value" ref="linkModeInput"  autocomplete="off" type="text" v-model="linkModeString"  class="input-single-subject subject-input">            
+                  </form>
+                </div>
+              </div>
+            </div>
+          
+        </div>
 
-   
+    </template>
 
   </div>
 
@@ -386,7 +467,14 @@
 
   }
 
+  .subjectEditorModeButtons{
+    display: inline-flex;
+    font-size: 0.9em;
+  }
 
+  .subjectEditorModeTextEnabled{
+    text-decoration: underline;
+  }
 
 /*
 .left-menu-list-item-has-data::before {
@@ -459,6 +547,8 @@ export default {
 
       searchMode: "LCSHNAF",
 
+      linkModeString: "",
+
       showTypes: false,
 
       activeTypes: {
@@ -479,6 +569,7 @@ export default {
       rtLookup:'rtLookup',
       profiles: 'profiles',
       idXML:'idXML',
+      subjectEditorMode: 'subjectEditorMode',
 
       contextData: 'contextData',
       
@@ -490,14 +581,35 @@ export default {
     returnAuthIcon: uiUtils.returnAuthIcon,
 
 
-    searchModeSwitch: function(mode){
 
+    /**
+    * Kicks off search when the link mode string is changed
+    * @return {void}
+    */
+    linkModeTextChange: function(){
+      
+      console.log(this.linkModeString)
+
+    },
+
+
+    /**
+    * Change state to display different interface
+    * @param {string} mode - which mode to use "build" "link"
+    * @return {array} - An array of the pts, but only occuring once
+    */
+    editorModeSwitch: function(mode){
+      this.$store.dispatch("subjectEditorMode", { self: this, mode: mode})
+    },
+
+
+
+    searchModeSwitch: function(mode){
       this.searchMode = mode      
       if (this.activeComponent && this.activeComponent.label){        
         this.searchApis(this.activeComponent.label,this.subjectString,this)
       }
       this.$refs.subjectInput.focus()
-
     },
 
 

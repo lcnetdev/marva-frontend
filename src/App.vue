@@ -229,6 +229,12 @@ export default {
 
 
 
+    if (localStorage.getItem('bfeSettingsSubjectBuildMode')!== null){      
+      this.$store.dispatch("subjectEditorMode", { self: this, mode: localStorage.getItem('bfeSettingsSubjectBuildMode') }).then(() => {
+      })   
+    } 
+
+
 
 
 

@@ -137,6 +137,7 @@ export default new Vuex.Store({
     loadResourceFavorites: [], 
 
 
+    subjectEditorMode: 'build',
 
 
     saveRecord : debounce((state,commit) => {
@@ -375,6 +376,10 @@ export default new Vuex.Store({
       state.loadResourceFavorites = val
     }, 
 
+
+    SUBJECTEDITORMODE(state, val) {
+      state.subjectEditorMode = val
+    }
 
 
     
@@ -729,6 +734,19 @@ export default new Vuex.Store({
 
     }, 
 
+
+    /**
+    * Which interface to use in the subject editor tool
+    * It will also save the state to the localstorage for later use
+    * @param {string} data.mode - should be "build" "link" ...
+    * @return {void}
+    */
+    subjectEditorMode ({ commit }, data) {    
+      commit('SUBJECTEDITORMODE', data.mode)    
+      localStorage.setItem('bfeSettingsSubjectBuildMode',data.mode)
+    },
+
+
     
     // this is the macro express one
     setSettingsDPackVoyager({ commit}, data){
@@ -962,6 +980,7 @@ export default new Vuex.Store({
       console.log('mini',mini)
 
     },
+
 
 
 
