@@ -320,10 +320,10 @@
       "altKey": true,
       "combo": "Ctrl+Alt+Shift+k",
       "code": "KeyK",
-      "codeEscape": "\uFE22",
+      "codeEscape": "\uFE20",
       "combining": false,
       "nick": "Double tilde first half",
-      "unicode": "FE22",
+      "unicode": "FE20",
       "name": "Double Tilde First Half (Use Diacritic Mode"
     }
   ],
@@ -334,10 +334,10 @@
       "altKey": true,
       "combo": "Ctrl+Alt+Shift+l",
       "code": "KeyL",
-      "codeEscape": "\uFE23",
+      "codeEscape": "\uFE21",
       "combining": false,
       "nick": "Double tilde second half",
-      "unicode": "FE23",
+      "unicode": "FE21",
       "name": "Double Tilde Second Half (Use Diacritic Mode"
     },
     {
