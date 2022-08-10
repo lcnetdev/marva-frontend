@@ -303,6 +303,11 @@ export default {
           let url = config.convertToRegionUrl(uri)
           let env = config.returnUrls().env
 
+          // GPO HACK HERE
+          if (record.typeid.includes('GPO')){
+            url = url.replace('preprod-8230','preprod-8210')
+          }
+
           results.push({
             'type':type,
             'url': url,
