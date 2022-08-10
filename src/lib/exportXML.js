@@ -1438,7 +1438,46 @@ const exportXML = {
         //strXmlFormatted = uiUtils.prettifyXmlJS(strXmlBasic, ' ')
 
 
+        if (config.postUsingAlmaXmlFormat){
 
+			// console.log("strXmlBasic")
+			// console.log(rdfBasic)
+
+
+			// get the various pieces
+			let almaWorksEl =  rdfBasic.getElementsByTagName("bf:Work")
+			let almaInstancesEl =  rdfBasic.getElementsByTagName("bf:Instance")
+			let almaItemsEl =  rdfBasic.getElementsByTagName("bf:Item")
+
+			// would need to tweak this probably...
+
+			// make a new doc
+			let almaXmlElBib = document.createElement("bib");
+			// <bib>
+
+			let almaXmlElRecordFormat = document.createElement("record_format");
+			almaXmlElRecordFormat.innerHTML = "BIBFRAME"
+			almaXmlElBib.appendChild(almaXmlElRecordFormat)
+
+
+			let almaXmlElRecord = document.createElement("record");
+
+			for (let el of almaWorksEl){ almaXmlElRecord.appendChild(el) }
+			for (let el of almaInstancesEl){ almaXmlElRecord.appendChild(el) }
+			for (let el of almaItemsEl){ almaXmlElRecord.appendChild(el) }
+
+			almaXmlElBib.appendChild(almaXmlElRecord)
+
+			
+
+			let strAlmaXmlElBib = (new XMLSerializer()).serializeToString(almaXmlElBib)
+
+
+			// overwrite the existing string with with one
+			// strXml is the one sent to the server
+			strXml = strAlmaXmlElBib
+
+        }
 
 
 

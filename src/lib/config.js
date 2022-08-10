@@ -50,6 +50,7 @@ const config = {
 			utilLang  :  'https://editor.id.loc.gov/bfe2/util-lang/',
 			publish: 'https://editor.id.loc.gov/bfe2/util/publish/production',
 			bfdb : 'https://preprod-8230.id.loc.gov/',
+			bfdbGPO : 'https://preprod-8210.id.loc.gov/',
 			// profiles : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:profile',
 			// starting : 'https://editor.id.loc.gov/api/listconfigs?where=index.resourceType:startingPoints&where=index.label:config',
 			profiles : '/bfe2/util/profiles/profile/prod',
@@ -82,15 +83,19 @@ const config = {
 	},
 
 	returnUrls: function(){
-
-		if (window.location.href.startsWith('http://localhost')){
+		// testing for window here because of running unit tests in node
+		if (typeof window !== 'undefined'){
+			if (window && window.location.href.startsWith('http://localhost')){
+				return this.regionUrls.dev
+			}else if (window && window.location.href.startsWith('https://preprod-3001')){
+				return this.regionUrls.staging
+			}else if (window && window.location.href.startsWith('https://editor.id')){
+				return this.regionUrls.production
+			}else if (window && window.location.href.includes('bibframe.org/marva')){
+				return this.regionUrls.bibframeDotOrg
+			}
+		}else{
 			return this.regionUrls.dev
-		}else if (window.location.href.startsWith('https://preprod-3001')){
-			return this.regionUrls.staging
-		}else if (window.location.href.startsWith('https://editor.id')){
-			return this.regionUrls.production
-		}else if (window.location.href.includes('bibframe.org/marva')){
-			return this.regionUrls.bibframeDotOrg
 		}
 	},
 
@@ -106,6 +111,10 @@ const config = {
 	
 		return url
 	},
+
+
+
+	postUsingAlmaXmlFormat: false,
 
 
 

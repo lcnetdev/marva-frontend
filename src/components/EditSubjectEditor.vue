@@ -2,7 +2,7 @@
 
   <div style="position: relative;">
 
-    <div style="position:absolute; right:2em; top:  0.25em; z-index: 100;">
+    <div style="position:absolute; right:2em; top:  0.25em; z-index: 100; display:none;">
       <button @click="editorModeSwitch('build')" class="subjectEditorModeButtons" style="margin-right: 1em;">
 <!--         <svg fill="#F2F2F2" width="20px" height="20px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
          <g>
