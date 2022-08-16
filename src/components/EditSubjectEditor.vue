@@ -1336,11 +1336,37 @@ export default {
         window.setTimeout(()=>{
           for (let x of this.components){
             if (this.localContextCache[x.uri]){
+
+
+              if (this.localContextCache[x.uri].nodeMap && this.localContextCache[x.uri].nodeMap['MADS Collection'] && this.localContextCache[x.uri].nodeMap['MADS Collection'].includes('GeographicSubdivisions')){
+                x.type = 'madsrdf:Geographic'
+              }
+
+
               if (this.localContextCache[x.uri].type === 'GenreForm'){
                 x.type = 'madsrdf:GenreForm'
               }
-            }         
+              if (this.localContextCache[x.uri].type === 'Temporal'){
+                x.type = 'madsrdf:Temporal'
+              }
+              if (this.localContextCache[x.uri].type === 'Geographic'){
+                x.type = 'madsrdf:Geographic'
+              }
+              if (this.localContextCache[x.uri].type === 'Topic'){
+                x.type = 'madsrdf:Topic'
+              }
+
+              console.log(this.localContextCache[x.uri])
+
+
+
+            }  
+
           }
+
+          // always make the first one the topic
+          this.components[0].type = 'madsrdf:Topic'
+
           this.updateAvctiveTypeSelected()
           this.validateOkayToAdd()
         },100)
