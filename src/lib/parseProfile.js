@@ -1940,6 +1940,8 @@ const parseProfile = {
 
                 userValue['@id'] = subjectComponents[0].uri
 
+                userValue['@type'] = subjectComponents[0].type.replace('madsrdf:','http://www.loc.gov/mads/rdf/v1#')
+
                 userValue["http://www.loc.gov/mads/rdf/v1#authoritativeLabel"] = [{
                     "@guid": short.generate(),
                     "http://www.loc.gov/mads/rdf/v1#authoritativeLabel": subjectComponents[0].label

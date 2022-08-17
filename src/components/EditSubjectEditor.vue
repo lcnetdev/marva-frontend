@@ -2,7 +2,7 @@
 
   <div style="position: relative;">
 
-    <div style="position:absolute; right:2em; top:  0.25em; z-index: 100; display:none;">
+    <div style="position:absolute; right:2em; top:  0.25em; z-index: 100;">
       <button @click="editorModeSwitch('build')" class="subjectEditorModeButtons" style="margin-right: 1em;">
 <!--         <svg fill="#F2F2F2" width="20px" height="20px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
          <g>
@@ -1356,10 +1356,6 @@ export default {
                 x.type = 'madsrdf:Topic'
               }
 
-              console.log(this.localContextCache[x.uri])
-
-
-
             }  
 
           }
@@ -1389,8 +1385,16 @@ export default {
       // remove our werid hyphens before we send it back
       for (let c of this.components){
         c.label = c.label.replaceAll('‑','-')
-      }
 
+        // we have the full mads type from the build process, check if the component is a id name authortiy
+        // if so over write the user defined type with the full type from the authority file so that 
+        // something like a name becomes a madsrdf:PersonalName instead of madsrdf:Topic 
+        if (c.uri && c.uri.includes('id.loc.gov/authorities/names/') && this.localContextCache && this.localContextCache[c.uri]){
+          c.type = this.localContextCache[c.uri].typeFull.replace('http://www.loc.gov/mads/rdf/v1#','madsrdf:')
+        }
+      }
+      console.log(this.localContextCache)
+      console.log(this.components)
       this.$emit('subjectAdded', this.components)
 
 
