@@ -536,6 +536,12 @@ const exportXML = {
 				// do some updates to the admin metadata 
 				if (pt.includes('http://id.loc.gov/ontologies/bibframe/adminMetadata')){
 
+					// set the profile used
+					ptObj.userValue['http://id.loc.gov/ontologies/bflc/profile'] = [
+						{
+							'http://id.loc.gov/ontologies/bflc/profile' : rt							
+						}
+					]
 
 					// drop any existing changeDate and add our own
 					try{
@@ -563,8 +569,8 @@ const exportXML = {
 					}
 
 
-					console.log("---------http://id.loc.gov/ontologies/bibframe/adminMetadata----------")
-					console.log(ptObj)
+					// make sure if its an instance it has a localid
+
 				}
 
 
