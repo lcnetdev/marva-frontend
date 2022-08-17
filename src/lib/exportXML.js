@@ -533,6 +533,43 @@ const exportXML = {
 				}
 
 
+				// do some updates to the admin metadata 
+				if (pt.includes('http://id.loc.gov/ontologies/bibframe/adminMetadata')){
+
+
+					// drop any existing changeDate and add our own
+					try{
+						delete ptObj.userValue['http://id.loc.gov/ontologies/bibframe/changeDate']
+					}catch (e){
+						//
+					}
+
+					// add our own
+					ptObj.userValue['http://id.loc.gov/ontologies/bibframe/changeDate'] = [
+						{
+							'http://id.loc.gov/ontologies/bibframe/changeDate' : new Date().toISOString().split('.')[0]+"Z",
+							'@datatype': 'http://www.w3.org/2001/XMLSchema#dateTime'
+						}
+					]
+
+					// and make a creationdate if it doesn't yet exist
+					if (!ptObj.userValue['http://id.loc.gov/ontologies/bibframe/creationDate']){
+						ptObj.userValue['http://id.loc.gov/ontologies/bibframe/creationDate'] = [
+							{
+								'http://id.loc.gov/ontologies/bibframe/creationDate' : new Date().toISOString().split('.')[0]+"Z",
+								'@datatype': 'http://www.w3.org/2001/XMLSchema#dateTime'
+							}
+						]
+					}
+
+
+					console.log("---------http://id.loc.gov/ontologies/bibframe/adminMetadata----------")
+					console.log(ptObj)
+				}
+
+
+
+
 
 				// does it even have any userValues?
 				if (this.hasUserValue(userValue)){
@@ -1023,11 +1060,6 @@ const exportXML = {
 				}
 
 			}
-
-			
-
-
-			
 
 			// build the lookup
 
