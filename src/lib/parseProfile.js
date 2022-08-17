@@ -3136,8 +3136,15 @@ const parseProfile = {
               "@guid": short.generate(),
               "http://id.loc.gov/ontologies/bflc/catalogerId": store.state.catInitials
               }
-            ]
-
+            ],
+            "http://id.loc.gov/ontologies/bibframe/identifiedBy": [{
+                "@guid": short.generate(),
+                "@type": "http://id.loc.gov/ontologies/bibframe/Local",
+                "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": [{
+                    "@guid": short.generate(),
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": profile.rt[newRdId].URI.split("/")[profile.rt[newRdId].URI.split("/").length-1]
+                }]                
+            }]
           },
           "valueConstraint": {
             "defaults": [],
@@ -3146,7 +3153,7 @@ const parseProfile = {
           "valueTemplateRefs": this.returnAdminMedataToUse(newRdId)
           }
         }
-
+        
         let adminMetadataPropertyLabel = 'http://id.loc.gov/ontologies/bibframe/adminMetadata|Admin Metadata'
         profile.rt[newRdId].pt[adminMetadataPropertyLabel] = JSON.parse(JSON.stringify(adminMetadataProperty))
         profile.rt[newRdId].ptOrder.push(adminMetadataPropertyLabel)
@@ -3161,12 +3168,7 @@ const parseProfile = {
 
 
     cloneInstance: function(profile, uri){
-
-        
-        
-
-
-        // find the instance first
+        // find the correct instance to clone
         for (let rtId in profile.rt){
 
             if (profile.rt[rtId].URI && profile.rt[rtId].URI == uri){
@@ -3219,6 +3221,19 @@ const parseProfile = {
                                 "http://id.loc.gov/ontologies/bflc/catalogerId": store.state.catInitials
                             }
                         ]
+
+
+                        // add/replace with our new local id
+                        profile.rt[newRdId].pt[key].userValue["http://id.loc.gov/ontologies/bibframe/identifiedBy"] = [{
+                            "@guid": short.generate(),
+                            "@TEST": "HELLO",
+                            "@type": "http://id.loc.gov/ontologies/bibframe/Local",
+                            "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": [{
+                                "@guid": short.generate(),
+                                "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": profile.rt[newRdId].URI.split("/")[profile.rt[newRdId].URI.split("/").length-1]
+                            }]                
+                        }]
+
                     }
                 }
 
@@ -3778,8 +3793,8 @@ const parseProfile = {
         }  
       }
 
-      console.log('------useProfile-------')
-      console.log(useProfile)
+      // console.log('------useProfile-------')
+      // console.log(useProfile)
 
       if (addAdmin){
 
