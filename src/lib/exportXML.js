@@ -1481,35 +1481,33 @@ const exportXML = {
 			// console.log("strXmlBasic")
 			// console.log(rdfBasic)
 
-
 			// get the various pieces
 			let almaWorksEl =  rdfBasic.getElementsByTagName("bf:Work")
 			let almaInstancesEl =  rdfBasic.getElementsByTagName("bf:Instance")
 			let almaItemsEl =  rdfBasic.getElementsByTagName("bf:Item")
 
-			// would need to tweak this probably...
-
-			// make a new doc
-			let almaXmlElBib = document.createElement("bib");
+			const doc = document.implementation.createDocument("", "", null);
+			// make a new root element 
+			let almaXmlElBib = doc.createElement("bib");
 			// <bib>
 
-			let almaXmlElRecordFormat = document.createElement("record_format");
+			let almaXmlElRecordFormat = doc.createElement("record_format");
 			almaXmlElRecordFormat.innerHTML = "BIBFRAME"
 			almaXmlElBib.appendChild(almaXmlElRecordFormat)
+			// make a child element record of bib
+			let almaXmlElRecord = doc.createElement("record");			
+			//rdf tag should be open 
+			let almaXmlElRdf = doc.createElement("rdf:RDF");
+			almaXmlElRdf.setAttribute("xmlns:rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");					
+			almaXmlElRecord.appendChild(almaXmlElRdf)
+			almaXmlElBib.appendChild(almaXmlElRecord)	
+		
+			for (let el of almaWorksEl){ almaXmlElRdf.appendChild(el) }
+			for (let el of almaInstancesEl){ almaXmlElRdf.appendChild(el) }
+			for (let el of almaItemsEl){ almaXmlElRdf.appendChild(el) }
+					
 
-
-			let almaXmlElRecord = document.createElement("record");
-
-			for (let el of almaWorksEl){ almaXmlElRecord.appendChild(el) }
-			for (let el of almaInstancesEl){ almaXmlElRecord.appendChild(el) }
-			for (let el of almaItemsEl){ almaXmlElRecord.appendChild(el) }
-
-			almaXmlElBib.appendChild(almaXmlElRecord)
-
-			
-
-			let strAlmaXmlElBib = (new XMLSerializer()).serializeToString(almaXmlElBib)
-
+			let strAlmaXmlElBib = (new XMLSerializer()).serializeToString(almaXmlElBib)	
 
 			// overwrite the existing string with with one
 			// strXml is the one sent to the server
@@ -1518,8 +1516,17 @@ const exportXML = {
         }
 
 
-
+        // build the BF2MARC package
 		
+		let bf2MarcXmlElRdf = this.createElByBestNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#RDF')
+		// bf2MarcXmlElRdf.setAttribute("xmlns:rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");					
+	
+		for (let el of rdfBasic.getElementsByTagName("bf:Work")){ bf2MarcXmlElRdf.appendChild(el) }
+		for (let el of rdfBasic.getElementsByTagName("bf:Instance")){ bf2MarcXmlElRdf.appendChild(el) }
+		for (let el of rdfBasic.getElementsByTagName("bf:Item")){ bf2MarcXmlElRdf.appendChild(el) }
+		let strBf2MarcXmlElBib = (new XMLSerializer()).serializeToString(bf2MarcXmlElRdf)	
+
+		console.log(strBf2MarcXmlElBib)
 		
 
 
@@ -1527,6 +1534,7 @@ const exportXML = {
 			xmlDom: rdf,
 			xmlStringFormatted: strXmlFormatted,
 			xlmString: strXml,
+			bf2Marc: strBf2MarcXmlElBib,
 			xlmStringBasic: strXmlBasic,
 			voidTitle: xmlVoidDataTitle,
 			voidContributor:xmlVoidDataContributor

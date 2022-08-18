@@ -40,7 +40,7 @@
             <div style="display:flex">
               <div style="flex:1;">{{++idx}}. <span style="font-weight:bold">{{r.label}}</span></div>
               <div style="flex:1"><a :href="r.bfdbURL" target="_blank">View on BFDB</a></div>
-              <div style="flex:1"><a href="#" target="_blank" @click.prevent="instanceEditorLink = r.bfdbPackageURL; testInstance()">Fetch Record</a></div>
+              <div style="flex:1"><a href="#" target="_blank" @click.prevent="instanceEditorLink = r.bfdbPackageURL; testInstance()">Retrieve</a></div>
             </div>
           </li>      
         </template>
