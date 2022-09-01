@@ -21,6 +21,16 @@ button:active{
     transform: scale(0.98);
 }
 
+#loading-icon{
+  display: inline-block;
+   animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+    100% {
+        transform: rotate(1turn);
+    }
+}
 
 
 .component-container{

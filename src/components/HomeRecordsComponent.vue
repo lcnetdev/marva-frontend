@@ -906,16 +906,9 @@ background: #ff9800;
 }
 
 
-@keyframes rotate {
-    100% {
-        transform: rotate(1turn);
-    }
-}
 
-#loading-icon{
-  display: inline-block;
-   animation: rotate 2s linear infinite;
-}
+
+
 
 
 /*

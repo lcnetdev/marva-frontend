@@ -2,7 +2,7 @@
 
   <div style="position: relative;">
 
-    <div style="position:absolute; right:2em; top:  0.25em; z-index: 100; display:none;">
+    <div style="position:absolute; right:2em; top:  0.25em; z-index: 100;">
       <button @click="editorModeSwitch('build')" class="subjectEditorModeButtons" style="margin-right: 1em;">
 <!--         <svg fill="#F2F2F2" width="20px" height="20px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
          <g>
@@ -215,9 +215,66 @@
               <div  style="display: flex;">
                 <div  style="flex:1; position: relative;">
                   <form autocomplete="off" style="height: 3em;">   
-                    <input @input="linkModeTextChange" placeholder="Enter MARC encoded LCSH value" ref="linkModeInput"  autocomplete="off" type="text" v-model="linkModeString"  class="input-single-subject subject-input">            
+                    <input v-on:keydown.enter.prevent="linkModeTextChange" placeholder="Enter MARC encoded LCSH value"   autocomplete="off" type="text" v-model="linkModeString" ref="subjectInput" class="input-single-subject subject-input">            
                   </form>
                 </div>
+              </div>
+            </div>
+
+            <ul v-if="!linkModeSearching">
+              <li v-if="linkModeResults===false">Enter MARC subject string above (with $ signs for subdivdion seperation) and press enter key</li>
+            </ul>
+
+
+
+            <ol v-if="!linkModeSearching">           
+              <template v-if="linkModeResults!==false">
+
+                <template v-if="linkModeResults.resultType && linkModeResults.resultType == 'COMPLEX'">
+                  
+                  <li>
+
+                    <span :class="{ 'link-mode-good-heading': (linkModeResults.hit.uri), 'link-mode-bad-heading': (!linkModeResults.hit.uri) }">
+                      {{linkModeResults.hit.label}}
+                    </span>
+                    <span v-if="linkModeResults.hit.heading && linkModeResults.hit.heading.subdivision" class="link-mode-subdivision">(subdivision)</span>
+                    <a class="link-mode-good-heading-alink" target="_blank" v-if="linkModeResults.hit.uri" :href="linkModeResults.hit.uri">{{linkModeResults.hit.uri.split('/')[linkModeResults.hit.uri.split('/').length-1]}}</a>
+
+
+                  </li>
+
+                </template>
+
+                <template v-else>
+
+                  <li v-for="(hit,idx) in linkModeResults.hit" v-bind:key="idx">
+                    <span :class="{ 'link-mode-good-heading': (hit.uri), 'link-mode-bad-heading': (!hit.uri) }">
+                      {{hit.label}}
+                    </span>
+                    <span v-if="hit.heading && hit.heading.subdivision" class="link-mode-subdivision">(subdivision)</span>
+                    <a class="link-mode-good-heading-alink" target="_blank" v-if="hit.uri" :href="hit.uri">{{hit.uri.split('/')[hit.uri.split('/').length-1]}}</a>
+                  </li> 
+                </template>
+                
+              </template>
+            </ol>
+
+            <span style="color:darkred;" v-if="linkModeResults && linkModeResults.resultType && linkModeResults.resultType == 'ERROR'">{{linkModeResults.msg}}</span>
+
+            <div style="display: flex;">
+              <div style="flex:1">
+
+                <h1 v-if="linkModeSearching"> <span id="loading-icon">⟳</span> Working...</h1>
+
+                <button v-if="linkModeSearching===false" style="margin-right: 1em; margin-left: 2em" @click="linkModeTextChange({key:'Enter',shiftKey:false})">Link Components [Enter]</button>
+                <button v-if="linkModeResults!==false" style="" @click="addLinkMode">Add Heading [SHIFT+Enter]</button>
+
+
+
+              </div>
+              <div style="flex:1">
+                  <button style="float:right; margin-right:1em" @click="closeEditor">Close</button>
+
               </div>
             </div>
           
@@ -476,6 +533,35 @@
     text-decoration: underline;
   }
 
+
+.link-mode-good-heading, .link-mode-bad-heading{
+  font-size: 1.15em;
+  font-weight: bold;
+}
+.link-mode-good-heading-alink{
+  color: inherit;
+}
+.link-mode-subdivision{
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+}
+.link-mode-good-heading::before {
+    content: "✓ " !important;
+    transition-property: all;
+    transition-duration: 500ms;
+    font-weight: bold;
+    color: green;
+    font-size: larger;
+}
+.link-mode-bad-heading::before {
+    content: "x " !important;
+    transition-property: all;
+    transition-duration: 500ms;
+    font-weight: bold;
+    color: darkred;
+    font-size: x-large;
+}
+
 /*
 .left-menu-list-item-has-data::before {
     content: "✓ " !important;
@@ -548,6 +634,8 @@ export default {
       searchMode: "LCSHNAF",
 
       linkModeString: "",
+      linkModeResults: false,
+      linkModeSearching: false,
 
       showTypes: false,
 
@@ -586,10 +674,30 @@ export default {
     * Kicks off search when the link mode string is changed
     * @return {void}
     */
-    linkModeTextChange: function(){
-      
-      console.log(this.linkModeString)
+    linkModeTextChange: async function(event){
+        
 
+      
+      this.$refs.subjectInput.focus()
+
+      if (event.key==='Enter' && event.shiftKey===false){
+        console.log("Starting search")
+        this.linkModeResults=false
+        this.linkModeSearching=true
+        this.linkModeResults = await lookupUtil.subjectLinkModeResolveLCSH(this.linkModeString)
+        this.linkModeSearching=false
+        console.log(this.linkModeResults)
+
+      }else if (event.key==='Enter' && event.shiftKey===true){
+
+        this.addLinkMode()
+
+      }
+
+      
+
+      if (event.preventDefault) {event.preventDefault()}
+      return false
     },
 
 
@@ -600,6 +708,10 @@ export default {
     */
     editorModeSwitch: function(mode){
       this.$store.dispatch("subjectEditorMode", { self: this, mode: mode})
+      this.$nextTick(() => {
+        this.$refs.subjectInput.focus()
+      })
+      
     },
 
 
@@ -1126,10 +1238,12 @@ export default {
           let activeLeft=0
           for (let com of this.components){       
             // set the left 
-            this.$refs['cBackground'+com.id][0].style.left = `${activeLeft}px`
-            // add the width of all the existing components to the var
-            // add 12 to accomodate the "--" seperator
-            activeLeft = activeLeft + this.$refs['cBackground'+com.id][0].offsetWidth + 11
+            if (this.$refs['cBackground'+com.id] && this.$refs['cBackground'+com.id][0]){
+              this.$refs['cBackground'+com.id][0].style.left = `${activeLeft}px`
+              // add the width of all the existing components to the var
+              // add 12 to accomodate the "--" seperator
+              activeLeft = activeLeft + this.$refs['cBackground'+com.id][0].offsetWidth + 11
+            }
           }          
         })
 
@@ -1380,8 +1494,111 @@ export default {
 
     },
 
-    add: function(){
+    /**
+    * Emits the components back to the complex component to add to the system
+    * uses this.linkModeResults
+    * @return {void}
+    */
 
+    addLinkMode: function(){
+
+
+      let sendResults = []
+
+      console.log(this.linkModeResults)
+
+
+      if (this.linkModeResults){
+
+
+        if (this.linkModeResults.resultType && this.linkModeResults.resultType==='COMPLEX'){
+          sendResults.push({
+            complex: true,
+            id: 0,
+            label: this.linkModeResults.hit.label,
+            literal: false,
+            posEnd: 0,
+            posStart: 0,
+            type:  "madsrdf:Topic",
+            uri: this.linkModeResults.hit.uri
+          })
+
+        }else{
+          for (const [i, v] of this.linkModeResults.hit.entries()) {
+            sendResults.push({
+              complex: false,
+              id: i,
+              label: v.label,
+              literal: v.literal,
+              posEnd: 0,
+              posStart: 0,
+              type: v.heading.rdfType.replace('http://www.loc.gov/mads/rdf/v1#','madsrdf:'),
+              uri: v.uri
+            })
+          }
+        }
+
+
+
+
+      }
+
+      console.log("sendResults",sendResults)
+
+      this.$emit('subjectAdded', sendResults)
+
+// depreciated: false
+// extra: ""
+// heading: Object
+//   label: "Woolf, Virginia, 1882-1941"
+//   primary: true
+//   rdfType: "http://www.loc.gov/mads/rdf/v1#PersonalName"
+//   subdivision: false
+//   type: "a"
+// label: "Woolf, Virginia, 1882-1941"
+// literal: false
+// suggestLabel: "Woolf, Virginia, 1882-1941"
+// uri: "http://id.loc.gov/authorities/names/n79041870"
+// vlabel: ""
+
+
+// -----------
+
+      console.log("ADDDD")
+// complex: false
+// id: 2
+// label: "20th century"
+// literal: false
+// posEnd: 47
+// posStart: 36
+// type: "madsrdf:Temporal"
+// uri: "http://id.loc.gov/authorities/subjects/sh2002012476"
+
+
+// complex: false
+// id: 1
+// label: "19999"
+// literal: true
+// posEnd: 29
+// posStart: 25
+// type: "madsrdf:Temporal"
+// uri: null
+
+// complex: true
+// id: 0
+// label: "Archaeology and history--United States"
+// literal: false
+// posEnd: 37
+// posStart: 0
+// type: "madsrdf:Topic"
+// uri: "http://id.loc.gov/authorities/subjects/sh2009115324"
+
+
+    },
+
+
+    add: function(){
+      console.log('this.components',this.components)
       // remove our werid hyphens before we send it back
       for (let c of this.components){
         c.label = c.label.replaceAll('‑','-')
@@ -1396,9 +1613,7 @@ export default {
       console.log(this.localContextCache)
       console.log(this.components)
       this.$emit('subjectAdded', this.components)
-
-
-      
+  
 
     },
 
@@ -1413,7 +1628,7 @@ export default {
 
       // also check to see if the toolbar is off the screen,
       // in very very low res setups sometimes this area gets clipped
-      if (this.$refs.toolbar.getBoundingClientRect().bottom > window.innerHeight){
+      if (this.$refs.toolbar && this.$refs.toolbar.getBoundingClientRect().bottom > window.innerHeight){
         this.lowResMode=true  
         this.$emit('lowResModeActivate', true)
       }
@@ -1458,6 +1673,7 @@ export default {
           userValue=userValue.slice(0,-1)
         }
         this.subjectString=userValue
+        this.linkModeString=userValue
         this.$nextTick(() => {
           this.navString({key:'ArrowRight'})        
         })

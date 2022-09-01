@@ -914,7 +914,7 @@ export default new Vuex.Store({
 
 
     cloneInstance ({ commit, state }, data) {    
-      let nap = parseProfile.cloneInstance(state.activeProfile, data.uri)
+      let nap = parseProfile.cloneInstance(state.activeProfile, data.uri)      
       commit('ACTIVEPROFILE', nap)   
 
       let mini = parseProfile.returnDiagramMiniMap(nap)

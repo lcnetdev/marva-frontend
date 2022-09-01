@@ -390,6 +390,7 @@ const lookupUtil = {
 
                   let hitAdd = { 
                     label: hit.aLabel,
+                    vlabel: hit.vLabel,
                     suggestLabel: hit.suggestLabel,
                     uri: hit.uri,
                     literal:false,
@@ -456,7 +457,7 @@ const lookupUtil = {
     },
 
 
-    // a special subject method to do sepcial subject things
+    // a special subject method to do special subject things
     subjectSearch: async function(searchVal,complexVal,mode){
       
       let namesUrl = config.lookupConfig['http://preprod.id.loc.gov/authorities/names'].modes[0]['NAF All'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=4')
@@ -1895,11 +1896,15 @@ const lookupUtil = {
         searchValue: complexHeading
       }
 
-
       for (let heading of headings){
 
         let foundHeading = false
         // console.log("---------------------\n",heading,"\n------------------------\n")
+        
+        // if after the first loop looking at the piramry if it hits a full authorized complex stop looping
+        if (result && result.resultType && result.resultType=='COMPLEX'){
+          break
+        }
 
         let searchVal = heading.label
 
@@ -1918,6 +1923,8 @@ const lookupUtil = {
         let hubsUrlAnchored = config.lookupConfig['https://preprod-8080.id.loc.gov/resources/works'].modes[0]['Hubs - Left Anchored'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=5')
 
         let subjectUrlHierarchicalGeographic = config.lookupConfig['HierarchicalGeographic'].modes[0]['All'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=5')            
+        let subjectUrlHierarchicalGeographicLCSH = config.lookupConfig['http://id.loc.gov/authorities/subjects'].modes[0]['LCSH All'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=5')+ '&rdftype=HierarchicalGeographic'         
+
         let subjectUrlGeographicLCSH = config.lookupConfig['http://id.loc.gov/authorities/subjects'].modes[0]['LCSH All'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=5')+'&rdftype=Geographic&memberOf=http://id.loc.gov/authorities/subjects/collection_Subdivisions'
         let subjectUrlGeographicLCNAF = config.lookupConfig['http://preprod.id.loc.gov/authorities/names'].modes[0]['NAF All'].url.replace('<QUERY>',searchVal).replace('&count=25','&count=5')+'&rdftype=Geographic&memberOf=http://id.loc.gov/authorities/subjects/collection_Subdivisions'
 
@@ -1963,6 +1970,12 @@ const lookupUtil = {
           url: [subjectUrlHierarchicalGeographic],
           searchValue: searchVal
         }
+        let searchPayloadHierarchicalGeographicLCSH = {
+          processor: 'lcAuthorities',
+          url: [subjectUrlHierarchicalGeographicLCSH],
+          searchValue: searchVal
+        }
+
 
         let searchPayloadGeographicLCSH = {
           processor: 'lcAuthorities',
@@ -1993,6 +2006,7 @@ const lookupUtil = {
         let resultsSubjectsSimple=[]
         let resultsSubjectsComplex=[]
         let resultsHierarchicalGeographic=[]
+        let resultsHierarchicalGeographicLCSH=[]
         let resultsWorksAnchored=[]
         let resultsHubsAnchored=[]
         let resultsPayloadSubjectsSimpleSubdivision=[]
@@ -2008,13 +2022,14 @@ const lookupUtil = {
         // if it is a primary heading then we need to search LCNAF, HUBS, WORKS, and simple subjects, and do the whole thing with complex subjects
         if (heading.primary){
           // resultsNames = await this.searchComplex(searchPayloadNames)
-          [resultsNames, resultsNamesSubdivision, resultsSubjectsSimple, resultsPayloadSubjectsSimpleSubdivision, resultsSubjectsComplex, resultsHierarchicalGeographic, resultsWorksAnchored, resultsHubsAnchored] = await Promise.all([
+          [resultsNames, resultsNamesSubdivision, resultsSubjectsSimple, resultsPayloadSubjectsSimpleSubdivision, resultsSubjectsComplex, resultsHierarchicalGeographic,resultsHierarchicalGeographicLCSH, resultsWorksAnchored, resultsHubsAnchored] = await Promise.all([
               this.searchComplex(searchPayloadNames),
               this.searchComplex(searchPayloadNamesSubdivision),
               this.searchComplex(searchPayloadSubjectsSimple),
               this.searchComplex(searchPayloadSubjectsSimpleSubdivision),
               this.searchComplex(searchPayloadSubjectsComplex),
               this.searchComplex(searchPayloadHierarchicalGeographic),
+              this.searchComplex(searchPayloadHierarchicalGeographicLCSH),
               this.searchComplex(searchPayloadWorksAnchored),
               this.searchComplex(searchPayloadHubsAnchored)              
           ]);
@@ -2029,6 +2044,7 @@ const lookupUtil = {
           resultsSubjectsSimple = resultsSubjectsSimple.filter((r)=>{ return (!r.literal) })
           resultsSubjectsComplex = resultsSubjectsComplex.filter((r)=>{ return (!r.literal) })
           resultsHierarchicalGeographic = resultsHierarchicalGeographic.filter((r)=>{ return (!r.literal) })
+          resultsHierarchicalGeographicLCSH = resultsHierarchicalGeographicLCSH.filter((r)=>{ return (!r.literal) })
           resultsWorksAnchored = resultsWorksAnchored.filter((r)=>{ return (!r.literal) })
           resultsHubsAnchored = resultsHubsAnchored.filter((r)=>{ return (!r.literal) })
           resultsPayloadSubjectsSimpleSubdivision = resultsPayloadSubjectsSimpleSubdivision.filter((r)=>{ return (!r.literal) })
@@ -2042,14 +2058,17 @@ const lookupUtil = {
           // console.log("resultsWorksAnchored",resultsWorksAnchored) 
           // console.log("resultsHubsAnchored",resultsHubsAnchored) 
 
-
           // first see if we matched the whole thing
+          // console.log("resultsSubjectsComplex",resultsSubjectsComplex)
+          // console.log("heading",heading)
           if (resultsSubjectsComplex.length>0){
             for (let r of resultsSubjectsComplex){
-              if (complexHeading.toLowerCase().trim() == r.label.toLowerCase().trim()){
+              // console.log("r ",r)
+              if (complexHeading.toLowerCase().trim().toLowerCase().trim().replace(/\s+/g,' ').replace(/[\p{P}$+<=>^`|~]/gu, '') == r.label.toLowerCase().trim().toLowerCase().trim().replace(/\s+/g,' ').replace(/[\p{P}$+<=>^`|~]/gu, '')){
                 result.resultType = 'COMPLEX'
                 r.heading = heading
                 result.hit = r
+                // console.log("r",r)
                 foundHeading=true
                 break
               }
@@ -2057,6 +2076,7 @@ const lookupUtil = {
             if (foundHeading){ break }
           }
 
+          
           // // if not see if we matched a LCNAF for the first part
           // if (resultsNames.length>0){
           //   for (let r of resultsNames){
@@ -2077,13 +2097,13 @@ const lookupUtil = {
           subdivisionUris = resultsNamesSubdivision.map(  (r) => { return r.uri } )
           resultsNames = resultsNames.filter((r) => { return subdivisionUris.indexOf(r.uri) } )
           
-
+          // console.log("resultsSubjectsSimple",resultsSubjectsSimple)
 
           // if not see if we matched a simple subject that is not a subdivison
           if (resultsSubjectsSimple.length>0){
             for (let r of resultsSubjectsSimple){
               // lower case, remove end space, make double whitespace into one and remove any punctuation
-              if (heading.label.toLowerCase().trim().replace(/\s+/g,' ').replace(/[\p{P}$+<=>^`|~]/gu, '') == r.label.toLowerCase().trim().replace(/[\p{P}$+<=>^`|~]/gu, '')){
+              if (heading.label.toLowerCase().trim().replace(/\s+/g,' ').replace(/[\p{P}$+<=>^`|~]/gu, '') == r.label.toLowerCase().trim().replace(/[\p{P}$+<=>^`|~]/gu, '') || heading.label.toLowerCase().trim().replace(/\s+/g,' ').replace(/[\p{P}$+<=>^`|~]/gu, '') == r.vlabel.toLowerCase().trim().replace(/[\p{P}$+<=>^`|~]/gu, '')){
                 result.resultType = 'PRECOORD-LCSH'
                 if (!result.hit){ result.hit = [] }
                 r.heading = heading
@@ -2171,14 +2191,16 @@ const lookupUtil = {
           if (heading.type === 'z'){ // geographic
 
             // we need to search both direct and indirect headings
-            [resultsHierarchicalGeographic, resultsGeographicLCNAF, resultsGeographicLCSH] = await Promise.all([
+            [resultsHierarchicalGeographic,resultsHierarchicalGeographicLCSH, resultsGeographicLCNAF, resultsGeographicLCSH] = await Promise.all([
                 this.searchComplex(searchPayloadHierarchicalGeographic),
+                this.searchComplex(searchPayloadHierarchicalGeographicLCSH),
                 this.searchComplex(searchPayloadGeographicLCNAF),
                 this.searchComplex(searchPayloadGeographicLCSH)
                 
             ]);
 
             resultsHierarchicalGeographic = resultsHierarchicalGeographic.filter((r)=>{ return (!r.literal) })
+            resultsHierarchicalGeographicLCSH = resultsHierarchicalGeographicLCSH.filter((r)=>{ return (!r.literal) })
             resultsGeographicLCNAF = resultsGeographicLCNAF.filter((r)=>{ return (!r.literal) })
             resultsGeographicLCSH = resultsGeographicLCSH.filter((r)=>{ return (!r.literal) })
 
@@ -2194,6 +2216,19 @@ const lookupUtil = {
               }
               if (foundHeading){ continue }
             }
+            if (resultsHierarchicalGeographicLCSH.length>0){
+              for (let r of resultsHierarchicalGeographicLCSH){
+                // lower case, remove end space, make double whitespace into one and remove any punctuation
+                if (heading.label.toLowerCase().trim().replace(/\s+/g,' ').replace(/[\p{P}$+<=>^`|~]/gu, '') == r.label.toLowerCase().trim().replace(/[\p{P}$+<=>^`|~]/gu, '')){
+                  r.heading = heading
+                  result.hit.push(r)
+                  
+                  foundHeading = true
+                }
+              }
+              if (foundHeading){ continue }
+            }
+
 
             if (resultsGeographicLCNAF.length>0){
 
@@ -2365,7 +2400,7 @@ const lookupUtil = {
           }
         }
       }
-
+      // console.log("result",result)
       return result
     }    
 
