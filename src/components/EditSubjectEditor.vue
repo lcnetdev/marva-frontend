@@ -1695,6 +1695,7 @@ export default {
       let completeLabel = null
 
         // does it have a component list?
+        let linkModeValue = ""
 
         if (userValue['http://www.loc.gov/mads/rdf/v1#componentList']){
 
@@ -1720,11 +1721,13 @@ export default {
           let id = 0
           let activePosStart = 0
 
+          console.log("userValue['http://www.loc.gov/mads/rdf/v1#componentList']",userValue['http://www.loc.gov/mads/rdf/v1#componentList'])
           for (let component of userValue['http://www.loc.gov/mads/rdf/v1#componentList']){
 
             let label = ''
             let uri = null
             let type = null
+            let marcType = ''
             let literal = false
 
 
@@ -1755,15 +1758,23 @@ export default {
 
               if (component['@type']=='http://www.loc.gov/mads/rdf/v1#Geographic'){
                 type = 'madsrdf:Geographic'
+                marcType = 'z'
               }
               if (component['@type']=='http://www.loc.gov/mads/rdf/v1#Topic'){
                 type = 'madsrdf:Topic'
+                // main topical or subivision if not the first one
+                marcType = 'a'
+                if (id>0){
+                  marcType = 'x'
+                }
               }
               if (component['@type']=='http://www.loc.gov/mads/rdf/v1#GenreForm'){
                 type = 'madsrdf:GenreForm'
+                marcType = 'v'
               }
               if (component['@type']=='http://www.loc.gov/mads/rdf/v1#Temporal'){
                 type = 'madsrdf:Temporal'
+                marcType = 'y'
               }                            
 
             }
@@ -1774,6 +1785,8 @@ export default {
               label = authLabels[id]
             }
 
+
+            linkModeValue = linkModeValue + '$' + marcType + label
 
             let toAdd = {
               label: label,
@@ -1808,6 +1821,7 @@ export default {
           }
 
 
+
           
           completeLabel = componentLabelParts.join('--')
 
@@ -1829,6 +1843,7 @@ export default {
             completeLabel=completeLabel.slice(0,-1)
           }
 
+          linkModeValue = '$a' + completeLabel
 
 
 
@@ -1836,10 +1851,10 @@ export default {
 
 
 
+        console.log("linkModeValue",linkModeValue)
 
 
-
-
+        this.linkModeString=linkModeValue
 
         this.subjectString=completeLabel
 
