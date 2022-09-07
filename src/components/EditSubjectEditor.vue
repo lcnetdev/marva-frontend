@@ -262,7 +262,7 @@
             <span style="color:darkred;" v-if="linkModeResults && linkModeResults.resultType && linkModeResults.resultType == 'ERROR'">{{linkModeResults.msg}}</span>
 
             <div style="display: flex;">
-              <div style="flex:1">
+              <div style="flex:2">
 
                 <h1 v-if="linkModeSearching"> <span id="loading-icon">⟳</span> Working...</h1>
 
