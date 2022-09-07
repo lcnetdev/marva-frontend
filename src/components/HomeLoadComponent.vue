@@ -65,6 +65,10 @@
 
     </template>
 
+    <div v-if="makingRequest">
+      <h1><span id="loading-icon">⟳</span> Working...</h1>      
+    </div>
+
     <div>
       <input style="width: 75%;" class="editor-link-input" ref="urlToLoad" v-model="instanceEditorLink" type="text" id="instance-editor-link" placeholder="Paste Editor Link URL">
     </div>
@@ -321,9 +325,9 @@ export default {
         this.instanceEditorLink = this.instanceTests[Math.floor(Math.random() * this.instanceTests.length)];
 
       }
-
+      this.makingRequest=true
       this.$store.dispatch("fetchBfdbXML", { self: this, url: this.instanceEditorLink }).then(async () => {
-
+        this.makingRequest=false
         if (!this.bfdbXML || this.bfdbXML.substring(0,5) === 'ERROR'){
           alert("There was an error requesting that record")
           return false
@@ -390,9 +394,11 @@ export default {
       if (this.instanceEditorLink==''||this.instanceEditorLink==null){
         this.instanceEditorLink = this.instanceTests[Math.floor(Math.random() * this.instanceTests.length)];
       }    
+      this.makingRequest=true
       this.$store.dispatch("fetchBfdbXML", { self: this, url: this.instanceEditorLink }).then(async () => {
 
         if (!this.bfdbXML || this.bfdbXML.substring(0,5) === 'ERROR'){
+          this.makingRequest=false
           alert("There was an error requesting that record")
           return false
         }else{
@@ -493,7 +499,7 @@ export default {
             }
 
             this.$store.dispatch("setActiveUndo", { self: this, msg:'Loaded record'})
-
+            this.makingRequest=false
             // also save it since it now has a perm URL
             // let xml = await exportXML.toBFXML(this.transformResults)
             // lookupUtil.saveRecord(xml.xlmStringBasic, useProfile.eId)
@@ -616,6 +622,8 @@ export default {
       searchActive: true,
       instanceSelected: 'lc:RT:bf2:Monograph:Instance',
       instanceEditorLink: null,
+
+      makingRequest: false,
 
       // used in lccn search
       lccnToSearch: null,
