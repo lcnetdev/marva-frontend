@@ -1385,7 +1385,12 @@ const lookupUtil = {
           url = url + '?nocache='+Date.now()
         }
 
-        let r = await this.fetchSimpleLookup(url)
+        let r
+        try{
+          r = await this.fetchSimpleLookup(url)
+        }catch (error) {
+          r = 'ERROR: Error fetching record.'
+        }
         return r
     },
 
@@ -1804,25 +1809,44 @@ const lookupUtil = {
         result.resultType = 'ERROR'
         result.msg = 'REGEX Error: That value doesn\'t look like a valid MARC encoded LCSH string (not string)'
       }
+
+
+      // if it doesn't have a $a or ‡a in the start of the string add it
+      // often times copying from a system they dont include the $a 
+      if (lcsh.substring(0,2) != '$a' && lcsh.substring(0,2) != '‡a'){
+        lcsh = '$a' + lcsh
+      }
+      
+
+      // check to see if there are two geographic headings in a row, if there is then 
+      // it is likely a indirect geographic so collapse the $zABCD$zXYZ into $zABCD--XYZ
+      if (lcsh.match(/[$‡]z.*([$‡]z.*)/).length === 2){
+        let secondDollarZ = lcsh.match(/[$‡]z.*([$‡]z.*)/)[1]
+        let collapsedDollarZ = secondDollarZ.replace('$z','--')
+        lcsh = lcsh.replace(secondDollarZ,collapsedDollarZ)
+      }
+
+
       // first we have to test the encoded string to see if it is valid
-      let dollarCount = lcsh.split('$').length-1
+      let dollarCount = lcsh.split(/[$‡]/).length-1
+
       if (dollarCount > 0){
         if (dollarCount == 1){
-          regexResults = lcsh.match(/(\$[avxyz].*)/)
+          regexResults = lcsh.match(/([$‡][avxyz].*)/)
         }else if (dollarCount == 2){
-          regexResults = lcsh.match(/(\$[avxyz].*)(\$[avxyz].*)/)
+          regexResults = lcsh.match(/([$‡][avxyz].*)([$‡][avxyz].*)/)
         }else if (dollarCount == 3){
-          regexResults = lcsh.match(/(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)/)
+          regexResults = lcsh.match(/([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)/)
         }else if (dollarCount == 4){
-          regexResults = lcsh.match(/(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)/)
+          regexResults = lcsh.match(/([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)/)
         }else if (dollarCount == 5){
-          regexResults = lcsh.match(/(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)/)
+          regexResults = lcsh.match(/([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)/)
         }else if (dollarCount == 6){
-          regexResults = lcsh.match(/(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)/)
+          regexResults = lcsh.match(/([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)/)
         }else if (dollarCount == 7){
-          regexResults = lcsh.match(/(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)/)
+          regexResults = lcsh.match(/([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)/)
         }else if (dollarCount == 8){
-          regexResults = lcsh.match(/(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)(\$[avxyz].*)/)
+          regexResults = lcsh.match(/([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)([$‡][avxyz].*)/)
         }else{
           result.resultType = 'ERROR'
           result.msg = 'REGEX Error: That value doesn\'t look like a valid MARC encoded LCSH string (too long? invalid format?)'        
@@ -1831,7 +1855,16 @@ const lookupUtil = {
         try{
           regexResults = regexResults.slice(1,regexResults.length)
           for (let r of regexResults){
-            if (r.slice(0,2).toLowerCase() != '$v' && r.slice(0,2).toLowerCase() != '$a' && r.slice(0,2).toLowerCase() != '$x' && r.slice(0,2).toLowerCase() != '$y' && r.slice(0,2).toLowerCase() != '$z' ){
+            if (r.slice(0,2).toLowerCase() != '$v' && 
+                r.slice(0,2).toLowerCase() != '$a' && 
+                r.slice(0,2).toLowerCase() != '$x' && 
+                r.slice(0,2).toLowerCase() != '$y' && 
+                r.slice(0,2).toLowerCase() != '$z' &&
+                r.slice(0,2).toLowerCase() != '‡v' && 
+                r.slice(0,2).toLowerCase() != '‡a' && 
+                r.slice(0,2).toLowerCase() != '‡x' && 
+                r.slice(0,2).toLowerCase() != '‡y' && 
+                r.slice(0,2).toLowerCase() != '‡z'){
               // console.log(r.slice(0,2).toLowerCase())
               result.resultType = 'ERROR'
               result.msg = 'REGEX Error: That value doesn\'t look like a valid MARC encoded LCSH string (error spliting into seperate values)'
@@ -1854,7 +1887,7 @@ const lookupUtil = {
       let headings = regexResults.slice(0,regexResults.length).map((r)=>{
         return {
           type: r.slice(1,2),
-          label: r.slice(2,r.length).trim().replace(/\.$/gu, '') // remove any trailing periods
+          label: r.slice(2,r.length).trim().replace(/\.[$‡]/gu, '') // remove any trailing periods
         }
       })
 
