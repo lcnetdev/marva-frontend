@@ -1820,7 +1820,7 @@ const lookupUtil = {
 
       // check to see if there are two geographic headings in a row, if there is then 
       // it is likely a indirect geographic so collapse the $zABCD$zXYZ into $zABCD--XYZ
-      if (lcsh.match(/[$‡]z.*([$‡]z.*)/).length === 2){
+      if (lcsh.match(/[$‡]z.*([$‡]z.*)/) && lcsh.match(/[$‡]z.*([$‡]z.*)/).length === 2){
         let secondDollarZ = lcsh.match(/[$‡]z.*([$‡]z.*)/)[1]
         let collapsedDollarZ = secondDollarZ.replace('$z','--')
         lcsh = lcsh.replace(secondDollarZ,collapsedDollarZ)
