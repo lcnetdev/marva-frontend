@@ -1894,7 +1894,7 @@ const lookupUtil = {
       let headings = regexResults.slice(0,regexResults.length).map((r)=>{
         return {
           type: r.slice(1,2),
-          label: r.slice(2,r.length).trim().replace(/\.[$‡]/gu, '') // remove any trailing periods
+          label: r.slice(2,r.length).trim().replace(/\.[$‡]/gu, '').replace(/\.$/,'') // remove any trailing periods
         }
       })
 
