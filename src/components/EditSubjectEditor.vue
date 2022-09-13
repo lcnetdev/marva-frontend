@@ -3,7 +3,7 @@
   <div style="position: relative;">
 
     <div style="position:absolute; right:2em; top:  0.25em; z-index: 100;">
-      <button @click="editorModeSwitch('build')" class="subjectEditorModeButtons" style="margin-right: 1em;">
+      <button @click="editorModeSwitch('build')" data-tooltip="Build LCSH headings using a lookup list" class="subjectEditorModeButtons simptip-position-left" style="margin-right: 1em; background-color: black; height: 2em; display: inline-flex;">
 <!--         <svg fill="#F2F2F2" width="20px" height="20px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
          <g>
           <path d="m30 86.664c0 1.8359-1.5 3.3359-3.332 3.3359h-13.332c-1.8359 0-3.3359-1.5-3.3359-3.3359v-13.332c0-1.832 1.5-3.332 3.3359-3.332h13.332c1.832 0 3.332 1.5 3.332 3.332z"/>
@@ -33,7 +33,7 @@
 
         <span :class="[{ 'subjectEditorModeTextEnabled': (subjectEditorMode==='build') }]">Build Mode</span>
       </button>  
-      <button @click="editorModeSwitch('link')" class="subjectEditorModeButtons">
+      <button @click="editorModeSwitch('link')" data-tooltip="Build LCSH headings by entering a MARC encoded string" class="subjectEditorModeButtons simptip-position-left" style="background-color: black; height: 2em; display: inline-flex;">
 
         <svg fill="#F2F2F2" width="20px" height="20px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
          <g fill-rule="evenodd">
