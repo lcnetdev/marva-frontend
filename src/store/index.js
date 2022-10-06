@@ -1,8 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import parseProfile from "@/lib/parseProfile"
-import lookupUtil from "@/lib/lookupUtil"
-import exportXML from "@/lib/exportXML"
+import parseProfile from "../lib/parseProfile"
+import lookupUtil from "../lib/lookupUtil"
+import exportXML from "../lib/exportXML"
 // import exportXMLWorker from "@/lib/exportXMLWorker"
 
 Vue.use(Vuex);
@@ -508,10 +508,10 @@ export default new Vuex.Store({
     //   commit('LASTACTIVEPROFILE', data.profile)
     // },
 
-    setActiveProfile({ commit, state}, data){
+    async setActiveProfile({ commit, state}, data){
       
       if (data.useDefaultValues){
-        data.profile = parseProfile.populateDefaultValuesIntoUserValues(data.profile)
+        data.profile = await parseProfile.populateDefaultValuesIntoUserValues(data.profile)
       }
 
       data.profile = parseProfile.reorderRTOrder(data.profile)
@@ -553,14 +553,14 @@ export default new Vuex.Store({
 
       if (state.workingOnMiniProfile){
 
-        nap = await parseProfile.setValueComplex(state.activeProfileMini, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, state.contextData, data.structure, data.parentStructure)
+        nap = await parseProfile.setValueComplex(state.activeProfileMini, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, state.contextData, data.structure, data.parentStructure, data.propertyPath)
         nap = parseProfile.rebuildHubURI(nap)
 
         commit('ACTIVEPROFILEMINI', nap)
 
       }else{
 
-        nap = await parseProfile.setValueComplex(state.activeProfile, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, state.contextData, data.structure, data.parentStructure)
+        nap = await parseProfile.setValueComplex(state.activeProfile, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, state.contextData, data.structure, data.parentStructure, data.propertyPath)
         nap = parseProfile.rebuildHubURI(nap)
 
 
@@ -724,7 +724,7 @@ export default new Vuex.Store({
 
     async setValueSubject({ commit, state }, data) { 
 
-      let nap = await parseProfile.setValueSubject(state.activeProfile, data.profileComponet, state.activeProfileName, data.subjectComponents)
+      let nap = await parseProfile.setValueSubject(state.activeProfile, data.profileComponet, state.activeProfileName, data.subjectComponents, data.propertyPath)
 
       commit('ACTIVEPROFILE', nap)
       commit('ACTIVEEDITCOUNTER') 
@@ -802,7 +802,7 @@ export default new Vuex.Store({
 
 
     async removeValueSimple ({ commit, state }, data) {   
-      let results = parseProfile.removeValueSimple(state.activeProfile, data.idGuid, data.labelGuid)
+      let results = parseProfile.removeValueSimple(state.activeProfile, data.ptGuid, data.idGuid, data.labelGuid, data.propertyPath)
       commit('ACTIVEPROFILE', results)
       commit('ACTIVEEDITCOUNTER')    
       commit('ACTIVERECORDSAVED', false)
@@ -816,10 +816,10 @@ export default new Vuex.Store({
       let results
 
       if (state.workingOnMiniProfile){
-        results = await parseProfile.setValueSimple(state.activeProfileMini, data.ptGuid, data.parentURI, data.URI, data.valueURI, data.valueLabel)
+        results = await parseProfile.setValueSimple(state.activeProfileMini, data.ptGuid, data.valueURI, data.valueLabel, data.propertyPath)
         commit('ACTIVEPROFILEMINI', results.currentState)
       }else{
-        results = await parseProfile.setValueSimple(state.activeProfile, data.ptGuid, data.parentURI, data.URI, data.valueURI, data.valueLabel)
+        results = await parseProfile.setValueSimple(state.activeProfile, data.ptGuid, data.valueURI, data.valueLabel, data.propertyPath)
         commit('ACTIVEPROFILE', results.currentState)
         commit('ACTIVEEDITCOUNTER')    
         commit('ACTIVERECORDSAVED', false)
@@ -831,28 +831,25 @@ export default new Vuex.Store({
     },
 
     async setValueLiteral ({ commit, state }, data) {   
-      console.log('-----------setValueLiteral-----------')
-      console.log(data)
-      console.log('-----------setValueLiteral-----------')
+
       let results
 
       if (state.workingOnMiniProfile){
-        results = await parseProfile.setValueLiteral(state.activeProfileMini, data.ptGuid, data.guid, data.parentURI, data.URI, data.value)
+        results = await parseProfile.setValueLiteral(state.activeProfileMini, data.ptGuid, data.guid, data.value, data.propertyPath)
         
         results.currentState = parseProfile.rebuildHubURI(results.currentState)
 
         commit('ACTIVEPROFILEMINI', results.currentState)
       }else{
-        results = await parseProfile.setValueLiteral(state.activeProfile, data.ptGuid, data.guid, data.parentURI, data.URI, data.value)
+        results = await parseProfile.setValueLiteral(state.activeProfile, data.ptGuid, data.guid, data.value, data.propertyPath)
         
-        console.log('HEREEEEE',results)
         results.currentState = parseProfile.rebuildHubURI(results.currentState)
 
         commit('ACTIVEPROFILE', results.currentState)
         commit('ACTIVEEDITCOUNTER')    
         commit('ACTIVERECORDSAVED', false)
 
-        console.log('doing set literal value ', JSON.parse(JSON.stringify(results)))
+        
 
 
 
@@ -927,7 +924,7 @@ export default new Vuex.Store({
 
 
 
-    addInstance ({ commit, state }) {    
+    async addInstance ({ commit, state }) {    
       let nap = parseProfile.addInstance(state.activeProfile)
       nap = parseProfile.reorderRTOrder(nap)
       commit('ACTIVEPROFILE', nap)   

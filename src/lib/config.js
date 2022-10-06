@@ -182,6 +182,10 @@ const config = {
 		'http://id.loc.gov/ontologies/bibframe/hasInstance',
 	], 
 
+	// used in parseProfile isUriALiteral()
+	isLiteral: [
+		'http://www.w3.org/2000/01/rdf-schema#Literal'
+	],
 
 
 

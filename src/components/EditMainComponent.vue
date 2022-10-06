@@ -1,30 +1,123 @@
 <template>
 
   <div class="main-component-container">
+    
+    
+
     <div v-if="nested == false" :id="profileName+'|'+profileCompoent" style="display: flex; position: relative;">
 
       <div style="flex:15;">   
 
 
           <template v-if="hasDynamicTemplate()" >
-
-
-              <!--  -->
             
-             <EditTemplateRefComponent v-on="$listeners"  :ptGuid="ptGuid" :parentURI="parentURI" :key="useKey" :isMini="isMini" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditTemplateRefComponent>
+            <EditTemplateRefComponent v-on="$listeners"  
+              :ptGuid="ptGuid" 
+              :parentURI="parentURI" 
+              :key="useKey" 
+              :isMini="isMini" 
+              :structure="structure"  
+              :parentStructureObj="parentStructureObj" 
+              :parentStructure="parentStructure" 
+              :nested="nested" 
+              :level="levelPlusOne"
+              :propertyPath="buildPropertyPath(propertyPath)"
+
+              :profileName="profileName" 
+              :profileCompoent="profileCompoent" 
+              :activeTemplate="activeTemplate">
+            </EditTemplateRefComponent>
 
 
           </template>
+
           <template v-else>
 
 
-           <EditMetaComponent v-if="returnLookupType(structure) == 'meta'" :isMini="isMini" :ptGuid="ptGuid" :parentURI="parentURI" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditMetaComponent>
-           
-           <!-- <EditAdminComponent v-else-if="returnLookupType(structure) == 'admin'" :ptGuid="ptGuid" :parentURI="parentURI" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditAdminComponent> -->
-           <EditLiteralComponent v-else-if="structure.type == 'literal' || structure.type == 'literal-lang'" :key="useKey" :isMini="isMini" :ptGuid="ptGuid" :parentURI="parentURI"  :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditLiteralComponent>
-           <EditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" :ptGuid="ptGuid" :key="useKey" :isMini="isMini" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested"  :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate" ></EditSimpleLookupComponent>
-           <EditComplexLookupComponent v-on="$listeners" v-else-if="returnLookupType(structure) == 'complex'" :key="useKey" :isMini="isMini" @updated="forceUpdate" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditComplexLookupComponent>          
-           <EditTemplateRefComponent v-on="$listeners" v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" :isMini="isMini" :key="useKey" :ptGuid="ptGuid" :parentURI="parentURI" :structure="structure"  :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent" :activeTemplate="activeTemplate"  ></EditTemplateRefComponent>
+            <EditMetaComponent v-if="returnLookupType(structure) == 'meta'" 
+              :isMini="isMini" 
+              :ptGuid="ptGuid" 
+              :parentURI="parentURI" 
+              :nested="nested" 
+              :structure="structure" 
+              :profileName="profileName" 
+              :level="levelPlusOne"
+              :propertyPath="buildPropertyPath(propertyPath)"
+
+              :profileCompoent="profileCompoent" 
+              :parentStructureObj="parentStructureObj" 
+              :parentStructure="parentStructure" 
+              :activeTemplate="activeTemplate" >
+            </EditMetaComponent>           
+            <!-- <EditAdminComponent v-else-if="returnLookupType(structure) == 'admin'" :ptGuid="ptGuid" :parentURI="parentURI" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :activeTemplate="activeTemplate" ></EditAdminComponent> -->
+            <EditLiteralComponent v-else-if="structure.type == 'literal' || structure.type == 'literal-lang'" 
+              :key="useKey" 
+              :isMini="isMini" 
+              :ptGuid="ptGuid" 
+              :parentURI="parentURI"  
+              :nested="nested" 
+              :structure="structure" 
+              :level="levelPlusOne"
+              :propertyPath="buildPropertyPath(propertyPath)"
+
+              :profileName="profileName" 
+              :profileCompoent="profileCompoent" 
+              :parentStructureObj="parentStructureObj" 
+              :parentStructure="parentStructure" 
+              :activeTemplate="activeTemplate" >
+            </EditLiteralComponent>
+
+            <EditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" 
+              :ptGuid="ptGuid" 
+              :key="useKey" 
+              :isMini="isMini" 
+              :parentURI="parentURI" 
+              :structure="structure"  
+              :parentStructureObj="parentStructureObj" 
+              :parentStructure="parentStructure" 
+              :nested="nested"  
+              :level="levelPlusOne"
+              :propertyPath="buildPropertyPath(propertyPath)"
+
+              :profileName="profileName" 
+              :profileCompoent="profileCompoent" 
+              :activeTemplate="activeTemplate" >
+            </EditSimpleLookupComponent>
+
+            <EditComplexLookupComponent v-on="$listeners" v-else-if="returnLookupType(structure) == 'complex'" 
+              :key="useKey" 
+              :isMini="isMini" 
+              @updated="forceUpdate" 
+              :ptGuid="ptGuid" 
+              :parentURI="parentURI" 
+              :structure="structure"  
+              :parentStructureObj="parentStructureObj" 
+              :parentStructure="parentStructure" 
+              :nested="nested" 
+              :level="levelPlusOne"
+              :propertyPath="buildPropertyPath(propertyPath)"
+
+              :profileName="profileName" 
+              :profileCompoent="profileCompoent" 
+              :activeTemplate="activeTemplate"  >
+            </EditComplexLookupComponent>     
+
+           <EditTemplateRefComponent v-on="$listeners" v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" 
+              :isMini="isMini" 
+              :key="useKey" 
+              :ptGuid="ptGuid" 
+              :parentURI="parentURI" 
+              :structure="structure"  
+              :parentStructureObj="parentStructureObj" 
+              :parentStructure="parentStructure" 
+              :nested="nested" 
+              :level="levelPlusOne"
+              :propertyPath="buildPropertyPath(propertyPath)"
+
+              :profileName="profileName" 
+              :profileCompoent="profileCompoent" 
+              :activeTemplate="activeTemplate">
+            </EditTemplateRefComponent>
         
 
 
@@ -56,12 +149,70 @@
     <!-- This block renders the recursive componets being sent in from the TemplateRefComponent -->
     <div v-else>  
 
-
-
-        <EditLiteralComponent v-if="structure.type == 'literal' || structure.type == 'literal-lang'" :key="useKey" :isMini="isMini" :ptGuid="ptGuid"  :parentURI="parentURI" :activeTemplate="activeTemplate" :nested="nested" :structure="structure" :profileName="profileName" :profileCompoent="profileCompoent" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" ></EditLiteralComponent>
-        <EditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" :key="useKey" :ptGuid="ptGuid" :isMini="isMini" :parentURI="parentURI" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested"  :profileName="profileName" :profileCompoent="profileCompoent"  ></EditSimpleLookupComponent>
-        <EditComplexLookupComponent v-on="$listeners" v-else-if="returnLookupType(structure) == 'complex'" :key="useKey" :isMini="isMini" @updated="forceUpdate" :ptGuid="ptGuid" :parentURI="parentURI" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :nested="nested" :profileName="profileName" :profileCompoent="profileCompoent"   ></EditComplexLookupComponent>          
-        <EditTemplateRefComponent v-on="$listeners" v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" :isMini="isMini" :key="useKey" :ptGuid="ptGuid" :parentURI="parentURI" :activeTemplate="activeTemplate" :structure="structure" :parentStructureObj="parentStructureObj" :parentStructure="parentStructure" :profileName="profileName" :profileCompoent="profileCompoent" :nested="nested"></EditTemplateRefComponent>
+        <EditLiteralComponent v-if="structure.type == 'literal' || structure.type == 'literal-lang'" 
+          :key="useKey" 
+          :isMini="isMini" 
+          :ptGuid="ptGuid"  
+          :parentURI="parentURI" 
+          :activeTemplate="activeTemplate" 
+          :nested="nested" 
+          :level="levelPlusOne"
+          :propertyPath="buildPropertyPath(propertyPath)"
+          
+          :structure="structure" 
+          :profileName="profileName" 
+          :profileCompoent="profileCompoent" 
+          :parentStructureObj="parentStructureObj" 
+          :parentStructure="parentStructure" >
+            
+        </EditLiteralComponent>
+        <EditSimpleLookupComponent v-else-if="returnLookupType(structure) == 'simple'" 
+          :key="useKey" 
+          :ptGuid="ptGuid" 
+          :isMini="isMini" 
+          :parentURI="parentURI" 
+          :activeTemplate="activeTemplate" 
+          :structure="structure" 
+          :parentStructureObj="parentStructureObj" 
+          :parentStructure="parentStructure" 
+          :nested="nested"  
+          :level="levelPlusOne"
+          :propertyPath="buildPropertyPath(propertyPath)"
+          
+          :profileName="profileName" 
+          :profileCompoent="profileCompoent"  >
+        </EditSimpleLookupComponent>
+        <EditComplexLookupComponent v-on="$listeners" v-else-if="returnLookupType(structure) == 'complex'" 
+          :key="useKey" 
+          :isMini="isMini" @updated="forceUpdate" 
+          :ptGuid="ptGuid" 
+          :parentURI="parentURI" 
+          :activeTemplate="activeTemplate" 
+          :structure="structure" 
+          :parentStructureObj="parentStructureObj" 
+          :parentStructure="parentStructure" 
+          :nested="nested" 
+          :level="levelPlusOne"
+          :propertyPath="buildPropertyPath(propertyPath)"
+          
+          :profileName="profileName" 
+          :profileCompoent="profileCompoent"   >
+        </EditComplexLookupComponent>          
+        <EditTemplateRefComponent v-on="$listeners" v-else-if="structure.valueConstraint.valueTemplateRefs.length > 0" 
+          :isMini="isMini" 
+          :key="useKey" 
+          :ptGuid="ptGuid" 
+          :parentURI="parentURI" 
+          :activeTemplate="activeTemplate" 
+          :structure="structure" 
+          :level="levelPlusOne"
+          :propertyPath="buildPropertyPath(propertyPath)"
+          
+          :parentStructureObj="parentStructureObj" 
+          :parentStructure="parentStructure" 
+          :profileName="profileName" 
+          :profileCompoent="profileCompoent" :nested="nested">
+        </EditTemplateRefComponent>
 
 
 
@@ -145,7 +296,10 @@ export default {
     activeTemplate: Object,
     parentURI: String,
     ptGuid: String,
-    dynamic: String
+    dynamic: String,
+    level: Number,
+    
+    propertyPath: Array,
 
   },
   data: function() {
@@ -154,6 +308,7 @@ export default {
       labels: labels,
       displayDebug: false,
       useKey: short.generate(),
+      levelPlusOne: this.plusOne(this.level),
 
       // is a lookup url require a simple or complex lookup interface, and its options
       lookupType:config.lookupConfig
@@ -168,6 +323,31 @@ export default {
 
 
   methods: {
+
+    buildPropertyPath: function(currentPath){
+      if (!currentPath){
+        currentPath = []
+      }
+      // if it is at level one it is a new bnode, but we might have
+      // already had other bnodes in this tree, so go through an delete eveything 
+      // that isn't level zero
+      if (this.level==1){
+        currentPath = currentPath.filter((v) => { return (v.level==0) })        
+      }
+
+      // we also want to remove any properties at the current level of THIS property
+      // since it is a sibling and unrelated to the structure of this hierarchy
+      // so only keep things with a lower level
+      currentPath = currentPath.filter((v) => { return (v.level<this.level) })  
+
+
+      currentPath.push({level: this.level, propertyURI: this.structure.propertyURI})
+      return currentPath
+    },
+
+    plusOne: function(val){
+     return val + 1 
+   },
 
     prettifyXml: uiUtils.prettifyXml,
 

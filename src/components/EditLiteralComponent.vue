@@ -87,6 +87,10 @@
   <div v-else-if="hideField == false">
 
 
+
+
+
+
         <Keypress key-event="keydown" :multiple-keys="[{keyCode: 68, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="openDiacriticSelect" />
         <Keypress key-event="keydown" :multiple-keys="[{keyCode: 86, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="openEditor" />
        <Keypress key-event="keydown" :multiple-keys="[{keyCode: 90, modifiers: ['shiftKey','ctrlKey','altKey'],preventDefault: true}]" @success="addAnotherLiteral" />
@@ -203,8 +207,9 @@ export default {
     parentURI: String,
     nested: Boolean,
     isMini: Boolean,
-    ptGuid: String
-
+    ptGuid: String,
+    level: Number,
+    propertyPath: Array
   },
 
   methods: {
@@ -387,8 +392,7 @@ export default {
         event = event.event
       }      
       this.showDiacriticsGuid=event.target.dataset.guid
-      // console.log(this.showDiacriticsGuid,event.target,this.$refs[`input_${this.showDiacriticsGuid}`])
-      // console.log(this.$refs)
+      
       // we are using global dicratics so stop if this is one of the other components and not this one
       if (!this.$refs[`input_${this.showDiacriticsGuid}`]){
         return false
@@ -697,11 +701,13 @@ export default {
 
     },
 
-
+    /**
+    * Change the value of the field, via state change and parseProfile method
+    * @param {object} event - the event obj passed
+    * @param {string} inputV - the current value of the input element
+    * @return {void}
+    */
     change: function(event,inputV){
-
-
-
 
 
       // find where we are inserting the value into
@@ -712,20 +718,16 @@ export default {
         insertAt=this.$refs[`input_${inputV.guid}`][0].selectionStart
       }            
 
-      // console.log("======================")
-      // console.log(event,inputV,insertAt)
-
-
 
       if (diacrticsVoyagerMacroExpress[event.code] && this.settingsDPackVoyager){
 
-        console.log("diacrticsVoyagerMacroExpress[event.code]",diacrticsVoyagerMacroExpress[event.code])
+        
 
         for (let macro of diacrticsVoyagerMacroExpress[event.code]){
 
           if (event.ctrlKey == macro.ctrlKey && event.altKey == macro.altKey && event.shiftKey == macro.shiftKey){
 
-            console.log("DOIBNG",macro)
+            
             event.preventDefault();
 
             this.$refs["input"+ '_' + inputV.guid][0].style.color="blue"
@@ -962,16 +964,19 @@ export default {
         parentURI = this.parentStructureObj.propertyURI
       }
 
+    
+      // don't fire on command keys, heres a few common ones to ignore
+      // when they do SHIFT+A the A gets its own keyup and so does the shift, so ignore the shift for example
+      if (event && event.key && ['Shift','Control','Meta','Alt','CapsLock'].indexOf(event.key) > -1){
+        return false
+      }
 
-
-      this.$store.dispatch("setValueLiteral", { self: this, ptGuid: this.ptGuid, guid: useGuid, parentURI:parentURI, URI: this.structure.propertyURI, value: inputV.value }).then((newGuid) => {
-        
-
+      this.$store.dispatch("setValueLiteral", { self: this, ptGuid: this.ptGuid, guid: useGuid, parentURI:parentURI, URI: this.structure.propertyURI, value: inputV.value, propertyPath: this.propertyPath }).then((newGuid) => {
         // this.inputValueLast = this.inputValue
         // if this is here then we created a new value, store it for future edits
         if(newGuid){
+          
           inputV.guid = newGuid
-
         }
 
         // but if it is explictly set to false that means we just unset the value, so reset the guid here
@@ -1001,112 +1006,202 @@ export default {
         data = this.activeProfile.rt[this.profileName].pt[this.profileCompoent]  
       }
 
+      // this will keep track of all the guids for data found
+      // it is used below to reconcile the component cache of the current values and
+      // what is in state, which becomes unaligned when things like undos happen
       let allGuidsFound = []
 
 
+      // depending on the depth 
+      // we know where to look because we have the property path
+      if (this.propertyPath.length === 1){
+          let L0URI = this.propertyPath[0].propertyURI
+          if (data.userValue[L0URI]){
+              for (let uv of data.userValue[L0URI]){
+                    allGuidsFound.push(uv['@guid'])
+                    // check that it doesn't yet exist, if it does just update value
+                    if (this.inputValue.map((v)=> {return v.guid} ).includes(uv['@guid'])){
+                        for (let iv of this.inputValue){
+                          if (iv.guid == uv['@guid']){
+                            
+                            if (typeof uv[L0URI] == 'object' && uv[L0URI] !== null && uv[L0URI][0][L0URI] ){
+                              iv.value = uv[L0URI][0][L0URI]
+                            }else{
+                              iv.value = uv[L0URI]
+                            }
 
-      // test to see if this property exists in the user value at the parent structure / properturi lvl
-      if (this.parentStructureObj && data.userValue[this.parentStructureObj.propertyURI]){
+                          }
+                        }                  
+                    }else{
+
+                      if (typeof uv[L0URI] == 'object' && uv[L0URI] !== null && uv[L0URI][0][L0URI] ){
+                        this.inputValue.push({value:uv[L0URI][0][L0URI], guid:uv['@guid'] })
+                      }else{
+                        this.inputValue.push({value:uv[L0URI], guid:uv['@guid'] })
+                      }
+                    }
+              }
+          }
+      }else if (this.propertyPath.length === 2){
+          let L0URI = this.propertyPath[0].propertyURI
+          let L1URI = this.propertyPath[1].propertyURI
+          if (data.userValue[L0URI] && data.userValue[L0URI][0] && data.userValue[L0URI][0][L1URI]){
+              for (let uv of data.userValue[L0URI][0][L1URI]){
+                    allGuidsFound.push(uv['@guid'])
+                    // check that it doesn't yet exist, if it does just update value
+                    if (this.inputValue.map((v)=> {return v.guid} ).includes(uv['@guid'])){
+                        for (let iv of this.inputValue){
+                          if (iv.guid == uv['@guid']){
+                            iv.value = uv[L1URI]
+                          }
+                        }                  
+                    }else{
+                      this.inputValue.push({value:uv[L1URI], guid:uv['@guid'] })
+                    }
+              }
+          }
+      }else if (this.propertyPath.length === 3){
+          let L0URI = this.propertyPath[0].propertyURI
+          let L1URI = this.propertyPath[1].propertyURI
+          let L2URI = this.propertyPath[2].propertyURI
+
+          if (data.userValue[L0URI] && data.userValue[L0URI][0] && data.userValue[L0URI][0][L1URI] && data.userValue[L0URI][0][L1URI][0] && data.userValue[L0URI][0][L1URI][0][L2URI]){
+              for (let uv of data.userValue[L0URI][0][L1URI][0][L2URI]){
+                    allGuidsFound.push(uv['@guid'])
+                    // check that it doesn't yet exist, if it does just update value
+                    if (this.inputValue.map((v)=> {return v.guid} ).includes(uv['@guid'])){
+                        for (let iv of this.inputValue){
+                          if (iv.guid == uv['@guid']){
+                            iv.value = uv[L2URI]
+                          }
+                        }                  
+                    }else{
+                      this.inputValue.push({value:uv[L2URI], guid:uv['@guid'] })
+                    }
+              }
+          }
+
+      }else if (this.propertyPath.length === 4){
+
+          let L0URI = this.propertyPath[0].propertyURI
+          let L1URI = this.propertyPath[1].propertyURI
+          let L2URI = this.propertyPath[2].propertyURI
+          let L3URI = this.propertyPath[3].propertyURI
+
+          if (data.userValue[L0URI] && data.userValue[L0URI][0] && data.userValue[L0URI][0][L1URI] && data.userValue[L0URI][0][L1URI][0] && data.userValue[L0URI][0][L1URI][0][L2URI] && data.userValue[L0URI][0][L1URI][0][L2URI][0] && data.userValue[L0URI][0][L1URI][0][L2URI][0][L3URI]){
+              for (let uv of data.userValue[L0URI][0][L1URI][0][L2URI][0][L3URI]){
+                    allGuidsFound.push(uv['@guid'])
+                    // check that it doesn't yet exist, if it does just update value
+                    if (this.inputValue.map((v)=> {return v.guid} ).includes(uv['@guid'])){
+                        for (let iv of this.inputValue){
+                          if (iv.guid == uv['@guid']){
+                            iv.value = uv[L3URI]
+                          }
+                        }                  
+                    }else{
+                      this.inputValue.push({value:uv[L3URI], guid:uv['@guid'] })
+                    }
+              }
+          }
+      }else{
+          console.error("Error trying to update literal value but cannot find guid")
+      }
+
+
+
+      // // test to see if this property exists in the user value at the parent structure / properturi lvl
+      // if (this.parentStructureObj && data.userValue[this.parentStructureObj.propertyURI]){
         
-        for (let parentValueArray of data.userValue[this.parentStructureObj.propertyURI]){
-          if (parentValueArray[this.structure.propertyURI]){          
-            for (let childValue of parentValueArray[this.structure.propertyURI]){
-              if (childValue[this.structure.propertyURI]){
+      //   for (let parentValueArray of data.userValue[this.parentStructureObj.propertyURI]){
+      //     if (parentValueArray[this.structure.propertyURI]){          
+      //       for (let childValue of parentValueArray[this.structure.propertyURI]){
+      //         if (childValue[this.structure.propertyURI]){
   
 
 
 
-                    allGuidsFound.push(childValue['@guid'])
-                    // check that it doesn't yet exist, if it does just update value
-                    if (this.inputValue.map((v)=> {return v.guid} ).includes(childValue['@guid'])){
-                        for (let iv of this.inputValue){
-                          if (iv.guid == childValue['@guid']){
-                            iv.value = childValue[this.structure.propertyURI]
-                          }
-                        }                  
-                    }else{
-                      this.inputValue.push({value:childValue[this.structure.propertyURI], guid:childValue['@guid'] })
-                    }
+      //               allGuidsFound.push(childValue['@guid'])
+      //               // check that it doesn't yet exist, if it does just update value
+      //               if (this.inputValue.map((v)=> {return v.guid} ).includes(childValue['@guid'])){
+      //                   for (let iv of this.inputValue){
+      //                     if (iv.guid == childValue['@guid']){
+      //                       iv.value = childValue[this.structure.propertyURI]
+      //                     }
+      //                   }                  
+      //               }else{
+      //                 this.inputValue.push({value:childValue[this.structure.propertyURI], guid:childValue['@guid'] })
+      //               }
 
 
 
 
-              }
-            }
-          }
-        }
-      }else if (!this.parentStructureObj && data.userValue[this.structure.propertyURI]){
+      //         }
+      //       }
+      //     }
+      //   }
+      // }else if (!this.parentStructureObj && data.userValue[this.structure.propertyURI]){
         
-        // if it is not a nested template literal then it should be a first lvl one
-        for (let value of data.userValue[this.structure.propertyURI]){
-          if (value[this.structure.propertyURI]){
+      //   // if it is not a nested template literal then it should be a first lvl one
+      //   for (let value of data.userValue[this.structure.propertyURI]){
+      //     if (value[this.structure.propertyURI]){
          
 
 
-              allGuidsFound.push(value['@guid'])
-              // check that it doesn't yet exist, if it does just update value
-              if (this.inputValue.map((v)=> {return v.guid} ).includes(value['@guid'])){
-                  for (let iv of this.inputValue){
-                    if (iv.guid == value['@guid']){
-                      iv.value = value[this.structure.propertyURI]
-                    }
-                  }                  
-              }else{
-                this.inputValue.push({value:value[this.structure.propertyURI], guid:value['@guid'] })
-              }
+      //         allGuidsFound.push(value['@guid'])
+      //         // check that it doesn't yet exist, if it does just update value
+      //         if (this.inputValue.map((v)=> {return v.guid} ).includes(value['@guid'])){
+      //             for (let iv of this.inputValue){
+      //               if (iv.guid == value['@guid']){
+      //                 iv.value = value[this.structure.propertyURI]
+      //               }
+      //             }                  
+      //         }else{
+      //           this.inputValue.push({value:value[this.structure.propertyURI], guid:value['@guid'] })
+      //         }
 
 
 
 
-          }
-        }
-      }else if (this.parentStructureObj && this.parentStructureObj.propertyURI == data.userValue['@root'] && data.userValue[this.structure.propertyURI]){
+      //     }
+      //   }
+      // }else if (this.parentStructureObj && this.parentStructureObj.propertyURI == data.userValue['@root'] && data.userValue[this.structure.propertyURI]){
 
 
-        for (let value of data.userValue[this.structure.propertyURI]){
-          if (value[this.structure.propertyURI]){
+      //   for (let value of data.userValue[this.structure.propertyURI]){
+      //     if (value[this.structure.propertyURI]){
 
 
-                allGuidsFound.push(value['@guid'])
+      //           allGuidsFound.push(value['@guid'])
 
-                // check that it doesn't yet exist, if it does just update value
-                if (this.inputValue.map((v)=> {return v.guid} ).includes(value['@guid'])){
-                    for (let iv of this.inputValue){
-                      if (iv.guid == value['@guid']){
-                        iv.value = value[this.structure.propertyURI]
-                      }
-                    }                  
-                }else{
-                  this.inputValue.push({value:value[this.structure.propertyURI], guid:value['@guid'] })
-                }
+      //           // check that it doesn't yet exist, if it does just update value
+      //           if (this.inputValue.map((v)=> {return v.guid} ).includes(value['@guid'])){
+      //               for (let iv of this.inputValue){
+      //                 if (iv.guid == value['@guid']){
+      //                   iv.value = value[this.structure.propertyURI]
+      //                 }
+      //               }                  
+      //           }else{
+      //             this.inputValue.push({value:value[this.structure.propertyURI], guid:value['@guid'] })
+      //           }
 
-          }
-        }
+      //     }
+      //   }
 
-      }
+      // }
 
 
       // look at the config file to understand this flag
       if (config.profileHacks.agentsHideManualRDFLabelIfURIProvided.enabled){
         if (this.parentStructureObj && this.parentStructureObj.propertyURI == 'http://id.loc.gov/ontologies/bibframe/agent'){
           if (this.structure.propertyURI=='http://www.w3.org/2000/01/rdf-schema#label'){
-            // always hide it
-            // if (bnodeHasURI){
-
               if (
                   !this.parentStructureObj.parentId.includes('Information') &&
                   !this.structure.parentId.includes('PubPlace') &&
                   !this.structure.parentId.includes('PubName') &&
-                  !this.structure.parentId.includes(':Provision:')
-
-                  
+                  !this.structure.parentId.includes(':Provision:')                
                   ){
                 this.hideField = true
               }
-
-
-
-            // }
           }
         }
 
@@ -1144,9 +1239,8 @@ export default {
       }
 
 
-
-      // check to make sure if it is a rtl lang that there is room for the buttons, so they don't over lap the text
       
+      // check to make sure if it is a rtl lang that there is room for the buttons, so they don't over lap the text
       for (let inputV of this.inputValue){
 
 
@@ -1250,6 +1344,8 @@ export default {
     }
   },
   created: function(){
+
+    
 
     this.refreshInputDisplay()
 

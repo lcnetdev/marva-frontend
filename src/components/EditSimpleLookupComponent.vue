@@ -44,6 +44,8 @@
 
 
   <div v-else style="position: relative;">
+
+
       <div  v-bind:class="['component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border temp-icon-search']" :style="{'background-color': (structure.dynamic) ? 'auto' : 'auto' }">          
         <form autocomplete="off" v-on:submit.prevent style="">
           <div style="">
@@ -117,7 +119,10 @@ export default {
     activeTemplate: Object,
     ptGuid: String,
     parentStructureObj: Object,
-    profileCompoent: String
+    profileCompoent: String,
+    level: Number,
+    bnodeProperty: String,
+    propertyPath: Array,
 
   },
   components: {    
@@ -158,7 +163,7 @@ export default {
 
   created: function(){
 
- 
+   
     this.refreshInputDisplay()    
 
 
@@ -204,300 +209,683 @@ export default {
 
       this.activeLookupValue = []
 
-      let currentUserValue
+      let userValue
 
       if (this.isMini){
-        currentUserValue = this.activeProfileMini.rt[this.profileName].pt[this.profileCompoent].userValue
+        userValue = this.activeProfileMini.rt[this.profileName].pt[this.profileCompoent].userValue
       }else{
-        currentUserValue = this.activeProfile.rt[this.profileName].pt[this.profileCompoent].userValue  
+        userValue = this.activeProfile.rt[this.profileName].pt[this.profileCompoent].userValue  
       }
       
-
+      
+      
+      
+      
 
       let possibleLiteralProperties = ['http://www.w3.org/1999/02/22-rdf-syntax-ns#value', 'http://www.w3.org/2000/01/rdf-schema#label', 'http://id.loc.gov/ontologies/bibframe/code','http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
-      let foundLabelPropertiesTopLevelCount = possibleLiteralProperties.filter((p) => { return (Object.keys(currentUserValue).indexOf(p) > -1) ? true : false }).length
+      
 
-      // find the level we are going to work with, it could be the root level or it 
-      // could be like Role and stored as a blank node in the data structure
-      // let useValue = null
+      // filter out any bnodes with that guid starting from the bottom of the hiearchy
+      // then go through and check if we left an empty bnode hiearchy and if so delete it
+      if (this.propertyPath.length==4){
+          let L0URI = this.propertyPath[0].propertyURI
+          let L1URI = this.propertyPath[1].propertyURI
+          let L2URI = this.propertyPath[2].propertyURI
+          let L3URI = this.propertyPath[3].propertyURI
+          if (userValue[L0URI] && userValue[L0URI][0] && userValue[L0URI][0][L1URI] && userValue[L0URI][0][L1URI][0] && userValue[L0URI][0][L1URI][0][L2URI] && userValue[L0URI][0][L1URI][0][L2URI][0] && userValue[L0URI][0][L1URI][0][L2URI][0][L3URI]){
+            for (let v of userValue[L0URI][0][L1URI][0][L2URI][0][L3URI]){
+              let label = null 
+              let labelGuid = null
+              let uri = null
+              let uriGuid = null 
 
-
-      if (currentUserValue && currentUserValue['@root'] && currentUserValue['@root'] == this.structure.propertyURI ){
-
-
-        // it is the root user value, we need to find its URI if it has one and what the label is
-        // but the label could be stored all over and the URI might be stored at the label level as well :(
-
-        let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(currentUserValue).indexOf(p) > -1) ? true : false })
-
-        // does it have any data?
-        if (currentUserValue['@id'] || foundLabelProperties.length > 0){
-
-          // so it has at least a URI or a label property
-
-          // try to find the label
-
-          let label = null
-          let labelGuid = null
-          let uri = null
-          let uriGuid = null
-
-          for (let p of foundLabelProperties){
-
-            if (currentUserValue[p]){
-              for (let value of currentUserValue[p]){
-                if (value[p]){
-                  label = value[p]
-                  labelGuid = value['@guid']
+              for (let aKey in v){
+                if (possibleLiteralProperties.indexOf(aKey)>-1){
+                  if (v[aKey] && v[aKey][0][aKey]){
+                    label = v[aKey][0][aKey]
+                    labelGuid = v['@guid']
+                  }
                 }
-                // it could also store the URI in the #value or something
-                if (value['@id']){
-                  uri= value['@id']
-                  uriGuid = value['@guid']
+                if (v['@id']){
+                  uri = v['@id']
+                  uriGuid = v['@guid']
                 }
               }
+              if (!label){
+                // no label was found, just use the URI and it will get dereferenced by the componet
+                if (uri){
+                  label = uri
+                }
+              }
+              this.activeLookupValue.push({
+                'http://www.w3.org/2000/01/rdf-schema#label' : label,
+                uri : uri,
+                uriGuid: uriGuid,
+                labelGuid: labelGuid
+              })
             }
           }
+      }
 
-          if (currentUserValue['@id'] && uri &&  currentUserValue['@id'] != uri){
-            console.warn('---------------------------------------------')
-            console.warn('There is a URI at the root level and also in the label? Which to use?')
-            console.warn(currentUserValue)
-            console.warn(this.structure)
-            console.warn('---------------------------------------------')
-          }
+      if (this.propertyPath.length==3){
+          let L0URI = this.propertyPath[0].propertyURI
+          let L1URI = this.propertyPath[1].propertyURI
+          let L2URI = this.propertyPath[2].propertyURI
 
-          if (currentUserValue['@id']){
-            uri = currentUserValue['@id']
-            uriGuid = currentUserValue['@guid']
-          }
+          if (userValue[L0URI] && userValue[L0URI][0] && userValue[L0URI][0][L1URI] && userValue[L0URI][0][L1URI][0] && userValue[L0URI][0][L1URI][0][L2URI]){
+            for (let v of userValue[L0URI][0][L1URI][0][L2URI]){
+              let label = null 
+              let labelGuid = null
+              let uri = null
+              let uriGuid = null 
 
-
-          if (!label){
-
-            // no label was found, just use the URI and it will get dereferenced by the componet
-            if (uri){
-              label = uri
+              for (let aKey in v){
+                if (possibleLiteralProperties.indexOf(aKey)>-1){
+                  if (v[aKey] && v[aKey][0][aKey]){
+                    label = v[aKey][0][aKey]
+                    labelGuid = v['@guid']
+                  }
+                }
+                if (v['@id']){
+                  uri = v['@id']
+                  uriGuid = v['@guid']
+                }
+              }
+              if (!label){
+                // no label was found, just use the URI and it will get dereferenced by the componet
+                if (uri){
+                  label = uri
+                }
+              }
+              this.activeLookupValue.push({
+                'http://www.w3.org/2000/01/rdf-schema#label' : label,
+                uri : uri,
+                uriGuid: uriGuid,
+                labelGuid: labelGuid
+              })
             }
-
           }
+      }
+      if (this.propertyPath.length==2){
+          let L0URI = this.propertyPath[0].propertyURI
+          let L1URI = this.propertyPath[1].propertyURI
 
-          // we just use rdf:label internally here, but it could be any of the label properties above
-          // we keep the guid so the predicate doesn't really matter
-          this.activeLookupValue.push({
-            'http://www.w3.org/2000/01/rdf-schema#label' : label,
-            uri : uri,
-            uriGuid: uriGuid,
-            labelGuid: labelGuid
+          if (userValue[L0URI] && userValue[L0URI][0] && userValue[L0URI][0][L1URI]){
+            for (let v of userValue[L0URI][0][L1URI]){
+              let label = null 
+              let labelGuid = null
+              let uri = null
+              let uriGuid = null 
 
-          })
+              for (let aKey in v){
+                if (possibleLiteralProperties.indexOf(aKey)>-1){
+                  if (v[aKey] && v[aKey][0][aKey]){
+                    label = v[aKey][0][aKey]
+                    labelGuid = v['@guid']
+                  }
+                }
+                if (v['@id']){
+                  uri = v['@id']
+                  uriGuid = v['@guid']
+                }
+              }
+              if (!label){
+                // no label was found, just use the URI and it will get dereferenced by the componet
+                if (uri){
+                  label = uri
+                }
+              }
+              this.activeLookupValue.push({
+                'http://www.w3.org/2000/01/rdf-schema#label' : label,
+                uri : uri,
+                uriGuid: uriGuid,
+                labelGuid: labelGuid
+              })
+              
+            }
+          }
+      }
+      if (this.propertyPath.length==1){
+          let L0URI = this.propertyPath[0].propertyURI
+
+          if (userValue[L0URI]){
+            for (let v of userValue[L0URI]){
+              let label = null 
+              let labelGuid = null
+              let uri = null
+              let uriGuid = null 
+
+              for (let aKey in v){
+                if (possibleLiteralProperties.indexOf(aKey)>-1){
+                  if (v[aKey] && v[aKey][0][aKey]){
+                    label = v[aKey][0][aKey]
+                    labelGuid = v['@guid']
+                  }
+                }
+                if (v['@id']){
+                  uri = v['@id']
+                  uriGuid = v['@guid']
+                }
+              }
+              if (!label){
+                // no label was found, just use the URI and it will get dereferenced by the componet
+                if (uri){
+                  label = uri
+                }
+              }
+              this.activeLookupValue.push({
+                'http://www.w3.org/2000/01/rdf-schema#label' : label,
+                uri : uri,
+                uriGuid: uriGuid,
+                labelGuid: labelGuid
+              })
+            }
+          }
+      }
+
+      // if (propertyPath.length==3){
+      //     let L0URI = propertyPath[0].propertyURI
+      //     let L1URI = propertyPath[1].propertyURI
+      //     let L2URI = propertyPath[2].propertyURI
+      //     console.log("here userValue[L0URI][0][L1URI][0][L2URI]",userValue[L0URI][0][L1URI][0][L2URI])
+      //     let f = userValue[L0URI][0][L1URI][0][L2URI].filter((v=>{ return (v['@guid'] && v['@guid'] != idGuid && v['@guid'] != labelGuid)}))
+      //     console.log("f is",f)
+          
+      //     if (f.length < userValue[L0URI][0][L1URI][0][L2URI].length){
+      //         removed = true
+      //         userValue[L0URI][0][L1URI][0][L2URI] = f
+      //     }
 
 
-        }
+      //     if (userValue[L0URI][0][L1URI][0][L2URI].length==0){
+      //         delete userValue[L0URI][0][L1URI][0][L2URI]
+      //     }
+
+      //     // then check to see if the parent bnode of the thing we just deleted is now an empty bnode
+      //     // if so then remove it. filter on any of the keys that are not important if the bnode is empty and if it is zero then there is nothing to save
+      //     if (Object.keys(userValue[L0URI][0][L1URI][0]).filter((k) => { return (k != '@guid' && k != '@id' && k !='@type' && k !='@flags') }).length==0){
+      //         userValue[L0URI][0][L1URI].pop()
+      //     }
+
+      // }
+      // if (propertyPath.length==2){
+      //     let L0URI = propertyPath[0].propertyURI
+      //     let L1URI = propertyPath[1].propertyURI
+
+      //     console.log("userValue[L0URI]",userValue[L0URI])
+      //     let f = userValue[L0URI][0][L1URI].filter((v=>{ return (v['@guid'] && v['@guid'] != idGuid && v['@guid'] != labelGuid)}))
+      //     if (f.length < userValue[L0URI][0][L1URI].length){
+      //         removed = true
+      //         userValue[L0URI][0][L1URI] = f
+      //     }
+
+
+      //     if (userValue[L0URI][0][L1URI].length==0){
+      //         delete userValue[L0URI][0][L1URI]
+      //     }
+
+      //     // then check to see if the parent bnode of the thing we just deleted is now an empty bnode
+      //     // if so then remove it. filter on any of the keys that are not important if the bnode is empty and if it is zero then there is nothing to save
+      //     if (Object.keys(userValue[L0URI][0]).filter((k) => { return (k != '@guid' && k != '@id' && k !='@type' && k !='@flags') }).length==0){
+      //         userValue[L0URI].pop()
+      //     }
+
+
+
+      // }
+      // if (propertyPath.length==1){
+      //     let L0URI = propertyPath[0].propertyURI
+
+      //     let f = userValue[L0URI].filter((v=>{ return (v['@guid'] && v['@guid'] != idGuid && v['@guid'] != labelGuid)}))
+      //     if (f.length < userValue[L0URI].length){
+      //         removed = true
+      //         userValue[L0URI] = f
+      //     }
+
+
+      //     if (userValue[L0URI].length==0){
+      //         delete userValue[L0URI]
+      //     }
+
+
+
+      // }
+
+
+
+      // // we are adding the rdfs:label and the @id to this property
+      // // we just need to know where to put it
+
+      // // a reference to allow us to write to the end of the hierarchy
+      // let currentUserValuePos = currentUserValue
+
+      // // used as a reference to the last postion's parent, so we can easily add a new sibling
+      // let currentUserValuePosParent = null
+      // // debugger // eslint-disable-line no-debugger
+
+      // for (let p of this.propertyPath){
+      //   if (currentUserValuePos[p.propertyURI]){
+      //     currentUserValuePosParent = currentUserValuePos[p.propertyURI]
+      //     if (currentUserValuePos[p.propertyURI][0]){
+      //       currentUserValuePos = currentUserValuePos[p.propertyURI][0]
+      //     }
+      //   }
+      // }
+
+      // if (currentUserValuePosParent){
+      //   for (let v of currentUserValuePosParent){
+          
+      //     let label = null 
+      //     let labelGuid = null
+      //     let uri = null
+      //     let uriGuid = null        
+      //     // these are all the values at the last node of the hierarchy
+      //     for (let aKey in v){
+
+      //       if (this.propertyPath[0].propertyURI === 'http://id.loc.gov/ontologies/bibframe/contribution') console.log(aKey, v[aKey])
+
+      //       if (possibleLiteralProperties.indexOf(aKey)>-1){
+      //         if (this.propertyPath[0].propertyURI === 'http://id.loc.gov/ontologies/bibframe/contribution') console.log("Found",aKey,v)
+      //         if (v[aKey]){
+      //           label = v[aKey]
+      //           labelGuid = v['@guid']
+      //         }
+      //       }
+
+      //       if (v['@id']){
+      //         uri = v['@id']
+      //         uriGuid = v['@guid']
+      //       }
+
+      //     }
+
+      //     if (!label){
+      //       // no label was found, just use the URI and it will get dereferenced by the componet
+      //       if (uri){
+      //         label = uri
+      //       }
+      //     }
+      //     this.activeLookupValue.push({
+      //       'http://www.w3.org/2000/01/rdf-schema#label' : label,
+      //       uri : uri,
+      //       uriGuid: uriGuid,
+      //       labelGuid: labelGuid
+      //     })
+
+
+
+      //   }
+      // }
+
+
+      // if (this.propertyPath[0].propertyURI === 'http://id.loc.gov/ontologies/bibframe/contribution') console.log('this.activeLookupValue',this.activeLookupValue)
+
+
+      // let foundLabelPropertiesTopLevelCount = possibleLiteralProperties.filter((p) => { return (Object.keys(currentUserValue).indexOf(p) > -1) ? true : false }).length
+
+      // // find the level we are going to work with, it could be the root level or it 
+      // // could be like Role and stored as a blank node in the data structure
+      // // let useValue = null
+
+      // // if (this.profileCompoent === 'http://id.loc.gov/ontologies/bflc/relationship|Series Hub'){
+      // //   console.log("================")
+      // //   console.log(this.profileCompoent)
+      // //   console.log("currentUserValue", this.structure.propertyURI,currentUserValue)
+      // // }
+
+      // if (currentUserValue && currentUserValue['@root'] && currentUserValue['@root'] == this.structure.propertyURI ){
+
+
+      //   // if (this.profileCompoent === 'http://id.loc.gov/ontologies/bflc/relationship|Series Hub'){
+      //   //   console.log("================1")
+      //   // }
+
+      //   // it is the root user value, we need to find its URI if it has one and what the label is
+      //   // but the label could be stored all over and the URI might be stored at the label level as well :(
+
+      //   let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(currentUserValue).indexOf(p) > -1) ? true : false })
+
+      //   // does it have any data?
+      //   if (currentUserValue['@id'] || foundLabelProperties.length > 0){
+
+      //     // so it has at least a URI or a label property
+
+      //     // try to find the label
+
+      //     let label = null
+      //     let labelGuid = null
+      //     let uri = null
+      //     let uriGuid = null
+
+      //     for (let p of foundLabelProperties){
+
+      //       if (currentUserValue[p]){
+      //         for (let value of currentUserValue[p]){
+      //           if (value[p]){
+      //             label = value[p]
+      //             labelGuid = value['@guid']
+      //           }
+      //           // it could also store the URI in the #value or something
+      //           if (value['@id']){
+      //             uri= value['@id']
+      //             uriGuid = value['@guid']
+      //           }
+      //         }
+      //       }
+      //     }
+
+      //     if (currentUserValue['@id'] && uri &&  currentUserValue['@id'] != uri){
+      //       console.warn('---------------------------------------------')
+      //       console.warn('There is a URI at the root level and also in the label? Which to use?')
+      //       console.warn(currentUserValue)
+      //       console.warn(this.structure)
+      //       console.warn('---------------------------------------------')
+      //     }
+
+      //     if (currentUserValue['@id']){
+      //       uri = currentUserValue['@id']
+      //       uriGuid = currentUserValue['@guid']
+      //     }
+
+
+      //     if (!label){
+
+      //       // no label was found, just use the URI and it will get dereferenced by the componet
+      //       if (uri){
+      //         label = uri
+      //       }
+
+      //     }
+
+      //     // we just use rdf:label internally here, but it could be any of the label properties above
+      //     // we keep the guid so the predicate doesn't really matter
+      //     this.activeLookupValue.push({
+      //       'http://www.w3.org/2000/01/rdf-schema#label' : label,
+      //       uri : uri,
+      //       uriGuid: uriGuid,
+      //       labelGuid: labelGuid
+
+      //     })
+
+
+      //   }
 
         
 
-      }else if (currentUserValue && currentUserValue['@type'] && currentUserValue['@type'] == this.structure.propertyURI && foundLabelPropertiesTopLevelCount >0 ){
+      // }else if (currentUserValue && currentUserValue['@type'] && currentUserValue['@type'] == this.structure.propertyURI && foundLabelPropertiesTopLevelCount >0 ){
 
 
-        // it is the root user value, we need to find its URI if it has one and what the label is
-        // but the label could be stored all over and the URI might be stored at the label level as well :(
+      //   // if (this.profileCompoent === 'http://id.loc.gov/ontologies/bflc/relationship|Series Hub'){
+      //   //   console.log("================2")
+      //   // }
 
-        let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(currentUserValue).indexOf(p) > -1) ? true : false })
+      //   // it is the root user value, we need to find its URI if it has one and what the label is
+      //   // but the label could be stored all over and the URI might be stored at the label level as well :(
 
-
-        // does it have any data?
-        if (currentUserValue['@id'] || foundLabelProperties.length > 0){
-
-          // so it has at least a URI or a label property
-
-          // try to find the label
-
-          let label = null
-          let labelGuid = null
-          let uri = null
-          let uriGuid = null
-
-          for (let p of foundLabelProperties){
-
-            if (currentUserValue[p]){
-              for (let value of currentUserValue[p]){
-                if (value[p]){
-                  label = value[p]
-                  labelGuid = value['@guid']
-                }
-                // it could also store the URI in the #value or something
-                if (value['@id']){
-                  uri= value['@id']
-                  uriGuid = value['@guid']
-                }
-              }
-            }
-          }
-
-          if (currentUserValue['@id'] && uri &&  currentUserValue['@id'] != uri){
-            console.warn('---------------------------------------------')
-            console.warn('There is a URI at the root level and also in the label? Which to use?')
-            console.warn(currentUserValue)
-            console.warn(this.structure)
-            console.warn('---------------------------------------------')
-          }
-
-          if (currentUserValue['@id']){
-            uri = currentUserValue['@id']
-            uriGuid = currentUserValue['@guid']
-          }
+      //   let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(currentUserValue).indexOf(p) > -1) ? true : false })
 
 
-          if (!label){
+      //   // does it have any data?
+      //   if (currentUserValue['@id'] || foundLabelProperties.length > 0){
 
-            // no label was found, just use the URI and it will get dereferenced by the componet
-            if (uri){
-              label = uri
-            }
+      //     // so it has at least a URI or a label property
 
-          }
+      //     // try to find the label
 
-          // we just use rdf:label internally here, but it could be any of the label properties above
-          // we keep the guid so the predicate doesn't really matter
-          this.activeLookupValue.push({
-            'http://www.w3.org/2000/01/rdf-schema#label' : label,
-            uri : uri,
-            uriGuid: uriGuid,
-            labelGuid: labelGuid
+      //     let label = null
+      //     let labelGuid = null
+      //     let uri = null
+      //     let uriGuid = null
 
-          })
+      //     for (let p of foundLabelProperties){
 
+      //       if (currentUserValue[p]){
+      //         for (let value of currentUserValue[p]){
+      //           if (value[p]){
+      //             label = value[p]
+      //             labelGuid = value['@guid']
+      //           }
+      //           // it could also store the URI in the #value or something
+      //           if (value['@id']){
+      //             uri= value['@id']
+      //             uriGuid = value['@guid']
+      //           }
+      //         }
+      //       }
+      //     }
 
-        }
+      //     if (currentUserValue['@id'] && uri &&  currentUserValue['@id'] != uri){
+      //       console.warn('---------------------------------------------')
+      //       console.warn('There is a URI at the root level and also in the label? Which to use?')
+      //       console.warn(currentUserValue)
+      //       console.warn(this.structure)
+      //       console.warn('---------------------------------------------')
+      //     }
 
-      }else if (this.parentStructureObj && currentUserValue[this.parentStructureObj.propertyURI]){
-
-
-
-
-          for (let childProperty of currentUserValue[this.parentStructureObj.propertyURI]){
-
-            let label = null
-            let labelGuid = null
-            let uri = null
-            let uriGuid = null
-
-
-            let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(childProperty).indexOf(p) > -1) ? true : false })
-
-            // likely just stored at the first level
-            if (childProperty['@id']){
-              uri = childProperty['@id']
-              uriGuid = childProperty['@guid']
-            }
-
-            for (let p of foundLabelProperties){
-
-              if (childProperty[p]){
-                for (let value of childProperty[p]){
-                  if (value[p]){
-                    label = value[p]
-                    labelGuid = value['@guid']
-                  }
-                  // it could also store the URI in the #value or something
-                  if (value['@id']){
-                    uri= value['@id']
-                    uriGuid = value['@guid']
-                  }
-                }
-              }
-            }
+      //     if (currentUserValue['@id']){
+      //       uri = currentUserValue['@id']
+      //       uriGuid = currentUserValue['@guid']
+      //     }
 
 
-            if (!label){
+      //     if (!label){
 
-              // no label was found, just use the URI and it will get dereferenced by the componet
-              if (uri){
-                label = uri
-              }
+      //       // no label was found, just use the URI and it will get dereferenced by the componet
+      //       if (uri){
+      //         label = uri
+      //       }
 
-            }
+      //     }
 
-            this.activeLookupValue.push({
-              'http://www.w3.org/2000/01/rdf-schema#label' : label,
-              uri : uri,
-              uriGuid: uriGuid,
-              labelGuid: labelGuid
+      //     // we just use rdf:label internally here, but it could be any of the label properties above
+      //     // we keep the guid so the predicate doesn't really matter
+      //     this.activeLookupValue.push({
+      //       'http://www.w3.org/2000/01/rdf-schema#label' : label,
+      //       uri : uri,
+      //       uriGuid: uriGuid,
+      //       labelGuid: labelGuid
 
-            })
-
-          }
-
-
-      }else if (this.parentStructureObj && currentUserValue['@root'] && currentUserValue['@root'] == this.parentStructureObj.propertyURI && currentUserValue[this.structure.propertyURI]) {
-
-        // its at the first level
+      //     })
 
 
+      //   }
 
-        for (let childProperty of currentUserValue[this.structure.propertyURI]){
-
-          let label = null
-          let labelGuid = null
-          let uri = null
-          let uriGuid = null
+      // }else if (this.parentStructureObj && currentUserValue[this.parentStructureObj.propertyURI]){
 
 
-          let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(childProperty).indexOf(p) > -1) ? true : false })
+      //   // if (this.profileCompoent === 'http://id.loc.gov/ontologies/bflc/relationship|Series Hub'){
+      //   //   console.log("================3")
+      //   // }
 
-          // likely just stored at the first level
-          if (childProperty['@id']){
-            uri = childProperty['@id']
-            uriGuid = childProperty['@guid']
-          }
+      //     for (let childProperty of currentUserValue[this.parentStructureObj.propertyURI]){
 
-          for (let p of foundLabelProperties){
-
-            if (childProperty[p]){
-              for (let value of childProperty[p]){
-                if (value[p]){
-                  label = value[p]
-                  labelGuid = value['@guid']
-                }
-                // it could also store the URI in the #value or something
-                if (value['@id']){
-                  uri= value['@id']
-                  uriGuid = value['@guid']
-                }
-              }
-            }
-          }
+      //       let label = null
+      //       let labelGuid = null
+      //       let uri = null
+      //       let uriGuid = null
 
 
-          if (!label){
+      //       let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(childProperty).indexOf(p) > -1) ? true : false })
 
-            // no label was found, just use the URI and it will get dereferenced by the componet
-            if (uri){
-              label = uri
-            }
+      //       // likely just stored at the first level
+      //       if (childProperty['@id']){
+      //         uri = childProperty['@id']
+      //         uriGuid = childProperty['@guid']
+      //       }
 
-          }
+      //       for (let p of foundLabelProperties){
 
-          this.activeLookupValue.push({
-            'http://www.w3.org/2000/01/rdf-schema#label' : label,
-            uri : uri,
-            uriGuid: uriGuid,
-            labelGuid: labelGuid
+      //         if (childProperty[p]){
+      //           for (let value of childProperty[p]){
+      //             if (value[p]){
+      //               label = value[p]
+      //               labelGuid = value['@guid']
+      //             }
+      //             // it could also store the URI in the #value or something
+      //             if (value['@id']){
+      //               uri= value['@id']
+      //               uriGuid = value['@guid']
+      //             }
+      //           }
+      //         }
+      //       }
 
-          })
 
-        }
+      //       if (!label){
+
+      //         // no label was found, just use the URI and it will get dereferenced by the componet
+      //         if (uri){
+      //           label = uri
+      //         }
+
+      //       }
+
+      //       this.activeLookupValue.push({
+      //         'http://www.w3.org/2000/01/rdf-schema#label' : label,
+      //         uri : uri,
+      //         uriGuid: uriGuid,
+      //         labelGuid: labelGuid
+
+      //       })
+
+      //     }
 
 
-      }else{
+      // }else if (this.parentStructureObj && currentUserValue['@root'] && currentUserValue['@root'] == this.parentStructureObj.propertyURI && currentUserValue[this.structure.propertyURI]) {
+
+      //   // its at the first level
+
+      //   // if (this.profileCompoent === 'http://id.loc.gov/ontologies/bflc/relationship|Series Hub'){
+      //   //   console.log("================4")
+      //   // }
+
+      //   for (let childProperty of currentUserValue[this.structure.propertyURI]){
+
+      //     let label = null
+      //     let labelGuid = null
+      //     let uri = null
+      //     let uriGuid = null
 
 
-        // this.activeLookupValue.push({
-        //   'http://www.w3.org/2000/01/rdf-schema#label' : 'No DATA'
-        // })
+      //     let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(childProperty).indexOf(p) > -1) ? true : false })
 
-      }
+      //     // likely just stored at the first level
+      //     if (childProperty['@id']){
+      //       uri = childProperty['@id']
+      //       uriGuid = childProperty['@guid']
+      //     }
+
+      //     for (let p of foundLabelProperties){
+
+      //       if (childProperty[p]){
+      //         for (let value of childProperty[p]){
+      //           if (value[p]){
+      //             label = value[p]
+      //             labelGuid = value['@guid']
+      //           }
+      //           // it could also store the URI in the #value or something
+      //           if (value['@id']){
+      //             uri= value['@id']
+      //             uriGuid = value['@guid']
+      //           }
+      //         }
+      //       }
+      //     }
+
+
+      //     if (!label){
+
+      //       // no label was found, just use the URI and it will get dereferenced by the componet
+      //       if (uri){
+      //         label = uri
+      //       }
+
+      //     }
+
+      //     this.activeLookupValue.push({
+      //       'http://www.w3.org/2000/01/rdf-schema#label' : label,
+      //       uri : uri,
+      //       uriGuid: uriGuid,
+      //       labelGuid: labelGuid
+
+      //     })
+
+      //   }
+
+
+
+      // // }else if (currentUserValue && currentUserValue[this.structure.propertyURI]){
+
+      // //   if (this.profileCompoent === 'http://id.loc.gov/ontologies/bflc/relationship|Series Hub'){
+      // //     console.log("================5")
+      // //   }
+
+      // //   console.log("currentUserValue[this.structure.propertyURI]",currentUserValue[this.structure.propertyURI])
+
+      // //    for (let childProperty of currentUserValue[this.structure.propertyURI]){
+
+      // //       let label = null
+      // //       let labelGuid = null
+      // //       let uri = null
+      // //       let uriGuid = null
+
+
+      // //       let foundLabelProperties = possibleLiteralProperties.filter((p) => { return (Object.keys(childProperty).indexOf(p) > -1) ? true : false })
+
+      // //       // likely just stored at the first level
+      // //       if (childProperty['@id']){
+      // //         uri = childProperty['@id']
+      // //         uriGuid = childProperty['@guid']
+      // //       }
+
+      // //       for (let p of foundLabelProperties){
+
+      // //         if (childProperty[p]){
+      // //           for (let value of childProperty[p]){
+      // //             if (value[p]){
+      // //               label = value[p]
+      // //               labelGuid = value['@guid']
+      // //             }
+      // //             // it could also store the URI in the #value or something
+      // //             if (value['@id']){
+      // //               uri= value['@id']
+      // //               uriGuid = value['@guid']
+      // //             }
+      // //           }
+      // //         }
+      // //       }
+
+
+      // //       if (!label){
+
+      // //         // no label was found, just use the URI and it will get dereferenced by the componet
+      // //         if (uri){
+      // //           label = uri
+      // //         }
+
+      // //       }
+
+      // //       this.activeLookupValue.push({
+      // //         'http://www.w3.org/2000/01/rdf-schema#label' : label,
+      // //         uri : uri,
+      // //         uriGuid: uriGuid,
+      // //         labelGuid: labelGuid
+
+      // //       })
+
+      // //     }
+
+
+
+
+      // }else{
+
+
+      //   // this.activeLookupValue.push({
+      //   //   'http://www.w3.org/2000/01/rdf-schema#label' : 'No DATA'
+      //   // })
+
+      // }
       
 
 
@@ -523,7 +911,7 @@ export default {
 
 
 
-      this.$store.dispatch("removeValueSimple", { self: this, idGuid: toRemove.uriGuid, labelGuid: toRemove.labelGuid }).then(() => {
+      this.$store.dispatch("removeValueSimple", { self: this, ptGuid: this.ptGuid, idGuid: toRemove.uriGuid, labelGuid: toRemove.labelGuid, propertyPath: this.propertyPath }).then(() => {
        
       })  
 
@@ -544,7 +932,7 @@ export default {
       this.displayList = []
       this.activeSelect = ''
       this.activeKeyword = false
-      console.log("this.activeFilter",this.activeFilter)
+      // console.log("this.activeFilter",this.activeFilter)
       
       let addKeyword = ''
       if (recursive){
@@ -849,10 +1237,10 @@ export default {
             this.activeSelect = ''
             this.displayAutocomplete=false
             event.target.value = ''     
-            let parentURI = (this.parentStructureObj) ? this.parentStructureObj.propertyURI : null 
+            // let parentURI = (this.parentStructureObj) ? this.parentStructureObj.propertyURI : null 
             let useLabel = (metadata[key].authLabel) ? metadata[key].authLabel : metadata[key].label[idx]
 
-            this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, parentURI: parentURI, URI: this.structure.propertyURI, valueURI: metadata[key].uri, valueLabel:useLabel}).then((resultData) => {
+            this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, propertyPath: this.propertyPath, valueURI: metadata[key].uri, valueLabel:useLabel}).then((resultData) => {
               this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':resultData.valueLabel, uri: resultData.valueURI, uriGuid: resultData.guid, labelGuid:resultData.guid})
             })
           }
@@ -879,9 +1267,9 @@ export default {
           this.displayAutocomplete=false
 
 
-          let parentURI = (this.parentStructureObj) ? this.parentStructureObj.propertyURI : null 
+          // let parentURI = (this.parentStructureObj) ? this.parentStructureObj.propertyURI : null 
 
-          this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, parentURI: parentURI, URI: this.structure.propertyURI, valueURI: null, valueLabel:event.target.value}).then((resultData) => {
+          this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, propertyPath: this.propertyPath, valueURI: null, valueLabel:event.target.value}).then((resultData) => {
             this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':resultData.valueLabel, uriGuid: resultData.guid, labelGuid:resultData.guid})
           })
   
@@ -953,10 +1341,10 @@ export default {
           this.activeSelect = ''
           this.displayAutocomplete=false
           event.target.value = ''     
-          let parentURI = (this.parentStructureObj) ? this.parentStructureObj.propertyURI : null 
+          // let parentURI = (this.parentStructureObj) ? this.parentStructureObj.propertyURI : null 
           let useLabel = (metadata[key].authLabel) ? metadata[key].authLabel : metadata[key].label[idx]
 
-          this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, parentURI: parentURI, URI: this.structure.propertyURI, valueURI: metadata[key].uri, valueLabel:useLabel}).then((resultData) => {
+          this.$store.dispatch("setValueSimple", { self: this, ptGuid: this.ptGuid, propertyPath: this.propertyPath, valueURI: metadata[key].uri, valueLabel:useLabel}).then((resultData) => {
             this.activeLookupValue.push({'http://www.w3.org/2000/01/rdf-schema#label':resultData.valueLabel, uri: resultData.valueURI, uriGuid: resultData.guid, labelGuid:resultData.guid})
           })
         }

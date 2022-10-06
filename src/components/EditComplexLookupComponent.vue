@@ -427,7 +427,10 @@ export default {
     activeTemplate: Object,
     parentURI: String,
     isMini: Boolean,
-    nested: Boolean
+    nested: Boolean,
+    level: Number,
+    bnodeProperty: String,
+    propertyPath: Array
 
   },
   data: function() {
@@ -653,7 +656,7 @@ export default {
 
       if (this.displayLabel.startsWith('http:')){
 
-        let userData = parseProfile.returnUserValues(this.returnCorrectActiveProfile(), this.profileName, this.profileCompoent, this.structure.propertyURI)
+        let userData = parseProfile.returnUserValues(this.returnCorrectActiveProfile(), this.profileName, this.profileCompoent, this.structure.propertyURI, this.propertyPath)
         
 
         // look for a @context in any of the properties
@@ -818,7 +821,7 @@ export default {
             //console.log("the this")
             //console.log(this)
 
-            let userData = parseProfile.returnUserValues(this.returnCorrectActiveProfile(), this.profileName, this.profileCompoent, this.structure.propertyURI)
+            let userData = parseProfile.returnUserValues(this.returnCorrectActiveProfile(), this.profileName, this.profileCompoent, this.structure.propertyURI, this.propertyPath)
             // dis connect it from the source so it doesnt update the value, read only
             userData = JSON.parse(JSON.stringify(userData))
 
@@ -833,7 +836,7 @@ export default {
                 validationUtil.validateHeading(userData)
                 .then((validationStatus) => {
 
-                  let orignalUserData = parseProfile.returnUserValues(this.returnCorrectActiveProfile(), this.profileName, this.profileCompoent, this.structure.propertyURI)
+                  let orignalUserData = parseProfile.returnUserValues(this.returnCorrectActiveProfile(), this.profileName, this.profileCompoent, this.structure.propertyURI, this.propertyPath)
 
 
                   // console.log("USERDATA 3",JSON.parse(JSON.stringify(userData)))
@@ -879,11 +882,12 @@ export default {
                   // uservalue is populated with the right stuff
                   // sometimes a record will come in without a URI but it has a valid label
                   if (!orignalUserData['@id']){
+                    console.log("userData",userData)
                     if (userData["@id"].includes('id.loc.gov/authorities/names/')){
                       this.$store.dispatch("fetchContext", { self: this, searchPayload: userData["@id"] }).then(() => {                      
                         // console.log("SETTING THE VALUE ON",this.profileName)
                         // console.log("USER VALUE WAS:",userData)
-                        this.$store.dispatch("setValueComplex", { self: this, profileComponet: this.profileCompoent, template:this.profileName, structure: this.structure, parentStructure: this.parentStructureObj }).then(() => {
+                        this.$store.dispatch("setValueComplex", { self: this, profileComponet: this.profileCompoent, template:this.profileName, structure: this.structure, parentStructure: this.parentStructureObj, propertyPath: this.propertyPath }).then(() => {
                           this.componentKey++
                         })  
                       })    
@@ -1019,7 +1023,7 @@ export default {
           this.userData = {}
           this.$store.dispatch("clearContext", { self: this}).then(() => {
 
-            this.$store.dispatch("setValueComplex", { self: this, profileComponet: this.profileCompoent, template:this.activeTemplate, structure: this.structure, parentStructure: this.parentStructureObj })
+            this.$store.dispatch("setValueComplex", { self: this, profileComponet: this.profileCompoent, template:this.activeTemplate, structure: this.structure, parentStructure: this.parentStructureObj, propertyPath: this.propertyPath })
             .then(() => {
 
               this.checkForUserData()
@@ -1078,7 +1082,7 @@ export default {
       this.displayGuid = null
 
       let userValue 
-      let rootPropertyURI
+      // let rootPropertyURI
 
 
 
@@ -1086,31 +1090,40 @@ export default {
       //   userValue = parseProfile.returnUserValues(this.activeProfileMini, this.profileName, this.profileCompoent,this.structure.propertyURI)
       //   rootPropertyURI = parseProfile.returnRootPropertyURI(this.activeProfileMini, this.profileCompoent,this.structure.propertyURI)        
       // }else{
-        userValue = parseProfile.returnUserValues(this.returnCorrectActiveProfile(), this.profileName, this.profileCompoent,this.structure.propertyURI)
-        rootPropertyURI = parseProfile.returnRootPropertyURI(this.returnCorrectActiveProfile(), this.profileCompoent,this.structure.propertyURI)        
+        userValue = parseProfile.returnUserValues(this.returnCorrectActiveProfile(), this.profileName, this.profileCompoent,this.structure.propertyURI, this.propertyPath)
+        // rootPropertyURI = parseProfile.returnRootPropertyURI(this.returnCorrectActiveProfile(), this.profileCompoent,this.structure.propertyURI)        
       // }
-    
+      
+
+
       
       
       if (userValue['http://www.w3.org/2000/01/rdf-schema#label'] || userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'] || userValue['http://id.loc.gov/ontologies/bibframe/code']){
 
         if (userValue['http://www.w3.org/2000/01/rdf-schema#label']){
-          this.displayLabel = userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
+          this.displayLabel = userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label'] || userValue['http://www.w3.org/2000/01/rdf-schema#label']
           
 
         }else if (userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
-          this.displayLabel = userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
+          this.displayLabel = userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'] || userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
           
 
         }else if (userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']){
-          this.displayLabel = userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']
+          this.displayLabel = userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'] || userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']
           
 
         }else if (userValue['http://id.loc.gov/ontologies/bibframe/code']){
-          this.displayLabel = userValue['http://id.loc.gov/ontologies/bibframe/code'][0]['http://id.loc.gov/ontologies/bibframe/code']
-          
-
+          this.displayLabel = userValue['http://id.loc.gov/ontologies/bibframe/code'][0]['http://id.loc.gov/ontologies/bibframe/code'] || userValue['http://id.loc.gov/ontologies/bibframe/code']
         }
+
+
+        if (!this.displayLabel){
+          console.log("ERROR GETTING this.displayLabel")
+          console.log(userValue)
+          console.log(this.parentStructure)
+        }
+
+        
 
         if (userValue['@type']){
           this.displayType = userValue['@type']
@@ -1131,156 +1144,156 @@ export default {
 
 
 
-      }else if (this.parentStructureObj && this.parentStructureObj.propertyURI && userValue[this.parentStructureObj.propertyURI]){
+      // }else if (this.parentStructureObj && this.parentStructureObj.propertyURI && userValue[this.parentStructureObj.propertyURI]){
         
-        // the data is stored in the sub graph named under the parent
-        if (Array.isArray(userValue[this.parentStructureObj.propertyURI])){
+      //   // the data is stored in the sub graph named under the parent
+      //   if (Array.isArray(userValue[this.parentStructureObj.propertyURI])){
 
-          if (userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/2000/01/rdf-schema#label']){
+      //     if (userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/2000/01/rdf-schema#label']){
 
 
 
-            this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
+      //       this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
             
-            this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
-            if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
-              this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
-            }else{
+      //       this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
+      //       if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
+      //         this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
+      //       }else{
 
-              this.displayContext = {
-                contextValue: true,
-                uri: (userValue[this.parentStructureObj.propertyURI][0]['@id']) ? userValue[this.parentStructureObj.propertyURI][0]['@id'] : null,
-                title: this.displayLabel,
-                nodeMap: {}
-              }
+      //         this.displayContext = {
+      //           contextValue: true,
+      //           uri: (userValue[this.parentStructureObj.propertyURI][0]['@id']) ? userValue[this.parentStructureObj.propertyURI][0]['@id'] : null,
+      //           title: this.displayLabel,
+      //           nodeMap: {}
+      //         }
 
-            }
+      //       }
 
 
             
 
-          }else if (userValue[this.parentStructureObj.propertyURI][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
-            this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
+      //     }else if (userValue[this.parentStructureObj.propertyURI][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
+      //       this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
             
-            this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
-            if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
-              this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
-            }else{
+      //       this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
+      //       if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
+      //         this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
+      //       }else{
 
-              this.displayContext = {
-                contextValue: true,
-                uri: (userValue[this.parentStructureObj.propertyURI][0]['@id']) ? userValue[this.parentStructureObj.propertyURI][0]['@id'] : null,
-                title: this.displayLabel,
-                nodeMap: {}
-              }
+      //         this.displayContext = {
+      //           contextValue: true,
+      //           uri: (userValue[this.parentStructureObj.propertyURI][0]['@id']) ? userValue[this.parentStructureObj.propertyURI][0]['@id'] : null,
+      //           title: this.displayLabel,
+      //           nodeMap: {}
+      //         }
 
-            }
+      //       }
 
-          }else if (userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']){
-            this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']
+      //     }else if (userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']){
+      //       this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']
             
-            this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
-            if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
-              this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
-            }else{
+      //       this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
+      //       if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
+      //         this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
+      //       }else{
 
-              this.displayContext = {
-                contextValue: true,
-                uri: (userValue[this.parentStructureObj.propertyURI][0]['@id']) ? userValue[this.parentStructureObj.propertyURI][0]['@id'] : null,
-                title: this.displayLabel,
-                nodeMap: {}
-              }
+      //         this.displayContext = {
+      //           contextValue: true,
+      //           uri: (userValue[this.parentStructureObj.propertyURI][0]['@id']) ? userValue[this.parentStructureObj.propertyURI][0]['@id'] : null,
+      //           title: this.displayLabel,
+      //           nodeMap: {}
+      //         }
 
-            }
+      //       }
 
-          }else if (userValue[this.parentStructureObj.propertyURI][0]['http://id.loc.gov/ontologies/bibframe/code']){
-            this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://id.loc.gov/ontologies/bibframe/code'][0]['http://id.loc.gov/ontologies/bibframe/code']
+      //     }else if (userValue[this.parentStructureObj.propertyURI][0]['http://id.loc.gov/ontologies/bibframe/code']){
+      //       this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://id.loc.gov/ontologies/bibframe/code'][0]['http://id.loc.gov/ontologies/bibframe/code']
             
-            this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
-            if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
-              this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
-            }else{
+      //       this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
+      //       if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
+      //         this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
+      //       }else{
 
-              this.displayContext = {
-                contextValue: true,
-                uri: (userValue[this.parentStructureObj.propertyURI][0]['@id']) ? userValue[this.parentStructureObj.propertyURI][0]['@id'] : null,
-                title: this.displayLabel,
-                nodeMap: {}
-              }
+      //         this.displayContext = {
+      //           contextValue: true,
+      //           uri: (userValue[this.parentStructureObj.propertyURI][0]['@id']) ? userValue[this.parentStructureObj.propertyURI][0]['@id'] : null,
+      //           title: this.displayLabel,
+      //           nodeMap: {}
+      //         }
 
-            }
+      //       }
 
-          }
+      //     }
           
-        }
+      //   }
 
         
-        if (userValue[this.parentStructureObj.propertyURI] && userValue[this.parentStructureObj.propertyURI].length>0){
-          this.displayType = userValue[this.parentStructureObj.propertyURI][0]['@type']
-        }
+      //   if (userValue[this.parentStructureObj.propertyURI] && userValue[this.parentStructureObj.propertyURI].length>0){
+      //     this.displayType = userValue[this.parentStructureObj.propertyURI][0]['@type']
+      //   }
 
-        if (!this.displayLabel){
+      //   if (!this.displayLabel){
 
-          if (userValue[this.parentStructureObj.propertyURI][0] && userValue[this.parentStructureObj.propertyURI][0]['@id']){
+      //     if (userValue[this.parentStructureObj.propertyURI][0] && userValue[this.parentStructureObj.propertyURI][0]['@id']){
             
-            this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['@id']
+      //       this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['@id']
             
 
-            this.displayContext = {
-              contextValue: true,
-              uri: userValue[this.parentStructureObj.propertyURI][0]['@id'],
-              title: this.displayLabel,
-              nodeMap: {}
-            }
+      //       this.displayContext = {
+      //         contextValue: true,
+      //         uri: userValue[this.parentStructureObj.propertyURI][0]['@id'],
+      //         title: this.displayLabel,
+      //         nodeMap: {}
+      //       }
 
-          }
+      //     }
           
 
-        }
+      //   }
 
         
 
-      }else if (userValue['@root'] && userValue['@root'] == rootPropertyURI){
+      // }else if (userValue['@root'] && userValue['@root'] == rootPropertyURI){
 
         
-        if (userValue['http://www.w3.org/2000/01/rdf-schema#label']){
-          this.displayLabel = userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']      
+      //   if (userValue['http://www.w3.org/2000/01/rdf-schema#label']){
+      //     this.displayLabel = userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']      
           
-        }else if (userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
-          this.displayLabel = userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
+      //   }else if (userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
+      //     this.displayLabel = userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
           
-        }else if (userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']){
-          this.displayLabel = userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']
+      //   }else if (userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']){
+      //     this.displayLabel = userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']
           
-        }else if (userValue['http://id.loc.gov/ontologies/bibframe/code']){
-          this.displayLabel = userValue['http://id.loc.gov/ontologies/bibframe/code'][0]['http://id.loc.gov/ontologies/bibframe/code']
+      //   }else if (userValue['http://id.loc.gov/ontologies/bibframe/code']){
+      //     this.displayLabel = userValue['http://id.loc.gov/ontologies/bibframe/code'][0]['http://id.loc.gov/ontologies/bibframe/code']
           
-        }
+      //   }
         
-        if (userValue['@type']){
-          this.displayType = userValue['@type']
-        }
+      //   if (userValue['@type']){
+      //     this.displayType = userValue['@type']
+      //   }
         
         
-        if (!this.displayLabel){
-          if (userValue['@id']){
-            this.displayLabel = userValue['@id']
+      //   if (!this.displayLabel){
+      //     if (userValue['@id']){
+      //       this.displayLabel = userValue['@id']
             
-          }
-        }
+      //     }
+      //   }
         
 
 
-        if (userValue['@context']){
-          this.displayContext = userValue['@context']
-        }else{
-          this.displayContext = {
-            contextValue: true,
-            uri: (userValue['@id']) ? userValue['@id'] : null,
-            title: this.displayLabel,
-            nodeMap: {}
-          }
-        }
+      //   if (userValue['@context']){
+      //     this.displayContext = userValue['@context']
+      //   }else{
+      //     this.displayContext = {
+      //       contextValue: true,
+      //       uri: (userValue['@id']) ? userValue['@id'] : null,
+      //       title: this.displayLabel,
+      //       nodeMap: {}
+      //     }
+      //   }
 
 
 
@@ -1288,12 +1301,18 @@ export default {
 
       }else{
 
-          console.warn('---------------------------------------------')
-          console.warn('Dont know how to extract the userValue for this complexLookup')
-          console.warn(userValue)
-          console.warn(this.structure)
-          console.warn('---------------------------------------------')
 
+          // does the userValue returned have anything other than the metadata keys?
+          let keys = Object.keys(userValue).filter((v) => { return (v != '@root') })
+
+
+          if (keys.length>0){
+            console.warn('---------------------------------------------')
+            console.warn('Dont know how to extract the userValue for this complexLookup')
+            console.warn(userValue)
+            console.warn(this.structure)
+            console.warn('---------------------------------------------')
+          }
 
       }
 
@@ -1526,7 +1545,7 @@ export default {
     subjectAdded: function(components){
 
 
-      this.$store.dispatch("setValueSubject", { self: this, profileComponet: this.profileCompoent, subjectComponents: components }).then(() => {
+      this.$store.dispatch("setValueSubject", { self: this, profileComponet: this.profileCompoent, subjectComponents: components, propertyPath: this.propertyPath }).then(() => {
         this.componentKey++
         this.displayModal = false
         this.checkForUserData()
@@ -1883,7 +1902,7 @@ export default {
         
         // set it and then set the vlue when done
         this.$store.dispatch("setContextManually", { self: this, context: tempContext, }).then(() => {
-          this.$store.dispatch("setValueComplex", { self: this, profileComponet: this.profileCompoent, template:this.activeTemplate, structure: this.structure, parentStructure: this.parentStructureObj }).then(() => {
+          this.$store.dispatch("setValueComplex", { self: this, profileComponet: this.profileCompoent, template:this.activeTemplate, structure: this.structure, parentStructure: this.parentStructureObj, propertyPath: this.propertyPath }).then(() => {
             this.componentKey++
             this.displayModal = false
             this.$store.dispatch("enableMacroNav", { self: this})
@@ -1917,7 +1936,7 @@ export default {
         // }
 
 
-        this.$store.dispatch("setValueComplex", { self: this, profileComponet: this.profileCompoent, template:this.activeTemplate, structure: this.structure, parentStructure: this.parentStructureObj }).then(() => {
+        this.$store.dispatch("setValueComplex", { self: this, profileComponet: this.profileCompoent, template:this.activeTemplate, structure: this.structure, parentStructure: this.parentStructureObj, propertyPath: this.propertyPath }).then(() => {
           this.componentKey++
           this.displayModal = false
           this.checkForUserData()

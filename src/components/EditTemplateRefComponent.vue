@@ -6,7 +6,23 @@
 
   <div v-if="dynamic == 'singleTemplate'">
 
-    <EditMainComponent  v-for="(pt,idx) in activeTemplate.propertyTemplates" :ptGuid="ptGuid" :isMini="isMini" :key="idx" :position="idx" :activeTemplate="Object.assign({nested:true},activeTemplate)" :structure="activeTemplate.propertyTemplates[idx]" :profileCompoent="profileCompoent" :profileName="profileName" :grandParentStructureObj="parentStructureObj" :parentStructureObj="structure" :parentStructure="['nothing']"  :nested="true"></EditMainComponent>
+    <EditMainComponent  v-for="(pt,idx) in activeTemplate.propertyTemplates" 
+      :level="level"
+      :bnodeProperty="bnodeProperty" 
+      :propertyPath="propertyPath"
+      :ptGuid="ptGuid" 
+      :isMini="isMini" 
+      :key="idx" 
+      :position="idx" 
+      :activeTemplate="Object.assign({nested:true},activeTemplate)" 
+      :structure="activeTemplate.propertyTemplates[idx]" 
+      :profileCompoent="profileCompoent" 
+      :profileName="profileName" 
+      :grandParentStructureObj="parentStructureObj" 
+      :parentStructureObj="structure" 
+      :parentStructure="['nothing']"  
+      :nested="true">    
+    </EditMainComponent>
 
 
   </div>
@@ -34,7 +50,21 @@
         <!-- <EditMainComponent name="pt." v-for="pt in this.activeTemplate.propertyTemplates" v-bind:key="pt" v-bind:structure="pt"></EditMainComponent> -->
         <!-- <EditMainComponent name="yeet"></EditMainComponent> -->
 
-        <EditMainComponent  v-for="(pt,idx) in activeTemplate.propertyTemplates" :ptGuid="ptGuid" :key="idx" :isMini="isMini" :activeTemplate="activeTemplate" :structure="activeTemplate.propertyTemplates[idx]" :parentStructureObj="structure" :parentStructure="['nothing']" :profileCompoent="profileCompoent" :profileName="profileName" :nested="true"></EditMainComponent>
+        <EditMainComponent  v-for="(pt,idx) in activeTemplate.propertyTemplates" 
+        :level="level" 
+        :bnodeProperty="bnodeProperty"
+        :propertyPath="propertyPath"
+        :ptGuid="ptGuid" 
+        :key="idx" 
+        :isMini="isMini" 
+        :activeTemplate="activeTemplate" 
+        :structure="activeTemplate.propertyTemplates[idx]" 
+        :parentStructureObj="structure" 
+        :parentStructure="['nothing']" 
+        :profileCompoent="profileCompoent" 
+        :profileName="profileName" 
+        :nested="true">
+        </EditMainComponent>
       </div>
       <div v-else>
         <span>Missing resource template {{structure.valueConstraint.valueTemplateRefs}}</span>
@@ -64,7 +94,23 @@
         <!-- <EditMainComponent name="yeet"></EditMainComponent> -->
 
 
-        <EditMainComponent  v-for="(pt,idx) in activeTemplate.propertyTemplates" :ptGuid="ptGuid"  :key="idx" :isMini="isMini" :position="idx" :activeTemplate="Object.assign({nested:true},activeTemplate)" :structure="activeTemplate.propertyTemplates[idx]" :profileCompoent="profileCompoent" :profileName="profileName" :grandParentStructureObj="parentStructureObj" :parentStructureObj="structure" :parentStructure="['nothing']"  :nested="true"></EditMainComponent>
+        <EditMainComponent  v-for="(pt,idx) in activeTemplate.propertyTemplates" 
+          :ptGuid="ptGuid"  
+          :level="level" 
+          :bnodeProperty="bnodeProperty"
+          :propertyPath="propertyPath"
+          :key="idx" 
+          :isMini="isMini" 
+          :position="idx" 
+          :activeTemplate="Object.assign({nested:true},activeTemplate)" 
+          :structure="activeTemplate.propertyTemplates[idx]" 
+          :profileCompoent="profileCompoent" 
+          :profileName="profileName" 
+          :grandParentStructureObj="parentStructureObj" 
+          :parentStructureObj="structure" 
+          :parentStructure="['nothing']"  
+          :nested="true">          
+        </EditMainComponent>
       </template>
 
   </div>
@@ -107,7 +153,11 @@ export default {
     nested: Boolean,
     isMini: Boolean,
     dynamic: String,
-    ptGuid: String
+    ptGuid: String,
+    level: Number,
+    bnodeProperty: String,
+    propertyPath: Array,
+
   },  
   data: function() {
     return {
@@ -346,7 +396,7 @@ export default {
         this.$store.dispatch("refTemplateChange", { self: this, profileName:this.profileName, profileComponet: this.profileCompoent, structure: this.structure, template:this.activeTemplate, parentId: this.structure.parentId, nextRef:this.rtLookup[nextRefID], thisRef: this.rtLookup[currentRefID] }).then(() => {
          
           let nextRef = JSON.parse(JSON.stringify(this.rtLookup[nextRefID]))
-          console.log(nextRef)
+          
           this.multiTemplateSelect = nextRef.resourceLabel
           this.multiTemplateSelectURI = nextRefID
           this.activeTemplate = nextRef

@@ -5,8 +5,24 @@ import parseProfile from "./parseProfile";
 import config from "./config";
 
 
+// we will use the built in DOMParser() in the browser 
+// but when unit tests are run it will use the jsdom module 
+const returnDOMParser = function(){
+	let p
+	try{
+		p = new DOMParser();
+	}catch(error){
+		const jsdom = require("jsdom");
+		const { JSDOM } = jsdom;
+		const { window } = new JSDOM(`<!DOCTYPE html><p>Hello world</p>`);
+		p = new window.DOMParser();
+	}	
+	return p
+}
 
-const parser = new DOMParser();
+
+
+const parser = returnDOMParser()
 
 
 const exportXML = {
@@ -115,9 +131,12 @@ const exportXML = {
 	},
 
 
-	suggestType: async function(propertyURI){
+	suggestType: async function(propertyURI, resourceTemplateId){
 
-
+		if (!resourceTemplateId){
+			resourceTemplateId=false
+		}
+		
 		let result = false
 
 
@@ -125,6 +144,16 @@ const exportXML = {
 		if (propertyURI==='http://www.w3.org/2000/01/rdf-schema#label'){
 			return 'http://www.w3.org/2000/01/rdf-schema#Literal'
 		}
+		if (propertyURI==='http://www.w3.org/1999/02/22-rdf-syntax-ns#value'){
+			return 'http://www.w3.org/2000/01/rdf-schema#Literal'
+		}
+		if (propertyURI==='http://www.loc.gov/mads/rdf/v1#componentList'){
+			return 'http://www.w3.org/1999/02/22-rdf-syntax-ns#List'
+		}
+
+		
+
+		
 
 
 		// at this point we have a well cached lookup of the whole onotlogy in localstorage
@@ -140,12 +169,14 @@ const exportXML = {
 				result = range.attributes['rdf:resource'].value
 			}
 		}
+		console.log('resourceTemplateId',resourceTemplateId)
+		console.log("Export suggest type 1",result)
 
-		let profileLookup = parseProfile.suggestType(propertyURI)
+		let profileLookup = parseProfile.suggestType(propertyURI,resourceTemplateId)
 		if (profileLookup != false){
 			result = profileLookup
 		}
-
+		console.log("Export suggest type 2",result)
 		// some try something else
 		// TODO if needed
 
@@ -275,7 +306,7 @@ const exportXML = {
 
 	debug: function(uri, msg, userValue, other1, other2, other3){
 
-		let print = false
+		let print = true
 
 		if(print){
 			console.log(uri, msg, userValue, other1, other2, other3)
@@ -525,8 +556,19 @@ const exportXML = {
 			for (let pt of profile.rt[rt].ptOrder){
 
 				let ptObj = profile.rt[rt].pt[pt]
+				
+				let userValue
 
-				let userValue = ptObj.userValue
+				if (ptObj.userValue[ptObj.propertyURI] && ptObj.userValue[ptObj.propertyURI][0]){
+					userValue = ptObj.userValue[ptObj.propertyURI][0] 				
+				}else if (ptObj.userValue[ptObj.propertyURI]){
+					userValue = ptObj.userValue[ptObj.propertyURI]
+				}else{
+					userValue = ptObj.userValue 	
+				}
+
+
+				
 
 				if (this.ignoreProperties.indexOf(ptObj.propertyURI) > -1){
 					continue
@@ -536,8 +578,10 @@ const exportXML = {
 				// do some updates to the admin metadata 
 				if (pt.includes('http://id.loc.gov/ontologies/bibframe/adminMetadata')){
 
+					let adminData = ptObj.userValue['http://id.loc.gov/ontologies/bibframe/adminMetadata'][0]
+
 					// set the profile used
-					ptObj.userValue['http://id.loc.gov/ontologies/bflc/profile'] = [
+					adminData['http://id.loc.gov/ontologies/bflc/profile'] = [
 						{
 							'http://id.loc.gov/ontologies/bflc/profile' : rt							
 						}
@@ -545,13 +589,13 @@ const exportXML = {
 
 					// drop any existing changeDate and add our own
 					try{
-						delete ptObj.userValue['http://id.loc.gov/ontologies/bibframe/changeDate']
+						delete adminData['http://id.loc.gov/ontologies/bibframe/changeDate']
 					}catch (e){
 						//
 					}
 
 					// add our own
-					ptObj.userValue['http://id.loc.gov/ontologies/bibframe/changeDate'] = [
+					adminData['http://id.loc.gov/ontologies/bibframe/changeDate'] = [
 						{
 							'http://id.loc.gov/ontologies/bibframe/changeDate' : new Date().toISOString().split('.')[0]+"Z",
 							'@datatype': 'http://www.w3.org/2001/XMLSchema#dateTime'
@@ -559,8 +603,8 @@ const exportXML = {
 					]
 
 					// and make a creationdate if it doesn't yet exist
-					if (!ptObj.userValue['http://id.loc.gov/ontologies/bibframe/creationDate']){
-						ptObj.userValue['http://id.loc.gov/ontologies/bibframe/creationDate'] = [
+					if (!adminData['http://id.loc.gov/ontologies/bibframe/creationDate']){
+						adminData['http://id.loc.gov/ontologies/bibframe/creationDate'] = [
 							{
 								'http://id.loc.gov/ontologies/bibframe/creationDate' : new Date().toISOString().split('.')[0]+"Z",
 								'@datatype': 'http://www.w3.org/2001/XMLSchema#dateTime'
@@ -580,7 +624,7 @@ const exportXML = {
 				// does it even have any userValues?
 				if (this.hasUserValue(userValue)){
 
-
+					console.log("Doing export on",pt,userValue)
 
 					// keep track of what resource teplates we used in this record
 					if (xmlVoidDataRtsUsed.indexOf(rt)==-1){
@@ -852,6 +896,7 @@ const exportXML = {
 										lp.innerHTML = label['http://www.w3.org/2000/01/rdf-schema#label']
 										bnode.appendChild(lp)
 									}
+									console.log()
 
 									if (label['@id']){
 										bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', label['@id'])
@@ -1038,7 +1083,7 @@ const exportXML = {
 
 			if (orginalProfile.rt[rt].unusedXml){
 				
-				let parser = new DOMParser();
+				let parser = returnDOMParser()
 
 
 
@@ -1081,7 +1126,7 @@ const exportXML = {
 
 		// also just build a basic version tosave
 
-		let parser = new DOMParser();
+		let parser = returnDOMParser()
 
 		
 		for (let URI in tleLookup['Work']){
@@ -1550,7 +1595,7 @@ const exportXML = {
 	returnHasItem: function(URI,profile,tleLookup){
 
 		let results = []
-		let parser = new DOMParser();
+		let parser = returnDOMParser()
 
 		for (let rt in profile.rt){
 
@@ -1591,7 +1636,7 @@ const exportXML = {
 
 	},
 	returnWorkFromInstance: function(instanceURI,profile,tleLookup){
-		let parser = new DOMParser();
+		let parser = returnDOMParser()
 
 		let results = null
 

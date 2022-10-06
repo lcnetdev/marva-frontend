@@ -624,7 +624,23 @@ const parseProfile = {
     },
 
 
-    populateDefaultValuesIntoUserValues: function(profile,onlyNew){
+
+
+    /**
+    * a convience function to say if a sepcific type of URI is a literal
+    * this allows a single place to change what qualifies as a literal
+    * @param {string} URI - the string URI to test
+    * @return {bolean}
+    */    
+    isUriALiteral: function(URI){
+        if (config.isLiteral.map((v) => {return v.toLowerCase()}).indexOf(URI.toLowerCase()) > -1){
+            return true
+        }
+        return false
+    },
+
+
+    populateDefaultValuesIntoUserValues: async function(profile,onlyNew){
 
 
         // loop thorugh the profile being passed and add in the default values to all the userValue property
@@ -647,21 +663,42 @@ const parseProfile = {
 
                 pt = profile.rt[rt].pt[pt]
 
+                // console.log("Doing ", pt.propertyURI)
+
                 // if its right there in the PT
                 if (pt.valueConstraint.defaults && pt.valueConstraint.defaults.length>0){
+
+                    // make the base predicate
+
+                    pt.userValue[pt.propertyURI] = [{}]
+
+              
+                    let userValue = pt.userValue[pt.propertyURI][0]
+                    
+                    // set the type if needed
+                    let thisLevelType = await exportXML.suggestType(pt.propertyURI,rt)
+
+                    if (!this.isUriALiteral(thisLevelType)){
+                        userValue['@type'] = thisLevelType
+                    }      
+
+
+
+
                     pt.userValue['@guid'] = short.generate()
                     // its the root level property uri
                     if (pt.propertyURI == pt.userValue['@root']){
                         
                         if (pt.valueConstraint.defaults[0].defaultLiteral){
-                            pt.userValue['http://www.w3.org/2000/01/rdf-schema#label'] = [{
+                            userValue['http://www.w3.org/2000/01/rdf-schema#label'] = [{
                                 '@guid': short.generate(),
                                 'http://www.w3.org/2000/01/rdf-schema#label':pt.valueConstraint.defaults[0].defaultLiteral
                             }]
                         }
                         if (pt.valueConstraint.defaults[0].defaultURI){
-                            pt.userValue['@id'] = pt.valueConstraint.defaults[0].defaultURI
-                        }                        
+                            userValue['@id'] = pt.valueConstraint.defaults[0].defaultURI
+                        }      
+
                     }else{
 
 
@@ -669,7 +706,7 @@ const parseProfile = {
 
 
 
-                            pt.userValue[pt.propertyURI]= [{
+                            userValue[pt.propertyURI]= [{
                                 '@guid': short.generate(),
                                 'http://www.w3.org/2000/01/rdf-schema#label': [
                                     {
@@ -682,10 +719,10 @@ const parseProfile = {
                         }
 
                         if (pt.valueConstraint.defaults[0].defaultURI){
-                            pt.userValue[pt.propertyURI]['@id'] = pt.valueConstraint.defaults[0].defaultURI
+                            userValue[pt.propertyURI]['@id'] = pt.valueConstraint.defaults[0].defaultURI
 
                             if (pt.valueConstraint.valueDataType && pt.valueConstraint.valueDataType.dataTypeURI){
-                                pt.userValue[pt.propertyURI]['@type'] = pt.valueConstraint.valueDataType.dataTypeURI
+                                userValue[pt.propertyURI]['@type'] = pt.valueConstraint.valueDataType.dataTypeURI
                             }
 
                         }      
@@ -694,6 +731,7 @@ const parseProfile = {
 
 
                     }
+                    // console.log("userValue",userValue)
 
                 }
 
@@ -710,17 +748,31 @@ const parseProfile = {
                         for (let subpt of this.rtLookup[pt.valueConstraint.valueTemplateRefs[0]].propertyTemplates ){
                             if (subpt.valueConstraint.defaults && subpt.valueConstraint.defaults.length>0){
 
+                                // make the base predicate
+
+                                if (!pt.userValue[pt.propertyURI]){
+                                    pt.userValue[pt.propertyURI] = [{}]
+                                }
+                                
+                                let userValue = pt.userValue[pt.propertyURI][0]
+                                
+                                // set the type if needed
+                                let thisLevelType = await exportXML.suggestType(pt.propertyURI,rt)
+
+                                if (!this.isUriALiteral(thisLevelType)){
+                                    userValue['@type'] = thisLevelType
+                                }     
 
                                 if (subpt.propertyURI == pt.userValue['@root']){
                                     
                                     if (subpt.valueConstraint.defaults[0].defaultLiteral){
-                                        pt.userValue['http://www.w3.org/2000/01/rdf-schema#label'] = [{
+                                        userValue['http://www.w3.org/2000/01/rdf-schema#label'] = [{
                                             '@guid': short.generate(),
                                             'http://www.w3.org/2000/01/rdf-schema#label':subpt.valueConstraint.defaults[0].defaultLiteral
                                         }]
                                     }
                                     if (subpt.valueConstraint.defaults[0].defaultURI){
-                                        pt.userValue['@id'] = subpt.valueConstraint.defaults[0].defaultURI
+                                        userValue['@id'] = subpt.valueConstraint.defaults[0].defaultURI
                                     }                
 
                                 }else{
@@ -728,7 +780,7 @@ const parseProfile = {
 
                                     if (subpt.valueConstraint.defaults[0].defaultLiteral){
 
-                                        pt.userValue[subpt.propertyURI]= [{
+                                        userValue[subpt.propertyURI]= [{
                                             '@guid': short.generate(),
                                             'http://www.w3.org/2000/01/rdf-schema#label': [
                                                 {
@@ -742,10 +794,10 @@ const parseProfile = {
 
                                     if (subpt.valueConstraint.defaults[0].defaultURI){
                                         // console.log('subpt',subpt)
-                                        if (pt.userValue[subpt.propertyURI][0]){
-                                            pt.userValue[subpt.propertyURI][0]['@id'] = subpt.valueConstraint.defaults[0].defaultURI    
+                                        if (userValue[subpt.propertyURI][0]){
+                                            userValue[subpt.propertyURI][0]['@id'] = subpt.valueConstraint.defaults[0].defaultURI    
                                             if (subpt.valueConstraint.valueDataType && subpt.valueConstraint.valueDataType.dataTypeURI){
-                                                pt.userValue[subpt.propertyURI][0]['@type'] = subpt.valueConstraint.valueDataType.dataTypeURI
+                                                userValue[subpt.propertyURI][0]['@type'] = subpt.valueConstraint.valueDataType.dataTypeURI
                                             }
 
                                         }
@@ -1276,7 +1328,7 @@ const parseProfile = {
     },
 
     // eslint-disable-next-line
-    removeValueSimple: function(currentState, idGuid, labelGuid){
+    removeValueSimple: function(currentState, ptGuid, idGuid, labelGuid, propertyPath){
 
 
         // console.log('idGuid',idGuid)
@@ -1285,97 +1337,198 @@ const parseProfile = {
         for (let rt in currentState.rt){
             for (let pt in currentState.rt[rt].pt){
 
+                if (currentState.rt[rt].pt[pt]['@guid'] == ptGuid){
 
-                let removed = false
+                    // console.log("propertyPath",propertyPath)
+
+                    let removed = false
+                    let userValue = currentState.rt[rt].pt[pt].userValue
+
+                    // filter out any bnodes with that guid starting from the bottom of the hiearchy
+                    // then go through and check if we left an empty bnode hiearchy and if so delete it
+                    if (propertyPath.length==4){
+                        let L0URI = propertyPath[0].propertyURI
+                        let L1URI = propertyPath[1].propertyURI
+                        let L2URI = propertyPath[2].propertyURI
+                        let L3URI = propertyPath[3].propertyURI
+
+                        let f = userValue[L0URI][0][L1URI][0][L2URI][0][L3URI].filter((v=>{ return (v['@guid'] && (v['@guid'] != idGuid && v['@guid'] != labelGuid))}))
+                        if (f.length < userValue[L0URI][0][L1URI][0][L2URI][0][L3URI].length){
+                            removed = true
+                            userValue[L0URI][0][L1URI][0][L2URI][0][L3URI] = f
+                        }
+                        if (userValue[L0URI][0][L1URI][0][L2URI][0][L3URI].length==0){
+                            delete userValue[L0URI][0][L1URI][0][L2URI][0][L3URI]
+                        }
 
 
-                // the root node is the lookup val, reset the uservale to remove
-                if (idGuid != null && currentState.rt[rt].pt[pt].userValue['@guid'] == idGuid){
-                    currentState.rt[rt].pt[pt].userValue = {'@root':currentState.rt[rt].pt[pt].propertyURI}
-                    removed = true
-                }else if (idGuid != null) {
-
-                    // search through the properties to see if we have this guid anywhere
-
-                    for (let uvLvl1PropertyName in currentState.rt[rt].pt[pt].userValue){
-
-                        if (Array.isArray(currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName])){
-
-                            let removeIdx = -1
-                            let counter = -1
-                            for (let childValueObj of currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName]){
-                                counter++
-                                if (childValueObj['@guid'] && childValueObj['@guid'] == idGuid){
-                                    removeIdx = counter
-                                    removed = true
-                                }
-                            }
-                            if (removeIdx>-1){
-                                currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName].splice(removeIdx,1)
-                                // if we removed the only/last one remove the property
-                                if (currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName].length==0){
-                                    delete currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName]
-                                }
-                            }
+                        // then check to see if the parent bnode of the thing we just deleted is now an empty bnode
+                        // if so then remove it. filter on any of the keys that are not important if the bnode is empty and if it is zero then there is nothing to save
+                        if (Object.keys(userValue[L0URI][0][L1URI][0][L2URI][0]).filter((k) => { return (k != '@guid' && k != '@id' && k !='@type' && k !='@flags') }).length==0){
+                            userValue[L0URI][0][L1URI][0][L2URI].pop()
                         }
                     }
-                }else if (labelGuid != null) {
 
-                    // search through the properties to see if we have this guid anywhere
-                    for (let uvLvl1PropertyName in currentState.rt[rt].pt[pt].userValue){
+                    if (propertyPath.length==3){
+                        let L0URI = propertyPath[0].propertyURI
+                        let L1URI = propertyPath[1].propertyURI
+                        let L2URI = propertyPath[2].propertyURI
+                        // console.log("here userValue[L0URI][0][L1URI][0][L2URI]",userValue[L0URI][0][L1URI][0][L2URI])
+                        let f = userValue[L0URI][0][L1URI][0][L2URI].filter((v=>{ return (v['@guid'] && v['@guid'] != idGuid && v['@guid'] != labelGuid)}))
+                        // console.log("f is",f)
 
-                        if (Array.isArray(currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName])){
+                        if (f.length < userValue[L0URI][0][L1URI][0][L2URI].length){
+                            removed = true
+                            userValue[L0URI][0][L1URI][0][L2URI] = f
+                        }
+     
 
-                            let removeIdx = -1
-                            let counter = -1
-                            for (let childValueObj of currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName]){
-                                counter++
+                        if (userValue[L0URI][0][L1URI][0][L2URI].length==0){
+                            delete userValue[L0URI][0][L1URI][0][L2URI]
+                        }
 
-
-                                // look for the label that has that label guid and delte the parent
-                                for (let uvLvl2PropertyName in childValueObj){
-                                    if (Array.isArray(childValueObj[uvLvl2PropertyName])){
-
-                                        // if it is an array see what guids it has
-
-                                        let guids = childValueObj[uvLvl2PropertyName].map((x)=>{ return x['@guid']})
-
-                                        if (guids.indexOf(labelGuid)>-1){
-                                            removeIdx = counter
-                                        }
-                                    }
-
-                                }
-
-                            }
-                            if (removeIdx>-1){
-                                currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName].splice(removeIdx,1)
-                                // if we removed the only/last one remove the property
-                                if (currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName].length==0){
-                                    delete currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName]
-                                    removed = true
-                                }
-                            }
-
-
-
+                        // then check to see if the parent bnode of the thing we just deleted is now an empty bnode
+                        // if so then remove it. filter on any of the keys that are not important if the bnode is empty and if it is zero then there is nothing to save
+                        if (Object.keys(userValue[L0URI][0][L1URI][0]).filter((k) => { return (k != '@guid' && k != '@id' && k !='@type' && k !='@flags') }).length==0){
+                            userValue[L0URI][0][L1URI].pop()
                         }
 
                     }
+                    if (propertyPath.length==2){
+                        let L0URI = propertyPath[0].propertyURI
+                        let L1URI = propertyPath[1].propertyURI
+
+                        // console.log("userValue[L0URI]",userValue[L0URI])
+                        let f = userValue[L0URI][0][L1URI].filter((v=>{ return (v['@guid'] && v['@guid'] != idGuid && v['@guid'] != labelGuid)}))
+                        if (f.length < userValue[L0URI][0][L1URI].length){
+                            removed = true
+                            userValue[L0URI][0][L1URI] = f
+                        }
+     
+
+                        if (userValue[L0URI][0][L1URI].length==0){
+                            delete userValue[L0URI][0][L1URI]
+                        }
+
+                        // then check to see if the parent bnode of the thing we just deleted is now an empty bnode
+                        // if so then remove it. filter on any of the keys that are not important if the bnode is empty and if it is zero then there is nothing to save
+                        if (Object.keys(userValue[L0URI][0]).filter((k) => { return (k != '@guid' && k != '@id' && k !='@type' && k !='@flags') }).length==0){
+                            userValue[L0URI].pop()
+                        }
 
 
 
-                }
+                    }
+                    if (propertyPath.length==1){
+                        let L0URI = propertyPath[0].propertyURI
+
+                        let f = userValue[L0URI].filter((v=>{ return (v['@guid'] && v['@guid'] != idGuid && v['@guid'] != labelGuid)}))
+                        if (f.length < userValue[L0URI].length){
+                            removed = true
+                            userValue[L0URI] = f
+                        }
+
+
+                        if (userValue[L0URI].length==0){
+                            delete userValue[L0URI]
+                        }
 
 
 
-                if (removed){
+                    }
 
 
-                    
-                    store.state.activeUndoLog.push(`Removed lookup value from ${exportXML.namespaceUri(currentState.rt[rt].pt[pt].propertyURI)}`)
 
-                    break
+
+                    // // the root node is the lookup val, reset the uservale to remove
+                    // if (idGuid != null && currentState.rt[rt].pt[pt].userValue['@guid'] == idGuid){
+                    //     currentState.rt[rt].pt[pt].userValue = {'@root':currentState.rt[rt].pt[pt].propertyURI}
+                    //     removed = true
+                    // }else if (idGuid != null) {
+
+                    //     // search through the properties to see if we have this guid anywhere
+
+                    //     for (let uvLvl1PropertyName in currentState.rt[rt].pt[pt].userValue){
+
+                    //         if (Array.isArray(currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName])){
+
+                    //             let removeIdx = -1
+                    //             let counter = -1
+                    //             for (let childValueObj of currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName]){
+                    //                 counter++
+                    //                 if (childValueObj['@guid'] && childValueObj['@guid'] == idGuid){
+                    //                     removeIdx = counter
+                    //                     removed = true
+                    //                 }
+                    //             }
+                    //             if (removeIdx>-1){
+                    //                 currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName].splice(removeIdx,1)
+                    //                 // if we removed the only/last one remove the property
+                    //                 if (currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName].length==0){
+                    //                     delete currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName]
+                    //                 }
+                    //             }
+                    //         }
+                    //     }
+                    // }else if (labelGuid != null) {
+
+                    //     // search through the properties to see if we have this guid anywhere
+                    //     for (let uvLvl1PropertyName in currentState.rt[rt].pt[pt].userValue){
+
+                    //         if (Array.isArray(currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName])){
+
+                    //             let removeIdx = -1
+                    //             let counter = -1
+                    //             for (let childValueObj of currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName]){
+                    //                 counter++
+
+
+                    //                 // look for the label that has that label guid and delte the parent
+                    //                 for (let uvLvl2PropertyName in childValueObj){
+                    //                     if (Array.isArray(childValueObj[uvLvl2PropertyName])){
+
+                    //                         // if it is an array see what guids it has
+
+                    //                         let guids = childValueObj[uvLvl2PropertyName].map((x)=>{ return x['@guid']})
+
+                    //                         if (guids.indexOf(labelGuid)>-1){
+                    //                             removeIdx = counter
+                    //                         }
+                    //                     }
+
+                    //                 }
+
+                    //             }
+                    //             if (removeIdx>-1){
+                    //                 currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName].splice(removeIdx,1)
+                    //                 // if we removed the only/last one remove the property
+                    //                 if (currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName].length==0){
+                    //                     delete currentState.rt[rt].pt[pt].userValue[uvLvl1PropertyName]
+                    //                     removed = true
+                    //                 }
+                    //             }
+
+
+
+                    //         }
+
+                    //     }
+
+
+
+                    // }
+
+
+
+                    if (removed){
+
+
+                        
+                        store.state.activeUndoLog.push(`Removed lookup value from ${exportXML.namespaceUri(currentState.rt[rt].pt[pt].propertyURI)}`)
+
+                        break
+                    }
+
                 }
 
 
@@ -1393,133 +1546,230 @@ const parseProfile = {
 
 
 
-    setValueSimple: async function(currentState, ptGuid, parentURI, URI, valueURI, valueLabel){
+    setValueSimple: async function(currentState, ptGuid, valueURI, valueLabel, propertyPath){
 
         let results = {newData:{}}
 
-        // console.log("-------------Adding DATA---------------")
-        // console.log('currentState',currentState)
-        // console.log('ptGuid',ptGuid)
-        // console.log('parentURI',parentURI)
-        // console.log('URI',URI)
-        // console.log('valueURI',valueURI)
-        // console.log('valueLabel',valueLabel)
+        console.log("-------------Adding DATA---------------")
+        console.log('currentState',currentState)
+        console.log('ptGuid',ptGuid)
+        console.log('propertyPath',propertyPath)
+        console.log('valueURI',valueURI)
+        console.log('valueLabel',valueLabel)
 
 
-        // find the pt for the value we are editing
         for (let rt in currentState.rt){
-
             for (let pt in currentState.rt[rt].pt){
-
                 if (currentState.rt[rt].pt[pt]['@guid'] == ptGuid){
 
                     let userValue = currentState.rt[rt].pt[pt].userValue
 
+                    // we are adding the rdfs:label and the @id to this property
+                    // we just need to know where to put it
 
-                    // top level
-                    if (currentState.rt[rt].pt[pt].propertyURI == URI){
-                        // console.log("--- top level")
-                        //s
+                    // a reference to allow us to write to the end of the hierarchy
+                    let currentUserValuePos = userValue
 
-                        let topLvlTmpGuid = short.generate()
-                        let tmpGuid = short.generate()
-                        
+                    // used as a reference to the last postion's parent, so we can easily add a new sibling
+                    let currentUserValuePosParent = null
+
+                    // keeps track of the @type, will be the last @type of the hiearchy when done looping
+                    let thisLevelType
+
+                    for (let p of propertyPath){
+
+
+
+                        if (!currentUserValuePos[p.propertyURI]){
+                            currentUserValuePos[p.propertyURI] = []
+                        }
+
+                        thisLevelType = await exportXML.suggestType(p.propertyURI,rt)
+
+                        let thisLevel = {'@guid':short.generate()}
+                        if (!this.isUriALiteral(thisLevelType)){
+                            thisLevel['@type'] = thisLevelType
+                        }
+
+                        if (currentUserValuePos[p.propertyURI].length==0){
+                            currentUserValuePos[p.propertyURI].push(thisLevel)
+                        }
+
+                        currentUserValuePosParent = currentUserValuePos[p.propertyURI]
+                        currentUserValuePos = currentUserValuePos[p.propertyURI][0]
+                    }
+
+                    
+
+                    // now the hiearchy exists, if it did not before, add in the value
+                    // if it doesn't have a value yet over write the [0] which is the one we just made
+                    if (!currentUserValuePos['@id'] && !currentUserValuePos['http://www.w3.org/2000/01/rdf-schema#label']){
 
                         if (valueLabel){
-
-                            if (!userValue['http://www.w3.org/2000/01/rdf-schema#label']){
-                                userValue['http://www.w3.org/2000/01/rdf-schema#label'] = []    
-                            }else{
-
-                                // if we are adding multi values to the top level simple look up give the 
-                                // exporter a little help to know what to do
-                                // this is not really a expected behavior ( to add multiple lookups to a top level simple look up but..)
-                                if (!userValue['@flags']){
-                                    userValue['@flags'] = ['simpleLookupTopLevelMulti']
-                                }
-                            }
-                                                    
-
-                            userValue['@guid'] = topLvlTmpGuid
-                            userValue['http://www.w3.org/2000/01/rdf-schema#label'].push(
-
-                                {
-                                    '@guid': tmpGuid,
-                                    'http://www.w3.org/2000/01/rdf-schema#label':valueLabel
-
-                                }
-
-                            )
-                            store.state.activeUndoLog.push(`Added lookup value ${valueLabel} to ${exportXML.namespaceUri(URI)}`)
-
-                            
+                            currentUserValuePos['http://www.w3.org/2000/01/rdf-schema#label']  = [{
+                                '@guid' : short.generate(),
+                                'http://www.w3.org/2000/01/rdf-schema#label': valueLabel
+                            }]
                         }
-                        if (valueURI && !userValue['@id']){
-                            userValue['@id'] = valueURI
+                        if (valueURI){
+                            currentUserValuePos['@id']  = valueURI
                         }
 
-
-                        
-                        results.newData = {'guid': topLvlTmpGuid, valueLabel: valueLabel, valueURI:valueURI }
-
-
-
+                        results.newData = {'guid': currentUserValuePos['@guid'], valueLabel: valueLabel, valueURI:valueURI }
 
                     }else{
 
-                        if (!userValue[URI]){
-                            userValue[URI] = []
+                        // it has a value, so create a new one and through it into 
+                        let newVal = {'@guid':short.generate()}
+                        
+                        if (!this.isUriALiteral(thisLevelType)){
+                            newVal['@type'] = thisLevelType
                         }
 
-                        // console.log("--- not top level")
-
-                        let newData = {'@guid': short.generate()}
-                        newData['@type'] = await exportXML.suggestType(URI)
                         if (valueLabel){
-                            newData['http://www.w3.org/2000/01/rdf-schema#label'] = []
+                            newVal['http://www.w3.org/2000/01/rdf-schema#label']  = [{
+                                '@guid' : short.generate(),
+                                'http://www.w3.org/2000/01/rdf-schema#label': valueLabel
+                            }]
+                        }
+                        if (valueURI){
+                            newVal['@id']  = valueURI
+                        }
 
-                            newData['http://www.w3.org/2000/01/rdf-schema#label'].push(
+                        currentUserValuePosParent.push(newVal)
+                        results.newData = {'guid': newVal['@guid'], valueLabel: valueLabel, valueURI:valueURI }
 
-                                {
-                                    '@guid': short.generate(),
-                                    'http://www.w3.org/2000/01/rdf-schema#label':valueLabel
 
-                                }
+                    }
 
-                            )
-                            store.state.activeUndoLog.push(`Added lookup value ${valueLabel} to ${exportXML.namespaceUri(URI)}`)
+
+                    store.state.activeUndoLog.push(`Added lookup value ${valueLabel} to ${exportXML.namespaceUri( propertyPath[propertyPath.length-1].propertyURI  )}`)
+
+                    console.log("userValue =",userValue)
+
+
+                }
+            }
+        }
+
+
+
+
+
+        // // find the pt for the value we are editing
+        // for (let rt in currentState.rt){
+
+        //     for (let pt in currentState.rt[rt].pt){
+
+        //         if (currentState.rt[rt].pt[pt]['@guid'] == ptGuid){
+
+        //             let userValue = currentState.rt[rt].pt[pt].userValue
+
+
+        //             // top level
+        //             if (currentState.rt[rt].pt[pt].propertyURI == URI){
+        //                 // console.log("--- top level")
+        //                 //s
+
+        //                 let topLvlTmpGuid = short.generate()
+        //                 let tmpGuid = short.generate()
+                        
+
+        //                 if (valueLabel){
+
+        //                     if (!userValue['http://www.w3.org/2000/01/rdf-schema#label']){
+        //                         userValue['http://www.w3.org/2000/01/rdf-schema#label'] = []    
+        //                     }else{
+
+        //                         // if we are adding multi values to the top level simple look up give the 
+        //                         // exporter a little help to know what to do
+        //                         // this is not really a expected behavior ( to add multiple lookups to a top level simple look up but..)
+        //                         if (!userValue['@flags']){
+        //                             userValue['@flags'] = ['simpleLookupTopLevelMulti']
+        //                         }
+        //                     }
+                                                    
+
+        //                     userValue['@guid'] = topLvlTmpGuid
+        //                     userValue['http://www.w3.org/2000/01/rdf-schema#label'].push(
+
+        //                         {
+        //                             '@guid': tmpGuid,
+        //                             'http://www.w3.org/2000/01/rdf-schema#label':valueLabel
+
+        //                         }
+
+        //                     )
+        //                     store.state.activeUndoLog.push(`Added lookup value ${valueLabel} to ${exportXML.namespaceUri(URI)}`)
+
+                            
+        //                 }
+        //                 if (valueURI && !userValue['@id']){
+        //                     userValue['@id'] = valueURI
+        //                 }
+
+
+                        
+        //                 results.newData = {'guid': topLvlTmpGuid, valueLabel: valueLabel, valueURI:valueURI }
+
+
+
+
+        //             }else{
+
+        //                 if (!userValue[URI]){
+        //                     userValue[URI] = []
+        //                 }
+
+        //                 // console.log("--- not top level")
+
+        //                 let newData = {'@guid': short.generate()}
+        //                 newData['@type'] = await exportXML.suggestType(URI)
+        //                 if (valueLabel){
+        //                     newData['http://www.w3.org/2000/01/rdf-schema#label'] = []
+
+        //                     newData['http://www.w3.org/2000/01/rdf-schema#label'].push(
+
+        //                         {
+        //                             '@guid': short.generate(),
+        //                             'http://www.w3.org/2000/01/rdf-schema#label':valueLabel
+
+        //                         }
+
+        //                     )
+        //                     store.state.activeUndoLog.push(`Added lookup value ${valueLabel} to ${exportXML.namespaceUri(URI)}`)
 
 
                             
-                        }
-                        if (valueURI){
-                            newData['@id'] = valueURI
-                        }
+        //                 }
+        //                 if (valueURI){
+        //                     newData['@id'] = valueURI
+        //                 }
 
-                        userValue[URI].push(newData)
+        //                 userValue[URI].push(newData)
                         
-                        results.newData = {'guid': newData['@guid'], valueLabel: valueLabel, valueURI:valueURI }
+        //                 results.newData = {'guid': newData['@guid'], valueLabel: valueLabel, valueURI:valueURI }
 
 
                       
 
 
-                    }
+        //             }
 
-                    // always make sure there is a type
-                    if (!userValue['@type']){
-                        userValue['@type'] = await exportXML.suggestType(currentState.rt[rt].pt[pt].propertyURI)
+        //             // always make sure there is a type
+        //             if (!userValue['@type']){
+        //                 userValue['@type'] = await exportXML.suggestType(currentState.rt[rt].pt[pt].propertyURI)
                         
-                    }
+        //             }
 
-                }
+        //         }
 
                 
 
 
-            }
+        //     }
 
-        }
+        // }
 
 
 
@@ -1531,254 +1781,521 @@ const parseProfile = {
     },
 
     // eslint-disable-next-line
-    setValueLiteral: async function(currentState, ptGuid, guid, parentURI, URI, value){
+    setValueLiteral: async function(currentState, ptGuid, guid, value, propertyPath){
 
 
         let results = {newGuid:null}
 
 
-        
-        // console.log(currentState, ptGuid, guid, parentURI, URI, value)
-        // console.log('before:',JSON.parse(JSON.stringify(currentState)))
+
+        // console.log("Start New STATE ---------down arrow down arrow down arrow---------------")
+        // console.log("currentState",currentState)
+        // console.log("ptGuid",ptGuid)
+        // console.log("guid",guid)
+        // console.log("value",value)
+        // console.log("propertyPath",propertyPath)
+
 
         // find the pt for the value we are editing
         for (let rt in currentState.rt){
-
             for (let pt in currentState.rt[rt].pt){
                 if (currentState.rt[rt].pt[pt]['@guid'] == ptGuid){
 
-                    // console.log("found the existing PTguid",currentState.rt[rt].pt[pt])
                     let userValue = currentState.rt[rt].pt[pt].userValue
-
+                    // console.log('propertyPath',propertyPath)
+                    // console.log(userValue)
+                    // if the guid was passed that means we are editing an existing value in the userValue
+                    // otherwise we are creating one
                     if (guid){
-                        // console.log("here1")
-                        // it already has a guid, so we are editing an existing value
-                        if (parentURI){
-                            // console.log("here2")
-                            // if we have the parent URi try to search using both 
-                            if (userValue[parentURI]){
-                                // console.log("here3")
-                                for (let parentValueArray of userValue[parentURI]){
-                                    if (parentValueArray[URI]){          
-                                      // console.log(JSON.parse(JSON.stringify(parentValueArray[URI])))
-                                      for (let childValue of parentValueArray[URI]){
-                                        if (childValue['@guid'] == guid){
-                                            // console.log(JSON.parse(JSON.stringify(childValue)))
-                                            // console.log("here5",childValue,guid,URI)
-                                            childValue[URI] = value                                            
-                                            if (value && value.length==0){
-                                                // value is null remove the property
-                                                // if it is a multiliteral make sure we remvoe the correct one                                            
-                                                if (parentValueArray[URI].length>1){
-                                                    parentValueArray[URI] = parentValueArray[URI].filter((v)=>{ return (v['@guid'] != guid) })
-                                                }else{
-                                                    delete parentValueArray[URI]    
-                                                }
-                                                results.newGuid=false
-                                                // console.log("here5a")
-                                            }else if (!value){
-                                                // value is null remove the property
-                                                // if it is a multiliteral make sure we remvoe the correct one
-                                                if (parentValueArray[URI].length>1){
-                                                    parentValueArray[URI] = parentValueArray[URI].filter((v)=>{ return (v['@guid'] != guid) })
-                                                }else{
-                                                    delete parentValueArray[URI]    
-                                                }
 
-                                                results.newGuid=false
-                                                // console.log("here5b")
-                                            }
+                        //
+                        // console.log("guidguidguidguid",guid)
 
-                                        }
-                                      }
+                        // we know where to look because we have the property path
+                        if (propertyPath.length === 1){
+
+                            let L0URI = propertyPath[0].propertyURI
+                            if (userValue[L0URI]){
+                                for (let uv of userValue[L0URI]){
+                                    if (uv[L0URI] && uv['@guid'] === guid){
+                                        uv[L0URI] = value
+                                        break
                                     }
                                 }
-                            }else{
-
-                                // console.log("here6")
-                                // just search using the propertyURI
-                                if (userValue[URI]){
-                                  // console.log("here611")  
-                                  for (let childValue of userValue[URI]){
-                                    if (childValue['@guid'] == guid){
-                                        childValue[URI] = value
-                                        if (value && value.length==0){
-
-
-                                            if (userValue[URI].length>1){
-                                                userValue[URI] = userValue[URI].filter((v)=>{ return (v['@guid'] != guid) })
-                                            }else{
-                                                delete userValue[URI]    
-                                            }
-
-                                            results.newGuid=false
-                                            // console.log("here66")
-                                        }else if (!value){
-                                            // value is null remove the property
-                                            if (userValue[URI].length>1){
-                                                userValue[URI] = userValue[URI].filter((v)=>{ return (v['@guid'] != guid) })
-                                            }else{
-                                                delete userValue[URI]    
-                                            }
-
-
-                                            results.newGuid=false
-                                            // console.log("here666")
-                                        }
-
-                                    }
-                                  }
-                                }
-
                             }
+                        }else if (propertyPath.length === 2){
+
+                            let L0URI = propertyPath[0].propertyURI
+                            let L1URI = propertyPath[1].propertyURI
+
+                            if (userValue[L0URI] && userValue[L0URI][0] && userValue[L0URI][0][L1URI]){
+                                let filterVal = userValue[L0URI][0][L1URI].filter((v) => { return (v['@guid'] === guid)})
+                                if (filterVal && filterVal[0]){
+                                    filterVal[0][L1URI] = value
+                                }
+                            }
+
+                        }else if (propertyPath.length === 3){
+
+                            let L0URI = propertyPath[0].propertyURI
+                            let L1URI = propertyPath[1].propertyURI
+                            let L2URI = propertyPath[2].propertyURI
+
+                            if (userValue[L0URI] && userValue[L0URI][0] && userValue[L0URI][0][L1URI] && userValue[L0URI][0][L1URI][0] && userValue[L0URI][0][L1URI][0][L2URI]){
+                                let filterVal = userValue[L0URI][0][L1URI][0][L2URI].filter((v) => { return (v['@guid'] === guid)})
+                                if (filterVal && filterVal[0]){
+                                    filterVal[0][L2URI] = value
+                                }
+                            }
+
+
+
+
+                        }else if (propertyPath.length === 4){
+
+                            let L0URI = propertyPath[0].propertyURI
+                            let L1URI = propertyPath[1].propertyURI
+                            let L2URI = propertyPath[2].propertyURI
+                            let L3URI = propertyPath[3].propertyURI
+                            
+                            if (userValue[L0URI] && userValue[L0URI][0] && userValue[L0URI][0][L1URI] && userValue[L0URI][0][L1URI][0] && userValue[L0URI][0][L1URI][0][L2URI] && userValue[L0URI][0][L1URI][0][L2URI][0] && userValue[L0URI][0][L1URI][0][L2URI][0][L3URI]){
+                                let filterVal = userValue[L0URI][0][L1URI][0][L2URI][0][L3URI].filter((v) => { return (v['@guid'] === guid)})
+                                if (filterVal && filterVal[0]){
+                                    filterVal[0][L3URI] = value
+                                }
+                            }
+
+
+
                         }else{
-                            // console.log("here7")
-                            // not nested
-                            if (userValue[URI]){
-                              for (let childValue of userValue[URI]){
-                                if (childValue['@guid'] == guid){
-                                    childValue[URI] = value
-                                    if (value && value.length==0){
 
-                                        if (userValue[URI].length>1){
-                                            userValue[URI] = userValue[URI].filter((v)=>{ return (v['@guid'] != guid) })
-                                        }else{
-                                            delete userValue[URI]    
-                                        }
-
-                                        results.newGuid=false
-                                    }else if (!value){
-                                        // value is null remove the property
-
-                                        if (userValue[URI].length>1){
-                                            userValue[URI] = userValue[URI].filter((v)=>{ return (v['@guid'] != guid) })
-                                        }else{
-                                            delete userValue[URI]    
-                                        }
-
-                                        results.newGuid=false
-                                    }
-
-                                }
-
-
-                              }
-                            }
-
-
+                            console.error("Error trying to update literal value but cannot find guid")
                         }
-
-
 
 
 
                     }else{
 
-                        
+                        //
+                         // console.log("propertyPath.length",propertyPath.length)
 
-                        // we are not editing, we are creating a new node
-                        // can we find the uri to use, 
+                        // this will be the new userValue
+                        //let data = {'@guid': short.generate()}
 
-                        let data = {'@guid': short.generate()}
+                        if (propertyPath.length==0){ 
+                            console.error("Something is wrong with propertyPath, reading zero levels, no place to set data.")
 
-                        // if there is no type yet and this is not a literal component PT then
-                        // it needs to have a type assigned
-                        // console.log('creating',currentState.rt[rt].pt[pt])
-                        if (currentState.rt[rt].pt[pt].type != 'literal' && !currentState.rt[rt].pt[pt].userValue['@type']){
+                        // we need to build the hiearchy or reuse the hiearchy 
+                        // we could do a recursive thing here but the depth is really usually only 2 levels max, 3 is extream, so we will accomdate 3 levels   
 
-                            currentState.rt[rt].pt[pt].userValue['@type'] = await exportXML.suggestType(currentState.rt[rt].pt[pt].propertyURI)
+                        }else if(propertyPath.length === 1){
 
-                            // it might be that it is a reftemplate though
-                            // so see if the ref templates have any valueDataType we should use (use the first one if so)
-                            if (currentState.rt[rt].pt[pt].valueConstraint.valueTemplateRefs.length>0){
-                                if (this.rtLookup[currentState.rt[rt].pt[pt].valueConstraint.valueTemplateRefs[0]]){
-                                    if (this.rtLookup[currentState.rt[rt].pt[pt].valueConstraint.valueTemplateRefs[0]].resourceURI){
-                                        currentState.rt[rt].pt[pt].userValue['@type'] = this.rtLookup[currentState.rt[rt].pt[pt].valueConstraint.valueTemplateRefs[0]].resourceURI
-                                    }
-                                }
-                                
+                            // this level is like
+                            // <bf:orignDate>1234</bf:orignDate>
+
+
+                            let L0URI = propertyPath[0].propertyURI
+
+                            let data = {'@guid': short.generate()}
+
+                            // length is one, it means it is a rool level value, not in a bnode
+                            // so set the value 
+                            data[L0URI] = value
+                            // does this proerty exist at this level yet, if so push it otherwise make it
+                            if (!userValue[L0URI]){
+                                userValue[L0URI] = []
+                            }
+                            userValue[L0URI].push(data)
+                            results.newGuid = data['@guid']
+
+
+                        }else if (propertyPath.length >= 2){
+
+                            // this level is like
+                            // <bf:title>
+                            //   <bf:Title>
+                            //     <bf:mainTitle>hallo</bf:mainTitle>
+
+                            let L0URI = propertyPath[0].propertyURI
+                            let L1URI = propertyPath[1].propertyURI
+
+                            // build the L0 if it doesn't exist
+                            // if it does find it and referenece it
+
+                            // we may or maynot need this
+                            let L0New = {
+                                '@guid': short.generate(),
+                                '@type': await exportXML.suggestType(L0URI)
                             }
 
-                            // console.log(structure)
-                        }
-
-                        results.newGuid = data['@guid']
-                        data[URI] = value
-
-                        if (userValue['@root'] == parentURI && !userValue[URI]){
-                            //we have no data at all yet
-                            
-                            
-                            userValue[URI] = []
-                            userValue[URI].push(data)
-
-
-                        }else if (userValue['@root'] == parentURI && userValue[URI]){
-                            // we have the property created already, just add it to that one
-                            userValue[URI].push(data)
-                            
-
-                        }else if (userValue['@root'] != parentURI && parentURI && !userValue[parentURI]){
-                            // we are using the parent but its not made yet
-                            userValue[parentURI] = []
-                            let subUri = {'@guid': short.generate()}
-                            subUri['@type'] = await exportXML.suggestType(parentURI)
-
-                            subUri[URI] = []
-                            subUri[URI].push(data)
-                            userValue[parentURI].push(subUri)
+                            if (!userValue[L0URI]){
+                                userValue[L0URI] = [L0New]
+                            }else{
+                                if (userValue[L0URI].length===0){
+                                    // it exists but is empty for some reason
+                                    // add it in
+                                    userValue[L0URI].push(L0New)
+                                }else if (userValue[L0URI].length>1){
+                                    console.error(L0URI, 'has more than one blank node of the same type?')
+                                }
+                            }
 
 
-                            
+                            let L1Type = await exportXML.suggestType(L1URI)
+                            let L1New = {
+                                '@guid': short.generate(),
+                                '@type': L1Type
+                            }
+                            // if we done at this level then set the value
+                            // it may be the case that we need to keep going deeper
+                            if (propertyPath.length === 2){
+                                L1New[L1URI] = value
+                                results.newGuid = L1New['@guid']
+                            }
 
+                            // literals dont have @types in our export process
+                            // its used to test, so remove it if this level is a literal
+                            if (this.isUriALiteral(L1Type)){
+                                delete L1New['@type']
+                            }
 
-                        }else if (userValue['@root'] != parentURI && userValue[parentURI] && userValue[parentURI].length == 1 && !userValue[parentURI][0][URI]){
-                            // we are using the parent but the child URI is not made yet
-                            userValue[parentURI][0][URI] = []
-                            userValue[parentURI][0][URI].push(data)
-                            
-
-                        }else if (userValue['@root'] != parentURI && userValue[parentURI] && userValue[parentURI].length == 1 && userValue[parentURI][0][URI]){
-                            // everything exists, just add the new value
-                            userValue[parentURI][0][URI].push(data)
+                            // we can attach the L1 to the L0 bnode
+                            if (!userValue[L0URI][0][L1URI]){
+                                userValue[L0URI][0][L1URI] = []
+                            }
+                            userValue[L0URI][0][L1URI].push(L1New)
                             
 
-                        }else if (userValue['@root'] == URI && !userValue[URI]){
+                            // keep it going if needed
+                            if (propertyPath.length >= 3){
 
-                            // no data yet
-                            userValue[URI] = []
-                            userValue[URI].push(data)
+                                let L2URI = propertyPath[2].propertyURI
+                                let L2Type = await exportXML.suggestType(L2URI)
+                                let L2New = {
+                                    '@guid': short.generate(),
+                                    '@type': L2Type
+                                }
+                                
+
+                                // literals dont have @types in our export process
+                                // its used to test, so remove it if this level is a literal
+                                if (this.isUriALiteral(L2Type)){
+                                    delete L2New['@type']
+                                }
+
+                                // we can attach the L2 to the L1 bnode
+                                if (!userValue[L0URI][0][L1URI][0][L2URI]){
+                                    userValue[L0URI][0][L1URI][0][L2URI] = []
+                                }
+                                userValue[L0URI][0][L1URI][0][L2URI].push(L2New)
+
+                                if (propertyPath.length === 3){
+                                    results.newGuid = L2New['@guid']
+                                    L2New[L2URI] = value
+                                }
+
+                                // keep it going if needed
+                                if (propertyPath.length >= 4){
+
+                                    let L3URI = propertyPath[3].propertyURI
+                                    let L3Type = await exportXML.suggestType(L3URI)
+                                    let L3New = {
+                                        '@guid': short.generate(),
+                                        '@type': L3Type
+                                    }
+                                    
+
+                                    // literals dont have @types in our export process
+                                    // its used to test, so remove it if this level is a literal
+                                    if (this.isUriALiteral(L3Type)){
+                                        delete L3New['@type']
+                                    }
+
+                                    if (propertyPath.length === 4){
+                                        results.newGuid = L3New['@guid']
+                                        L3New[L3URI] = value
+                                    }
 
 
+                                    // we can attach the L3 to the L2 bnode
+                                    if (!userValue[L0URI][0][L1URI][0][L2URI][0][L3URI]){
+                                        userValue[L0URI][0][L1URI][0][L2URI][0][L3URI] = []
+                                    }
+                                    userValue[L0URI][0][L1URI][0][L2URI][0][L3URI].push(L3New)
+
+
+                                }
+
+
+
+                            }
 
                         }else{
-
-                            console.error('---------------------------------------------')
-                            console.error('Cannot find the right place to insert this value')
-                            console.error('currentState, ptGuid, guid, parentURI, URI, value')
-                            console.error(currentState, ptGuid, guid, parentURI, URI, value)
-                            console.error('---------------------------------------------')
-
+                            console.error("Error trying to write to the correct literal level")
                         }
-                        
 
 
 
                     }
 
-                    
-
-                    // we found it stop looping
+                    // if we found the ptGuid thats it
                     break
+
                 }
             }
+        }
+
+
+
+
+        // console.log("End New STATE  -----------^^^^^^-------------")
+
+        // if (guid === 3){
+
             
-        }        
+        //     // console.log(currentState, ptGuid, guid, parentURI, URI, value)
+        //     // console.log('before:',JSON.parse(JSON.stringify(currentState)))
+
+        //     // find the pt for the value we are editing
+        //     for (let rt in currentState.rt){
+
+        //         for (let pt in currentState.rt[rt].pt){
+        //             if (currentState.rt[rt].pt[pt]['@guid'] == ptGuid){
+
+        //                 // console.log("found the existing PTguid",currentState.rt[rt].pt[pt])
+        //                 let userValue = currentState.rt[rt].pt[pt].userValue
+
+        //                 if (guid){
+        //                     // console.log("here1")
+        //                     // it already has a guid, so we are editing an existing value
+        //                     if (parentURI){
+        //                         // console.log("here2")
+        //                         // if we have the parent URi try to search using both 
+        //                         if (userValue[parentURI]){
+        //                             // console.log("here3")
+        //                             for (let parentValueArray of userValue[parentURI]){
+        //                                 if (parentValueArray[URI]){          
+        //                                   // console.log(JSON.parse(JSON.stringify(parentValueArray[URI])))
+        //                                   for (let childValue of parentValueArray[URI]){
+        //                                     if (childValue['@guid'] == guid){
+        //                                         // console.log(JSON.parse(JSON.stringify(childValue)))
+        //                                         // console.log("here5",childValue,guid,URI)
+        //                                         childValue[URI] = value                                            
+        //                                         if (value && value.length==0){
+        //                                             // value is null remove the property
+        //                                             // if it is a multiliteral make sure we remvoe the correct one                                            
+        //                                             if (parentValueArray[URI].length>1){
+        //                                                 parentValueArray[URI] = parentValueArray[URI].filter((v)=>{ return (v['@guid'] != guid) })
+        //                                             }else{
+        //                                                 delete parentValueArray[URI]    
+        //                                             }
+        //                                             results.newGuid=false
+        //                                             // console.log("here5a")
+        //                                         }else if (!value){
+        //                                             // value is null remove the property
+        //                                             // if it is a multiliteral make sure we remvoe the correct one
+        //                                             if (parentValueArray[URI].length>1){
+        //                                                 parentValueArray[URI] = parentValueArray[URI].filter((v)=>{ return (v['@guid'] != guid) })
+        //                                             }else{
+        //                                                 delete parentValueArray[URI]    
+        //                                             }
+
+        //                                             results.newGuid=false
+        //                                             // console.log("here5b")
+        //                                         }
+
+        //                                     }
+        //                                   }
+        //                                 }
+        //                             }
+        //                         }else{
+
+        //                             // console.log("here6")
+        //                             // just search using the propertyURI
+        //                             if (userValue[URI]){
+        //                               // console.log("here611")  
+        //                               for (let childValue of userValue[URI]){
+        //                                 if (childValue['@guid'] == guid){
+        //                                     childValue[URI] = value
+        //                                     if (value && value.length==0){
+
+
+        //                                         if (userValue[URI].length>1){
+        //                                             userValue[URI] = userValue[URI].filter((v)=>{ return (v['@guid'] != guid) })
+        //                                         }else{
+        //                                             delete userValue[URI]    
+        //                                         }
+
+        //                                         results.newGuid=false
+        //                                         // console.log("here66")
+        //                                     }else if (!value){
+        //                                         // value is null remove the property
+        //                                         if (userValue[URI].length>1){
+        //                                             userValue[URI] = userValue[URI].filter((v)=>{ return (v['@guid'] != guid) })
+        //                                         }else{
+        //                                             delete userValue[URI]    
+        //                                         }
+
+
+        //                                         results.newGuid=false
+        //                                         // console.log("here666")
+        //                                     }
+
+        //                                 }
+        //                               }
+        //                             }
+
+        //                         }
+        //                     }else{
+        //                         // console.log("here7")
+        //                         // not nested
+        //                         if (userValue[URI]){
+        //                           for (let childValue of userValue[URI]){
+        //                             if (childValue['@guid'] == guid){
+        //                                 childValue[URI] = value
+        //                                 if (value && value.length==0){
+
+        //                                     if (userValue[URI].length>1){
+        //                                         userValue[URI] = userValue[URI].filter((v)=>{ return (v['@guid'] != guid) })
+        //                                     }else{
+        //                                         delete userValue[URI]    
+        //                                     }
+
+        //                                     results.newGuid=false
+        //                                 }else if (!value){
+        //                                     // value is null remove the property
+
+        //                                     if (userValue[URI].length>1){
+        //                                         userValue[URI] = userValue[URI].filter((v)=>{ return (v['@guid'] != guid) })
+        //                                     }else{
+        //                                         delete userValue[URI]    
+        //                                     }
+
+        //                                     results.newGuid=false
+        //                                 }
+
+        //                             }
+
+
+        //                           }
+        //                         }
+
+
+        //                     }
 
 
 
 
-        let pURI = (parentURI) ? parentURI : URI;
+
+        //                 }else{
+
+                            
+
+        //                     // we are not editing, we are creating a new node
+        //                     // can we find the uri to use, 
+
+        //                     let data = {'@guid': short.generate()}
+
+        //                     // if there is no type yet and this is not a literal component PT then
+        //                     // it needs to have a type assigned
+        //                     // console.log('creating',currentState.rt[rt].pt[pt])
+        //                     if (currentState.rt[rt].pt[pt].type != 'literal' && !currentState.rt[rt].pt[pt].userValue['@type']){
+
+        //                         currentState.rt[rt].pt[pt].userValue['@type'] = await exportXML.suggestType(currentState.rt[rt].pt[pt].propertyURI)
+
+        //                         // it might be that it is a reftemplate though
+        //                         // so see if the ref templates have any valueDataType we should use (use the first one if so)
+        //                         if (currentState.rt[rt].pt[pt].valueConstraint.valueTemplateRefs.length>0){
+        //                             if (this.rtLookup[currentState.rt[rt].pt[pt].valueConstraint.valueTemplateRefs[0]]){
+        //                                 if (this.rtLookup[currentState.rt[rt].pt[pt].valueConstraint.valueTemplateRefs[0]].resourceURI){
+        //                                     currentState.rt[rt].pt[pt].userValue['@type'] = this.rtLookup[currentState.rt[rt].pt[pt].valueConstraint.valueTemplateRefs[0]].resourceURI
+        //                                 }
+        //                             }
+                                    
+        //                         }
+
+        //                         // console.log(structure)
+        //                     }
+
+        //                     results.newGuid = data['@guid']
+        //                     data[URI] = value
+
+        //                     if (userValue['@root'] == parentURI && !userValue[URI]){
+        //                         //we have no data at all yet
+                                
+                                
+        //                         userValue[URI] = []
+        //                         userValue[URI].push(data)
+
+
+        //                     }else if (userValue['@root'] == parentURI && userValue[URI]){
+        //                         // we have the property created already, just add it to that one
+        //                         userValue[URI].push(data)
+                                
+
+        //                     }else if (userValue['@root'] != parentURI && parentURI && !userValue[parentURI]){
+        //                         // we are using the parent but its not made yet
+        //                         userValue[parentURI] = []
+        //                         let subUri = {'@guid': short.generate()}
+        //                         subUri['@type'] = await exportXML.suggestType(parentURI)
+
+        //                         subUri[URI] = []
+        //                         subUri[URI].push(data)
+        //                         userValue[parentURI].push(subUri)
+
+
+                                
+
+
+        //                     }else if (userValue['@root'] != parentURI && userValue[parentURI] && userValue[parentURI].length == 1 && !userValue[parentURI][0][URI]){
+        //                         // we are using the parent but the child URI is not made yet
+        //                         userValue[parentURI][0][URI] = []
+        //                         userValue[parentURI][0][URI].push(data)
+                                
+
+        //                     }else if (userValue['@root'] != parentURI && userValue[parentURI] && userValue[parentURI].length == 1 && userValue[parentURI][0][URI]){
+        //                         // everything exists, just add the new value
+        //                         userValue[parentURI][0][URI].push(data)
+                                
+
+        //                     }else if (userValue['@root'] == URI && !userValue[URI]){
+
+        //                         // no data yet
+        //                         userValue[URI] = []
+        //                         userValue[URI].push(data)
+
+
+
+        //                     }else{
+
+        //                         console.error('---------------------------------------------')
+        //                         console.error('Cannot find the right place to insert this value')
+        //                         console.error('currentState, ptGuid, guid, parentURI, URI, value')
+        //                         console.error(currentState, ptGuid, guid, parentURI, URI, value)
+        //                         console.error('---------------------------------------------')
+
+        //                     }
+                            
+
+
+
+        //                 }
+
+                        
+
+        //                 // we found it stop looping
+        //                 break
+        //             }
+        //         }
+                
+        //     }        
+
+        // }
+
+
+        // let pURI = (parentURI) ? parentURI : URI;
+        let pURI = propertyPath[propertyPath.length - 1].propertyURI
+
 
         // see if the previous edit of this literal is already in the log, if so remove
         store.state.activeUndoLog = store.state.activeUndoLog.filter((f) => (f.includes(exportXML.namespaceUri(pURI)) ? false : true ))
@@ -1888,65 +2405,98 @@ const parseProfile = {
 
     // a special funtion just for subject headings (how fun)
     
-    setValueSubject: async function(currentState, component, activeProfileName, subjectComponents){
+    setValueSubject: async function(currentState, component, activeProfileName, subjectComponents,propertyPath){
 
         // we're just going to overwrite the whole userValue with the constructed headings
 
-
+        console.log(propertyPath)
 
         // find it
         if (currentState.rt[activeProfileName].pt[component]){
 
 
+            // build out the hiearchy
+            let userValue = {}
+
+            // build the hiearchy if it doesn't exist to place the data
+
+            // we are adding the rdfs:label and the @id to this property
+            // we just need to know where to put it
+
+            // a reference to allow us to write to the end of the hierarchy
+            let currentUserValuePos = userValue
+
+            // used as a reference to the last postion's parent, so we can easily add a new sibling
+            // let currentUserValuePosParent = null
+
+            // keeps track of the @type, will be the last @type of the hiearchy when done looping
+            let thisLevelType
+
+            for (let p of propertyPath){
+
+                // if the property is owl:sameAs it is the last field 
+                // of where we are building the entitiy, so we don't  want
+                // bf:Agent -> owl:sameAs we just want the bf:Agent with values filed in there
+                if (p.propertyURI=='http://www.w3.org/2002/07/owl#sameAs'){
+                    break
+                }
+                // same with component list, we'll build that manually
+                if (p.propertyURI=='http://www.loc.gov/mads/rdf/v1#componentList'){
+                    break
+                }
 
 
-            // hard code some properties that are used
-            let userValue = {
-                "@root": currentState.rt[activeProfileName].pt[component].userValue['@root'],
-                "@guid": currentState.rt[activeProfileName].pt[component].userValue['@guid'],
-                "@type": "http://id.loc.gov/ontologies/bibframe/Topic",
-                "http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme": [{
-                    "@guid": "7M2siXsnQb73NRmttF333f",
-                    "@id": "http://id.loc.gov/authorities/subjects"
-                }],
-                // "http://id.loc.gov/ontologies/bibframe/source": [{
-                //     "@guid": short.generate(),
-                //     "@type": "http://id.loc.gov/ontologies/bibframe/Source",
-                //     "http://www.w3.org/2000/01/rdf-schema#label": [{
-                //         "@guid": short.generate(),
-                //         "http://www.w3.org/2000/01/rdf-schema#label": "Library of Congress subject headings"
-                //     }],
-                //     "http://id.loc.gov/ontologies/bibframe/code": [{
-                //         "@guid": short.generate(),
-                //         "http://id.loc.gov/ontologies/bibframe/code": "lcsh"
-                //     }],                    
-                //     "@id": "http://id.loc.gov/vocabulary/subjectSchemes/lcsh"
-                // }]
+
+                if (!currentUserValuePos[p.propertyURI]){
+                    currentUserValuePos[p.propertyURI] = []
+                }
+                thisLevelType = await exportXML.suggestType(p.propertyURI)
+                let thisLevel = {'@guid':short.generate()}
+                if (!this.isUriALiteral(thisLevelType)){
+                    thisLevel['@type'] = thisLevelType
+                }
+                if (currentUserValuePos[p.propertyURI].length==0){
+                    currentUserValuePos[p.propertyURI].push(thisLevel)
+                }
+                // currentUserValuePosParent = currentUserValuePos[p.propertyURI]
+                currentUserValuePos = currentUserValuePos[p.propertyURI][0]
+            } 
+
+
+            if (currentState.rt[activeProfileName].pt[component].userValue["http://id.loc.gov/ontologies/bibframe/subject"] &&
+                currentState.rt[activeProfileName].pt[component].userValue["http://id.loc.gov/ontologies/bibframe/subject"][0] &&
+                currentState.rt[activeProfileName].pt[component].userValue["http://id.loc.gov/ontologies/bibframe/subject"][0]["http://id.loc.gov/ontologies/bibframe/source"] &&
+                currentState.rt[activeProfileName].pt[component].userValue["http://id.loc.gov/ontologies/bibframe/subject"][0]["http://id.loc.gov/ontologies/bibframe/source"][0]){
+
+                userValue["http://id.loc.gov/ontologies/bibframe/subject"][0]["http://id.loc.gov/ontologies/bibframe/source"] = JSON.parse(JSON.stringify(currentState.rt[activeProfileName].pt[component].userValue["http://id.loc.gov/ontologies/bibframe/subject"][0]["http://id.loc.gov/ontologies/bibframe/source"]))
+            }               
+
+            if (currentState.rt[activeProfileName].pt[component].userValue['@root']){
+                userValue['@root'] = JSON.parse(JSON.stringify(currentState.rt[activeProfileName].pt[component].userValue['@root']))
+            }
+            if (currentState.rt[activeProfileName].pt[component].userValue['@guid']){
+                userValue['@guid'] = JSON.parse(JSON.stringify(currentState.rt[activeProfileName].pt[component].userValue['@guid']))
             }
 
-            // but find a source predicates so we can add those back in
-            if (currentState.rt[activeProfileName].pt[component].userValue['http://id.loc.gov/ontologies/bibframe/source']){
-                userValue['http://id.loc.gov/ontologies/bibframe/source'] = JSON.parse(JSON.stringify(currentState.rt[activeProfileName].pt[component].userValue['http://id.loc.gov/ontologies/bibframe/source']))
-             }
+            currentUserValuePos["http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme"] = [{
+                "@guid": short.generate(),
+                "@id": "http://id.loc.gov/authorities/subjects"
+            }]
 
-            // overwrite the guid if it already exists in the source
-            // if (currentState.rt[activeProfileName].pt[component].userValue['http://id.loc.gov/ontologies/bibframe/source']){
-            //     userValue['http://id.loc.gov/ontologies/bibframe/source']['@guid'] = currentState.rt[activeProfileName].pt[component].userValue['http://id.loc.gov/ontologies/bibframe/source']['@guid']
-            // }
 
 
             // if it is a solo subject heading
             if (subjectComponents.length==1){
 
-                userValue['@id'] = subjectComponents[0].uri
+                currentUserValuePos['@id'] = subjectComponents[0].uri
 
-                userValue['@type'] = subjectComponents[0].type.replace('madsrdf:','http://www.loc.gov/mads/rdf/v1#')
+                currentUserValuePos['@type'] = subjectComponents[0].type.replace('madsrdf:','http://www.loc.gov/mads/rdf/v1#')
 
-                userValue["http://www.loc.gov/mads/rdf/v1#authoritativeLabel"] = [{
+                currentUserValuePos["http://www.loc.gov/mads/rdf/v1#authoritativeLabel"] = [{
                     "@guid": short.generate(),
                     "http://www.loc.gov/mads/rdf/v1#authoritativeLabel": subjectComponents[0].label
                 }]
-                userValue["http://www.w3.org/2000/01/rdf-schema#label"] = [{
+                currentUserValuePos["http://www.w3.org/2000/01/rdf-schema#label"] = [{
                     "@guid": short.generate(),
                     "http://www.w3.org/2000/01/rdf-schema#label": subjectComponents[0].label
                 }]
@@ -1963,11 +2513,11 @@ const parseProfile = {
 
                 store.state.activeUndoLog.push(`Added subject heading ${fullLabel}`)
 
-                userValue["http://www.loc.gov/mads/rdf/v1#authoritativeLabel"] = [{
+                currentUserValuePos["http://www.loc.gov/mads/rdf/v1#authoritativeLabel"] = [{
                     "@guid": short.generate(),
                     "http://www.loc.gov/mads/rdf/v1#authoritativeLabel": fullLabel
                 }]
-                userValue["http://www.w3.org/2000/01/rdf-schema#label"] = [{
+                currentUserValuePos["http://www.w3.org/2000/01/rdf-schema#label"] = [{
                     "@guid": short.generate(),
                     "http://www.w3.org/2000/01/rdf-schema#label": fullLabel
                 }]
@@ -1975,7 +2525,7 @@ const parseProfile = {
                 // we need to make the component list then
 
 
-                userValue["http://www.loc.gov/mads/rdf/v1#componentList"] = []
+                currentUserValuePos["http://www.loc.gov/mads/rdf/v1#componentList"] = []
 
                 for (let c of subjectComponents){
 
@@ -1992,18 +2542,114 @@ const parseProfile = {
                         compo['@id'] = c.uri
                     }
 
-                    userValue["http://www.loc.gov/mads/rdf/v1#componentList"].push(compo)
+                    currentUserValuePos["http://www.loc.gov/mads/rdf/v1#componentList"].push(compo)
 
 
                 }
-
-
-
-
-
-
-
             }
+
+
+
+
+
+
+            // // hard code some properties that are used
+            // let userValue = {
+            //     "@root": currentState.rt[activeProfileName].pt[component].userValue['@root'],
+            //     "@guid": currentState.rt[activeProfileName].pt[component].userValue['@guid'],
+            //     "@type": "http://id.loc.gov/ontologies/bibframe/Topic",
+            //     "http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme": [{
+            //         "@guid": "7M2siXsnQb73NRmttF333f",
+            //         "@id": "http://id.loc.gov/authorities/subjects"
+            //     }],
+            //     // "http://id.loc.gov/ontologies/bibframe/source": [{
+            //     //     "@guid": short.generate(),
+            //     //     "@type": "http://id.loc.gov/ontologies/bibframe/Source",
+            //     //     "http://www.w3.org/2000/01/rdf-schema#label": [{
+            //     //         "@guid": short.generate(),
+            //     //         "http://www.w3.org/2000/01/rdf-schema#label": "Library of Congress subject headings"
+            //     //     }],
+            //     //     "http://id.loc.gov/ontologies/bibframe/code": [{
+            //     //         "@guid": short.generate(),
+            //     //         "http://id.loc.gov/ontologies/bibframe/code": "lcsh"
+            //     //     }],                    
+            //     //     "@id": "http://id.loc.gov/vocabulary/subjectSchemes/lcsh"
+            //     // }]
+            // }
+
+            // // but find a source predicates so we can add those back in
+            // if (currentState.rt[activeProfileName].pt[component].userValue['http://id.loc.gov/ontologies/bibframe/source']){
+            //     userValue['http://id.loc.gov/ontologies/bibframe/source'] = JSON.parse(JSON.stringify(currentState.rt[activeProfileName].pt[component].userValue['http://id.loc.gov/ontologies/bibframe/source']))
+            //  }
+
+            // // overwrite the guid if it already exists in the source
+            // // if (currentState.rt[activeProfileName].pt[component].userValue['http://id.loc.gov/ontologies/bibframe/source']){
+            // //     userValue['http://id.loc.gov/ontologies/bibframe/source']['@guid'] = currentState.rt[activeProfileName].pt[component].userValue['http://id.loc.gov/ontologies/bibframe/source']['@guid']
+            // // }
+
+
+            // // if it is a solo subject heading
+            // if (subjectComponents.length==1){
+
+            //     userValue['@id'] = subjectComponents[0].uri
+
+            //     userValue['@type'] = subjectComponents[0].type.replace('madsrdf:','http://www.loc.gov/mads/rdf/v1#')
+
+            //     userValue["http://www.loc.gov/mads/rdf/v1#authoritativeLabel"] = [{
+            //         "@guid": short.generate(),
+            //         "http://www.loc.gov/mads/rdf/v1#authoritativeLabel": subjectComponents[0].label
+            //     }]
+            //     userValue["http://www.w3.org/2000/01/rdf-schema#label"] = [{
+            //         "@guid": short.generate(),
+            //         "http://www.w3.org/2000/01/rdf-schema#label": subjectComponents[0].label
+            //     }]
+                
+            //     store.state.activeUndoLog.push(`Added subject heading ${subjectComponents[0].label}`)
+
+
+            // }else if (subjectComponents.length>1){
+
+            //     //userValue
+
+                
+            //     let fullLabel = subjectComponents.map((c)=>{return c.label}).join('--')
+
+            //     store.state.activeUndoLog.push(`Added subject heading ${fullLabel}`)
+
+            //     userValue["http://www.loc.gov/mads/rdf/v1#authoritativeLabel"] = [{
+            //         "@guid": short.generate(),
+            //         "http://www.loc.gov/mads/rdf/v1#authoritativeLabel": fullLabel
+            //     }]
+            //     userValue["http://www.w3.org/2000/01/rdf-schema#label"] = [{
+            //         "@guid": short.generate(),
+            //         "http://www.w3.org/2000/01/rdf-schema#label": fullLabel
+            //     }]
+
+            //     // we need to make the component list then
+
+
+            //     userValue["http://www.loc.gov/mads/rdf/v1#componentList"] = []
+
+            //     for (let c of subjectComponents){
+
+            //         let compo = {
+            //                 "@guid": short.generate(),
+            //                 "@type": c.type.replace('madsrdf:','http://www.loc.gov/mads/rdf/v1#'),
+            //                 "http://www.loc.gov/mads/rdf/v1#authoritativeLabel": [{
+            //                     "@guid": short.generate(),
+            //                     "http://www.loc.gov/mads/rdf/v1#authoritativeLabel": c.label
+            //                 }]
+            //         }
+
+            //         if (c.uri){
+            //             compo['@id'] = c.uri
+            //         }
+
+            //         userValue["http://www.loc.gov/mads/rdf/v1#componentList"].push(compo)
+
+
+            //     }
+            // }
 
 
 
@@ -2023,29 +2669,29 @@ const parseProfile = {
 
     },
 
-    setValueComplex: async function(currentState, component, key, activeProfileName, template, value, structure,parentStructure){
+    setValueComplex: async function(currentState, component, key, activeProfileName, template, value, structure,parentStructure, propertyPath){
 
             console.log("setvaluecomplex")
             console.log(currentState, component, key, activeProfileName, template, value, structure,parentStructure)
+            console.log("propertyPath",propertyPath)
             // if it is a top level Work uri don't let them change it
             if (!parentStructure && structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/Work'){
-
                 alert("You cannot change the existing URI of this work.")
                 return currentState
-
             }
 
-            let relatedEdgecaseParentProperty = -1
-
-            if (parentStructure){
-               relatedEdgecaseParentProperty = ['http://id.loc.gov/ontologies/bibframe/relatedTo','http://id.loc.gov/ontologies/bflc/relation','http://id.loc.gov/ontologies/bibframe/expressionOf'].indexOf(parentStructure.propertyURI)
-            }
-
+            // let relatedEdgecaseParentProperty = -1
+            // if (parentStructure){
+            //    relatedEdgecaseParentProperty = ['http://id.loc.gov/ontologies/bibframe/relatedTo','http://id.loc.gov/ontologies/bflc/relation','http://id.loc.gov/ontologies/bibframe/expressionOf'].indexOf(parentStructure.propertyURI)
+            // }
 
             if (!activeProfileName){
                 console.warn('setValueComplex no activeProfileName')
                 return currentState
             }
+
+
+
 
             // console.log('currentState, component, key, activeProfileName, template, value, structure,parentStructure')
             // console.log(currentState, component, key, activeProfileName, template, value, structure,parentStructure)
@@ -2055,58 +2701,105 @@ const parseProfile = {
             // adding this value, so remove it and break
             if (typeof value === 'object' && Object.keys(value).length==0){
                 if (currentState.rt[activeProfileName].pt[component]){
+
+
+                    let foundWhatToDelete = false
+
+                    if (propertyPath.length>=4 && !foundWhatToDelete){
+                        // there are only two levels, the [0] is always root predicate
+                        if (currentState.rt[activeProfileName].pt[component].userValue[propertyPath[0].propertyURI] &&
+                            currentState.rt[activeProfileName].pt[component].userValue[propertyPath[0].propertyURI][0] &&
+                            currentState.rt[activeProfileName].pt[component].userValue[propertyPath[0].propertyURI][0][propertyPath[1].propertyURI] &&
+                            currentState.rt[activeProfileName].pt[component].userValue[propertyPath[0].propertyURI][0][propertyPath[1].propertyURI][0] &&
+                            currentState.rt[activeProfileName].pt[component].userValue[propertyPath[0].propertyURI][0][propertyPath[1].propertyURI][0][propertyPath[2].propertyURI] &&
+                            currentState.rt[activeProfileName].pt[component].userValue[propertyPath[0].propertyURI][0][propertyPath[1].propertyURI][0][propertyPath[2].propertyURI][0] && 
+                            currentState.rt[activeProfileName].pt[component].userValue[propertyPath[0].propertyURI][0][propertyPath[1].propertyURI][0][propertyPath[2].propertyURI][0][propertyPath[3].propertyURI]){
+
+                            delete currentState.rt[activeProfileName].pt[component].userValue[propertyPath[0].propertyURI][0][propertyPath[1].propertyURI][0][propertyPath[2].propertyURI][0][propertyPath[3].propertyURI]
+                            foundWhatToDelete = true
+                        }
+                    }
+
+                    if (propertyPath.length>=3 && !foundWhatToDelete){
+                        // there are only two levels, the [0] is always root predicate
+                        if (currentState.rt[activeProfileName].pt[component].userValue[propertyPath[0].propertyURI] &&
+                            currentState.rt[activeProfileName].pt[component].userValue[propertyPath[0].propertyURI][0] &&
+                            currentState.rt[activeProfileName].pt[component].userValue[propertyPath[0].propertyURI][0][propertyPath[1].propertyURI] &&
+                            currentState.rt[activeProfileName].pt[component].userValue[propertyPath[0].propertyURI][0][propertyPath[1].propertyURI][0] &&
+                            currentState.rt[activeProfileName].pt[component].userValue[propertyPath[0].propertyURI][0][propertyPath[1].propertyURI][propertyPath[2].propertyURI]){
+                            
+                            delete currentState.rt[activeProfileName].pt[component].userValue[propertyPath[0].propertyURI][0][propertyPath[1].propertyURI][propertyPath[2].propertyURI]
+                            foundWhatToDelete = true
+                        }
+                    }
+
+
+                    if (propertyPath.length>=2 && !foundWhatToDelete){
+
+                        // there are only two levels, the [0] is always root predicate
+                        if (currentState.rt[activeProfileName].pt[component].userValue[propertyPath[0].propertyURI] &&
+                            currentState.rt[activeProfileName].pt[component].userValue[propertyPath[0].propertyURI][0] &&
+                            currentState.rt[activeProfileName].pt[component].userValue[propertyPath[0].propertyURI][0][propertyPath[1].propertyURI]){
+                            
+                            delete currentState.rt[activeProfileName].pt[component].userValue[propertyPath[0].propertyURI][0][propertyPath[1].propertyURI]
+                            foundWhatToDelete = true
+                        }
+                    }
+
+
+
                     // currentState.rt[activeProfileName].pt[component].userValue = {
                     //     '@guid': short.generate(),                        
                     //     '@root': currentState.rt[activeProfileName].pt[component].propertyURI
                     // }
 
-                    // first remove the root @id and @type if its there
-                    if (currentState.rt[activeProfileName].pt[component].userValue['@id']){
-                       delete currentState.rt[activeProfileName].pt[component].userValue['@id']
-                    }
-                    if (currentState.rt[activeProfileName].pt[component].userValue['@type']){
-                       delete currentState.rt[activeProfileName].pt[component].userValue['@type']
-                    }
+                //     // first remove the root @id and @type if its there
+                //     if (currentState.rt[activeProfileName].pt[component].userValue['@id']){
+                //        delete currentState.rt[activeProfileName].pt[component].userValue['@id']
+                //     }
+                //     if (currentState.rt[activeProfileName].pt[component].userValue['@type']){
+                //        delete currentState.rt[activeProfileName].pt[component].userValue['@type']
+                //     }
 
 
-                    // remove the root property if there
-                    if (currentState.rt[activeProfileName].pt[component].userValue[currentState.rt[activeProfileName].pt[component].propertyURI]){
-                        delete currentState.rt[activeProfileName].pt[component].userValue[currentState.rt[activeProfileName].pt[component].propertyURI]
+                //     // remove the root property if there
+                //     if (currentState.rt[activeProfileName].pt[component].userValue[currentState.rt[activeProfileName].pt[component].propertyURI]){
+                //         delete currentState.rt[activeProfileName].pt[component].userValue[currentState.rt[activeProfileName].pt[component].propertyURI]
                         
 
-                    }
-                    if (currentState.rt[activeProfileName].pt[component].userValue[structure.propertyURI]){
-                        delete currentState.rt[activeProfileName].pt[component].userValue[structure.propertyURI]
+                //     }
+                //     if (currentState.rt[activeProfileName].pt[component].userValue[structure.propertyURI]){
+                //         delete currentState.rt[activeProfileName].pt[component].userValue[structure.propertyURI]
                         
 
-                    }
-                    if (currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI]){
-                        delete currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI]
+                //     }
+                //     if (currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI]){
+                //         delete currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI]
                         
-                    }                    
+                //     }                    
 
 
 
-                    // loop through and remove anything that doesn't have a @type, a bnode
-                    for (let key in currentState.rt[activeProfileName].pt[component].userValue){
-                        if (!key.startsWith('@')){
+                //     // loop through and remove anything that doesn't have a @type, a bnode
+                //     for (let key in currentState.rt[activeProfileName].pt[component].userValue){
+                //         if (!key.startsWith('@')){
                             
-                            let remove = true
-                            if (Array.isArray(currentState.rt[activeProfileName].pt[component].userValue[key])){
-                                for (let obj of currentState.rt[activeProfileName].pt[component].userValue[key]){
-                                    if (obj['@type']){
-                                        remove = false
-                                    }
-                                }
-                            }
+                //             let remove = true
+                //             if (Array.isArray(currentState.rt[activeProfileName].pt[component].userValue[key])){
+                //                 for (let obj of currentState.rt[activeProfileName].pt[component].userValue[key]){
+                //                     if (obj['@type']){
+                //                         remove = false
+                //                     }
+                //                 }
+                //             }
                             
-                            if (remove){
+                //             if (remove){
                                 
-                                delete currentState.rt[activeProfileName].pt[component].userValue[key]
-                            }
+                //                 delete currentState.rt[activeProfileName].pt[component].userValue[key]
+                //             }
 
-                        }
-                    }
+                //         }
+                //     }
 
 
 
@@ -2122,185 +2815,310 @@ const parseProfile = {
 
             
             if (currentState.rt[activeProfileName].pt[component]){
-                    
-                // console.log('>>>>',structure.type, parentStructure)
 
-                // need tofigure out what property to store this under the in the userValue
-                if (parentStructure && key == 'http://www.w3.org/2002/07/owl#sameAs' && currentState.rt[activeProfileName].pt[component].propertyURI != parentStructure.propertyURI){
-                    // console.log('case 1')
-                    if (!currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI]){
-                        currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI] = []
+
+
+
+                // build the hiearchy if it doesn't exist to place the data
+                let userValue = currentState.rt[activeProfileName].pt[component].userValue
+
+                // we are adding the rdfs:label and the @id to this property
+                // we just need to know where to put it
+
+                // a reference to allow us to write to the end of the hierarchy
+                let currentUserValuePos = userValue
+
+                // used as a reference to the last postion's parent, so we can easily add a new sibling
+                // let currentUserValuePosParent = null
+
+                // keeps track of the @type, will be the last @type of the hiearchy when done looping
+                let thisLevelType
+
+                for (let p of propertyPath){
+
+                    // if the property is owl:sameAs it is the last field 
+                    // of where we are building the entitiy, so we don't  want
+                    // bf:Agent -> owl:sameAs we just want the bf:Agent with values filed in there
+
+                    if (p.propertyURI=='http://www.w3.org/2002/07/owl#sameAs'){
+                        break
                     }
 
-                    let userValue = currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI]
+                    
+                    
+                    
 
+
+                    
+                    if (!currentUserValuePos[p.propertyURI]){
+                        currentUserValuePos[p.propertyURI] = []
+                    }
+
+                    thisLevelType = await exportXML.suggestType(p.propertyURI,activeProfileName)
+                    
+                    let thisLevel = {'@guid':short.generate()}
+                    if (!this.isUriALiteral(thisLevelType)){
+                        thisLevel['@type'] = thisLevelType
+                        
+                    }
+
+                    if (currentUserValuePos[p.propertyURI].length==0){
+                        currentUserValuePos[p.propertyURI].push(thisLevel)
+                    }
+
+                    // currentUserValuePosParent = currentUserValuePos[p.propertyURI]
+                    currentUserValuePos = currentUserValuePos[p.propertyURI][0]
+                
+                }                
+
+
+                // some possible options to set the @type
+
+                // if there is a valueConstraint.valueDataType.dataTypeURI set it to that
+                if (currentState.rt[activeProfileName].pt[component].valueConstraint 
+                    && currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType 
+                    && currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType.dataTypeURI){
+                    currentUserValuePos['@type'] = currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType.dataTypeURI
+                    
+                }
+
+                // if it or its parent have a valueConstraint.valueDataType.dataTypeURI then use it
+                if (parentStructure && parentStructure.valueConstraint.valueDataType.dataTypeURI && parentStructure.valueConstraint.valueDataType.dataTypeURI.trim()  != ''){
+                    currentUserValuePos['@type'] = parentStructure.valueConstraint.valueDataType.dataTypeURI
+                }else if (structure && structure.valueConstraint.valueDataType.dataTypeURI && structure.valueConstraint.valueDataType.dataTypeURI.trim()  != ''){
+                    currentUserValuePos['@type'] = structure.valueConstraint.valueDataType.dataTypeURI
+                }
+
+
+
+
+                // if it is a ref component one see if we need to set it based on what the refcomponent is set to
+                if (currentState.rt[activeProfileName].pt[component].valueConstraint && currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs && currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs.length > 1){
+                    if (!currentState.rt[activeProfileName].pt[component].activeType){
+                       currentState.rt[activeProfileName].pt[component].activeType =  this.rtLookup[currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs[0]].resourceURI
+                    }
+                    currentUserValuePos['@type'] = currentState.rt[activeProfileName].pt[component].activeType
+                    
+                }
+
+                // we might have the type stored in the context of the thing we just looked up and selected to use
+                if (key == 'http://www.w3.org/2002/07/owl#sameAs'){
                     if (value.contextValue){
-
-                        // testing just making sure there is only one value in there
-                        userValue = []
-
                         if (!value.typeFull && value.type == "Literal Value"){
-
                             if (structure && structure.propertyURI == "http://id.loc.gov/ontologies/bibframe/agent"){
                                 value.typeFull = 'http://id.loc.gov/ontologies/bibframe/Agent'
                             }else if (parentStructure && parentStructure.propertyURI == "http://id.loc.gov/ontologies/bibframe/agent"){
                                 value.typeFull = 'http://id.loc.gov/ontologies/bibframe/Agent'
                             }
-
-                            // if its looking up from an agent 
-
                         }
-
-
-
-                        userValue.push({
-                            '@guid': short.generate(),
-                            '@type': value.typeFull,
-                            '@id' : value.uri,
-                            '@context': value,
-                            'http://www.w3.org/2000/01/rdf-schema#label': [
-                                {
-                                    'http://www.w3.org/2000/01/rdf-schema#label': value.title,
-                                    '@guid': short.generate()
-                                }
-                            ]
-                        })
-
+                        // if its looking up from an agent 
+                        currentUserValuePos['@type'] = value.typeFull
+                        
 
                     }
-
-                    currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI] = userValue
-
-                    if (currentState.rt[activeProfileName].pt[component].valueConstraint 
-                        && currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType 
-                        && currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType.dataTypeURI){
-                        currentState.rt[activeProfileName].pt[component].userValue['@type'] = currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType.dataTypeURI
-                    }
-
-                    if (!currentState.rt[activeProfileName].pt[component].userValue['@type']){
-
-                        // just make sure it has a type
-                        currentState.rt[activeProfileName].pt[component].userValue['@type'] = await exportXML.suggestType(currentState.rt[activeProfileName].pt[component].propertyURI)
-
-                    }
-
-
-
-                }else if (parentStructure && key == 'http://www.w3.org/2002/07/owl#sameAs' && currentState.rt[activeProfileName].pt[component].propertyURI == parentStructure.propertyURI){
-                    // console.log('case 2')
-                    currentState.rt[activeProfileName].pt[component].userValue = {
-                            '@guid': short.generate(),
-                            '@type': await exportXML.suggestType(parentStructure.propertyURI),
-                            '@id' : value.uri,
-                            '@root': parentStructure.propertyURI,
-                            '@context': value,
-                            'http://www.w3.org/2000/01/rdf-schema#label': [
-                                {
-                                    'http://www.w3.org/2000/01/rdf-schema#label': value.title,
-                                    '@guid': short.generate()
-                                }
-                            ]
-                        }
-
-                }else if (structure.type == 'lookup' && parentStructure && relatedEdgecaseParentProperty > -1){
-                    // console.log('case 3')
-                    // thre are some very nested template, which we are just checking for
-                    if (!currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI]){
-                        currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI] = []
-                    }
-
-                    // we dont want multiple values here
-                    currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI] = []
-
-                    if (!currentState.rt[activeProfileName].pt[component].userValue['@type']){
-                        currentState.rt[activeProfileName].pt[component].userValue['@type'] = await exportXML.suggestType(currentState.rt[activeProfileName].pt[component].propertyURI)
-                  
-                    }
-
-
-                    
-
-                    let data = {
-                        '@guid': short.generate(),
-                        '@type': await exportXML.suggestType(parentStructure.propertyURI),
-                        '@id' : value.uri,
-                        '@context': value,
-                        'http://www.w3.org/2000/01/rdf-schema#label': [
-                            {
-                                'http://www.w3.org/2000/01/rdf-schema#label': value.title,
-                                '@guid': short.generate()
-                            }
-                        ]           
-                    }
-
-                    // we don't want to make bnodes for things like Works in related to stuff
-                    if (structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/Work' || structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/Instance'){
-                        delete data['@type']
-                        delete data['http://www.w3.org/2000/01/rdf-schema#label']
-                    }
-
-
-                    currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI].push(data)
-
-
-
-                }else if (currentState.rt[activeProfileName].pt[component].valueConstraint && currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs && currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs.length > 1){
-                    // console.log('case 4')
-                    // this is ref template, so they select what Type it is from the refTemeplate selector
-
-                    // does it have it set? otherwise we need to set it to the default, first refTempalte
-                    if (!currentState.rt[activeProfileName].pt[component].activeType){
-                       currentState.rt[activeProfileName].pt[component].activeType =  this.rtLookup[currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs[0]].resourceURI
-                    }
-                    
-
-                    
-                    currentState.rt[activeProfileName].pt[component].userValue = {
-                            '@guid': short.generate(),
-                            '@type': currentState.rt[activeProfileName].pt[component].activeType,
-                            '@id' : value.uri,
-                            '@root': currentState.rt[activeProfileName].pt[component].propertyURI,
-                            '@context': value,
-                            'http://www.w3.org/2000/01/rdf-schema#label': [
-                                {
-                                    'http://www.w3.org/2000/01/rdf-schema#label': value.title,
-                                    '@guid': short.generate()
-                                }
-                            ]
-                        }
-
-
-                
-
-                
-                }else{
-
-                    console.log('case 5')
-
-                    // dunno, use the root level
-                    currentState.rt[activeProfileName].pt[component].userValue = {
-                            '@guid': short.generate(),
-                            '@type': await exportXML.suggestType(currentState.rt[activeProfileName].pt[component].propertyURI),
-                            '@id' : value.uri,
-                            '@root': currentState.rt[activeProfileName].pt[component].propertyURI,
-                            '@context': value,
-                            'http://www.w3.org/2000/01/rdf-schema#label': [
-                                {
-                                    'http://www.w3.org/2000/01/rdf-schema#label': value.title,
-                                    '@guid': short.generate()
-                                }
-                            ]
-                        }
-
-
-                    // console.error('---------------------------------------------')
-                    // console.error('Cannot gereate userValue for this complext Lookup')
-                    // console.error('component, key, activeProfileName, template, value, structure,parentStructure')
-                    // console.error(component, key, activeProfileName, template, value, structure,parentStructure)
-                    // console.error('---------------------------------------------')
-
-
                 }
+
+
+                if (!currentUserValuePos['@type']){
+                    // just make sure it has a type
+                    currentUserValuePos['@type'] = await exportXML.suggestType(currentState.rt[activeProfileName].pt[component].propertyURI,activeProfileName)
+                    
+
+                }                
+
+                // set the label and the uri
+                currentUserValuePos['@id'] = value.uri
+                currentUserValuePos['http://www.w3.org/2000/01/rdf-schema#label'] = [
+                                {
+                                    'http://www.w3.org/2000/01/rdf-schema#label': value.title,
+                                    '@guid': short.generate()
+                                }
+                            ]
+
+
+                
+                
+
+
+                    
+                // console.log('>>>>',structure.type, parentStructure)
+
+                // need tofigure out what property to store this under the in the userValue
+                // if (parentStructure && key == 'http://www.w3.org/2002/07/owl#sameAs' && currentState.rt[activeProfileName].pt[component].propertyURI != parentStructure.propertyURI){
+                //     // console.log('case 1')
+                //     if (!currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI]){
+                //         currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI] = []
+                //     }
+
+                //     let userValue = currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI]
+
+                //     if (value.contextValue){
+
+                //         // testing just making sure there is only one value in there
+                //         userValue = []
+
+                //         if (!value.typeFull && value.type == "Literal Value"){
+
+                //             if (structure && structure.propertyURI == "http://id.loc.gov/ontologies/bibframe/agent"){
+                //                 value.typeFull = 'http://id.loc.gov/ontologies/bibframe/Agent'
+                //             }else if (parentStructure && parentStructure.propertyURI == "http://id.loc.gov/ontologies/bibframe/agent"){
+                //                 value.typeFull = 'http://id.loc.gov/ontologies/bibframe/Agent'
+                //             }
+
+                //             // if its looking up from an agent 
+
+                //         }
+
+
+
+                //         userValue.push({
+                //             '@guid': short.generate(),
+                //             '@type': value.typeFull,
+                //             '@id' : value.uri,
+                //             '@context': value,
+                //             'http://www.w3.org/2000/01/rdf-schema#label': [
+                //                 {
+                //                     'http://www.w3.org/2000/01/rdf-schema#label': value.title,
+                //                     '@guid': short.generate()
+                //                 }
+                //             ]
+                //         })
+
+
+                //     }
+
+                //     currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI] = userValue
+
+                //     if (currentState.rt[activeProfileName].pt[component].valueConstraint 
+                //         && currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType 
+                //         && currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType.dataTypeURI){
+                //         currentState.rt[activeProfileName].pt[component].userValue['@type'] = currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType.dataTypeURI
+                //     }
+
+                //     if (!currentState.rt[activeProfileName].pt[component].userValue['@type']){
+
+                //         // just make sure it has a type
+                //         currentState.rt[activeProfileName].pt[component].userValue['@type'] = await exportXML.suggestType(currentState.rt[activeProfileName].pt[component].propertyURI)
+
+                //     }
+
+
+
+                // }else if (parentStructure && key == 'http://www.w3.org/2002/07/owl#sameAs' && currentState.rt[activeProfileName].pt[component].propertyURI == parentStructure.propertyURI){
+                //     // console.log('case 2')
+                //     currentState.rt[activeProfileName].pt[component].userValue = {
+                //             '@guid': short.generate(),
+                //             '@type': await exportXML.suggestType(parentStructure.propertyURI),
+                //             '@id' : value.uri,
+                //             '@root': parentStructure.propertyURI,
+                //             '@context': value,
+                //             'http://www.w3.org/2000/01/rdf-schema#label': [
+                //                 {
+                //                     'http://www.w3.org/2000/01/rdf-schema#label': value.title,
+                //                     '@guid': short.generate()
+                //                 }
+                //             ]
+                //         }
+
+                // }else if (structure.type == 'lookup' && parentStructure && relatedEdgecaseParentProperty > -1){
+                //     // console.log('case 3')
+                //     // thre are some very nested template, which we are just checking for
+                //     if (!currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI]){
+                //         currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI] = []
+                //     }
+
+                //     // we dont want multiple values here
+                //     currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI] = []
+
+                //     if (!currentState.rt[activeProfileName].pt[component].userValue['@type']){
+                //         currentState.rt[activeProfileName].pt[component].userValue['@type'] = await exportXML.suggestType(currentState.rt[activeProfileName].pt[component].propertyURI)
+                  
+                //     }
+
+
+                    
+
+                //     let data = {
+                //         '@guid': short.generate(),
+                //         '@type': await exportXML.suggestType(parentStructure.propertyURI),
+                //         '@id' : value.uri,
+                //         '@context': value,
+                //         'http://www.w3.org/2000/01/rdf-schema#label': [
+                //             {
+                //                 'http://www.w3.org/2000/01/rdf-schema#label': value.title,
+                //                 '@guid': short.generate()
+                //             }
+                //         ]           
+                //     }
+
+                //     // we don't want to make bnodes for things like Works in related to stuff
+                //     if (structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/Work' || structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/Instance'){
+                //         delete data['@type']
+                //         delete data['http://www.w3.org/2000/01/rdf-schema#label']
+                //     }
+
+
+                //     currentState.rt[activeProfileName].pt[component].userValue[parentStructure.propertyURI].push(data)
+
+
+
+                // }else if (currentState.rt[activeProfileName].pt[component].valueConstraint && currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs && currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs.length > 1){
+                //     // console.log('case 4')
+                //     // this is ref template, so they select what Type it is from the refTemeplate selector
+
+                //     // does it have it set? otherwise we need to set it to the default, first refTempalte
+                //     if (!currentState.rt[activeProfileName].pt[component].activeType){
+                //        currentState.rt[activeProfileName].pt[component].activeType =  this.rtLookup[currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs[0]].resourceURI
+                //     }
+                    
+
+                    
+                //     currentState.rt[activeProfileName].pt[component].userValue = {
+                //             '@guid': short.generate(),
+                //             '@type': currentState.rt[activeProfileName].pt[component].activeType,
+                //             '@id' : value.uri,
+                //             '@root': currentState.rt[activeProfileName].pt[component].propertyURI,
+                //             '@context': value,
+                //             'http://www.w3.org/2000/01/rdf-schema#label': [
+                //                 {
+                //                     'http://www.w3.org/2000/01/rdf-schema#label': value.title,
+                //                     '@guid': short.generate()
+                //                 }
+                //             ]
+                //         }
+
+
+                
+
+                
+                // }else{
+
+                //     console.log('case 5')
+
+                //     // dunno, use the root level
+                //     currentState.rt[activeProfileName].pt[component].userValue = {
+                //             '@guid': short.generate(),
+                //             '@type': await exportXML.suggestType(currentState.rt[activeProfileName].pt[component].propertyURI),
+                //             '@id' : value.uri,
+                //             '@root': currentState.rt[activeProfileName].pt[component].propertyURI,
+                //             '@context': value,
+                //             'http://www.w3.org/2000/01/rdf-schema#label': [
+                //                 {
+                //                     'http://www.w3.org/2000/01/rdf-schema#label': value.title,
+                //                     '@guid': short.generate()
+                //                 }
+                //             ]
+                //         }
+
+
+                //     // console.error('---------------------------------------------')
+                //     // console.error('Cannot gereate userValue for this complext Lookup')
+                //     // console.error('component, key, activeProfileName, template, value, structure,parentStructure')
+                //     // console.error(component, key, activeProfileName, template, value, structure,parentStructure)
+                //     // console.error('---------------------------------------------')
+
+
+                // }
 
 
 
@@ -2320,9 +3138,12 @@ const parseProfile = {
 
             }
 
-        let pValue = (value && value.title) ? ` (${value.title})` : "";
-        let pURI = (parentStructure) ? parentStructure.propertyURI : structure.propertyURI;
-        store.state.activeUndoLog.push(`Added lookup value${pValue} to ${exportXML.namespaceUri(pURI)}`)
+
+        // TODO
+
+        // let pValue = (value && value.title) ? ` (${value.title})` : "";
+        // let pURI = (parentStructure) ? parentStructure.propertyURI : structure.propertyURI;
+        // store.state.activeUndoLog.push(`Added lookup value${pValue} to ${exportXML.namespaceUri(pURI)}`)
 
 
 
@@ -2584,8 +3405,17 @@ const parseProfile = {
 
     },
 
-    returnUserValues: function(currentState, activeRt, component, propertyURI){
-        console.log(currentState, activeRt, component, propertyURI)
+    /**
+    * Digs through the userValue of a component to return the speicific value for that input
+    * @param {object} currentState - current state
+    * @param {string} activeRt - current state
+    * @param {string} component - current state
+    * @param {string} propertyURI - current state
+    * @param {array} propertyPath - array of the property hierarchy
+    * @return {results} - object of the uservalue for that bnode
+    */    
+    returnUserValues: function(currentState, activeRt, component, propertyURI, propertyPath){
+        // console.log(currentState, activeRt, component, propertyURI)
 
         let results = false
 
@@ -2599,7 +3429,49 @@ const parseProfile = {
 
 
             if (currentState.rt[activeRt] && currentState.rt[activeRt].pt[component]){
-                results = currentState.rt[activeRt].pt[component].userValue
+
+
+                // now navigate to the correct part of the userValue
+
+                // results = currentState.rt[activeRt].pt[component].userValue
+
+
+                let userValue = currentState.rt[activeRt].pt[component].userValue
+
+                // we are adding the rdfs:label and the @id to this property
+                // we just need to know where to put it
+
+                // a reference to allow us to write to the end of the hierarchy
+                let currentUserValuePos = userValue
+                // used as a reference to the last postion's parent, so we can easily add a new sibling
+                // let currentUserValuePosParent = null
+
+                for (let p of propertyPath){
+
+                    // if the property is owl:sameAs it is the last field 
+                    // of where we are building the entitiy, so we don't  want
+                    // bf:Agent -> owl:sameAs we just want the bf:Agent with values filed in there
+
+                    if (p.propertyURI=='http://www.w3.org/2002/07/owl#sameAs'){
+                        break
+                    }
+                    // same with component list, we don't want to go that far in to look for the auth label and uri etc.
+                    if (p.propertyURI=='http://www.loc.gov/mads/rdf/v1#componentList'){
+                        break
+                    }
+
+                    // currentUserValuePosParent = currentUserValuePos[p.propertyURI]
+                    if (currentUserValuePos[p.propertyURI] && currentUserValuePos[p.propertyURI][0]){
+                        currentUserValuePos = currentUserValuePos[p.propertyURI][0]
+                    }else{
+                        break
+                    }
+                }             
+
+
+                results = currentUserValuePos
+
+
  
             }else{
                 console.warn('Trying to reference rt',activeRt, 'and pt',component,'but one or both not found.')
@@ -2653,17 +3525,37 @@ const parseProfile = {
     
 
     // returns a Class type basedon the predicate from the the profiles
-    suggestType: function(propertyURI){
+    suggestType: function(propertyURI,resourceTemplateId){
 
+        if (resourceTemplateId){
+            console.log("!!!!!!!!!!!!")
+            console.log(resourceTemplateId)
+            console.log(parseProfile.rtLookup[resourceTemplateId])
+            console.log(parseProfile.rtLookup)
 
-        for (let key in this.rtLookup){
-            for (let pt of parseProfile.rtLookup[key].propertyTemplates ){
-                if (pt.propertyURI == propertyURI){
-                    if (pt.valueConstraint.valueDataType && pt.valueConstraint.valueDataType.dataTypeURI)
-                    return pt.valueConstraint.valueDataType.dataTypeURI
+            if (parseProfile.rtLookup[resourceTemplateId]){
+                for (let pt of parseProfile.rtLookup[resourceTemplateId].propertyTemplates ){
+                    if (pt.propertyURI == propertyURI){
+                        if (pt.valueConstraint.valueDataType && pt.valueConstraint.valueDataType.dataTypeURI)
+                        return pt.valueConstraint.valueDataType.dataTypeURI
+                    }
                 }
             }
+
+        }else{
+
+            for (let key in this.rtLookup){
+                for (let pt of parseProfile.rtLookup[key].propertyTemplates ){
+                    if (pt.propertyURI == propertyURI){
+                        if (pt.valueConstraint.valueDataType && pt.valueConstraint.valueDataType.dataTypeURI)
+                        return pt.valueConstraint.valueDataType.dataTypeURI
+                    }
+                }
+            }
+
         }
+
+
 
 
         return false
@@ -2743,7 +3635,7 @@ const parseProfile = {
     },
 
 
-    addItem: function(profile, uri){
+    addItem: async function(profile, uri){
 
         // the URI is acutally the profile name, so turn that into a URI
 
@@ -2866,13 +3758,15 @@ const parseProfile = {
           "type": "resource",
           "userValue": {
             "@root":"http://id.loc.gov/ontologies/bibframe/adminMetadata",
-            "@type": "http://id.loc.gov/ontologies/bibframe/AdminMetadata",
-            "http://id.loc.gov/ontologies/bflc/catalogerId": [
-              {
-              "@guid": short.generate(),
-              "http://id.loc.gov/ontologies/bflc/catalogerId": store.state.catInitials
-              }
-            ]
+            "http://id.loc.gov/ontologies/bibframe/adminMetadata":[{
+                "@type": "http://id.loc.gov/ontologies/bibframe/AdminMetadata",
+                "http://id.loc.gov/ontologies/bflc/catalogerId": [
+                  {
+                  "@guid": short.generate(),
+                  "http://id.loc.gov/ontologies/bflc/catalogerId": store.state.catInitials
+                  }
+                ]                
+            }]
 
           },
           "valueConstraint": {
@@ -2891,7 +3785,7 @@ const parseProfile = {
 
 
 
-        profile = this.populateDefaultValuesIntoUserValues(profile,true)
+        profile = await this.populateDefaultValuesIntoUserValues(profile,true)
 
 
 
@@ -3053,7 +3947,7 @@ const parseProfile = {
 
 
 
-    addInstance: function(profile){
+    addInstance: async function(profile){
 
         
         
@@ -3130,21 +4024,24 @@ const parseProfile = {
           "type": "resource",
           "userValue": {
             "@root":"http://id.loc.gov/ontologies/bibframe/adminMetadata",
-            "@type": "http://id.loc.gov/ontologies/bibframe/AdminMetadata",
-            "http://id.loc.gov/ontologies/bflc/catalogerId": [
-              {
-              "@guid": short.generate(),
-              "http://id.loc.gov/ontologies/bflc/catalogerId": store.state.catInitials
-              }
-            ],
-            "http://id.loc.gov/ontologies/bibframe/identifiedBy": [{
-                "@guid": short.generate(),
-                "@type": "http://id.loc.gov/ontologies/bibframe/Local",
-                "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": [{
+            "http://id.loc.gov/ontologies/bibframe/adminMetadata": [{
+                "@type": "http://id.loc.gov/ontologies/bibframe/AdminMetadata",
+                "http://id.loc.gov/ontologies/bflc/catalogerId": [
+                  {
+                  "@guid": short.generate(),
+                  "http://id.loc.gov/ontologies/bflc/catalogerId": store.state.catInitials
+                  }
+                ],
+                "http://id.loc.gov/ontologies/bibframe/identifiedBy": [{
                     "@guid": short.generate(),
-                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": profile.rt[newRdId].URI.split("/")[profile.rt[newRdId].URI.split("/").length-1]
-                }]                
+                    "@type": "http://id.loc.gov/ontologies/bibframe/Local",
+                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": [{
+                        "@guid": short.generate(),
+                        "http://www.w3.org/1999/02/22-rdf-syntax-ns#value": profile.rt[newRdId].URI.split("/")[profile.rt[newRdId].URI.split("/").length-1]
+                    }]                
+                }]
             }]
+
           },
           "valueConstraint": {
             "defaults": [],
@@ -3159,7 +4056,7 @@ const parseProfile = {
         profile.rt[newRdId].ptOrder.push(adminMetadataPropertyLabel)
 
 
-        profile = this.populateDefaultValuesIntoUserValues(profile,true)
+        profile = await this.populateDefaultValuesIntoUserValues(profile,true)
 
 
         return profile
@@ -3215,16 +4112,19 @@ const parseProfile = {
                         // 
 
                         // replace with our id
-                        profile.rt[newRdId].pt[key].userValue['http://id.loc.gov/ontologies/bflc/catalogerId'] = [
+                        if (!profile.rt[newRdId].pt[key].userValue['http://id.loc.gov/ontologies/bibframe/adminMetadata']){
+                            profile.rt[newRdId].pt[key].userValue['http://id.loc.gov/ontologies/bibframe/adminMetadata'] = [{}]
+                        }
+                        profile.rt[newRdId].pt[key].userValue['http://id.loc.gov/ontologies/bibframe/adminMetadata'][0]['http://id.loc.gov/ontologies/bflc/catalogerId'] = [
                             {
                                 "@guid": short.generate(),
-                                "http://id.loc.gov/ontologies/bflc/catalogerId": store.state.catInitials
+                                "http://id.loc.gov/ontologies/bflc/catalogerId": store.state.catInitials 
                             }
                         ]
 
 
                         // add/replace with our new local id
-                        profile.rt[newRdId].pt[key].userValue["http://id.loc.gov/ontologies/bibframe/identifiedBy"] = [{
+                        profile.rt[newRdId].pt[key].userValue['http://id.loc.gov/ontologies/bibframe/adminMetadata'][0]["http://id.loc.gov/ontologies/bibframe/identifiedBy"] = [{
                             "@guid": short.generate(),
                             "@TEST": "HELLO",
                             "@type": "http://id.loc.gov/ontologies/bibframe/Local",
@@ -3811,14 +4711,17 @@ const parseProfile = {
               "type": "resource",
               "userValue": {
                 "@root":"http://id.loc.gov/ontologies/bibframe/adminMetadata",
-                "@type": "http://id.loc.gov/ontologies/bibframe/AdminMetadata",
-                '@guid': short.generate(),
-                "http://id.loc.gov/ontologies/bflc/catalogerId": [
-                  {
-                  "@guid": short.generate(),
-                  "http://id.loc.gov/ontologies/bflc/catalogerId": addAdmin
-                  }
-                ]
+                "http://id.loc.gov/ontologies/bibframe/adminMetadata":[{
+
+                    "@type": "http://id.loc.gov/ontologies/bibframe/AdminMetadata",
+                    '@guid': short.generate(),
+                    "http://id.loc.gov/ontologies/bflc/catalogerId": [
+                      {
+                      "@guid": short.generate(),
+                      "http://id.loc.gov/ontologies/bflc/catalogerId": addAdmin
+                      }
+                    ]
+                }]
 
               },
               "valueConstraint": {
@@ -3837,8 +4740,8 @@ const parseProfile = {
             console.log("Admin already exists for ", rt, 'chahhing userid')
             // it already exists, so update the catalogerId and use the existing userValue
 
-            if (useProfile.rt[rt].pt[adminMetadataPropertyLabel].userValue["http://id.loc.gov/ontologies/bflc/catalogerId"]){
-                useProfile.rt[rt].pt[adminMetadataPropertyLabel].userValue["http://id.loc.gov/ontologies/bflc/catalogerId"] =  [
+            if (useProfile.rt[rt].pt[adminMetadataPropertyLabel].userValue['http://id.loc.gov/ontologies/bibframe/adminMetadata'][0]["http://id.loc.gov/ontologies/bflc/catalogerId"]){
+                useProfile.rt[rt].pt[adminMetadataPropertyLabel].userValue['http://id.loc.gov/ontologies/bibframe/adminMetadata'][0]["http://id.loc.gov/ontologies/bflc/catalogerId"] =  [
                   {
                   "@guid": short.generate(),
                   "http://id.loc.gov/ontologies/bflc/catalogerId": addAdmin

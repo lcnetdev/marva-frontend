@@ -1085,6 +1085,7 @@ const parseBfdb = {
 
 				
 		console.log(`test run?: ${testRun}`, " USING profile",JSON.parse(JSON.stringify(profile)))
+		
 		for (const pkey in profile.rt) {
 
 
@@ -1641,6 +1642,14 @@ const parseBfdb = {
 						}
 
 
+
+						// we want all userValues to includ the root predicate property
+						// we will map that to the base level to make things cleaner below
+						// so populateData.userValue['http://id.loc.gov/bibframe/title'] becomes userValue							
+						populateData.userValue[populateData.propertyURI] = [{}]
+						let userValue = populateData.userValue[populateData.propertyURI][0]
+
+
 						
 						// we have some special functions to deal with tricky elements
 						if (this.specialTransforms[prefixURI]){
@@ -1651,9 +1660,15 @@ const parseBfdb = {
 						}else if (e.children.length == 0){
 
 							// console.log(e.tagName)
+
+
+
+
+							
+
 							
 							// if (!populateData.userValue){
-								populateData.userValue['@guid'] = short.generate()
+								userValue['@guid'] = short.generate()
 							// }
 
 							let eProperty = this.UriNamespace(e.tagName)
@@ -1662,13 +1677,13 @@ const parseBfdb = {
 
 							if (this.isClass(e.tagName)){
 								
-								populateData.userValue['@type'] = this.UriNamespace(e.tagName)
+								userValue['@type'] = this.UriNamespace(e.tagName)
 
 								// check for URI
 								if (e.attributes && e.attributes['rdf:about']){
-									populateData.userValue['@id'] = this.extractURI(e.attributes['rdf:about'].value)
+									userValue['@id'] = this.extractURI(e.attributes['rdf:about'].value)
 								}else if (e.attributes && e.attributes['rdf:resource']){
-									populateData.userValue['@id'] = this.extractURI(e.attributes['rdf:resource'].value)
+									userValue['@id'] = this.extractURI(e.attributes['rdf:resource'].value)
 								}else{
 									// console.log('No URI for this child property')
 								}
@@ -1682,9 +1697,9 @@ const parseBfdb = {
 								// if there is a RDF type node here it is the parent's type
 								// overwrite the basic type that was set via the bnode type
 								if (e.attributes && e.attributes['rdf:about']){
-									populateData.userValue['@type'] = e.attributes['rdf:about'].value
+									userValue['@type'] = e.attributes['rdf:about'].value
 								}else if (e.attributes && e.attributes['rdf:resource']){
-									populateData.userValue['@type'] = e.attributes['rdf:resource'].value
+									userValue['@type'] = e.attributes['rdf:resource'].value
 								}else{
 									console.warn('---------------------------------------------')
 									console.warn('There was a e RDF Type node but could not extract the type')
@@ -1697,13 +1712,13 @@ const parseBfdb = {
 							}else if (e.attributes['rdf:resource'] && e.innerHTML.trim() == ''){
 								
 								// it is a property pointing to another resource with no label or anything
-								populateData.userValue['@guid'] = short.generate()
-								populateData.userValue['@id'] = this.extractURI(e.attributes['rdf:resource'].value)
+								userValue['@guid'] = short.generate()
+								userValue['@id'] = this.extractURI(e.attributes['rdf:resource'].value)
 
 								// for now since there is no label make a basic lable for it with the URI slug
-								// populateData.userValue['http://www.w3.org/2000/01/rdf-schema#label'] = [
+								// userValue['http://www.w3.org/2000/01/rdf-schema#label'] = [
 								// 	{
-								// 	"http://www.w3.org/2000/01/rdf-schema#label": populateData.userValue['@id'].split('/').slice(-1)[0],
+								// 	"http://www.w3.org/2000/01/rdf-schema#label": userValue['@id'].split('/').slice(-1)[0],
 								// 	"@guid": short.generate()
 								// 	}								
 								// ]
@@ -1712,8 +1727,8 @@ const parseBfdb = {
 								
 
 
-								if (!populateData.userValue[eProperty]){
-									populateData.userValue[eProperty] = []
+								if (!userValue[eProperty]){
+									userValue[eProperty] = []
 								}
 
 								// it doesn't have any children, so it will be a literal or something like that
@@ -1747,9 +1762,9 @@ const parseBfdb = {
 
 								}
 
-								// console.log(populateData.userValue)
+								// console.log(userValue)
 
-								populateData.userValue[eProperty].push(eData)
+								userValue[eProperty].push(eData)
 
 
 							}
@@ -1758,13 +1773,13 @@ const parseBfdb = {
 
 							
 							// if (e.attributes && e.attributes['rdf:about'] && e.innerHTML.length == 0){
-							// 	populateData.userValue[this.UriNamespace(prefixURI)] ={
+							// 	userValue[this.UriNamespace(prefixURI)] ={
 							// 		URI: e.attributes['rdf:about'].value,
 							// 		label: null
 							// 	} 
 							// }
 							// if (e.attributes && e.attributes['rdf:resource']){
-							// 	populateData.userValue[this.UriNamespace(prefixURI)] ={
+							// 	userValue[this.UriNamespace(prefixURI)] ={
 							// 		URI: e.attributes['rdf:resource'].value,
 							// 		label: null
 							// 	} 								
@@ -1772,7 +1787,7 @@ const parseBfdb = {
 
 
 							// if (e.innerHTML && e.innerHTML.length!=0){
-							// 	populateData.userValue[this.UriNamespace(prefixURI)] =e.innerHTML								
+							// 	userValue[this.UriNamespace(prefixURI)] =e.innerHTML								
 
 							// }
 
@@ -1795,18 +1810,18 @@ const parseBfdb = {
 							for (let child of e.children){
 
 								// the inital bnode
-								populateData.userValue['@guid'] = short.generate()
+								userValue['@guid'] = short.generate()
 
 								// set the type of this bnode
-								populateData.userValue['@type'] = this.UriNamespace(child.tagName)
+								userValue['@type'] = this.UriNamespace(child.tagName)
 
 								// does this thing have a URI?
 								// <bf:title><bf:Title rdf:about="http://...."> 
 
 								if (child.attributes && child.attributes['rdf:about']){
-									populateData.userValue['@id'] = this.extractURI(child.attributes['rdf:about'].value)
+									userValue['@id'] = this.extractURI(child.attributes['rdf:about'].value)
 								}else if (child.attributes && child.attributes['rdf:resource']){
-									populateData.userValue['@id'] = this.extractURI(child.attributes['rdf:resource'].value)
+									userValue['@id'] = this.extractURI(child.attributes['rdf:resource'].value)
 								}else{
 
 
@@ -1834,7 +1849,7 @@ const parseBfdb = {
 											// if they used a uncontrolled value then there is no uri, just a literal
 											// normally we don't care about the literal even if it exists because we can just load the label
 											if (rdfTypeUri){
-												populateData.userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] = [
+												userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] = [
 													{
 													"@guid": short.generate(),
 													"@id" : rdfTypeUri
@@ -1842,7 +1857,7 @@ const parseBfdb = {
 												]
 											}else if (gChild.innerHTML && gChild.innerHTML.trim() != ''){
 												// but if there is no uri but there is a label in there build it out so it renders correctly in the interface
-												populateData.userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] = [
+												userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] = [
 													{
 													"@guid": short.generate(),
 													"http://www.w3.org/2000/01/rdf-schema#label": [
@@ -1860,9 +1875,9 @@ const parseBfdb = {
 											// if there is a RDF type node here it is the parent's type
 											// overwrite the basic type that was set via the bnode type
 											if (gChild.attributes && gChild.attributes['rdf:about']){
-												populateData.userValue['@type'] = gChild.attributes['rdf:about'].value
+												userValue['@type'] = gChild.attributes['rdf:about'].value
 											}else if (gChild.attributes && gChild.attributes['rdf:resource']){
-												populateData.userValue['@type'] = gChild.attributes['rdf:resource'].value
+												userValue['@type'] = gChild.attributes['rdf:resource'].value
 											}else{
 												console.warn('---------------------------------------------')
 												console.warn('There was a gChild RDF Type node but could not extract the type')
@@ -1880,13 +1895,13 @@ const parseBfdb = {
 										// literal or something
 										if (this.isClass(gChild.tagName)){
 											let gChildData = {'@guid': short.generate()}
-											populateData.userValue[gChildProperty].push(gChildData)
+											userValue[gChildProperty].push(gChildData)
 
 										}else{
 
 
-											if (!populateData.userValue[gChildProperty]){
-												populateData.userValue[gChildProperty] = []
+											if (!userValue[gChildProperty]){
+												userValue[gChildProperty] = []
 											}
 
 											// it doesn't have any children, so it will be a literal or something like that
@@ -1919,7 +1934,7 @@ const parseBfdb = {
 
 											}
 
-											populateData.userValue[gChildProperty].push(gChildData)
+											userValue[gChildProperty].push(gChildData)
 
 
 										}
@@ -1934,8 +1949,8 @@ const parseBfdb = {
 										// if we dont have that property yet add it
 										let gChildProperty = this.UriNamespace(gChild.tagName)
 
-										if (!populateData.userValue[gChildProperty]){
-											populateData.userValue[gChildProperty] = []
+										if (!userValue[gChildProperty]){
+											userValue[gChildProperty] = []
 										}
 
 										let gChildData = {'@guid': short.generate()}
@@ -2271,7 +2286,7 @@ const parseBfdb = {
 
 												}
 
-												populateData.userValue[gChildProperty].push(gChildData)
+												userValue[gChildProperty].push(gChildData)
 
 												gChildData = false
 
@@ -2354,7 +2369,7 @@ const parseBfdb = {
 										// and then set the last one to false
 										// so dont add 
 										if (gChildData !== false){
-											populateData.userValue[gChildProperty].push(gChildData)	
+											userValue[gChildProperty].push(gChildData)	
 										}
 										
 
@@ -2471,9 +2486,15 @@ const parseBfdb = {
 				if (profile.rt[pkey].pt[key].propertyURI == 'http://id.loc.gov/ontologies/bibframe/adminMetadata'){
 					
 
+					if (!profile.rt[pkey].pt[key].userValue['http://id.loc.gov/ontologies/bibframe/adminMetadata']){
+						profile.rt[pkey].pt[key].userValue['http://id.loc.gov/ontologies/bibframe/adminMetadata'] = [{}]
+					}					
+					let userValue = profile.rt[pkey].pt[key].userValue['http://id.loc.gov/ontologies/bibframe/adminMetadata'][0]
+
+
 					// if it doesnt already have a cataloger id use ours
-					if (!profile.rt[pkey].pt[key].userValue['http://id.loc.gov/ontologies/bflc/catalogerId']){
-						profile.rt[pkey].pt[key].userValue['http://id.loc.gov/ontologies/bflc/catalogerId'] = [
+					if (!userValue['http://id.loc.gov/ontologies/bflc/catalogerId']){
+						userValue['http://id.loc.gov/ontologies/bflc/catalogerId'] = [
 							{
 								"@guid": short.generate(),
 								"http://id.loc.gov/ontologies/bflc/catalogerId": store.state.catInitials
@@ -2482,7 +2503,7 @@ const parseBfdb = {
 					}
 
 					// we need to set the procInfo, so use whatever we have in the profile
-					profile.rt[pkey].pt[key].userValue['http://id.loc.gov/ontologies/bflc/procInfo'] = [
+					userValue['http://id.loc.gov/ontologies/bflc/procInfo'] = [
 						{
 							"@guid": short.generate(),
 							"http://id.loc.gov/ontologies/bflc/procInfo": profile.procInfo
