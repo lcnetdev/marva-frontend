@@ -12,9 +12,9 @@ const returnDOMParser = function(){
 	try{
 		p = new DOMParser();
 	}catch(error){
-		const jsdom = require("jsdom");
-		const { JSDOM } = jsdom;
-		const { window } = new JSDOM(`<!DOCTYPE html><p>Hello world</p>`);
+		// const jsdom = require("jsdom");
+		// const { JSDOM } = jsdom;
+		// const { window } = new JSDOM(`<!DOCTYPE html><p>Hello world</p>`);
 		p = new window.DOMParser();
 	}	
 	return p
@@ -896,7 +896,6 @@ const exportXML = {
 										lp.innerHTML = label['http://www.w3.org/2000/01/rdf-schema#label']
 										bnode.appendChild(lp)
 									}
-									console.log()
 
 									if (label['@id']){
 										bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', label['@id'])
