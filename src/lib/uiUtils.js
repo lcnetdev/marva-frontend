@@ -15,8 +15,7 @@ const uiUtils = {
       if (store.state.workingOnMiniProfile){
         list = document.getElementsByClassName('selectable-input-mini')
       }
-      console.log(list)
-      
+
       let activeInputIndex = -1
       for (let i = 0; i < list.length; i++) {
         if (list[i].id == this.activeInput){
@@ -45,7 +44,7 @@ const uiUtils = {
           activeInputIndex = i
         }
       }
-      console.log("activeInputIndex===",activeInputIndex,list[activeInputIndex-1])
+
       if (activeInputIndex != -1){
         // see if there is a next input
         if (list[activeInputIndex-1]){

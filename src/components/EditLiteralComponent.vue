@@ -1011,7 +1011,10 @@ export default {
       // what is in state, which becomes unaligned when things like undos happen
       let allGuidsFound = []
 
-
+      // if (this.profileCompoent=='http://id.loc.gov/ontologies/bflc/relationship|Input Transcribed Series'){
+      //   console.log('http://id.loc.gov/ontologies/bflc/relationship --- DATA', this.profileCompoent)
+      //   console.log(data)
+      // }
       // depending on the depth 
       // we know where to look because we have the property path
       if (this.propertyPath.length === 1){
@@ -1278,7 +1281,15 @@ export default {
     settingsDPackVoyager: 'settingsDPackVoyager',
     settingsDPackVoyagerNative: 'settingsDPackVoyagerNative',
     assignedId (){
-      return uiUtils.assignID(this.structure,this.parentStructure)
+      // return uiUtils.assignID(this.structure,this.parentStructure)
+      if (this.internalAssignID){
+        return this.internalAssignID
+      }else{
+        this.internalAssignID = uiUtils.assignID(this.structure,this.parentStructure)
+        return this.internalAssignID
+      }      
+
+
     },    
 
     showAddAddditonalLiteralButton (){
@@ -1340,7 +1351,8 @@ export default {
       guid: null,
       initalGuid: null,
       diacrticsVoyagerNativeMode:false,
-
+      internalAssignID: false,
+      
     }
   },
   created: function(){

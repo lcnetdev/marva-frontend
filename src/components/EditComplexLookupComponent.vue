@@ -471,7 +471,7 @@ export default {
 
       userData: {},
 
-
+      internalAssignID: false,
 
 
     }
@@ -521,7 +521,13 @@ export default {
     undoCounter: 'undoCounter',
 
     assignedId (){
-      return uiUtils.assignID(this.structure,this.parentStructure,config)
+      if (this.internalAssignID){
+        return this.internalAssignID
+      }else{
+        this.internalAssignID = uiUtils.assignID(this.structure,this.parentStructure,config)
+        return this.internalAssignID
+      }
+      // return uiUtils.assignID(this.structure,this.parentStructure,config)
     },
 
     modalSelectOptions(){
@@ -882,6 +888,7 @@ export default {
                   // uservalue is populated with the right stuff
                   // sometimes a record will come in without a URI but it has a valid label
                   if (!orignalUserData['@id']){
+                    console.log("userData",userData)
                     console.log("userData",userData)
                     if (userData["@id"].includes('id.loc.gov/authorities/names/')){
                       this.$store.dispatch("fetchContext", { self: this, searchPayload: userData["@id"] }).then(() => {                      
@@ -1443,6 +1450,7 @@ export default {
     focused: function(event){     
 
       this.$store.dispatch("setActiveInput", { self: this, id: event.target.id, profileCompoent: this.profileCompoent, profileName: this.profileName }).then(()=>{
+                console.log("event.target.id",event.target.id)
 
         // now focus the side bars
         this.$nextTick(()=>{

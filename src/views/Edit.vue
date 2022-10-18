@@ -1261,82 +1261,101 @@ export default {
       let r = []
       try{
 
+        // find the base predicate and use that to get to the base bnode
+        let usekey = Object.keys(userValue).filter((v)=>{ return (v.indexOf('@') == -1) })
 
-        // console.log(userValue)
-        // console.log(Object.keys(userValue))
-        Object.keys(userValue).forEach((k)=>{  
-          // console.log(k)    
-          // console.log(userValue[k])    
-          if (!k.startsWith('@')){
-            // console.log(k,userValue[k],"<----")
-            for (let objVal of userValue[k]){
-              // console.log(objVal)
-              let addedValue = false
-              Object.keys(objVal).forEach((kk)=>{
 
+
+        if (usekey.length>0 && userValue[usekey[0]]){
+
+
+
+            userValue = userValue[usekey[0]][0]
+
+
+
+
+            Object.keys(userValue).forEach((k)=>{  
+              // console.log(k)    
+              // console.log(userValue[k])    
+              if (!k.startsWith('@')){
+                // console.log(k,userValue[k],"<----")
+                let addedValue = false
+
+                // this is for the top level literal values
+                if (typeof userValue[k] === 'string'){
+                    r.push(userValue[k])   
+                    addedValue = true  
+                    return
+                }
+
+                for (let objVal of userValue[k]){
+                  // console.log(objVal)
+                  
+                  Object.keys(objVal).forEach((kk)=>{
                 
 
-                if (!kk.startsWith('@')){
-                  if (typeof objVal[kk] == 'string'){
-                    r.push(objVal[kk])   
-                    addedValue = true               
-                  }else if (Array.isArray(objVal[kk])){
+                    if (!kk.startsWith('@')){
+                      if (typeof objVal[kk] == 'string'){
+                        r.push(objVal[kk])   
+                        addedValue = true               
+                      }else if (Array.isArray(objVal[kk])){
 
-                    for (let objVal2 of objVal[kk]){
-                      Object.keys(objVal2).forEach((kkk)=>{
-                        if (!kkk.includes('@')){
-                          if (typeof objVal2[kkk] == 'string'){
-                            r.push(objVal2[kkk])
-                            addedValue = true  
-                          }                      
+                        for (let objVal2 of objVal[kk]){
+                          Object.keys(objVal2).forEach((kkk)=>{
+                            if (!kkk.includes('@')){
+                              if (typeof objVal2[kkk] == 'string'){
+                                r.push(objVal2[kkk])
+                                addedValue = true  
+                              }                      
+                            }
+                          })
+
+
                         }
-                      })
+                      }
+                    }else if (kk=='@context'){
+
+                        if (objVal[kk].title){
+                            if (r.indexOf(objVal[kk].title)==-1){
+                                r.push(objVal[kk].title)
+                                addedValue = true  
+                            }
+                        }
+
+                    }
+                  })
+
+                    // if it went through all that and did not a it because it did not have a label, but it did have 
+                    // a URI add in the URI and the dereference component will look it up
+                    if (!addedValue){
+
+                        if (objVal['@id']){
+                            r.push(objVal['@id'])
+                        }
 
 
                     }
-                  }
-                }else if (kk=='@context'){
 
-                    if (objVal[kk].title){
-                        if (r.indexOf(objVal[kk].title)==-1){
-                            r.push(objVal[kk].title)
-                            addedValue = true  
-                        }
-                    }
 
                 }
-              })
-
-                // if it went through all that and did not a it because it did not have a label, but it did have 
-                // a URI add in the URI and the dereference component will look it up
-                if (!addedValue){
-
-                    if (objVal['@id']){
-                        r.push(objVal['@id'])
-                    }
+              }
 
 
-                }
 
+            })
 
+            if (r.length == 0 && userValue['@id']){
+              r.push(userValue['@id'])
             }
-          }
 
 
+            r = [...new Set(r)];
 
-        })
-
-        if (r.length == 0 && userValue['@id']){
-          r.push(userValue['@id'])
+            for (let x of r){
+                x = x.replace(/&amp;/g, '&'); 
+            }
         }
-
-
-        r = [...new Set(r)];
-
-        for (let x of r){
-            x = x.replace(/&amp;/g, '&'); 
-        }
-
 
       }catch{
         return "error"

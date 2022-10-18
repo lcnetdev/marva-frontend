@@ -143,7 +143,7 @@ export default {
       doubleDelete: false,
       activeLookupValue: [],
       debounceTimeout: null,
-
+      internalAssignID:false,
 
     }
   },
@@ -180,7 +180,14 @@ export default {
     undoCounter: 'undoCounter',
 
     assignedId (){
-      return uiUtils.assignID(this.structure,this.parentStructure)
+      // return uiUtils.assignID(this.structure,this.parentStructure)
+      if (this.internalAssignID){
+        return this.internalAssignID
+      }else{
+        this.internalAssignID = uiUtils.assignID(this.structure,this.parentStructure)
+        return this.internalAssignID
+      }     
+
     },  
     // to access local state with `this`, a normal function must be used
     lookupVocab (state) {
@@ -909,7 +916,11 @@ export default {
       toRemove = toRemove[0]
 
 
-
+      // TODO unhack this, put it in the tempalte or put it in the config :(
+      if (this.structure.valueConstraint && this.structure.valueConstraint.defaults && this.structure.valueConstraint.defaults[0] && this.structure.valueConstraint.defaults[0].defaultURI && this.structure.valueConstraint.defaults[0].defaultURI === 'http://id.loc.gov/ontologies/bibframe/hasSeries'){
+        this.refreshInputDisplay()
+        return false
+      }
 
       this.$store.dispatch("removeValueSimple", { self: this, ptGuid: this.ptGuid, idGuid: toRemove.uriGuid, labelGuid: toRemove.labelGuid, propertyPath: this.propertyPath }).then(() => {
        
@@ -1057,7 +1068,6 @@ export default {
 
       // let the rest of the app know what is the active input right now
       this.$store.dispatch("setActiveInput", { self: this, id: event.target.id, profileCompoent: this.profileCompoent, profileName: this.profileName }).then(()=>{
-
         // now focus the side bars
         this.$nextTick(()=>{
           uiUtils.focusSidebars()

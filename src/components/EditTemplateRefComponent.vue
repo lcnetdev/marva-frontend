@@ -167,7 +167,8 @@ export default {
       activeTemplate: null,
       propertyTemplatesOrderLookup: {},
       propertyTemplatesOrderTypeLookup: {},
-      labels: labels
+      labels: labels,
+      internalAssignID:false,
 
     }
   },
@@ -179,7 +180,14 @@ export default {
 
 
     assignedId (){
-      return uiUtils.assignID(this.structure,this.parentStructure)
+      
+      // return uiUtils.assignID(this.structure,this.parentStructure)
+      if (this.internalAssignID){
+        return this.internalAssignID
+      }else{
+        this.internalAssignID = uiUtils.assignID(this.structure,this.parentStructure)
+        return this.internalAssignID
+      }           
     },  
 
 

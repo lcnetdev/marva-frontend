@@ -91,7 +91,6 @@ const exportXML = {
 	createElByBestNS: function(elStr){
 
 
-
 		// HACK - bad marc2bf conversion
 		if (elStr == 'http://www.loc.gov/mads/rdf/v1#'){
 			elStr = 'http://www.loc.gov/mads/rdf/v1#Authority'
@@ -169,14 +168,12 @@ const exportXML = {
 				result = range.attributes['rdf:resource'].value
 			}
 		}
-		console.log('resourceTemplateId',resourceTemplateId)
-		console.log("Export suggest type 1",result)
 
 		let profileLookup = parseProfile.suggestType(propertyURI,resourceTemplateId)
 		if (profileLookup != false){
 			result = profileLookup
 		}
-		console.log("Export suggest type 2",result)
+
 		// some try something else
 		// TODO if needed
 
@@ -212,6 +209,18 @@ const exportXML = {
 			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
 		}
 
+
+
+		// Remove these when BFLC ontology is updated
+		if (propertyURI==='http://id.loc.gov/ontologies/bflc/simplePlace'){
+			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
+		}
+		if (propertyURI==='http://id.loc.gov/ontologies/bflc/simpleAgent'){
+			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
+		}
+		if (propertyURI==='http://id.loc.gov/ontologies/bflc/simpleDate'){
+			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
+		}
 
 		if (result===false){
 			console.warn('Could not @type this ',propertyURI)
@@ -418,6 +427,7 @@ const exportXML = {
 	},
 
 	createLiteral: function(property,userValue){
+
 
 
 		let p = this.createElByBestNS(property)
@@ -934,21 +944,35 @@ const exportXML = {
 							// its just a top level literal property
 							// loop through its keys and make the values
 							for (let key1 of Object.keys(userValue).filter(k => (!k.includes('@') ? true : false ) )){
+								console.log('userValue',userValue)
+								console.log('key1',key1)
+								console.log("userValue[key1]",userValue[key1])
+								// are we at the right level?
+								if (typeof userValue[key1] === 'string' || typeof userValue[key1] === 'number'){
+												
+									let p1 = this.createLiteral(key1, userValue)
+									console.log("p1",p1)
+									if (p1!==false) rootEl.appendChild(p1);
 
-								for (let value1 of userValue[key1]){
 
-									for (let key2 of Object.keys(value1).filter(k => (!k.includes('@') ? true : false ) )){
+								}else{
 
-										if (typeof value1[key2] == 'string' || typeof value1[key2] == 'number'){
-											// its a label or some other literal
-											let p1 = this.createLiteral(key2, value1)
-											if (p1!==false) rootEl.appendChild(p1);
-										}else{
-											console.error('key2', key2, value1[key2], 'not a literal, should not happen')
+									for (let value1 of userValue[key1]){
+										for (let key2 of Object.keys(value1).filter(k => (!k.includes('@') ? true : false ) )){
+
+											if (typeof value1[key2] == 'string' || typeof value1[key2] == 'number'){
+												// its a label or some other literal
+												let p1 = this.createLiteral(key2, value1)
+												if (p1!==false) rootEl.appendChild(p1);
+											}else{
+												console.error('key2', key2, value1[key2], 'not a literal, should not happen')
+											}
 										}
-
 									}
+
 								}
+
+
 
 							}
 						

@@ -8,7 +8,8 @@ const lookupUtil = {
 
     possibleLabelURIs: [
         'http://www.loc.gov/mads/rdf/v1#authoritativeLabel',
-        'http://www.w3.org/2004/02/skos/core#prefLabel'
+        'http://www.w3.org/2004/02/skos/core#prefLabel',
+        'http://www.w3.org/2000/01/rdf-schema#label'
     ],
 
 
@@ -113,6 +114,7 @@ const lookupUtil = {
                     this.possibleLabelURIs.forEach((labelURI)=>{
                         // if it has this label URI and does not yet have a label
                         if (d[labelURI] && !dataProcessed[d['@id']]){
+                          
                             label = this.returnValue(d[labelURI])
 
                             let labelWithCode = []

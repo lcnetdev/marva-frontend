@@ -875,6 +875,7 @@ const parseProfile = {
 
             let idPropertyId = activeProfile.rt[profile].pt[id].propertyURI  
 
+            let baseURI = activeProfile.rt[profile].pt[newPropertyId].propertyURI
 
 
             // let defaults = null
@@ -901,21 +902,34 @@ const parseProfile = {
 
             if (defaultsProperty && defaultsProperty.valueConstraint.defaults.length>0){
 
+                
+                // make sure the base URI exists in the uservalue
+                if (!activeProfile.rt[profile].pt[newPropertyId].userValue[baseURI]){
+                    activeProfile.rt[profile].pt[newPropertyId].userValue[baseURI] = [{}]
+                }
+                let userValue = activeProfile.rt[profile].pt[newPropertyId].userValue[baseURI][0]
+
                 // there are defauts at this level
                 // its not a nested component just add it in the first level                
                 if (defaultsProperty.valueConstraint.defaults[0].defaultLiteral){
                     console.log(activeProfile.rt[profile].pt[newPropertyId])
-                    activeProfile.rt[profile].pt[newPropertyId].userValue['http://www.w3.org/2000/01/rdf-schema#label'] = [{
+                    userValue['http://www.w3.org/2000/01/rdf-schema#label'] = [{
                         '@guid': short.generate(),
                         'http://www.w3.org/2000/01/rdf-schema#label':defaultsProperty.valueConstraint.defaults[0].defaultLiteral
                     }]
                 }
                 if (defaultsProperty.valueConstraint.defaults[0].defaultURI){
-                    activeProfile.rt[profile].pt[newPropertyId].userValue['@id'] = defaultsProperty.valueConstraint.defaults[0].defaultURI
+                    userValue['@id'] = defaultsProperty.valueConstraint.defaults[0].defaultURI
                 }                  
 
 
             }else if (defaultsProperty && defaultsProperty.valueConstraint.valueTemplateRefs.length>0){
+
+                if (!activeProfile.rt[profile].pt[newPropertyId].userValue[baseURI]){
+                    activeProfile.rt[profile].pt[newPropertyId].userValue[baseURI] = [{}]
+                }
+                let userValue = activeProfile.rt[profile].pt[newPropertyId].userValue[baseURI][0]
+
 
                 // it doesn't exist at the top level, see if it has at least one reference template, if so use the first one and look up if that one has defualt values
                 // the first one since it is the default for the referencetemplace componment
@@ -930,7 +944,7 @@ const parseProfile = {
 
                         if (defaults.defaultLiteral){
 
-                            activeProfile.rt[profile].pt[newPropertyId].userValue[refPt.propertyURI]= [{
+                            userValue[refPt.propertyURI]= [{
                                 '@guid': short.generate(),
                                 'http://www.w3.org/2000/01/rdf-schema#label': [
                                     {
@@ -943,10 +957,10 @@ const parseProfile = {
                         }
 
                         if (defaults.defaultURI){
-                            if (activeProfile.rt[profile].pt[newPropertyId].userValue[refPt.propertyURI][0]){
-                                activeProfile.rt[profile].pt[newPropertyId].userValue[refPt.propertyURI][0]['@id'] = defaults.defaultURI    
+                            if (userValue[refPt.propertyURI][0]){
+                                userValue[refPt.propertyURI][0]['@id'] = defaults.defaultURI    
                                 if (refPt.valueConstraint.valueDataType && refPt.valueConstraint.valueDataType.dataTypeURI){
-                                    activeProfile.rt[profile].pt[newPropertyId].userValue[refPt.propertyURI][0]['@type'] = refPt.valueConstraint.valueDataType.dataTypeURI
+                                    userValue[refPt.propertyURI][0]['@type'] = refPt.valueConstraint.valueDataType.dataTypeURI
                                 }
 
                             }
@@ -3399,10 +3413,6 @@ const parseProfile = {
         aap = aap.replace(/[.,-]/g, '')
 
         return aap
-
-
-
-
     },
 
     /**

@@ -925,7 +925,7 @@ export default new Vuex.Store({
 
 
     async addInstance ({ commit, state }) {    
-      let nap = parseProfile.addInstance(state.activeProfile)
+      let nap = await parseProfile.addInstance(state.activeProfile)
       nap = parseProfile.reorderRTOrder(nap)
       commit('ACTIVEPROFILE', nap)   
       
@@ -967,8 +967,8 @@ export default new Vuex.Store({
     },
     
 
-    addItem ({ commit, state }, data) {    
-      let nap = parseProfile.addItem(state.activeProfile, data.uri)
+    async addItem ({ commit, state }, data) {    
+      let nap = await parseProfile.addItem(state.activeProfile, data.uri)
       nap = parseProfile.reorderRTOrder(nap)
       commit('ACTIVEPROFILE', nap)   
 
