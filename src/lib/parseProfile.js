@@ -1159,24 +1159,37 @@ const parseProfile = {
 
             // keep track at the top level what is the active type for this template
             currentState.rt[activeProfileName].pt[component].activeType = nextRef.resourceURI
-                
+            
+            let baseURI = currentState.rt[activeProfileName].pt[component].propertyURI
 
-            // always remove the @id
-            if (currentState.rt[activeProfileName].pt[component].userValue['@id']){
-                delete currentState.rt[activeProfileName].pt[component].userValue['@id']
+            console.log('baseURI',baseURI)
+            console.log('baseURI',baseURI)
+            console.log("nextRef.resourceURI",nextRef.resourceURI)
+
+            // map to the first level
+            if (!currentState.rt[activeProfileName].pt[component].userValue[baseURI]){
+                currentState.rt[activeProfileName].pt[component].userValue[baseURI]=[{}]
             }
 
+            let userValue = currentState.rt[activeProfileName].pt[component].userValue[baseURI][0]
+           
+            // always remove the @id
+            if (userValue['@id']){
+                delete userValue['@id']
+            }
+
+            console.log("NEW userValue",userValue)
 
             // if the @type is stored at the root level change it otherwise it lives in the /agent or /subject or whatever
             // change it there
             if (key == currentState.rt[activeProfileName].pt[component].propertyURI){
 
-                currentState.rt[activeProfileName].pt[component].userValue['@type'] = nextRef.resourceURI
+                userValue['@type'] = nextRef.resourceURI
 
             }else{
                 // we need to change it in whatever its stored
-                if (currentState.rt[activeProfileName].pt[component].userValue[key] && currentState.rt[activeProfileName].pt[component].userValue[key][0] && currentState.rt[activeProfileName].pt[component].userValue[key][0]['@type']){
-                    currentState.rt[activeProfileName].pt[component].userValue[key][0]['@type'] = nextRef.resourceURI
+                if (userValue[key] && userValue[key][0] && userValue[key][0]['@type']){
+                    userValue[key][0]['@type'] = nextRef.resourceURI
                 }
             }
 
@@ -1231,14 +1244,14 @@ const parseProfile = {
             
 
 
-            for (let key in currentState.rt[activeProfileName].pt[component].userValue){
+            for (let key in userValue){
                 if (!key.startsWith('@')){
                     if (possibleProperties.indexOf(key)==-1){
                         // 
                         // this property has no place in the ref template we are about to switch to
                         // so store them over in the refTemplateUserValue for later if needed
-                        currentState.rt[activeProfileName].pt[component].refTemplateUserValue[key] =JSON.parse(JSON.stringify(currentState.rt[activeProfileName].pt[component].userValue[key]))
-                        delete currentState.rt[activeProfileName].pt[component].userValue[key]
+                        currentState.rt[activeProfileName].pt[component].refTemplateUserValue[key] =JSON.parse(JSON.stringify(userValue[key]))
+                        delete userValue[key]
                     }
                 }
             }
@@ -1254,7 +1267,7 @@ const parseProfile = {
                     // differnt types of classifications so leave it out, it will get populated with the default so
                     // we shouldn't loose any data, only if they change it then cycle the options then it will be lost and need to re-add
                     if (pp != 'http://id.loc.gov/ontologies/bibframe/assigner'){
-                        currentState.rt[activeProfileName].pt[component].userValue[pp]= JSON.parse(JSON.stringify(currentState.rt[activeProfileName].pt[component].refTemplateUserValue[pp]))
+                        userValue[pp]= JSON.parse(JSON.stringify(currentState.rt[activeProfileName].pt[component].refTemplateUserValue[pp]))
                     }
                     delete currentState.rt[activeProfileName].pt[component].refTemplateUserValue[pp]
                 }
@@ -1269,8 +1282,8 @@ const parseProfile = {
                     // console.log("These fdautls:",pt.valueConstraint.defaults && pt.valueConstraint.defaults[0])
                     // console.log(pt.propertyURI)
                     // if there is already this property in the uservalue remove it
-                    if (currentState.rt[activeProfileName].pt[component].userValue[pt.propertyURI]){
-                        currentState.rt[activeProfileName].pt[component].userValue[pt.propertyURI] = []
+                    if (userValue[pt.propertyURI]){
+                        userValue[pt.propertyURI] = []
                     }
 
                     // popualte with the default
@@ -1282,7 +1295,7 @@ const parseProfile = {
                         // if the default is for a label property, don't double nest it
                         if (pt.propertyURI === 'http://www.w3.org/2000/01/rdf-schema#label'){
 
-                            currentState.rt[activeProfileName].pt[component].userValue[pt.propertyURI]= [
+                            userValue[pt.propertyURI]= [
                                 {
                                     'http://www.w3.org/2000/01/rdf-schema#label':pt.valueConstraint.defaults[0].defaultLiteral,
                                     '@guid': short.generate(),
@@ -1290,7 +1303,7 @@ const parseProfile = {
                             ]
 
                         }else{
-                            currentState.rt[activeProfileName].pt[component].userValue[pt.propertyURI]= [{
+                            userValue[pt.propertyURI]= [{
                                 '@guid': short.generate(),
                                 'http://www.w3.org/2000/01/rdf-schema#label': [
                                     {
@@ -1310,10 +1323,10 @@ const parseProfile = {
                     if (pt.valueConstraint.defaults[0].defaultURI && pt.valueConstraint.defaults[0].defaultURI.trim() != ""){
 
 
-                        currentState.rt[activeProfileName].pt[component].userValue[pt.propertyURI][0]['@id'] = pt.valueConstraint.defaults[0].defaultURI
+                        userValue[pt.propertyURI][0]['@id'] = pt.valueConstraint.defaults[0].defaultURI
 
                         if (pt.valueConstraint.valueDataType && pt.valueConstraint.valueDataType.dataTypeURI){
-                            currentState.rt[activeProfileName].pt[component].userValue[pt.propertyURI][0]['@type'] = pt.valueConstraint.valueDataType.dataTypeURI
+                            userValue[pt.propertyURI][0]['@type'] = pt.valueConstraint.valueDataType.dataTypeURI
                         }
 
 
@@ -1332,11 +1345,12 @@ const parseProfile = {
 
 
 
+            //currentState.rt[activeProfileName].pt[component].userValue[baseURI][0] = userValue
 
         
 
         }
-
+        
 
         return currentState
     },

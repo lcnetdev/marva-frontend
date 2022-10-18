@@ -653,7 +653,7 @@ button[disabled]{
                             </div>
 
                             <div>
-                                <input type="radio" name="radio" @change="updateLayout('spreadsheet')" id="display-select-spreadsheet" :checked="(settingsDisplayMode=='spreadsheet')">
+                                <input disabled type="radio" name="radio" @change="updateLayout('spreadsheet')" id="display-select-spreadsheet" :checked="(settingsDisplayMode=='spreadsheet')">
                                 <label for="display-select-spreadsheet">Spreadsheet (BETA)</label>   
                             </div>                                                      
                         </div>                    

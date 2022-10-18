@@ -217,10 +217,14 @@ export default {
     let useId = this.structure.valueConstraint.valueTemplateRefs[0]
     let foundBetter = false
 
+    let userValue = this.structure.userValue
 
+    if (userValue[this.structure.propertyURI] && userValue[this.structure.propertyURI][0]){
+      userValue = this.structure.userValue[this.structure.propertyURI][0]
+    }
     
     // do we have user data and a possible @type to use
-    if (this.structure.userValue['@type'] || (this.parentStructureObj && this.parentStructureObj.userValue['@type'])){
+    if (userValue['@type'] || (this.parentStructureObj && this.parentStructureObj.userValue['@type'])){
 
 
       // loop thrugh all the refs and see if there is a URI that matches it better
@@ -229,15 +233,15 @@ export default {
 
         if (foundBetter) return false
 
-        if (this.rtLookup[tmpid].resourceURI === this.structure.userValue['@type']){
+        if (this.rtLookup[tmpid].resourceURI === userValue['@type']){
           useId = tmpid
           foundBetter = true
         }
 
-        for (let key in this.structure.userValue){
+        for (let key in userValue){
 
-          if (Array.isArray(this.structure.userValue[key])){
-            for (let val of this.structure.userValue[key]){
+          if (Array.isArray(userValue[key])){
+            for (let val of userValue[key]){
               if (val['@type'] && this.rtLookup[tmpid].resourceURI === val['@type']){
                 useId = tmpid
                 foundBetter = true
@@ -250,19 +254,19 @@ export default {
         }
 
         // also look into the parent that might have the data
-        if (this.parentStructureObj){
-          for (let key in this.parentStructureObj.userValue){
-            if (Array.isArray(this.parentStructureObj.userValue[key])){
-              for (let val of this.parentStructureObj.userValue[key]){
-                if (val['@type'] && this.rtLookup[tmpid].resourceURI === val['@type']){
-                  useId = tmpid
-                  foundBetter = true
-                }
-              }
-            }
+        // if (this.parentStructureObj){
+        //   for (let key in this.parentStructureObj.userValue){
+        //     if (Array.isArray(this.parentStructureObj.userValue[key])){
+        //       for (let val of this.parentStructureObj.userValue[key]){
+        //         if (val['@type'] && this.rtLookup[tmpid].resourceURI === val['@type']){
+        //           useId = tmpid
+        //           foundBetter = true
+        //         }
+        //       }
+        //     }
 
-          }
-        }
+        //   }
+        // }
 
 
 

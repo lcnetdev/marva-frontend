@@ -182,7 +182,9 @@ export default {
       this.$store.dispatch("setActiveProfile", { self: this, profile: useProfile, useDefaultValues: true }).then(() => {
         
         if (this.settingsDisplayMode == 'spreadsheet'){
-          this.$router.push({ name: 'CompactEdit', params: { recordId: useProfile.eId } })
+          // this.$router.push({ name: 'CompactEdit', params: { recordId: useProfile.eId } })
+          this.$router.push({ name: 'Edit', params: { recordId: useProfile.eId } })
+
         }else{
           this.$router.push({ name: 'Edit', params: { recordId: useProfile.eId } })
         }
