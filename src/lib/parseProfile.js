@@ -1963,10 +1963,17 @@ const parseProfile = {
                             // build the L0 if it doesn't exist
                             // if it does find it and referenece it
 
+
+                            let L0Type = await this.suggestTypeImproved(L0URI,currentState.rt[rt].pt[pt])
+                            if (!L0Type){
+                                L0Type = await exportXML.suggestType(L0URI,rt)
+                            }
+
+
                             // we may or maynot need this
                             let L0New = {
                                 '@guid': short.generate(),
-                                '@type': await exportXML.suggestType(L0URI)
+                                '@type': L0Type
                             }
 
                             if (!userValue[L0URI]){
@@ -1982,7 +1989,12 @@ const parseProfile = {
                             }
 
 
-                            let L1Type = await exportXML.suggestType(L1URI)
+                            // let L1Type = await exportXML.suggestType(L1URI)
+                            let L1Type = await this.suggestTypeImproved(L1URI,currentState.rt[rt].pt[pt])
+                            if (!L1Type){
+                                L1Type = await exportXML.suggestType(L1URI,rt)
+                            }
+
                             let L1New = {
                                 '@guid': short.generate(),
                                 '@type': L1Type
@@ -2011,7 +2023,12 @@ const parseProfile = {
                             if (propertyPath.length >= 3){
 
                                 let L2URI = propertyPath[2].propertyURI
-                                let L2Type = await exportXML.suggestType(L2URI)
+                                // let L2Type = await exportXML.suggestType(L2URI)
+                                let L2Type = await this.suggestTypeImproved(L2URI,currentState.rt[rt].pt[pt])
+                                if (!L2Type){
+                                    L2Type = await exportXML.suggestType(L2URI,rt)
+                                }
+
                                 let L2New = {
                                     '@guid': short.generate(),
                                     '@type': L2Type
@@ -2039,7 +2056,12 @@ const parseProfile = {
                                 if (propertyPath.length >= 4){
 
                                     let L3URI = propertyPath[3].propertyURI
-                                    let L3Type = await exportXML.suggestType(L3URI)
+                                    // let L3Type = await exportXML.suggestType(L3URI)
+                                    let L3Type = await this.suggestTypeImproved(L3URI,currentState.rt[rt].pt[pt])
+                                    if (!L3Type){
+                                        L3Type = await exportXML.suggestType(L3URI,rt)
+                                    }
+
                                     let L3New = {
                                         '@guid': short.generate(),
                                         '@type': L3Type
@@ -2896,7 +2918,7 @@ const parseProfile = {
                     }
 
 
-                    thisLevelType = this.suggestTypeImproved(p.propertyURI,currentState.rt[activeProfileName].pt[component])
+                    thisLevelType = await this.suggestTypeImproved(p.propertyURI,currentState.rt[activeProfileName].pt[component])
 
                     if (!thisLevelType){
                         thisLevelType = await exportXML.suggestType(p.propertyURI,activeProfileName)
@@ -3612,7 +3634,7 @@ const parseProfile = {
     },
 
     // returns a Class type basedon the predicate from the the profiles
-    suggestTypeImproved: function(propertyURI,pt){
+    suggestTypeImproved: async function(propertyURI,pt){
 
 
         // if the component itself has it set then just return it we dont need to dig around
@@ -3626,6 +3648,8 @@ const parseProfile = {
         }
 
 
+
+        
 
         // find a template name to use
         if (pt && pt.valueConstraint && pt.valueConstraint && pt.valueConstraint.valueTemplateRefs && pt.valueConstraint.valueTemplateRefs.length>0){
@@ -3661,11 +3685,38 @@ const parseProfile = {
                 return possibleTypes[0]
             }
 
+            possibleTypes = []
+
+
+            // console.log("HERE IS PT",pt)
+            // however if is brand NEW like they are just creating it now
+            // meaning there is no @type on it yet then just look at the very first ref template and use that val
+            if (!pt.userValue[pt.propertyURI] || (pt.userValue[pt.propertyURI] && pt.userValue[pt.propertyURI][0] && !pt.userValue[pt.propertyURI][0]['@type'])){
+                if (pt && pt.valueConstraint && pt.valueConstraint && pt.valueConstraint.valueTemplateRefs && pt.valueConstraint.valueTemplateRefs.length>0){
+
+                    let rtKey = pt.valueConstraint.valueTemplateRefs[0]
+                    if (parseProfile.rtLookup[rtKey]){
+                        // suggest the resource                        
+                        return parseProfile.rtLookup[rtKey].resourceURI
+                    }else{
+                        console.warn("Did not find the requested template name", rtKey)
+                    }
+
+                }
+
+            }
+            
+            // }else{
+
+            //     console.log("it alreay has a typ!")
+            //     console.log(JSON.parse(JSON.stringify(pt.userValue)))
+            // }
 
           
 
         }
 
+        console.log("returninf false we have faild oh no :)")
 
         return false
         // parseProfile.rtLookup[key].propertyTemplates

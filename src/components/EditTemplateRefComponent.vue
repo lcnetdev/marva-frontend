@@ -216,7 +216,7 @@ export default {
     // grab the first component from the struecture, but there might be mutluple ones
     let useId = this.structure.valueConstraint.valueTemplateRefs[0]
     let foundBetter = false
-
+    
     let userValue = this.structure.userValue
 
     if (userValue[this.structure.propertyURI] && userValue[this.structure.propertyURI][0]){
