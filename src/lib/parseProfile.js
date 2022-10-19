@@ -633,6 +633,7 @@ const parseProfile = {
     * @return {bolean}
     */    
     isUriALiteral: function(URI){
+        console.log(URI)
         if (config.isLiteral.map((v) => {return v.toLowerCase()}).indexOf(URI.toLowerCase()) > -1){
             return true
         }
@@ -2884,6 +2885,7 @@ const parseProfile = {
 
                     thisLevelType = await exportXML.suggestType(p.propertyURI,activeProfileName)
                     
+                    
                     let thisLevel = {'@guid':short.generate()}
                     if (!this.isUriALiteral(thisLevelType)){
                         thisLevel['@type'] = thisLevelType
@@ -2911,9 +2913,9 @@ const parseProfile = {
                 }
 
                 // if it or its parent have a valueConstraint.valueDataType.dataTypeURI then use it
-                if (parentStructure && parentStructure.valueConstraint.valueDataType.dataTypeURI && parentStructure.valueConstraint.valueDataType.dataTypeURI.trim()  != ''){
+                if (parentStructure && parentStructure.valueConstraint && parentStructure.valueConstraint.valueDataType && parentStructure.valueConstraint.valueDataType.dataTypeURI && parentStructure.valueConstraint.valueDataType.dataTypeURI.trim()  != ''){
                     currentUserValuePos['@type'] = parentStructure.valueConstraint.valueDataType.dataTypeURI
-                }else if (structure && structure.valueConstraint.valueDataType.dataTypeURI && structure.valueConstraint.valueDataType.dataTypeURI.trim()  != ''){
+                }else if (structure && structure.valueConstraint.valueDataType && structure.valueConstraint.valueDataType.dataTypeURI && structure.valueConstraint.valueDataType.dataTypeURI.trim()  != ''){
                     currentUserValuePos['@type'] = structure.valueConstraint.valueDataType.dataTypeURI
                 }
 

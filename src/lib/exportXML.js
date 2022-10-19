@@ -143,6 +143,10 @@ const exportXML = {
 		if (propertyURI==='http://www.w3.org/2000/01/rdf-schema#label'){
 			return 'http://www.w3.org/2000/01/rdf-schema#Literal'
 		}
+		if (propertyURI==='http://www.loc.gov/mads/rdf/v1#authoritativeLabel'){
+			return 'http://www.w3.org/2000/01/rdf-schema#Literal'
+		}
+		
 		if (propertyURI==='http://www.w3.org/1999/02/22-rdf-syntax-ns#value'){
 			return 'http://www.w3.org/2000/01/rdf-schema#Literal'
 		}
