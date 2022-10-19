@@ -146,7 +146,7 @@ const exportXML = {
 		if (propertyURI==='http://www.loc.gov/mads/rdf/v1#authoritativeLabel'){
 			return 'http://www.w3.org/2000/01/rdf-schema#Literal'
 		}
-		
+
 		if (propertyURI==='http://www.w3.org/1999/02/22-rdf-syntax-ns#value'){
 			return 'http://www.w3.org/2000/01/rdf-schema#Literal'
 		}
@@ -164,6 +164,8 @@ const exportXML = {
 		let propXml = await lookupUtil.fetchOntology(propertyURI)
 		let prop = parser.parseFromString(propXml, "text/xml");
 		let range = prop.getElementsByTagName("rdfs:range")
+		console.log("propXml",propXml)
+		console.log("range",range)
 
 		// if it has a range return it
 		if (range.length>0){

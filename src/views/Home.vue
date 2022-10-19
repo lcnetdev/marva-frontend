@@ -243,7 +243,6 @@ export default {
     // kick off the fetching of profiles on load
     this.$store.dispatch("fetchProfiles", { self: this })    
 
-
   },
 
   beforeCreate: function() {

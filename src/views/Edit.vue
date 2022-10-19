@@ -521,7 +521,15 @@ export default {
 
   created: async function () {
 
-
+    let yourDate = new Date()
+    
+    if (yourDate.toISOString().split('T')[0] == '2022-10-19' || yourDate.toISOString().split('T')[0] == '2022-10-20'){
+      Object.keys(localStorage)
+       .filter(x =>
+          x.startsWith('ontology_'))
+       .forEach(x => 
+          localStorage.removeItem(x))
+    }
 
 
 
@@ -1224,12 +1232,12 @@ export default {
 
       Object.keys(this.activeProfile.rt).forEach((rtk)=>{
         Object.keys(this.activeProfile.rt[rtk].pt).forEach((ptk)=>{
-          if (this.activeProfile.rt[rtk].pt[ptk].propertyURI == 'http://id.loc.gov/ontologies/bibframe/title'){
+          // if (this.activeProfile.rt[rtk].pt[ptk].propertyURI == 'http://id.loc.gov/ontologies/bibframe/title'){
 
             if (this.ontologyLookupTodo.indexOf(this.activeProfile.rt[rtk].pt[ptk].propertyURI) == -1){
               this.ontologyLookupTodo.push(this.activeProfile.rt[rtk].pt[ptk].propertyURI)  
             }           
-          }
+          // }
 
         })
       })

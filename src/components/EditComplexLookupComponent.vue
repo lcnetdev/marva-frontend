@@ -1123,6 +1123,7 @@ export default {
           this.displayLabel = userValue['http://id.loc.gov/ontologies/bibframe/code'][0]['http://id.loc.gov/ontologies/bibframe/code'] || userValue['http://id.loc.gov/ontologies/bibframe/code']
         }
 
+        this.displayLabel = this.displayLabel.replace(/&amp;/g,'&')
 
         if (!this.displayLabel){
           console.log("ERROR GETTING this.displayLabel")
