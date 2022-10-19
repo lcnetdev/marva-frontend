@@ -1419,7 +1419,6 @@ const lookupUtil = {
         if (window.localStorage && window.localStorage.getItem('ontology_'+url+'.rdf')){
           let response = JSON.parse(window.localStorage.getItem('ontology_'+url+'.rdf'))
           // make sure it is valid
-          console.log("response",response)
           if (response && response.response && response.ts){
             if (currentTS - response.ts < (86400*7)){
               // we have a fresh catch less than 7 day old, use that instead of asking the srver

@@ -340,8 +340,12 @@ export default {
       // so only keep things with a lower level
       currentPath = currentPath.filter((v) => { return (v.level<this.level) })  
 
+      let currentUris = currentPath.map((v) => { return v.propertyURI })  
 
-      currentPath.push({level: this.level, propertyURI: this.structure.propertyURI})
+      // don't duplicate property levels if that is possible
+      if (currentUris.indexOf(this.structure.propertyURI) == -1){
+        currentPath.push({level: this.level, propertyURI: this.structure.propertyURI})
+      }
       return currentPath
     },
 

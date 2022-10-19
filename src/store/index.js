@@ -465,10 +465,9 @@ export default new Vuex.Store({
     },
 
     async fetchOntology ({ commit },data) {   
-      console.log('data',data)
+
       let results = await lookupUtil.fetchOntology(data.uri)
       
-      console.log('results',results)
       commit('ONYOLOGYLOOKUP', results)  
 
     },

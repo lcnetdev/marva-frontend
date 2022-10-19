@@ -164,8 +164,7 @@ const exportXML = {
 		let propXml = await lookupUtil.fetchOntology(propertyURI)
 		let prop = parser.parseFromString(propXml, "text/xml");
 		let range = prop.getElementsByTagName("rdfs:range")
-		console.log("propXml",propXml)
-		console.log("range",range)
+
 
 		// if it has a range return it
 		if (range.length>0){
