@@ -1605,6 +1605,9 @@ const parseProfile = {
                     // keeps track of the @type, will be the last @type of the hiearchy when done looping
                     let thisLevelType
 
+                    console.log(currentState.rt[rt].pt[pt])
+
+
                     for (let p of propertyPath){
 
 
@@ -1613,7 +1616,13 @@ const parseProfile = {
                             currentUserValuePos[p.propertyURI] = []
                         }
 
-                        thisLevelType = await exportXML.suggestType(p.propertyURI,rt)
+
+                        thisLevelType = this.suggestTypeImproved(p.propertyURI,currentState.rt[rt].pt[pt])
+                        if (!thisLevelType){
+                            thisLevelType = await exportXML.suggestType(p.propertyURI,rt)
+                        }
+                        
+
 
                         let thisLevel = {'@guid':short.generate()}
                         if (!this.isUriALiteral(thisLevelType)){
@@ -2700,9 +2709,9 @@ const parseProfile = {
 
     setValueComplex: async function(currentState, component, key, activeProfileName, template, value, structure,parentStructure, propertyPath){
 
-            console.log("setvaluecomplex")
-            console.log(currentState, component, key, activeProfileName, template, value, structure,parentStructure)
-            console.log("propertyPath",propertyPath)
+            // console.log("setvaluecomplex")
+            // console.log(currentState, component, key, activeProfileName, template, value, structure,parentStructure)
+            // console.log("propertyPath",propertyPath)
             // if it is a top level Work uri don't let them change it
             if (!parentStructure && structure.propertyURI == 'http://id.loc.gov/ontologies/bibframe/Work'){
                 alert("You cannot change the existing URI of this work.")
@@ -2864,7 +2873,7 @@ const parseProfile = {
                 let thisLevelType
 
                 for (let p of propertyPath){
-
+                    console.log("on p",p)
                     // if the property is owl:sameAs it is the last field 
                     // of where we are building the entitiy, so we don't  want
                     // bf:Agent -> owl:sameAs we just want the bf:Agent with values filed in there
@@ -2883,9 +2892,15 @@ const parseProfile = {
                         currentUserValuePos[p.propertyURI] = []
                     }
 
-                    thisLevelType = await exportXML.suggestType(p.propertyURI,activeProfileName)
+
+                    thisLevelType = this.suggestTypeImproved(p.propertyURI,currentState.rt[activeProfileName].pt[component])
+
+                    if (!thisLevelType){
+                        thisLevelType = await exportXML.suggestType(p.propertyURI,activeProfileName)
+                    }
+
                     
-                    
+
                     let thisLevel = {'@guid':short.generate()}
                     if (!this.isUriALiteral(thisLevelType)){
                         thisLevel['@type'] = thisLevelType
@@ -2904,22 +2919,28 @@ const parseProfile = {
 
                 // some possible options to set the @type
 
-                // if there is a valueConstraint.valueDataType.dataTypeURI set it to that
-                if (currentState.rt[activeProfileName].pt[component].valueConstraint 
-                    && currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType 
-                    && currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType.dataTypeURI){
-                    currentUserValuePos['@type'] = currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType.dataTypeURI
-                    
+                if (thisLevelType !== 'http://www.w3.org/2000/01/rdf-schema#Literal'){
+
+                    // if there is a valueConstraint.valueDataType.dataTypeURI set it to that
+                    if (currentState.rt[activeProfileName].pt[component].valueConstraint 
+                        && currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType 
+                        && currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType.dataTypeURI){
+                        currentUserValuePos['@type'] = currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType.dataTypeURI
+                        
+                        // console.log("1 setting type ", currentState.rt[activeProfileName].pt[component].valueConstraint.valueDataType.dataTypeURI)
+                    }
+
+                    // if it or its parent have a valueConstraint.valueDataType.dataTypeURI then use it
+                    if (parentStructure && parentStructure.valueConstraint && parentStructure.valueConstraint.valueDataType && parentStructure.valueConstraint.valueDataType.dataTypeURI && parentStructure.valueConstraint.valueDataType.dataTypeURI.trim()  != ''){
+                        currentUserValuePos['@type'] = parentStructure.valueConstraint.valueDataType.dataTypeURI
+                        // console.log("2 setting type ", currentUserValuePos['@type'])
+
+                    }else if (structure && structure.valueConstraint.valueDataType && structure.valueConstraint.valueDataType.dataTypeURI && structure.valueConstraint.valueDataType.dataTypeURI.trim()  != ''){
+                        currentUserValuePos['@type'] = structure.valueConstraint.valueDataType.dataTypeURI
+                        // console.log("3 setting type ", currentUserValuePos['@type'])
+                    }
+
                 }
-
-                // if it or its parent have a valueConstraint.valueDataType.dataTypeURI then use it
-                if (parentStructure && parentStructure.valueConstraint && parentStructure.valueConstraint.valueDataType && parentStructure.valueConstraint.valueDataType.dataTypeURI && parentStructure.valueConstraint.valueDataType.dataTypeURI.trim()  != ''){
-                    currentUserValuePos['@type'] = parentStructure.valueConstraint.valueDataType.dataTypeURI
-                }else if (structure && structure.valueConstraint.valueDataType && structure.valueConstraint.valueDataType.dataTypeURI && structure.valueConstraint.valueDataType.dataTypeURI.trim()  != ''){
-                    currentUserValuePos['@type'] = structure.valueConstraint.valueDataType.dataTypeURI
-                }
-
-
 
 
                 // if it is a ref component one see if we need to set it based on what the refcomponent is set to
@@ -2928,7 +2949,7 @@ const parseProfile = {
                        currentState.rt[activeProfileName].pt[component].activeType =  this.rtLookup[currentState.rt[activeProfileName].pt[component].valueConstraint.valueTemplateRefs[0]].resourceURI
                     }
                     currentUserValuePos['@type'] = currentState.rt[activeProfileName].pt[component].activeType
-                    
+                    // console.log("4 setting type ", currentUserValuePos['@type'])
                 }
 
                 // we might have the type stored in the context of the thing we just looked up and selected to use
@@ -2943,7 +2964,7 @@ const parseProfile = {
                         }
                         // if its looking up from an agent 
                         currentUserValuePos['@type'] = value.typeFull
-                        
+                        // console.log("5 setting type ", currentUserValuePos['@type'])
 
                     }
                 }
@@ -3586,6 +3607,103 @@ const parseProfile = {
 
         return false
     },
+
+    // returns a Class type basedon the predicate from the the profiles
+    suggestTypeImproved: function(propertyURI,pt){
+
+
+        // if the component itself has it set then just return it we dont need to dig around
+        if (propertyURI == pt.propertyURI){
+            if (pt.valueConstraint &&
+                pt.valueConstraint.valueDataType &&
+                pt.valueConstraint.valueDataType.dataTypeURI &&
+                pt.valueConstraint.valueDataType.dataTypeURI.trim() != ''){
+                return pt.valueConstraint.valueDataType.dataTypeURI.trim()
+            }
+        }
+
+
+
+        // find a template name to use
+        if (pt && pt.valueConstraint && pt.valueConstraint && pt.valueConstraint.valueTemplateRefs && pt.valueConstraint.valueTemplateRefs.length>0){
+
+    
+            let possibleTypes = []
+            for (let rtKey of pt.valueConstraint.valueTemplateRefs){
+
+
+                if (parseProfile.rtLookup[rtKey]){
+
+                    for (let p of parseProfile.rtLookup[rtKey].propertyTemplates){
+                        if (p.propertyURI == propertyURI){
+
+                            if (p.valueConstraint &&
+                                p.valueConstraint.valueDataType &&
+                                p.valueConstraint.valueDataType.dataTypeURI &&
+                                p.valueConstraint.valueDataType.dataTypeURI.trim() != ''){
+                                possibleTypes.push(p.valueConstraint.valueDataType.dataTypeURI.trim())
+                            }
+                        }
+                    }
+
+                }else{
+                    console.warn("Did not find the requested template name", rtKey)
+                }
+
+            } 
+
+            possibleTypes = [...new Set(possibleTypes)];
+
+            if (possibleTypes.length == 1){
+                return possibleTypes[0]
+            }
+
+
+          
+
+        }
+
+
+        return false
+        // parseProfile.rtLookup[key].propertyTemplates
+
+
+
+        // if (resourceTemplateId){
+        //     console.log("!!!!!!!!!!!!")
+        //     console.log(resourceTemplateId)
+        //     console.log(parseProfile.rtLookup[resourceTemplateId])
+        //     console.log(parseProfile.rtLookup)
+
+        //     if (parseProfile.rtLookup[resourceTemplateId]){
+        //         for (let pt of parseProfile.rtLookup[resourceTemplateId].propertyTemplates ){
+        //             if (pt.propertyURI == propertyURI){
+        //                 if (pt.valueConstraint.valueDataType && pt.valueConstraint.valueDataType.dataTypeURI)
+        //                 return pt.valueConstraint.valueDataType.dataTypeURI
+        //             }
+        //         }
+        //     }
+
+        // }else{
+
+        //     for (let key in this.rtLookup){
+        //         for (let pt of parseProfile.rtLookup[key].propertyTemplates ){
+        //             if (pt.propertyURI == propertyURI){
+        //                 if (pt.valueConstraint.valueDataType && pt.valueConstraint.valueDataType.dataTypeURI)
+        //                 return pt.valueConstraint.valueDataType.dataTypeURI
+        //             }
+        //         }
+        //     }
+
+        // }
+
+
+
+
+
+    },
+
+
 
 
     suggestURI: function(profile,type,URI){
