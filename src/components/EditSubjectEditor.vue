@@ -1658,7 +1658,7 @@ export default {
       this.showTypes= false
 
 
-      
+
 
       if (!userValue){
         return
@@ -1689,7 +1689,9 @@ export default {
       // }
 
 
-
+      if (userValue['http://id.loc.gov/ontologies/bibframe/subject'] && userValue['http://id.loc.gov/ontologies/bibframe/subject'][0]){
+        userValue = userValue['http://id.loc.gov/ontologies/bibframe/subject'][0]
+      }
 
 
       let completeLabel = null
