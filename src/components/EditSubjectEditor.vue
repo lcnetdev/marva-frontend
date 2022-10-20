@@ -732,8 +732,8 @@ export default {
       that.x = 'Seaching...'
       that.pickPostion=0
 
-      searchString = searchString.trim()
-      searchStringFull = searchStringFull.trim()
+      searchString = searchString.trim().normalize()
+      searchStringFull = searchStringFull.trim().normalize()
 
       // make the "searching..." text grow
       let ti = window.setInterval(()=>{ that.activeSearch = ((!that.activeSearch) ? '' : that.activeSearch) + '.'},100)

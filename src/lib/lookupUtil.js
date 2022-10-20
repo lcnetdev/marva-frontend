@@ -1803,6 +1803,7 @@ const lookupUtil = {
 
       let regexResults
 
+      lcsh = lcsh.normalize()
 
       if (!lcsh){
         result.resultType = 'ERROR'
