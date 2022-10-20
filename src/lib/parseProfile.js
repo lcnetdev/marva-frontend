@@ -1605,7 +1605,7 @@ const parseProfile = {
                     // keeps track of the @type, will be the last @type of the hiearchy when done looping
                     let thisLevelType
 
-                    console.log(currentState.rt[rt].pt[pt])
+                    // console.log(currentState.rt[rt].pt[pt])
 
 
                     for (let p of propertyPath){
@@ -1617,16 +1617,16 @@ const parseProfile = {
                         }
 
 
-                        thisLevelType = this.suggestTypeImproved(p.propertyURI,currentState.rt[rt].pt[pt])
-                        console.log("thisLevelType frist",thisLevelType)
+                        thisLevelType = await this.suggestTypeImproved(p.propertyURI,currentState.rt[rt].pt[pt])
+                        // console.log("thisLevelType frist",thisLevelType)
 
                         if (!thisLevelType){
                             thisLevelType = await exportXML.suggestType(p.propertyURI,rt)
                         }
                         
-                        console.log("p.propertyURI",p.propertyURI)
+                        // console.log("p.propertyURI",p.propertyURI)
 
-                        console.log("thisLevelType",thisLevelType)
+                        // console.log("thisLevelType",thisLevelType)
                         let thisLevel = {'@guid':short.generate()}
                         if (!this.isUriALiteral(thisLevelType)){
                             thisLevel['@type'] = thisLevelType
@@ -3705,7 +3705,7 @@ const parseProfile = {
                 }
 
             }
-            
+
             // }else{
 
             //     console.log("it alreay has a typ!")
