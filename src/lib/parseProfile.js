@@ -3648,7 +3648,7 @@ const parseProfile = {
         }
 
 
-
+        // console.log("pt",pt)
         
 
         // find a template name to use
@@ -3678,23 +3678,45 @@ const parseProfile = {
                 }
 
             } 
-
+            console.log("possibleTypes1",possibleTypes)
             possibleTypes = [...new Set(possibleTypes)];
 
             if (possibleTypes.length == 1){
                 return possibleTypes[0]
             }
 
-            possibleTypes = []
+            // possibleTypes = []
 
 
             // console.log("HERE IS PT",pt)
+            // console.log("!pt.userValue[pt.propertyURI]",(!pt.userValue[pt.propertyURI]))
+            // console.log(pt.userValue[pt.propertyURI])
+            // console.log("(!pt.userValue[pt.propertyURI] || (pt.userValue[pt.propertyURI] && pt.userValue[pt.propertyURI][0] && !pt.userValue[pt.propertyURI][0]['@type']))",(!pt.userValue[pt.propertyURI] || (pt.userValue[pt.propertyURI] && pt.userValue[pt.propertyURI][0] && !pt.userValue[pt.propertyURI][0]['@type'])))
             // however if is brand NEW like they are just creating it now
             // meaning there is no @type on it yet then just look at the very first ref template and use that val
-            if (!pt.userValue[pt.propertyURI] || (pt.userValue[pt.propertyURI] && pt.userValue[pt.propertyURI][0] && !pt.userValue[pt.propertyURI][0]['@type'])){
-                if (pt && pt.valueConstraint && pt.valueConstraint && pt.valueConstraint.valueTemplateRefs && pt.valueConstraint.valueTemplateRefs.length>0){
 
+            let lookForResourceURI = false
+
+            if (!pt.userValue[pt.propertyURI]){
+                lookForResourceURI = true                
+            }else{
+                if (pt.userValue[pt.propertyURI] && pt.userValue[pt.propertyURI][0]){
+                    if (!pt.userValue[pt.propertyURI][0]['@type']){
+                        lookForResourceURI = true     
+                    }
+                }else{
+                    lookForResourceURI = true     
+                }
+
+            }
+
+
+            if (lookForResourceURI){
+                if (pt && pt.valueConstraint && pt.valueConstraint && pt.valueConstraint.valueTemplateRefs && pt.valueConstraint.valueTemplateRefs.length>0){
                     let rtKey = pt.valueConstraint.valueTemplateRefs[0]
+                    // console.log("parseProfile.rtLookup[rtKey]",parseProfile.rtLookup[rtKey])
+
+
                     if (parseProfile.rtLookup[rtKey]){
                         // suggest the resource                        
                         return parseProfile.rtLookup[rtKey].resourceURI
@@ -3715,8 +3737,7 @@ const parseProfile = {
           
 
         }
-
-        console.log("returninf false we have faild oh no :)")
+        // console.log("returninf false we have faild oh no :)")
 
         return false
         // parseProfile.rtLookup[key].propertyTemplates
