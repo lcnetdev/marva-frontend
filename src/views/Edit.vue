@@ -531,6 +531,15 @@ export default {
           localStorage.removeItem(x))
     }
 
+    if (yourDate.toISOString().split('T')[0].indexOf('2022-10') > -1){
+      Object.keys(localStorage)
+       .filter(x =>
+          x.startsWith('ontology_'))
+       .forEach(x => 
+          localStorage.removeItem(x))
+    }
+
+
 
 
     // load them profiles if they aint  
