@@ -1823,6 +1823,7 @@ const lookupUtil = {
         result.msg = 'REGEX Error: That value doesn\'t look like a valid MARC encoded LCSH string (not string)'
       }
 
+      lcsh=lcsh.replace(/\$c/g,'').replace(/\$d/g,'').replace(/‡c/g,'').replace(/‡d/g,'').replace(/\s{2,}/g, ' ')
 
       // if it doesn't have a $a or ‡a in the start of the string add it
       // often times copying from a system they dont include the $a 
