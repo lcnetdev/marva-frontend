@@ -217,6 +217,12 @@ export default {
     
 
     })  
+    this.$store.dispatch("setSupportedScriptShifter", { self: this}).then(() => {
+    
+
+    })  
+
+    
 
 
     if (localStorage.getItem('bfeLoadResourceFavorites')!== null){      

@@ -11,6 +11,7 @@
 
 
 
+
       </div>
       <div style="flex:1">
 
@@ -58,19 +59,35 @@
           </select>
         </template>
         <template v-else>
-          <div >Romanization</div>
+          <div >Romanization - Non-LC</div>
           <div >Enter non-latin text to see options</div>
         </template>
 
 
       </div>
       <div style="flex:1; background-color: #fffff0db; border-radius: 1em; text-align: center; min-height: 100px;">
-          Manual language settings here
+          <div >ScriptShifter Romanization</div>
+
+          <select ref="scriptShifterSelected" style="margin-left: 1em; margin-top: 1em;" @change="scriptShiftChange($event)">
+            <option v-for="l in Object.keys(supportedScriptShifter)" :selected="(l==scriptShifterDefault)" :value="l" :key="l">{{supportedScriptShifter[l].name}}</option>
+          </select>
+
+          <button @click="scriptShift()">Romanize</button>
+
+
 
       </div>  
       <div style="flex:1; background-color: #ffe4e161; border-radius: 1em; text-align: center; min-height: 100px;">
           <div>Toolbox</div>
-          <p>What are common text editing actions that could go here? <a href="https://git.loc.gov/lcnetdev/marva/-/issues/new?issue[title]=Literal%20editor%20toolbox%20suggestion" target="_blank">Add suggestion</a></p>
+          
+          <button @click="caseConvertSentenceCase()" class="simptip-position-top convert-case-button" data-tooltip="Sentence Case">Sentence</button>
+          <button @click="caseConvertCapitalize()" class="simptip-position-top convert-case-button" data-tooltip="Capitalize Case">Capitalize</button>
+          <button @click="caseConvertTitleCase()" class="simptip-position-top convert-case-button" data-tooltip="Title Case">Title</button>
+
+
+
+
+
       </div>  
       <div style="flex:1; text-align:center; padding-top:2em">
 
@@ -88,6 +105,15 @@
 
 
 <style type="text/css" scoped="true">
+
+
+    .convert-case-button{
+      background-color: rgb(42, 42, 42) !important;
+      margin-right: 0.25em;
+    }
+    #literal-editor-textarea{
+      font-family: inherit;  
+    }
 
     .diacritic-key{
       cursor: pointer;
@@ -192,6 +218,7 @@ export default {
       inputValue:"",
       changeTimeout: null,
       diacriticData: null,
+      scriptShifterDefault: false,
       activeLanguages: [],
       langs: [], 
       combiningDiacritics: [{"symbol":"\u0300","title":"Grave Accent"},{"symbol":"\u0301","title":"Acute Accent"},{"symbol":"\u0302","title":"Circumflex Accent"},{"symbol":"\u0303","title":"Tilde"},{"symbol":"\u0304","title":"Macron"},{"symbol":"\u0305","title":"Overline"},{"symbol":"\u0306","title":"Breve"},{"symbol":"\u0307","title":"Dot Above"},{"symbol":"\u0308","title":"Diaeresis"},{"symbol":"\u0309","title":"Hook Above"},{"symbol":"\u030a","title":"Ring Above"},{"symbol":"\u030b","title":"Double Acute Accent"},{"symbol":"\u030c","title":"Caron"},{"symbol":"\u030d","title":"Vertical Line Above"},{"symbol":"\u030e","title":"Double Vertical Line Above"},{"symbol":"\u030f","title":"Double Grave Accent"},{"symbol":"\u0310","title":"Candrabindu"},{"symbol":"\u0311","title":"Inverted Breve"},{"symbol":"\u0312","title":"Turned Comma Above"},{"symbol":"\u0313","title":"Comma Above"},{"symbol":"\u0314","title":"Reversed Comma Above"},{"symbol":"\u0315","title":"Comma Above Right"},{"symbol":"\u0316","title":"Grave Accent Below"},{"symbol":"\u0317","title":"Acute Accent Below"},{"symbol":"\u0318","title":"Left Tack Below"},{"symbol":"\u0319","title":"Right Tack Below"},{"symbol":"\u031a","title":"Left Angle Above"},{"symbol":"\u031b","title":"Horn"},{"symbol":"\u031c","title":"Left Half Ring Below"},{"symbol":"\u031d","title":"Up Tack Below"},{"symbol":"\u031e","title":"Down Tack Below"},{"symbol":"\u031f","title":"Plus Sign Below"},{"symbol":"\u0320","title":"Minus Sign Below"},{"symbol":"\u0321","title":"Palatalized Hook Below"},{"symbol":"\u0322","title":"Retroflex Hook Below"},{"symbol":"\u0323","title":"Dot Below"},{"symbol":"\u0324","title":"Diaeresis Below"},{"symbol":"\u0325","title":"Ring Below"},{"symbol":"\u0326","title":"Comma Below"},{"symbol":"\u0327","title":"Cedilla"},{"symbol":"\u0328","title":"Ogonek"},{"symbol":"\u0329","title":"Vertical Line Below"},{"symbol":"\u032a","title":"Bridge Below"},{"symbol":"\u032b","title":"Inverted Double Arch Below"},{"symbol":"\u032c","title":"Caron Below"},{"symbol":"\u032d","title":"Circumflex Accent Below"},{"symbol":"\u032e","title":"Breve Below"},{"symbol":"\u032f","title":"Inverted Breve Below"},{"symbol":"\u0330","title":"Tilde Below"},{"symbol":"\u0331","title":"Macron Below"},{"symbol":"\u0332","title":"Low Line"},{"symbol":"\u0333","title":"Double Low Line"},{"symbol":"\u0334","title":"Tilde Overlay"},{"symbol":"\u0335","title":"Short Stroke Overlay"},{"symbol":"\u0336","title":"Long Stroke Overlay"},{"symbol":"\u0337","title":"Short Solidus Overlay"},{"symbol":"\u0338","title":"Long Solidus Overlay"},{"symbol":"\u0339","title":"Right Half Ring Below"},{"symbol":"\u033a","title":"Inverted Bridge Below"},{"symbol":"\u033b","title":"Square Below"},{"symbol":"\u033c","title":"Seagull Below"},{"symbol":"\u033d","title":"X Above"},{"symbol":"\u033e","title":"Vertical Tilde"},{"symbol":"\u033f","title":"Double Overline"},{"symbol":"\u0340","title":"Grave Tone Mark"},{"symbol":"\u0341","title":"Acute Tone Mark"},{"symbol":"\u0342","title":"Greek Perispomeni"},{"symbol":"\u0343","title":"Greek Koronis"},{"symbol":"\u0344","title":"Greek Dialytika Tonos"},{"symbol":"\u0345","title":"Greek Ypogegrammeni"},{"symbol":"\u0346","title":"Bridge Above"},{"symbol":"\u0347","title":"Equals Sign Below"},{"symbol":"\u0348","title":"Double Vertical Line Below"},{"symbol":"\u0349","title":"Left Angle Below"},{"symbol":"\u034a","title":"Not Tilde Above"},{"symbol":"\u034b","title":"Homothetic Above"},{"symbol":"\u034c","title":"Almost Equal To Above"},{"symbol":"\u034d","title":"Left Right Arrow Below"},{"symbol":"\u034e","title":"Upwards Arrow Below"},{"symbol":"\u034f","title":"Grapheme Joiner"},{"symbol":"\u0350","title":"Right Arrowhead Above"},{"symbol":"\u0351","title":"Left Half Ring Above"},{"symbol":"\u0352","title":"Fermata"},{"symbol":"\u0353","title":"X Below"},{"symbol":"\u0354","title":"Left Arrowhead Below"},{"symbol":"\u0355","title":"Right Arrowhead Below"},{"symbol":"\u0356","title":"Right Arrowhead and Up Arrowhead Below"},{"symbol":"\u0357","title":"Right Half Ring Above"},{"symbol":"\u0358","title":"Dot Above Right"},{"symbol":"\u0359","title":"Asterisk Below"},{"symbol":"\u035a","title":"Double Ring Below"},{"symbol":"\u035b","title":"Zigzag Above"},{"symbol":"\u035c","title":"Double Breve Below"},{"symbol":"\u035d","title":"Double Breve"},{"symbol":"\u035e","title":"Double Macron"},{"symbol":"\u035f","title":"Double Macron Below"},{"symbol":"\u0360","title":"Double Tilde"},{"symbol":"\u0361","title":"Double Inverted Breve"},{"symbol":"\u0362","title":"Double Rightwards Arrow Below"},{"symbol":"\u0363","title":"Latin Small Letter A"},{"symbol":"\u0364","title":"Latin Small Letter E"},{"symbol":"\u0365","title":"Latin Small Letter I"},{"symbol":"\u0366","title":"Latin Small Letter O"},{"symbol":"\u0367","title":"Latin Small Letter U"},{"symbol":"\u0368","title":"Latin Small Letter C"},{"symbol":"\u0369","title":"Latin Small Letter D"},{"symbol":"\u036a","title":"Latin Small Letter H"},{"symbol":"\u036b","title":"Latin Small Letter M"},{"symbol":"\u036c","title":"Latin Small Letter R"},{"symbol":"\u036d","title":"Latin Small Letter T"},{"symbol":"\u036e","title":"Latin Small Letter V"},{"symbol":"\u036f","title":"Latin Small Letter X"}],
@@ -209,10 +236,49 @@ export default {
       profiles: 'profiles',
       contextData: 'contextData',
       supportedRomanizations: 'supportedRomanizations',
-      
+      supportedScriptShifter: 'supportedScriptShifter',
+
 
     }),
   methods: {
+
+
+
+    caseConvertSentenceCase: function(){
+        this.$refs.textarea.value = this.$refs.textarea.value.toLowerCase().replace(/\.\s+([a-z])[^\.]|^(\s*[a-z])[^\.]/g, s => s.replace(/([a-z])/,s => s.toUpperCase())) // eslint-disable-line
+    },
+
+    caseConvertCapitalize: function(){
+      this.$refs.textarea.value = this.$refs.textarea.value.toLowerCase()
+      .split(' ')
+      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+      .join(' ');
+    },
+
+    caseConvertTitleCase: function(){
+
+      let dont = ['and', 'as', 'at', 'but', 'by', 'for', 'from', 'if', 'in', 'into', 'like', 'near', 'that', 'nor', 'of', 'off', 'on', 'once', 'onto', 'or', 'over', 'past', 'so', 'than', 'that', 'till', 'to', 'up', 'upon', 'with', 'when', 'yet']
+      let output = []
+      for (let word of this.$refs.textarea.value.toLowerCase().split(' ')){
+
+        let cleanword = word.replace(/[^\w\s\']|_/g, "").replace(/\s+/g, " "); // eslint-disable-line
+
+        if (dont.indexOf(cleanword) == -1){
+          word = word.charAt(0).toUpperCase() + word.slice(1)
+          output.push(word)
+        }else{
+          output.push(word)
+        }
+
+      }
+
+
+      this.$refs.textarea.value = output.join(' ')
+
+
+
+    },
+
 
     loadDataFromInput: function(value){
 
@@ -242,6 +308,50 @@ export default {
 
 
     },
+
+
+    scriptShiftChange: function(event){
+
+
+      localStorage.setItem('bfeScriptShifterDefault',event.target.value)
+      this.scriptShifterDefault = event.target.value
+    },
+
+    scriptShift: async function(){
+
+
+          let fromLang = this.$refs.scriptShifterSelected.value
+          let literal = 'text=' + this.$refs.textarea.value
+
+
+          let r = await fetch(`${config.returnUrls().scriptshifter}trans/${fromLang}`, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json, text/plain, */*',
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            // body: JSON.stringify({value:"חצוף הארצישראלי : פרקים מחייו של הילד העברי הראשון"})
+            // body: JSON.stringify({value:"ha-Ḥatsuf ha-Eretsyiśreʼeli : peraḳim me-ḥayaṿ shel ha-yeled ha-ʻIvri ha-rishon"})
+            // body: JSON.stringify({value:"لأساس في تعليم العربية للناطقين بغيرها"})
+            // body: JSON.stringify({value:"Bader, Fawzīyah Aḥmad. Asās fī taʻlīm al-ʻArabīyah lil-nāṭiqīn bi-ghayrihā"})
+            // body: JSON.stringify({value:"Русская нация в XX веке : русское, советское, российское в этнополитической истории России : Монография"})
+            body: literal
+            
+          })
+
+          let results =  await r.text()
+          if (r.status !== 200){
+            alert(results)
+          }else{
+            this.inputValue = this.inputValue + '\n' + results  
+          }
+          
+          
+
+
+    },
+
+
 
     romanize: async function(useLang){
         
@@ -337,6 +447,13 @@ export default {
     if (d){
       this.diacriticData = JSON.parse(d)
       
+    }
+
+
+    if (localStorage.getItem('bfeScriptShifterDefault')!== null){  
+
+      this.scriptShifterDefault = localStorage.getItem('bfeScriptShifterDefault')
+
     }
 
 

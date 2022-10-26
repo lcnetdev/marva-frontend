@@ -256,6 +256,16 @@ const lookupUtil = {
 
     },
 
+    supportedScriptShifter: async function(){
+
+      return fetch(config.returnUrls().scriptshifter+'languages').then(response => response.json())
+
+    },
+
+
+
+
+
 
     userTemplates: async function(user){
 

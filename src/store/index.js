@@ -111,6 +111,8 @@ export default new Vuex.Store({
     contextData: {},
 
     supportedRomanizations: [],
+    supportedScriptShifter: [],
+
 
 
     idWorkSearchResults: [],
@@ -369,6 +371,11 @@ export default new Vuex.Store({
     SUPORTEDROMANIZATIONS(state, val) {
       state.supportedRomanizations = val
     }, 
+ 
+    SUPORTEDSCRIPTSHIFTER(state, val) {
+      state.supportedScriptShifter = val
+    }, 
+
  
 
  
@@ -901,6 +908,15 @@ export default new Vuex.Store({
     },
 
  
+    async setSupportedScriptShifter ({ commit }) {   
+    
+
+
+      let supportedScriptShifter = await lookupUtil.supportedScriptShifter() 
+      console.log('supportedScriptShifter',supportedScriptShifter)
+      commit('SUPORTEDSCRIPTSHIFTER', supportedScriptShifter)    
+     
+    },
 
 
 
