@@ -13,6 +13,10 @@ import TestEditMini from "../views/TestEditMini.vue";
 import TestLiteralEditor from "../views/TestLiteralEditor.vue";
 
 
+import ScriptShifter from "../views/ScriptShifter.vue";
+
+
+
 
 
 import Errors from "../views/Errors.vue";
@@ -55,6 +59,13 @@ const routes = [
     name: "TestLiteralEditor",
     component: TestLiteralEditor
   },
+  {
+    path: "/ScriptShifter",
+    name: "ScriptShifter",
+    component: ScriptShifter
+  },
+
+
 
 
 
