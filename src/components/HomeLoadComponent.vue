@@ -653,7 +653,10 @@ export default {
         // '/bfe2/editor/tests/instances/21210374.editor-pkg.xml', // xml error - hebrew book
 
 
-        '/bfe2/editor/tests/instances/21533302.editor-pkg.xml', // subject editing test
+        // '/bfe2/editor/tests/instances/21533302.editor-pkg.xml', // subject editing test
+
+
+        '/bfe2/editor/tests/instances/22812924.editor-pkg.xml', // subject editing test
 
 
 

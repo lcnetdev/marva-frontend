@@ -1360,8 +1360,8 @@ const parseProfile = {
     removeValueSimple: function(currentState, ptGuid, idGuid, labelGuid, propertyPath){
 
 
-        // console.log('idGuid',idGuid)
-        // console.log('labelGuid',labelGuid)
+        console.log('idGuid',idGuid)
+        console.log('labelGuid',labelGuid)
         // find the pt for the value we are editing
         for (let rt in currentState.rt){
             for (let pt in currentState.rt[rt].pt){

@@ -225,9 +225,8 @@ export default {
       }
       
       
-      
-      
-      
+
+
 
       let possibleLiteralProperties = ['http://www.w3.org/1999/02/22-rdf-syntax-ns#value', 'http://www.w3.org/2000/01/rdf-schema#label', 'http://id.loc.gov/ontologies/bibframe/code','http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
       
@@ -247,16 +246,29 @@ export default {
               let uriGuid = null 
 
               for (let aKey in v){
+
+
+                if (v['@id']){
+                  uri = v['@id']
+                  uriGuid = v['@guid']
+                }
+
+
                 if (possibleLiteralProperties.indexOf(aKey)>-1){
                   if (v[aKey] && v[aKey][0][aKey]){
                     label = v[aKey][0][aKey]
                     labelGuid = v['@guid']
                   }
+
+                  if (v[aKey] && v[aKey][0]['@id']){
+                    uri = v[aKey][0]['@id']
+                    // if the URI is stored at this level, we still want to point to the parent's guid
+                    uriGuid = v['@guid']
+
+                  }
+
                 }
-                if (v['@id']){
-                  uri = v['@id']
-                  uriGuid = v['@guid']
-                }
+
               }
               if (!label){
                 // no label was found, just use the URI and it will get dereferenced by the componet
@@ -279,6 +291,7 @@ export default {
           let L1URI = this.propertyPath[1].propertyURI
           let L2URI = this.propertyPath[2].propertyURI
 
+
           if (userValue[L0URI] && userValue[L0URI][0] && userValue[L0URI][0][L1URI] && userValue[L0URI][0][L1URI][0] && userValue[L0URI][0][L1URI][0][L2URI]){
             for (let v of userValue[L0URI][0][L1URI][0][L2URI]){
               let label = null 
@@ -287,16 +300,28 @@ export default {
               let uriGuid = null 
 
               for (let aKey in v){
+
+                if (v['@id']){
+                  uri = v['@id']
+                  uriGuid = v['@guid']
+                }
+
+
                 if (possibleLiteralProperties.indexOf(aKey)>-1){
                   if (v[aKey] && v[aKey][0][aKey]){
                     label = v[aKey][0][aKey]
                     labelGuid = v['@guid']
                   }
+
+                  if (v[aKey] && v[aKey][0]['@id']){
+                    uri = v[aKey][0]['@id']
+                    // if the URI is stored at this level, we still want to point to the parent's guid
+                    uriGuid = v['@guid']
+
+                  }
+
                 }
-                if (v['@id']){
-                  uri = v['@id']
-                  uriGuid = v['@guid']
-                }
+
               }
               if (!label){
                 // no label was found, just use the URI and it will get dereferenced by the componet
@@ -314,6 +339,7 @@ export default {
           }
       }
       if (this.propertyPath.length==2){
+
           let L0URI = this.propertyPath[0].propertyURI
           let L1URI = this.propertyPath[1].propertyURI
 
@@ -325,16 +351,28 @@ export default {
               let uriGuid = null 
 
               for (let aKey in v){
+
+                if (v['@id']){
+                  uri = v['@id']
+                  uriGuid = v['@guid']
+                }
+
+
                 if (possibleLiteralProperties.indexOf(aKey)>-1){
                   if (v[aKey] && v[aKey][0][aKey]){
                     label = v[aKey][0][aKey]
                     labelGuid = v['@guid']
                   }
+                  if (v[aKey] && v[aKey][0]['@id']){
+                    uri = v[aKey][0]['@id']
+                    // if the URI is stored at this level, we still want to point to the parent's guid
+                    uriGuid = v['@guid']
+
+                  }
+
+
                 }
-                if (v['@id']){
-                  uri = v['@id']
-                  uriGuid = v['@guid']
-                }
+
               }
               if (!label){
                 // no label was found, just use the URI and it will get dereferenced by the componet
@@ -363,16 +401,26 @@ export default {
               let uriGuid = null 
 
               for (let aKey in v){
+
+
+                if (v['@id']){
+                  uri = v['@id']
+                  uriGuid = v['@guid']
+                }
+
+
                 if (possibleLiteralProperties.indexOf(aKey)>-1){
                   if (v[aKey] && v[aKey][0][aKey]){
                     label = v[aKey][0][aKey]
                     labelGuid = v['@guid']
                   }
+                  if (v[aKey] && v[aKey][0]['@id']){
+                    uri = v[aKey][0]['@id']
+                    // if the URI is stored at this level, we still want to point to the parent's guid
+                    uriGuid = v['@guid']
+                  }
                 }
-                if (v['@id']){
-                  uri = v['@id']
-                  uriGuid = v['@guid']
-                }
+
               }
               if (!label){
                 // no label was found, just use the URI and it will get dereferenced by the componet
@@ -389,6 +437,9 @@ export default {
             }
           }
       }
+
+
+
 
       // if (propertyPath.length==3){
       //     let L0URI = propertyPath[0].propertyURI
