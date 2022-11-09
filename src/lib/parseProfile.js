@@ -1450,7 +1450,7 @@ const parseProfile = {
                     }
                     if (propertyPath.length==1){
                         let L0URI = propertyPath[0].propertyURI
-
+                        
                         let f = userValue[L0URI].filter((v=>{ return (v['@guid'] && v['@guid'] != idGuid && v['@guid'] != labelGuid)}))
                         if (f.length < userValue[L0URI].length){
                             removed = true
@@ -2426,34 +2426,44 @@ const parseProfile = {
                         let label = "!Unkown Subject Label!"
                         let source = ''
 
-                        if (profile.rt[rt].pt[pt].userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'] && profile.rt[rt].pt[pt].userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0] && profile.rt[rt].pt[pt].userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'] ){
-                            label = profile.rt[rt].pt[pt].userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
-                        }
+                        let userValue = profile.rt[rt].pt[pt].userValue
 
-                        if (profile.rt[rt].pt[pt].userValue['http://www.w3.org/2000/01/rdf-schema#label'] && profile.rt[rt].pt[pt].userValue['http://www.w3.org/2000/01/rdf-schema#label'][0] && profile.rt[rt].pt[pt].userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label'] ){
-                            label = profile.rt[rt].pt[pt].userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
-                        }
+                        console.log("subject list reorder userValue", userValue)
 
-                        if (profile.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/source'] && profile.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/source'][0] && profile.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/source'][0] ){
-                            let s = profile.rt[rt].pt[pt].userValue['http://id.loc.gov/ontologies/bibframe/source'][0]
-                            if (s['@id'] &&  s['@id'] == 'http://id.loc.gov/authorities/subjects'){
-                                source = 'lcsh'
-                            }
-                            if (s['@id'] &&  s['@id'] == 'http://id.loc.gov/vocabulary/subjectSchemes/fast'){
-                                source = 'fast'
+                        if (userValue['http://id.loc.gov/ontologies/bibframe/subject'] && userValue['http://id.loc.gov/ontologies/bibframe/subject'][0]){
+
+                            userValue = userValue['http://id.loc.gov/ontologies/bibframe/subject'][0]
+                            console.log("subject list reorder userValue 2", userValue)
+
+                            if (userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'] && userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0] && userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'] ){
+                                label = userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
                             }
 
+                            if (userValue['http://www.w3.org/2000/01/rdf-schema#label'] && userValue['http://www.w3.org/2000/01/rdf-schema#label'][0] && userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label'] ){
+                                label = userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
+                            }
 
+                            if (userValue['http://id.loc.gov/ontologies/bibframe/source'] && userValue['http://id.loc.gov/ontologies/bibframe/source'][0] && userValue['http://id.loc.gov/ontologies/bibframe/source'][0] ){
+                                let s = userValue['http://id.loc.gov/ontologies/bibframe/source'][0]
+                                if (s['@id'] &&  s['@id'] == 'http://id.loc.gov/authorities/subjects'){
+                                    source = 'lcsh'
+                                }
+                                if (s['@id'] &&  s['@id'] == 'http://id.loc.gov/vocabulary/subjectSchemes/fast'){
+                                    source = 'fast'
+                                }
+
+
+                            }
+
+                            
+                            list.push({
+                                guid: profile.rt[rt].pt[pt]['@guid'],
+                                source: source,
+                                label: label,
+                                pt: pt
+
+                            })
                         }
-
-                        
-                        list.push({
-                            guid: profile.rt[rt].pt[pt]['@guid'],
-                            source: source,
-                            label: label,
-                            pt: pt
-
-                        })
                     }
 
                 }
