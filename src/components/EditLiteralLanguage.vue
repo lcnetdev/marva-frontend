@@ -268,7 +268,20 @@ export default {
               if (l.length>0 && s.length>0){
                 this.availableOptions.push({l:l[0],s:s[0]})
               }
-              localStorage.setItem('bfeLiteralLanguageOptions',JSON.stringify(this.availableOptions))
+
+              let exsitingCodes = []
+              let toAdd = []
+              for (let opt of this.availableOptions){
+                let c = opt.s.code + '-' + opt.l.code
+                if (exsitingCodes.indexOf(c) === -1){
+                  exsitingCodes.push(c)
+                  toAdd.push(opt)
+                }
+              }
+
+
+              this.availableOptions = toAdd
+              localStorage.setItem('bfeLiteralLanguageOptions',JSON.stringify(toAdd))
 
             }
           }

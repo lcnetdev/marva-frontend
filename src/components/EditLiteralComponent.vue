@@ -103,7 +103,7 @@
               <form autocomplete="off" >
                 <div  class="component-nested-container-title">
                   <span v-if="settingsDisplayMode=='compact'">{{parentStructureObj.propertyLabel}} -- </span>
-                  <span>{{structure.propertyLabel}} <span @click="jumpToLangWindow(inputV.guid)" class="lang-tag" v-if="inputV.language">{{inputV.language}}</span></span>                  
+                  <span>{{structure.propertyLabel}} <EditLabelRemark :remark="structure.remark" /> <span @click="jumpToLangWindow(inputV.guid)" class="lang-tag" v-if="inputV.language">{{inputV.language}}</span></span>                  
                 </div>
                 <input v-if="!isNoteField(structure.propertyLabel, inputV.value)"   :ref="'input'+ '_' + inputV.guid"  :data-guid="inputV.guid"  bfeType="EditLiteralComponent-nested" :id="assignedId + '_' + idx"  :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true),'input-accommodate-diacritics': (containsNonLatinCodepoints(inputV.value))}]">
                 <textarea dir="auto" v-if="isNoteField(structure.propertyLabel, inputV.value)" :ref="'input'+ '_' + inputV.guid"  :data-guid="inputV.guid"  bfeType="EditLiteralComponent-nested" :id="assignedId + '_' + idx"  :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-nested', 'input-textarea-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true),'input-accommodate-diacritics-textarea': (containsNonLatinCodepoints(inputV.value))}]"></textarea>
@@ -1471,6 +1471,7 @@ export default {
   background-color: lightblue;
   border-radius: 1em;
   padding: 0 0.3em 0 0.3em;
+  cursor: pointer;
 }
 
 .input-nested{
