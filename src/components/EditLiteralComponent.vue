@@ -10,6 +10,7 @@
     <div :class="'component-container-input-container' + ' component-container-input-container-' + settingsDisplayMode">
 
         <div v-for="(inputV,idx) in inputValue" :key="`input_${idx}`" v-bind:class="'component-container-fake-input no-upper-right-border-radius no-lower-right-border-radius no-upper-border'">
+          
           <div style="display: flex; position: relative;">
             <div style="flex:1">
               <form autocomplete="off">    
@@ -102,7 +103,7 @@
               <form autocomplete="off" >
                 <div  class="component-nested-container-title">
                   <span v-if="settingsDisplayMode=='compact'">{{parentStructureObj.propertyLabel}} -- </span>
-                  <span>{{structure.propertyLabel}}</span>                  
+                  <span>{{structure.propertyLabel}} <span @click="jumpToLangWindow(inputV.guid)" class="lang-tag" v-if="inputV.language">{{inputV.language}}</span></span>                  
                 </div>
                 <input v-if="!isNoteField(structure.propertyLabel, inputV.value)"   :ref="'input'+ '_' + inputV.guid"  :data-guid="inputV.guid"  bfeType="EditLiteralComponent-nested" :id="assignedId + '_' + idx"  :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true),'input-accommodate-diacritics': (containsNonLatinCodepoints(inputV.value))}]">
                 <textarea dir="auto" v-if="isNoteField(structure.propertyLabel, inputV.value)" :ref="'input'+ '_' + inputV.guid"  :data-guid="inputV.guid"  bfeType="EditLiteralComponent-nested" :id="assignedId + '_' + idx"  :name="assignedId" v-on:keydown.enter.prevent="submitField" v-on:focus="focused" v-on:blur="blured" autocomplete="off" type="text" @keyup="change($event,inputV)" @keydown="nav" v-model="inputV.value"  :class="['input-nested', 'input-textarea-nested', {'selectable-input': (isMini==false), 'selectable-input-mini':(isMini==true),'input-accommodate-diacritics-textarea': (containsNonLatinCodepoints(inputV.value))}]"></textarea>
@@ -213,6 +214,35 @@ export default {
   },
 
   methods: {
+
+
+    jumpToLangWindow: function(idVal){
+
+      // just trigger it manually
+
+      document.getElementsByTagName('header')[0].classList.remove('retracted') 
+      document.getElementsByTagName('header')[0].classList.remove('inital') 
+      document.getElementsByTagName('header')[0].classList.add('deployed')
+
+      this.$nextTick(()=>{
+        document.getElementById('toolbar-lang-button').click()
+        
+        console.log(`literal-lang-${idVal}`)
+        console.log(document.getElementById('toolbar-lang-button'))
+        this.$nextTick(()=>{
+          window.setTimeout(()=>{          
+            document.getElementById(`literal-lang-${idVal}`).scrollIntoView({block: "center"})
+          },500)
+        })
+
+
+      })
+
+
+
+
+
+    },
 
     addAnotherLiteral: function(){
 
@@ -1029,8 +1059,18 @@ export default {
                             
                             if (typeof uv[L0URI] == 'object' && uv[L0URI] !== null && uv[L0URI][0][L0URI] ){
                               iv.value = uv[L0URI][0][L0URI]
+                              if (uv[L0URI][0]['@language']){
+                                iv.language = uv[L0URI][0]['@language']
+                              }else{
+                                iv.language = false
+                              }
                             }else{
                               iv.value = uv[L0URI]
+                              if (uv['@language']){
+                                iv.language = uv['@language']
+                              }else{
+                                iv.language = false
+                              }
                             }
 
                           }
@@ -1038,9 +1078,9 @@ export default {
                     }else{
 
                       if (typeof uv[L0URI] == 'object' && uv[L0URI] !== null && uv[L0URI][0][L0URI] ){
-                        this.inputValue.push({value:uv[L0URI][0][L0URI], guid:uv['@guid'] })
+                        this.inputValue.push({value:uv[L0URI][0][L0URI], guid:uv['@guid'], language:uv[L0URI][0]['@language'] })
                       }else{
-                        this.inputValue.push({value:uv[L0URI], guid:uv['@guid'] })
+                        this.inputValue.push({value:uv[L0URI], guid:uv['@guid'], language:uv['@language'] })
                       }
                     }
               }
@@ -1056,10 +1096,16 @@ export default {
                         for (let iv of this.inputValue){
                           if (iv.guid == uv['@guid']){
                             iv.value = uv[L1URI]
+                            if (uv['@language']){
+                              iv.language = uv['@language']
+                            }else{
+                              iv.language = false
+                            }
+
                           }
                         }                  
                     }else{
-                      this.inputValue.push({value:uv[L1URI], guid:uv['@guid'] })
+                      this.inputValue.push({value:uv[L1URI], guid:uv['@guid'], language:uv['@language'] })
                     }
               }
           }
@@ -1076,10 +1122,16 @@ export default {
                         for (let iv of this.inputValue){
                           if (iv.guid == uv['@guid']){
                             iv.value = uv[L2URI]
+                            if (uv['@language']){
+                              iv.language = uv['@language']
+                            }else{
+                              iv.language = false
+                            }
+
                           }
                         }                  
                     }else{
-                      this.inputValue.push({value:uv[L2URI], guid:uv['@guid'] })
+                      this.inputValue.push({value:uv[L2URI], guid:uv['@guid'], language:uv['@language'] })
                     }
               }
           }
@@ -1099,10 +1151,16 @@ export default {
                         for (let iv of this.inputValue){
                           if (iv.guid == uv['@guid']){
                             iv.value = uv[L3URI]
+                            if (uv['@language']){
+                              iv.language = uv['@language']
+                            }else{
+                              iv.language = false
+                            }
+
                           }
                         }                  
                     }else{
-                      this.inputValue.push({value:uv[L3URI], guid:uv['@guid'] })
+                      this.inputValue.push({value:uv[L3URI], guid:uv['@guid'], language:uv['@language'] })
                     }
               }
           }
@@ -1248,8 +1306,11 @@ export default {
 
 
         // and also clean up any escape chars here
-        inputV.value= inputV.value.replace(/&amp;/g, '&');
-        
+        if (inputV.value){
+          inputV.value= inputV.value.replace(/&amp;/g, '&');
+        }
+
+
 
         if (this.rtlRegEx.test(inputV.value)){
 
@@ -1294,10 +1355,13 @@ export default {
 
     showAddAddditonalLiteralButton (){
 
+      // look to see if there are any language defined on any of the literals
+      // if there are then turn on the add button
 
-      // does the profile have a literal lang somewhere
-      for (let rt in this.activeProfile.rt){
-        if (this.activeProfile.rt[rt].hasLiteralLangFields){
+
+      // // does the profile have a literal lang somewhere
+      // for (let rt in this.activeProfile.rt){
+      //   if (this.activeProfile.rt[rt].hasLiteralLangFields){
           if (config.allowLiteralRepeatForNonRomain.includes(this.structure.propertyURI)){
             return true
           }
@@ -1305,11 +1369,13 @@ export default {
             return true
           }
 
-        }
-      }
+      //   }
+      // }
       
 
       return false
+
+      // return true
 
 
     },
@@ -1352,6 +1418,7 @@ export default {
       initalGuid: null,
       diacrticsVoyagerNativeMode:false,
       internalAssignID: false,
+      language: false,
       
     }
   },
@@ -1400,6 +1467,11 @@ export default {
 <style scoped>
 
 
+.lang-tag{
+  background-color: lightblue;
+  border-radius: 1em;
+  padding: 0 0.3em 0 0.3em;
+}
 
 .input-nested{
   width: 95%;

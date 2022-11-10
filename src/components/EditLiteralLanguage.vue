@@ -55,7 +55,7 @@
         <div v-for="val in literals[rtKey]" :key="val.guid" style="padding-left: 2em; margin: 0.5em; background-color: whitesmoke; padding: 1em;">
             
             <div>{{val.ptLabel}}:</div>
-            <div style="padding-left: 1em;">
+            <div style="padding-left: 1em;" :id="'literal-lang-'+val.guid">
               <div style="font-size:1.25em; font-weight:bold">{{val.value}}</div>
               <div>
                   
@@ -170,12 +170,20 @@ export default {
       contextData: 'contextData',
 
 
+      /**
+      * Returns the current scripts defined in th embdeded data
+      * @return {array} results - array of scripts
+      */  
       scripts: function(){
 
         let results = this.iso15924.map((d)=>{return {code:d.alpha_4, numeric: d.numeric,name:d.name}})
         results = results.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
         return results
       },
+      /**
+      * Merges ISO639 arrays into one langauge array and reutrns them
+      * @return {array} results - array of languages
+      */  
       languages: function(){
 
         // merge the two arrays of lang codes togther, if 15924 has a 2 char code that was already included ignore it
@@ -204,18 +212,17 @@ export default {
 
       }, 
 
+      /**
+      * Returns the current codes to set script lang, used in template
+      * @return {object} results - object of codes
+      */  
       availableOptionsCodes: function(){
 
-        console.log()
         let results = {}
         for (let opt of this.availableOptions){
-
           let code = opt.l.code.toLowerCase() + '-' + opt.s.code.toLowerCase()
-
           results[code] = opt
-
         }
-
         return results
       }
 
@@ -224,40 +231,55 @@ export default {
     }),
   methods: {
 
-
-    selectLang: function(guid,lang){
-
-
-
-      
-      this.$store.dispatch("setLangLiterals", { self: this, guid:guid, lang:lang }).then(() => {
-
+    /**
+    * kicks off the dispatch event to store the sepcified lang/script to a literal in the profile userValue
+    * @return {void} 
+    */  
+    selectLang: function(literalObj,lang){
+      this.$store.dispatch("setLangLiterals", { self: this, literalObj:literalObj, lang:lang }).then(() => {
         this.refreshDisplay()
-
       })
-
-
-
-
     },
 
+    /**
+    * refreshes the data so the template can update
+    * @return {void} 
+    */  
     refreshDisplay: function(){
 
-
-      console.log('reffesrhg')
-
+      // load the saved langauge options
       if (localStorage.getItem('bfeLiteralLanguageOptions')!== null){
         this.availableOptions = JSON.parse(localStorage.getItem('bfeLiteralLanguageOptions'))
       }
 
 
+      // scan for existing literals in the record
       this.literals = parseProfile.returnLiterals(this.activeProfile)
 
+      // we want to review the langues returned from the found literals so they are an option and show selected
+      for (let key in this.literals){
+        for (let literal of this.literals[key]){
+          if (literal.language){
+            if (literal.language.indexOf('-')>-1){
+              let codes = literal.language.split('-')
+              let l = this.languages.filter((d) => { if (d.code.toLowerCase() === codes[0].toLowerCase()){ return true}else{return false} })
+              let s = this.scripts.filter((d) => { if (d.code.toLowerCase() === codes[1].toLowerCase()){ return true}else{return false} })
+                
+              if (l.length>0 && s.length>0){
+                this.availableOptions.push({l:l[0],s:s[0]})
+              }
+              localStorage.setItem('bfeLiteralLanguageOptions',JSON.stringify(this.availableOptions))
 
-      console.log('this.availableOptions',this.availableOptions)
-      console.log('this.literals',this.literals)
+            }
+          }
+        }
+      }
     },
 
+    /**
+    * Remove one of the default options and updates local storage
+    * @return {void} 
+    */  
     removeLangOption: function(idx){
 
       this.availableOptions.splice(idx, 1)
@@ -265,13 +287,12 @@ export default {
 
     },
 
+    /**
+    * stores an script/lang in the localSotrage and current display
+    * @return {void} 
+    */  
     addOption: function(){
 
-
-      console.log(this.languageValue, this.scriptValue)
-
-      console.log(this.languages)
-      console.log(this.scripts)
 
       if (this.languageValue && this.scriptValue){
 
@@ -293,14 +314,13 @@ export default {
 
     },
 
+    /**
+    * Calles an event on the parent to close this modal
+    * @return {void} 
+    */  
     closeLitLang: function(){
-
-      console.log(this.$parent.toggleLiteralLanguage())
-
-
+      this.$parent.toggleLiteralLanguage()
     }
-
-
   },
 
 

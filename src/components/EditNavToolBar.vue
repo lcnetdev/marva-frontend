@@ -800,7 +800,7 @@ button[disabled]{
                     </svg>
                 </button>
 
-                <button class="simptip-position-left toolbar-main-button" @click="toggleLiteralLanguage" data-tooltip="Select Language"> 
+                <button id="toolbar-lang-button" class="simptip-position-left toolbar-main-button" @click="toggleLiteralLanguage" data-tooltip="Select Language"> 
                     <svg width="50px" height="34px" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                      <path d="m93.75 6.25v68.75h-37.5l-25 18.75v-18.75h-25v-68.75zm-21.875 15.625v-6.25h-6.25v6.25h-9.375v6.25h15.488c-0.16016 1.9023-0.46094 3.7891-0.91016 5.6484-0.66406 2.7422-1.6484 5.3984-2.9062 7.918-0.39453-0.46875-0.77344-0.94922-1.1484-1.4297-1.6836-2.1914-3.1641-4.5312-4.4453-6.9766-0.054687-0.11328-0.11719-0.22656-0.17578-0.33984l-5.5547 2.8594 0.18359 0.35937 0.19531 0.375c2.0625 3.8555 4.5625 7.5117 7.5273 10.734-0.62109 0.84375-1.2734 1.6641-1.957 2.4531-1.3164 1.5234-2.7461 2.9414-4.2773 4.2461-0.66797 0.56641-1.3555 1.1016-2.0586 1.6289-0.41406 0.29688-0.41406 0.29688-0.83203 0.59375-0.42578 0.28906-0.42578 0.28906-0.85547 0.57422l3.4531 5.2109c2.2031-1.4609 4.2812-3.0977 6.1992-4.918 1.7852-1.6953 3.4258-3.5312 4.9141-5.4883 1.5664 1.2422 3.2383 2.3438 5.0234 3.2461 0.96484 0.48438 1.957 0.89453 2.9766 1.2539l2.0703-5.8984c-0.65625-0.23047-1.2969-0.48438-1.9219-0.78516-1.6914-0.8125-3.2578-1.8711-4.7031-3.0703 1.8281-3.2539 3.2461-6.7383 4.1914-10.359 0.66797-2.5742 1.0859-5.1914 1.2773-7.8359h3.2461v-6.25zm-40.625 3.125h-4.1211l-13.395 31.25h6.8008l2.6797-6.25h16.07l2.6797 6.25h6.8008l-13.395-31.25zm-5.3555 18.75h10.711l-5.3555-12.5z" fill-rule="evenodd"/>
                     </svg>
@@ -1032,7 +1032,7 @@ button[disabled]{
               </li>
             </transition-group>
           </draggable>
-          <div style="font-style: italic;     margin-left: 4%; margin-top: 1em;">Subject reordering is for display purposes only, order on posting is not guaranteed.</div>
+          <div style="font-style: italic; margin-left: 4%; margin-top: 1em;">Subject reordering is for display purposes only, order on posting is not guaranteed.</div>
 
 
         </div>

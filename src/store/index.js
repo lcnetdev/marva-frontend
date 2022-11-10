@@ -684,7 +684,7 @@ export default new Vuex.Store({
     
     setLangLiterals({ commit, state }, data) { 
 
-      let nap = parseProfile.setLangLiterals(state.activeProfile, data.guid, data.lang)
+      let nap = parseProfile.setLangLiterals(state.activeProfile, data.literalObj, data.lang)
 
       commit('ACTIVEPROFILE', nap)
       commit('ACTIVEEDITCOUNTER') 

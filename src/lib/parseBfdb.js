@@ -592,8 +592,8 @@ const parseBfdb = {
 		// restore the RTlookups so we are starting from a clean state
 		store.state.rtLookup = JSON.parse(JSON.stringify(store.state.rtLookupUnmodified))
 
-		console.log("********")
-		console.log(JSON.parse(JSON.stringify(profile)))
+		// console.log("********")
+		// console.log(JSON.parse(JSON.stringify(profile)))
 
 		// remove any non top level entities from the profile, this can be if they are defined and used in the same profile,
 		// we don't want to parse anything ecept HUB WORK INSTANCE ITEM

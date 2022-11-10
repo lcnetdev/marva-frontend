@@ -2428,13 +2428,11 @@ const parseProfile = {
 
                         let userValue = profile.rt[rt].pt[pt].userValue
 
-                        console.log("subject list reorder userValue", userValue)
-
+                        
                         if (userValue['http://id.loc.gov/ontologies/bibframe/subject'] && userValue['http://id.loc.gov/ontologies/bibframe/subject'][0]){
 
                             userValue = userValue['http://id.loc.gov/ontologies/bibframe/subject'][0]
-                            console.log("subject list reorder userValue 2", userValue)
-
+                            
                             if (userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'] && userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0] && userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'] ){
                                 label = userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
                             }
@@ -2482,7 +2480,7 @@ const parseProfile = {
 
         // we're just going to overwrite the whole userValue with the constructed headings
 
-        console.log(propertyPath)
+        
 
         // find it
         if (currentState.rt[activeProfileName].pt[component]){
@@ -3313,80 +3311,291 @@ const parseProfile = {
 
             for (let ptKey in activeProfile.rt[rtKey].pt){
 
+
                 let pt = activeProfile.rt[rtKey].pt[ptKey]
 
-                // if the whole component is a literal
-                // if (pt.type === '')
-
-
-                // see if there are any literals here
-                // let foundLiterals = []
-
-                if (pt.userValue['@id']){
-                    // if there is an URI then it is controlled, so skipp this one
+                // some components we want to ignore completely
+                if (['http://id.loc.gov/ontologies/bibframe/adminMetadata',
+                     'http://id.loc.gov/ontologies/bibframe/identifiedBy',
+                     'http://id.loc.gov/ontologies/bibframe/classification',
+                     'http://id.loc.gov/ontologies/bibframe/seriesEnumeration',
+                     'http://id.loc.gov/ontologies/bibframe/source',
+                     'http://id.loc.gov/ontologies/bibframe/subject'].indexOf(pt.propertyURI)>-1){
                     continue
                 }
 
-                for (let k in pt.userValue){
 
-                    if (!k.startsWith('@')){
-                        for (let val of pt.userValue[k]){
+                let userValue = pt.userValue
 
-                            // if this one has a URI then skipp it as well (might not happen?)
-                            if (val['@id']){
-                                // if there is an URI then it is controlled, so skipp this one
-                                continue
-                            }
+                // check to see if there is any data in the base predicate
+                if (pt.userValue[pt.propertyURI] && pt.userValue[pt.propertyURI][0]){
+                    userValue = pt.userValue[pt.propertyURI][0]
+                }
 
-                            // some things we don't want to keep track of
-                            if (['http://id.loc.gov/ontologies/bibframe/adminMetadata'].indexOf(pt.propertyURI)>-1){
-                                continue
-                            }
+                // loop through the keys, if they are a literal key value then add that literal
+                for (let l1Property in userValue){
 
+                    if (config.literalLangOptions.ignorePtURIs.indexOf(l1Property)>-1){
+                        continue
+                    }
 
+                    if (l1Property === '@id'){
+                        // if it has a URI at this level we dont need to look further
+                        break
+                    }
 
-                            let stringValue = ''
+                    if (!l1Property.startsWith('@')){
 
-                            for (let kk in val){
-                                if (!kk.startsWith('@')){
-                                    stringValue=stringValue+val[kk]
-                                }
-                            }
-
-                            if (isNaN(stringValue)==false){
-                                continue
-                            }
-
-                            if (stringValue==='[object Object]'){
-                                continue
-                            }
-
-                            
-
-                            
-                            if (config.literalLangOptions.ignorePtURIs.indexOf(pt.propertyURI)>-1){
-                                continue
-                            }
-
-        
+                        // see if it had a string literal value
+                        if (typeof userValue[l1Property] === 'string'){
 
                             literals[rtKey].push({
                                 rt: rtKey,
                                 ptGuid: pt['@guid'],
                                 ptLabel: pt.propertyLabel,
                                 ptURI: pt.propertyURI,
-                                userValueGuid: pt.userValue['@guid'],
-                                guid: val['@guid'],
-                                language: (val['@language']) ? val['@language'] : null,
-                                value: stringValue,
+                                userValueGuid: userValue['@guid'],
+                                propertyPath: [pt.propertyURI,l1Property],
+                                guid: userValue['@guid'],
+                                language: (userValue['@language']) ? userValue['@language'] : null,
+                                value: userValue[l1Property],
                             })
 
+                            
+
+                        }else if (Array.isArray(userValue[l1Property])){
+
+
+                            for (let l1Obj of userValue[l1Property]){
+
+                                // it will be an obj, soo loop through the keys at this level
+                                for (let l2Property in l1Obj){
+
+                                    if (config.literalLangOptions.ignorePtURIs.indexOf(l2Property)>-1){
+                                        continue
+                                    }
+
+                    
+
+                                    if (l2Property === '@id'){
+                                        // if it has a uri then we don't need to worry about any of its strings
+                                        break
+                                    }else if (!l2Property.startsWith('@')){
+
+                                        if (typeof l1Obj[l2Property] === 'string'){
+
+                                            literals[rtKey].push({
+                                                rt: rtKey,
+                                                ptGuid: pt['@guid'],
+                                                ptLabel: pt.propertyLabel,
+                                                ptURI: pt.propertyURI,
+                                                userValueGuid: userValue['@guid'],
+                                                propertyPath: [pt.propertyURI,l1Property,l2Property],
+                                                guid: l1Obj['@guid'],
+                                                language: (l1Obj['@language']) ? l1Obj['@language'] : null,
+                                                value: l1Obj[l2Property],
+                                            })
+
+
+
+                                        }else if (Array.isArray(l1Obj[l2Property])){
+                                            for (let l2Obj of l1Obj[l2Property]){
+
+
+                                                for (let l3Property in l2Obj){
+
+                                                    if (config.literalLangOptions.ignorePtURIs.indexOf(l3Property)>-1){
+                                                        continue
+                                                    }
+                                                    if (l3Property === '@id'){
+                                                        // if it has a uri then we don't need to worry about any of its strings
+                                                        break
+                                                    }else if (!l3Property.startsWith('@')){
+
+                                                        if (typeof l2Obj[l3Property] === 'string'){
+
+                                                            literals[rtKey].push({
+                                                                rt: rtKey,
+                                                                ptGuid: pt['@guid'],
+                                                                ptLabel: pt.propertyLabel,
+                                                                ptURI: pt.propertyURI,
+                                                                userValueGuid: userValue['@guid'],
+                                                                propertyPath: [pt.propertyURI,l1Property,l2Property,l3Property],
+                                                                guid: l2Obj['@guid'],
+                                                                language: (l2Obj['@language']) ? l2Obj['@language'] : null,
+                                                                value: l2Obj[l3Property],
+                                                            })
+
+
+                                                            console.log("Found string! 3", l2Obj[l3Property])
+
+                                                        }else if (Array.isArray(l2Obj[l3Property])){
+
+                                                            console.log("lelvel 3!", l2Obj[l3Property])
+                                                            for (let l3Obj of l2Obj[l3Property]){
+
+
+                                                                for (let l4Property in l3Obj){
+
+                                                                    if (config.literalLangOptions.ignorePtURIs.indexOf(l4Property)>-1){
+                                                                        continue
+                                                                    }
+                                                                    if (l4Property === '@id'){
+                                                                        // if it has a uri then we don't need to worry about any of its strings
+                                                                        break
+                                                                    }else if (!l4Property.startsWith('@')){
+
+                                                                        if (typeof l3Obj[l4Property] === 'string'){
+
+                                                                            console.log("Found string! 4", l3Obj[l4Property])
+                                                                            literals[rtKey].push({
+                                                                                rt: rtKey,
+                                                                                ptGuid: pt['@guid'],
+                                                                                ptLabel: pt.propertyLabel,
+                                                                                ptURI: pt.propertyURI,
+                                                                                userValueGuid: userValue['@guid'],
+                                                                                propertyPath: [pt.propertyURI,l1Property,l2Property,l3Property,l4Property],
+                                                                                guid: l3Obj['@guid'],
+                                                                                language: (l3Obj['@language']) ? l3Obj['@language'] : null,
+                                                                                value: l3Obj[l4Property],
+                                                                            })
+
+
+
+                                                                        }else if (Array.isArray(l3Obj[l4Property])){
+
+                                                                            console.warn("Trying to find literals, we're at level 4 and there are more levels, too deep hierachy", l3Obj[l4Property])
+
+
+                                                                        
+
+                                                                        }
+
+                                                                    }
+
+
+                                                                }
+
+
+                                                            }
+
+
+
+                                                        
+
+                                                        }
+
+                                                    }
+
+
+                                                }
+
+
+                                            }
+
+                                        }
+
+
+                                    }
+
+                                }
+
+
+
+                            }
 
 
                         }
+
+
+
+
                     }
 
+
                 }
+
+
+
+
+
+                // // see if there are any literals here
+                // // let foundLiterals = []
+
+                // if (userValue['@id']){
+                //     // if there is an URI then it is controlled, so skipp this one
+                //     continue
+                // }
+
+                // for (let k in userValue){
+
+                //     if (!k.startsWith('@')){
+                //         for (let val of userValue[k]){
+
+                //             console.log('Looping through ', k)
+                //             console.log('val', val)
+
+                //             // if this one has a URI then skipp it as well (might not happen?)
+                //             if (val['@id']){
+                //                 // if there is an URI then it is controlled, so skipp this one
+                //                 continue
+                //             }
+
+                //             // some things we don't want to keep track of
+                //             if (['http://id.loc.gov/ontologies/bibframe/adminMetadata'].indexOf(pt.propertyURI)>-1){
+                //                 continue
+                //             }
+
+
+
+                //             let stringValue = ''
+
+                //             for (let kk in val){
+                //                 if (!kk.startsWith('@')){
+                //                     console.log(kk,val[kk],stringValue)
+                //                     console.log("typeof val[kk]", typeof val[kk])
+                //                     stringValue=stringValue+val[kk]
+                //                 }
+                //             }
+
+                //             if (stringValue.indexOf('[object Object]')){
+                //                 console.log(k,val)
+                //             }
+
+                //             if (isNaN(stringValue)==false){
+                //                 continue
+                //             }
+
+                //             // if (stringValue==='[object Object]'){
+                //             //     continue
+                //             // }
+
+                            
+
+                            
+                //             if (config.literalLangOptions.ignorePtURIs.indexOf(pt.propertyURI)>-1){
+                //                 continue
+                //             }
+
+        
+
+                //             literals[rtKey].push({
+                //                 rt: rtKey,
+                //                 ptGuid: pt['@guid'],
+                //                 ptLabel: pt.propertyLabel,
+                //                 ptURI: pt.propertyURI,
+                //                 userValueGuid: pt.userValue['@guid'],
+                //                 guid: val['@guid'],
+                //                 language: (val['@language']) ? val['@language'] : null,
+                //                 value: stringValue,
+                //             })
+
+
+
+                //         }
+                //     }
+
+                // }
 
 
             }
@@ -3398,13 +3607,28 @@ const parseProfile = {
 
 
 
+        for (let key in literals){
+
+            // filter out values that are just numbers
+            literals[key] = literals[key].filter((l) => {  if (/^\d+$/.test(l.value.trim())){return false}else{return true}     })    
+            
+            // 123 pages
+            literals[key] = literals[key].filter((l) => {  if (/\d+\s+pages/.test(l.value.trim())){return false}else{return true}     })    
+
+            // code type things
+            // literals[key] = literals[key].filter((l) => {  if (/[A-Z0-9]{3,}/.test(l.value.trim())){return false}else{return true}     })    
+
+
+        }
+        
+
         return literals
 
     },
 
 
 
-    setLangLiterals: function(activeProfile, guid, lang){
+    setLangLiterals: function(activeProfile, literalObj, lang){
 
 
 
@@ -3412,39 +3636,85 @@ const parseProfile = {
             for (let ptKey in activeProfile.rt[rtKey].pt){
                 let pt = activeProfile.rt[rtKey].pt[ptKey]
 
-                if (pt.userValue['@id']){
-                    // if there is an URI then it is controlled, so skipp this one
-                    continue
-                }
+                if (pt['@guid'] == literalObj.ptGuid){
 
-                for (let k in pt.userValue){
+                    console.log("Cjaging lang here:",pt)
+                    console.log(lang)
 
-                    if (!k.startsWith('@')){
-                        for (let val of pt.userValue[k]){
+                    let userValue = pt.userValue
 
-                            
-                            if (val['@guid'] === guid['guid']){
-                                
 
-                                // if it already that undo it
-                                if (val['@language'] === lang){
-                                    store.state.activeUndoLog.push(`Removing ${val['@language']} language for ${exportXML.namespaceUri(pt.propertyURI)}`)
-                                    delete val['@language']
-                                    
+                    for (let pp of literalObj.propertyPath){
+                        console.log("Looking at",pp)                        
+                        let found = false
+
+                        if (userValue[pp] && Array.isArray(userValue[pp])){
+
+                            for (let component of userValue[pp]){
+
+                                if (component['@guid'] == literalObj.guid){
+
+                                    // if it already that undo it
+                                    if (component['@language'] === lang){
+                                        store.state.activeUndoLog.push(`Removing ${component['@language']} language for ${exportXML.namespaceUri(pt.propertyURI)}`)
+                                        delete component['@language']
+                                    }else{
+                                        //set it otherwise
+                                        component['@language'] = lang
+                                        store.state.activeUndoLog.push(`Setting ${component['@language']} language for ${exportXML.namespaceUri(pt.propertyURI)}`)
+                                    }
+                                    found = true
                                 }else{
-                                    //set it otherwise
-                                    val['@language'] = lang
-                                    store.state.activeUndoLog.push(`Setting ${val['@language']} language for ${exportXML.namespaceUri(pt.propertyURI)}`)
-
-
+                                    userValue = component
                                 }
                             }
-                            
 
                         }
+                        if (found){
+                            break
+                        }
+
+
                     }
 
+
+
+
                 }
+
+                // if (pt.userValue['@id']){
+                //     // if there is an URI then it is controlled, so skipp this one
+                //     continue
+                // }
+
+                // for (let k in pt.userValue){
+
+                //     if (!k.startsWith('@')){
+                //         for (let val of pt.userValue[k]){
+
+                            
+                //             if (val['@guid'] === guid['guid']){
+                                
+
+                //                 // if it already that undo it
+                //                 if (val['@language'] === lang){
+                //                     store.state.activeUndoLog.push(`Removing ${val['@language']} language for ${exportXML.namespaceUri(pt.propertyURI)}`)
+                //                     delete val['@language']
+                                    
+                //                 }else{
+                //                     //set it otherwise
+                //                     val['@language'] = lang
+                //                     store.state.activeUndoLog.push(`Setting ${val['@language']} language for ${exportXML.namespaceUri(pt.propertyURI)}`)
+
+
+                //                 }
+                //             }
+                            
+
+                //         }
+                //     }
+
+                // }
 
 
             }

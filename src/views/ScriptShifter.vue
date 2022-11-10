@@ -29,7 +29,7 @@
 </template>
 
 
-<style type="text/css">
+<style type="text/css" scoped>
     #literal-editor-textarea, #literal-output-textarea{
       font-family: inherit;  
       width: 99vw;
