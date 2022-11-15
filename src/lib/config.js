@@ -4,7 +4,7 @@ const config = {
 
 	versionMajor: 0,
 	versionMinor: 13,
-	versionPatch: 10,
+	versionPatch: 11,
 
 
 
