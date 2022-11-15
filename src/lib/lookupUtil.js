@@ -1546,7 +1546,7 @@ const lookupUtil = {
       }
     },
 
-    sendErrorReportLog: function(log,filename){
+    sendErrorReportLog: function(log,filename,profileAsJson){
 
       let url = config.returnUrls().util + 'errorlog/'
 
@@ -1557,7 +1557,11 @@ const lookupUtil = {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({log: log, filename:filename})
+        body: JSON.stringify({
+          log: log, 
+          filename:filename,
+          profile: profileAsJson
+        })
       });
 
 

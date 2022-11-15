@@ -251,7 +251,12 @@ const exportXML = {
 	toBFXML: async function(profile){
 
 		console.log("profile going in",profile)
-
+		let profileAsJson = ''
+		try{
+			profileAsJson = JSON.stringify(profile)
+		}catch(error){
+			profileAsJson = 'Error converting profile to json'
+		}
 		// if we are doing local dev then just error out, but if not show a message
 		// if (config.returnUrls().dev){
 
@@ -264,6 +269,8 @@ const exportXML = {
 			}catch (error){
 
 				let errorReport = `
+
+				Error: ${error}
 
 				----------------
 				XML Creation Log
@@ -285,7 +292,7 @@ const exportXML = {
 
 				const filename = `${Math.floor(Date.now() / 1000)}_${profile.user}_` + `${new Date().toDateString()}_${new Date().toTimeString()}`.replaceAll(' ','_').replaceAll(':','-') + '.txt'
 
-				lookupUtil.sendErrorReportLog(errorReport,filename)
+				lookupUtil.sendErrorReportLog(errorReport,filename,profileAsJson)
 				// const blob = new Blob([errorReport], {type: 'text/plain'});
 				// if(window.navigator.msSaveOrOpenBlob) {
 				// 	window.navigator.msSaveBlob(blob, filename);
@@ -1723,7 +1730,7 @@ const exportXML = {
 		let strBf2MarcXmlElBib = (new XMLSerializer()).serializeToString(bf2MarcXmlElRdf)	
 
 		// console.log(strBf2MarcXmlElBib, strXmlFormatted, strXmlBasic, strXml)
-		
+			
 
 		return {
 			xmlDom: rdf,
