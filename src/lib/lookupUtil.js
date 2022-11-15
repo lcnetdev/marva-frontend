@@ -1546,6 +1546,22 @@ const lookupUtil = {
       }
     },
 
+    sendErrorReportLog: function(log,filename){
+
+      let url = config.returnUrls().util + 'errorlog/'
+
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({log: log, filename:filename})
+      });
+
+
+    },
 
     publish: async function(xml,eid,activeProfile){
 
@@ -1564,7 +1580,6 @@ const lookupUtil = {
 
       
       let uuid = translator.toUUID(translator.new())
-      console.log(url,uuid)
 
       const rawResponse = await fetch(url, {
         method: 'POST',

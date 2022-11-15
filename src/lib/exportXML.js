@@ -60,6 +60,10 @@ const exportXML = {
 
 	debugHistory: [],
 
+	// holds the history of messages while building the XML so if something
+	// happens we can retrace what part it was on
+	xmlLog: [],
+
 	// from URI to prefixed
 	namespaceUri: function(uri){	
 		for (let ns in this.namespace){
@@ -246,26 +250,68 @@ const exportXML = {
 
 	toBFXML: async function(profile){
 
+		console.log("profile going in",profile)
 
 		// if we are doing local dev then just error out, but if not show a message
-		if (config.returnUrls().dev){
+		// if (config.returnUrls().dev){
 
-			return await this.toBFXMLProcess(profile)
+		// 	return await this.toBFXMLProcess(profile)
 
-		}else{
+		// }else{
 
 			try{
 				return await this.toBFXMLProcess(profile)	
 			}catch (error){
 
-				console.error(error);
+				let errorReport = `
 
-				alert("There was an error building the XML - Please 'Report Error'")
+				----------------
+				XML Creation Log
+				----------------
+				${JSON.stringify(this.xmlLog,null,2)}
+				----End Creation Log----
+
+
+				****************
+				XML Source
+				****************
+				${(profile.xmlSource) ? profile.xmlSource : 'No Source Found'}
+				***End Source***
+				`
+				// console.log(profile.xmlSource.innerHTML)
+				// console.error(error);
+				// console.log(this.xmlLog)
+				// console.log(errorReport)
+
+				const filename = `${Math.floor(Date.now() / 1000)}_${profile.user}_` + `${new Date().toDateString()}_${new Date().toTimeString()}`.replaceAll(' ','_').replaceAll(':','-') + '.txt'
+
+				lookupUtil.sendErrorReportLog(errorReport,filename)
+				// const blob = new Blob([errorReport], {type: 'text/plain'});
+				// if(window.navigator.msSaveOrOpenBlob) {
+				// 	window.navigator.msSaveBlob(blob, filename);
+				// }
+				// else{
+				// 	const elem = window.document.createElement('a');
+				// 	elem.href = window.URL.createObjectURL(blob,{ oneTimeOnly: true });
+				// 	elem.download = filename;    
+				// 	elem.style.display = 'none';    
+				// 	document.body.appendChild(elem);
+				// 	elem.click();        
+				// 	document.body.removeChild(elem);
+				// }
+
+
+				alert(`------------------------------------- \nThere was an error building the XML \nAn error report was saved on the server:\n${filename}\n-------------------------------------`)
+				
+
+
+
+
 				return false
 			}
 
 
-		}
+		// }
 
 
 
@@ -480,6 +526,7 @@ const exportXML = {
 	toBFXMLProcess: async function(profile){
 
 		this.debugHistory = []
+		this.xmlLog = []
 
 		let orginalProfile = profile
 		// cut the ref to the orginal
@@ -521,9 +568,12 @@ const exportXML = {
 
 		for (let rt of profile.rtOrder){
 
+			this.xmlLog.push(`Processing rt: ${rt}`)
 
-
-			if (profile.rt[rt].noData) continue
+			if (profile.rt[rt].noData){
+				this.xmlLog.push(` - ${rt} has no data, skipping it.`)
+				continue
+			} 
 
 			// console.log("rt is",rt)
 				
@@ -536,6 +586,7 @@ const exportXML = {
 				tleArray = tleWork
 				rootEl = document.createElementNS(this.namespace.bf,"bf:Work");
 				rootElName = "Work"
+
 			}else if (rt.includes(':Instance')){
 				tleArray = tleInstance
 				rootEl = document.createElementNS(this.namespace.bf,"bf:Instance");
@@ -550,8 +601,11 @@ const exportXML = {
 				rootElName = "Hub"
 			}else{
 				// don't mess with anything that is not a top level entitiy in the profile, there can be other referenced RTs that we don't want to export they are just used in the main RT
+				this.xmlLog.push(`Dunno what this part is, skipping ${rt}`)
 				continue
 			}
+
+			this.xmlLog.push(`Building ${rootElName}`)
 
 
 			// rdf.appendChild(rootEl,tleArray)
@@ -559,19 +613,30 @@ const exportXML = {
 			
 			if (profile.rt[rt].URI){
 				rootEl.setAttributeNS(this.namespace.rdf, 'rdf:about', profile.rt[rt].URI)
+				this.xmlLog.push(`Setting URI for this resource rdf:about to: ${profile.rt[rt].URI}`)
 				xmlVoidExternalID.push(profile.rt[rt].URI)
 			}
 			if (profile.rt[rt]['@type']){
 				let type = this.createElByBestNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#type')
 				type.setAttributeNS(this.namespace.rdf, 'rdf:resource', profile.rt[rt]['@type'])
+				this.xmlLog.push(`Setting URI for this resource rdf:resource to: ${profile.rt[rt]['@type']}`)
 				rootEl.appendChild(type)				
 			}
 
 
+			this.xmlLog.push(`Looping through the PTs`)
+
+
 			for (let pt of profile.rt[rt].ptOrder){
 
+
+
 				let ptObj = profile.rt[rt].pt[pt]
-				
+
+				this.xmlLog.push(`Working on: ${pt}`)
+
+
+
 				let userValue
 
 				if (ptObj.userValue[ptObj.propertyURI] && ptObj.userValue[ptObj.propertyURI][0]){
@@ -582,10 +647,12 @@ const exportXML = {
 					userValue = ptObj.userValue 	
 				}
 
+				this.xmlLog.push(['Set userValue to:', JSON.parse(JSON.stringify(userValue)) ])
 
 				
 
 				if (this.ignoreProperties.indexOf(ptObj.propertyURI) > -1){
+					this.xmlLog.push(`Skpping it because it is in the ignoreProperties list`)
 					continue
 				}
 
@@ -627,7 +694,7 @@ const exportXML = {
 						]
 					}
 
-
+					this.xmlLog.push(['Set adminData to:', JSON.parse(JSON.stringify(adminData)) ])
 					// make sure if its an instance it has a localid
 
 				}
@@ -639,7 +706,7 @@ const exportXML = {
 				// does it even have any userValues?
 				if (this.hasUserValue(userValue)){
 
-					console.log("Doing export on",pt,userValue)
+
 
 					// keep track of what resource teplates we used in this record
 					if (xmlVoidDataRtsUsed.indexOf(rt)==-1){
@@ -664,20 +731,26 @@ const exportXML = {
 
 						this.debug(ptObj.propertyURI,'root level element, is bnode', userValue)
 
+						this.xmlLog.push(`Root level bnode: ${ptObj.propertyURI}`)
+
+
 						let pLvl1 = this.createElByBestNS(ptObj.propertyURI)
 						let bnodeLvl1 = this.createBnode(userValue, ptObj.propertyURI)
 
+						this.xmlLog.push(`Created lvl 1 predicate: ${pLvl1.tagName} and bnode: ${bnodeLvl1.tagName}`)
 
 
 						// loop though the properties
 						for (let key1 of Object.keys(userValue).filter(k => (!k.includes('@') ? true : false ) )){
 
-
+							this.xmlLog.push(`Looking at property : ${key1} in the userValue`)
+							
 							let pLvl2 = this.createElByBestNS(key1)
 
 							if (key1 == 'http://www.loc.gov/mads/rdf/v1#componentList'){
 								pLvl2.setAttribute('rdf:parseType', 'Collection')
 							}
+							this.xmlLog.push(`Created lvl 2 predicate: ${pLvl2.tagName}`)
 
 							// if we have a rdf:type here build a stand alone type element and move on
 							// TODO: add the label if present(?)
@@ -687,10 +760,13 @@ const exportXML = {
 									let rdftype = this.createElByBestNS(key1)
 									rdftype.setAttributeNS(this.namespace.rdf, 'rdf:resource', userValue[key1][0]['@id'])
 									bnodeLvl1.appendChild(rdftype)
+									this.xmlLog.push(`This bnode just has a rdf:type : ${rdftype} setting it an continuing`)
+
 									continue
 								}else if (userValue[key1] && userValue[key1][0] && userValue[key1][0]['http://www.w3.org/2000/01/rdf-schema#label']){
 									let rdftype = this.createElByBestNS(key1)
 									rdftype.innerHTML=userValue[key1][0]['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
+									this.xmlLog.push(`This bnode just has a rdf:type and label : ${rdftype} setting it an continuing`)									
 									bnodeLvl1.appendChild(rdftype)
 									continue
 								}
@@ -704,6 +780,9 @@ const exportXML = {
 								if (!value1FirstLoop && this.needsNewPredicate(key1)){
 									// we are going to make a new predicate, same type but not the same one as the last one was attached to
 									pLvl2 = this.createElByBestNS(key1)
+									this.xmlLog.push(`Creating lvl 2 property : ${pLvl2.tagName} for ${JSON.stringify(value1)}`)
+
+
 								}
 								
 
@@ -712,10 +791,12 @@ const exportXML = {
 								if (this.isBnode(value1)){
 
 									// yes
-									
+
 									let bnodeLvl2 = this.createBnode(value1,key1)
 									pLvl2.appendChild(bnodeLvl2)
 									bnodeLvl1.appendChild(pLvl2)
+
+									this.xmlLog.push(`Creating bnode lvl 2 for it ${bnodeLvl2.tagName}`)
 
 
 
@@ -725,6 +806,8 @@ const exportXML = {
 									for (let key2 of Object.keys(value1).filter(k => (!k.includes('@') ? true : false ) )){
 
 										let pLvl3 = this.createElByBestNS(key2)
+
+										this.xmlLog.push(`Creating lvl 3 property: ${pLvl3.tagName} for ${key2}`)
 
 										for (let value2 of value1[key2]){
 
@@ -737,10 +820,14 @@ const exportXML = {
 
 												// more nested bnode
 												// one more level
-												
+
+
 												let bnodeLvl3 = this.createBnode(value2,key2)
 												pLvl3.appendChild(bnodeLvl3)
 												bnodeLvl2.appendChild(pLvl3)
+
+												this.xmlLog.push(`Creating lvl 3 bnode: ${bnodeLvl3.tagName} for ${key2}`)
+
 
 												for (let key3 of Object.keys(value2).filter(k => (!k.includes('@') ? true : false ) )){
 
@@ -749,6 +836,8 @@ const exportXML = {
 														if (this.isBnode(value3)){
 
 															console.error("Max hierarchy depth reached, but there are more levels left:", key3, 'in', userValue )
+															this.xmlLog.push(`Max hierarchy depth reached, but there are more levels left for ${key3}`)
+
 
 														}else{
 
@@ -759,10 +848,11 @@ const exportXML = {
 																	// its a label or some other literal
 																	let p4 = this.createLiteral(key4, value3)
 																	if (p4!==false) bnodeLvl3.appendChild(p4);
-																	
+																	this.xmlLog.push(`Added literal ${p4} for ${key4}`)
 
 																}else{
 																	console.error('key4', key4, value3[key4], 'not a literal, should not happen')
+																	this.xmlLog.push(`Error not a literal but I thought it was at ${key4}`)
 																}
 
 															}
@@ -783,10 +873,12 @@ const exportXML = {
 														// its a label or some other literal
 														let p3 = this.createLiteral(key3, value2)
 														if (p3!==false) bnodeLvl2.appendChild(p3)
-														
+														this.xmlLog.push(`Created Literal ${p3.innerHTML} for ${key3}`)
 
 													}else{
 														console.error('key3', key3, value2[key3], 'not a literal, should not happen')
+														this.xmlLog.push(`Error not a literal but I thought it was at ${key3}`)
+
 													}
 
 												}
@@ -804,6 +896,9 @@ const exportXML = {
 
 								}else{
 
+									this.xmlLog.push(`It's value at lvl is not a bnode, looping through and adding a literal value`)
+
+
 									// no it is a literal or something else
 									// loop through its keys and make the values
 									let keys = Object.keys(value1).filter(k => (!k.includes('@') ? true : false ) )
@@ -814,6 +909,7 @@ const exportXML = {
 										// then it means its a ref template, if it has an id then
 										// set the rdf about on it
 										if (value1['@id']){
+											this.xmlLog.push(`Setting its rdf:about to ${value1['@id']}`)
 											bnodeLvl1.setAttributeNS(this.namespace.rdf, 'rdf:about', value1['@id'])
 										}
 
@@ -825,6 +921,7 @@ const exportXML = {
 											if (typeof value1[key2] == 'string' || typeof value1[key2] == 'number'){
 												// its a label or some other literal
 												let p2 = this.createLiteral(key2, value1)
+												this.xmlLog.push(`Creating literal ${JSON.stringify(value1)}`)
 												if (p2!==false) bnodeLvl1.appendChild(p2);
 											}else if (Array.isArray(value1[key2])){
 
@@ -837,10 +934,11 @@ const exportXML = {
 															if (typeof arrayValue[key22] == 'string' || typeof arrayValue[key22] == 'number'){
 																// its a label or some other literal
 																let p2 = this.createLiteral(key22, arrayValue)
+																this.xmlLog.push(`Creating literal ${JSON.stringify(arrayValue[key22])}`)
 																if (p2!==false) bnodeLvl1.appendChild(p2)
 															}else{
 																console.error('key22', key22, arrayValue[key22], 'not a literal, should not happen')
-
+																this.xmlLog.push(`Error not a literal ${arrayValue[key22]}`)
 
 															}
 
@@ -855,6 +953,8 @@ const exportXML = {
 											}else{
 
 												console.error('key2', key2, value1[key2], 'not a literal, should not happen')
+												this.xmlLog.push(`Key 2 (${key2}) error, not a literal ${value1[key2]}`)
+
 											}
 
 										}
@@ -888,12 +988,14 @@ const exportXML = {
 					}else{
 
 						this.debug(ptObj.propertyURI, 'root level element does not look like a bnode', userValue)
+						this.xmlLog.push(`Root level does not look like a bnode: ${ptObj.propertyURI}`)
 
 						// but it might be a bnode, but with only a URI
 
 
 						if (userValue['@flags'] && userValue['@flags'].indexOf('simpleLookupTopLevelMulti') > -1){
 
+							this.xmlLog.push(`Found special flag rule for ${ptObj.propertyURI}`)
 							// an edge case here where we wanted to allow multiple simple lookups in root level fields
 							// like carrierType, loop through the labels, build the properties, if it doesnt have a @id its because its at te root lvl
 							
@@ -903,6 +1005,7 @@ const exportXML = {
 
 									let p = this.createElByBestNS(ptObj.propertyURI)
 									let bnode = this.createElByBestNS(await this.suggestType(ptObj.propertyURI))
+									this.xmlLog.push(`Created ${p.tagName} property and ${bnode.tagName} bnode`)
 									p.appendChild(bnode)
 									rootEl.appendChild(p)
 
@@ -913,9 +1016,11 @@ const exportXML = {
 									}
 
 									if (label['@id']){
+										this.xmlLog.push(`Set rdf:about from label bnode ${label['@id']}`)
 										bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', label['@id'])
 
 									}else if (userValue['@id']){
+										this.xmlLog.push(`Set rdf:about from root userValue @id ${userValue['@id']}`)
 										bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', userValue['@id'])
 									}
 
@@ -936,11 +1041,16 @@ const exportXML = {
 							let bnode = this.createElByBestNS(userValue['@type'])						
 							bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', userValue['@id'])
 
+							this.xmlLog.push(`Created ${p.tagName} property and ${bnode.tagName} bnode`)
+
+
 							p.appendChild(bnode)
 							rootEl.appendChild(p)
 						}else if (userValue['@type'] && !userValue['@id']){
 
 							this.debug(ptObj.propertyURI, 'Does not have URI, error', userValue)
+							this.xmlLog.push(`Should have a URI in ${ptObj.propertyURI} but can't find one`)
+
 
 							console.error("Does not have URI, ERROR")
 						}else if (await this.suggestType(ptObj.propertyURI) == 'http://www.w3.org/2000/01/rdf-schema#Literal'){
@@ -949,15 +1059,18 @@ const exportXML = {
 							// its just a top level literal property
 							// loop through its keys and make the values
 							for (let key1 of Object.keys(userValue).filter(k => (!k.includes('@') ? true : false ) )){
-								console.log('userValue',userValue)
-								console.log('key1',key1)
-								console.log("userValue[key1]",userValue[key1])
+								// console.log('userValue',userValue)
+								// console.log('key1',key1)
+								// console.log("userValue[key1]",userValue[key1])
 								// are we at the right level?
 								if (typeof userValue[key1] === 'string' || typeof userValue[key1] === 'number'){
 												
 									let p1 = this.createLiteral(key1, userValue)
-									console.log("p1",p1)
+									// console.log("p1",p1)
 									if (p1!==false) rootEl.appendChild(p1);
+									this.xmlLog.push(`Creating literal at root level for ${key1} with value ${p1.innerHTML}`)
+
+
 
 
 								}else{
@@ -969,8 +1082,10 @@ const exportXML = {
 												// its a label or some other literal
 												let p1 = this.createLiteral(key2, value1)
 												if (p1!==false) rootEl.appendChild(p1);
+												this.xmlLog.push(`Creating literal at root level for ${key2} with value ${value1}`)
 											}else{
 												console.error('key2', key2, value1[key2], 'not a literal, should not happen')
+												this.xmlLog.push(`Not a literal at root level ${key2} with value ${value1[key2]}`)
 											}
 										}
 									}
@@ -996,8 +1111,12 @@ const exportXML = {
 											// its a label or some other literal
 											let p1 = this.createLiteral(key2, value1)
 											if (p1!==false) rootEl.appendChild(p1);
+											this.xmlLog.push(`Listed as rdf:Resource but treating it a a literal, Creating literal for ${key2} with value ${p1.innerHTML}`)
 										}else{
 											console.error('key2', key2, value1[key2], 'not a literal, should not happen')
+											this.xmlLog.push(`Not a literal at root level ${key2} with value ${value1[key2]}`)
+
+
 										}
 
 									}
@@ -1042,6 +1161,10 @@ const exportXML = {
 
 
 					// }
+
+
+				}else{
+					this.xmlLog.push(`Skpping it because hasUserValue == false`)
 
 
 				}
@@ -1599,9 +1722,8 @@ const exportXML = {
 		for (let el of rdfBasic.getElementsByTagName("bf:Item")){ bf2MarcXmlElRdf.appendChild(el) }
 		let strBf2MarcXmlElBib = (new XMLSerializer()).serializeToString(bf2MarcXmlElRdf)	
 
-		console.log(strBf2MarcXmlElBib)
+		// console.log(strBf2MarcXmlElBib, strXmlFormatted, strXmlBasic, strXml)
 		
-
 
 		return {
 			xmlDom: rdf,
@@ -1624,6 +1746,7 @@ const exportXML = {
 
 		let results = []
 		let parser = returnDOMParser()
+
 
 		for (let rt in profile.rt){
 

@@ -669,7 +669,6 @@ const parseBfdb = {
 		// so looop through the children of rdf:RDF
 		let instanceCount = 0
 		for (let el of this.activeDom.children[0].children){
-			console.log('-->',el.tagName)
 			if (el.tagName=='bf:Instance'){
 				instanceCount++
 			}
@@ -1117,6 +1116,9 @@ const parseBfdb = {
 			}else{
 				xml = this.activeDom.getElementsByTagName(tle)
 			}
+
+			// store this here for easy access to the error report
+			profile.xmlSource = this.xmlSource
 			
 			
 			// only return the top level, no nested related things
@@ -2891,6 +2893,7 @@ const parseBfdb = {
 			xml = this.testXml
 		}	
 
+		this.xmlSource = xml
 
 
 
