@@ -659,7 +659,11 @@ export default {
         // '/bfe2/editor/tests/instances/22812924.editor-pkg.xml', // subject editing test
 
 
-        '/bfe2/editor/tests/instances/22812916.editor-pkg.xml', // looking for xml error
+        // '/bfe2/editor/tests/instances/22812916.editor-pkg.xml', // looking for xml error
+
+        '/bfe2/editor/tests/instances/22835043.convertedit-pkg.xml', // looking for xml error
+
+
 
 
 

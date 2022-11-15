@@ -1563,6 +1563,27 @@ const lookupUtil = {
 
     },
 
+    sendSourceRecord: function(xml,eid,user){
+
+      let url = config.returnUrls().util + 'sourcelog/'
+
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          xml: xml, 
+          eid:eid, 
+          user:user,
+          date: `${new Date().toDateString()}_${new Date().toTimeString()}`.replaceAll(' ','_').replaceAll(':','-')
+        })
+      });
+
+
+    },
     publish: async function(xml,eid,activeProfile){
 
       // console.log("activeProfile",activeProfile)

@@ -2,6 +2,8 @@
 // const jsdom = require("jsdom");
 import store from "../store";
 const short = require('short-uuid');
+import lookupUtil from "./lookupUtil";
+
 import config from "./config"
 
 const hashCode = s => s.split('').reduce((a,b) => (((a << 5) - a) + b.charCodeAt(0))|0, 0)
@@ -1051,7 +1053,8 @@ const parseBfdb = {
 		let results = await this.transformRts(profile)
 
 
-
+		// save a backup copy as well
+		lookupUtil.sendSourceRecord(this.xmlSource,profile.eId, profile.user)
 
 
 		// console.log('-------------------HERE---------------------xxx')
