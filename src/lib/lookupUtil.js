@@ -1023,7 +1023,7 @@ const lookupUtil = {
             
             data.forEach(function(n){
               if (n['http://www.loc.gov/mads/rdf/v1#birthDate']){
-                nodeMap['Birth Date'] = n['http://www.loc.gov/mads/rdf/v1#birthDate'].map(function(d){ return d['@id']})
+                nodeMap['Birth Date'] = n['http://www.loc.gov/mads/rdf/v1#birthDate'].map(function(d){ return d['@value']})
               }        
               if (n['http://www.loc.gov/mads/rdf/v1#birthPlace']){
                 nodeMap['Birth Place'] = n['http://www.loc.gov/mads/rdf/v1#birthPlace'].map(function(d){ return d['@id']})
@@ -1045,7 +1045,7 @@ const lookupUtil = {
                 nodeMap['Associated Language'] = n['http://www.loc.gov/mads/rdf/v1#associatedLanguage'].map(function(d){ return d['@id']})
               } 
               if (n['http://www.loc.gov/mads/rdf/v1#deathDate']){
-                nodeMap['Death Date'] = n['http://www.loc.gov/mads/rdf/v1#deathDate'].map(function(d){ return d['@id']})
+                nodeMap['Death Date'] = n['http://www.loc.gov/mads/rdf/v1#deathDate'].map(function(d){ return d['@value']})
               } 
               if (n['http://www.loc.gov/mads/rdf/v1#hasBroaderAuthority']){
                 nodeMap['Has Broader Authority'] = n['http://www.loc.gov/mads/rdf/v1#hasBroaderAuthority'].map(function(d){ return d['@id']})
@@ -1086,7 +1086,6 @@ const lookupUtil = {
 
 
             })
-
             // pull out the labels
             data.forEach(function(n){
 
@@ -1094,6 +1093,7 @@ const lookupUtil = {
               Object.keys(nodeMap).forEach(function(k){
                 if (!results.nodeMap[k]) { results.nodeMap[k] = [] }
                 // loop through each uri we have for this type
+                  console.log(nodeMap[k])
                 nodeMap[k].forEach(function(uri){
 
                   if (k == 'MADS Collection'){
