@@ -280,24 +280,6 @@ const parseProfile = {
                 }   
 
 
-
-
-
-
-
-
-
-                // if (rt.id.includes(':Work')){
-                //     for (let pt of rt.propertyTemplates){
-                //         if (pt.propertyURI === 'http://id.loc.gov/ontologies/bibframe/Work'){
-                //             pt.type = 'literal'
-                //             pt.propertyLabel = 'Work URI'
-                //         }
-                //     }
-
-                   
-                // }
-
                 // add wikidata into any NAF lookup pt
                 if (rt.id.includes(':Agent')){
                     for (let pt of rt.propertyTemplates){
@@ -981,7 +963,14 @@ const parseProfile = {
             }
 
 
-
+            // make sure we didnt make an empty propery array [{}]
+            if (activeProfile.rt[profile].pt[newPropertyId].userValue[baseURI]){
+                if (activeProfile.rt[profile].pt[newPropertyId].userValue[baseURI][0]){
+                    if (Object.keys(activeProfile.rt[profile].pt[newPropertyId].userValue[baseURI][0]).length === 0){
+                        delete activeProfile.rt[profile].pt[newPropertyId].userValue[baseURI]
+                    }
+                }
+            }
 
 
 
@@ -1611,28 +1600,42 @@ const parseProfile = {
                     for (let p of propertyPath){
 
 
+                        // an alternative template patter where they use the sameAs for the property URI
+                        // it doesn't really serve a purpose, more like a placeholder in the tempplate
+                        // so skip it if its a sameAs
+                        if (p.propertyURI == 'http://www.w3.org/2002/07/owl#sameAs'){
+                            continue
+                        }
+
+                        // console.log("THOS OS WHAT OTS WAS BEFORE", JSON.parse(JSON.stringify(currentUserValuePos[p.propertyURI])))
 
                         if (!currentUserValuePos[p.propertyURI]){
                             currentUserValuePos[p.propertyURI] = []
                         }
 
 
+
+                        console.log("p.propertyURI",p.propertyURI)
+
                         thisLevelType = await this.suggestTypeImproved(p.propertyURI,currentState.rt[rt].pt[pt])
-                        // console.log("thisLevelType frist",thisLevelType)
+                        
+                        console.log("thisLevelType frist",thisLevelType)
 
                         if (!thisLevelType){
                             thisLevelType = await exportXML.suggestType(p.propertyURI,rt)
                         }
                         
-                        // console.log("p.propertyURI",p.propertyURI)
+                        
 
-                        // console.log("thisLevelType",thisLevelType)
+                        console.log("thisLevelType",thisLevelType,this.isUriALiteral(thisLevelType))
                         let thisLevel = {'@guid':short.generate()}
                         if (!this.isUriALiteral(thisLevelType)){
                             thisLevel['@type'] = thisLevelType
+                            console.log('thisLevel',thisLevel)
                         }
-
+                        console.log('currentUserValuePos[p.propertyURI]',currentUserValuePos[p.propertyURI])
                         if (currentUserValuePos[p.propertyURI].length==0){
+                            console.log('puhing')
                             currentUserValuePos[p.propertyURI].push(thisLevel)
                         }
 

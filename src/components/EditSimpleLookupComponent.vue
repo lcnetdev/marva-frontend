@@ -224,8 +224,9 @@ export default {
         userValue = this.activeProfile.rt[this.profileName].pt[this.profileCompoent].userValue  
       }
       
-      
-
+      // get the length of the properties, for our case we can filter out sameAs properties
+      // as in simple lookups they are place holders and don't really need to be accounted for in the hierearchy of the properties
+      let propertyPathLength = this.propertyPath.filter((p)=>{ return (p.propertyURI != 'http://www.w3.org/2002/07/owl#sameAs') ? true : false }).length     
 
 
       let possibleLiteralProperties = ['http://www.w3.org/1999/02/22-rdf-syntax-ns#value', 'http://www.w3.org/2000/01/rdf-schema#label', 'http://id.loc.gov/ontologies/bibframe/code','http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
@@ -233,7 +234,7 @@ export default {
 
       // filter out any bnodes with that guid starting from the bottom of the hiearchy
       // then go through and check if we left an empty bnode hiearchy and if so delete it
-      if (this.propertyPath.length==4){
+      if (propertyPathLength==4){
           let L0URI = this.propertyPath[0].propertyURI
           let L1URI = this.propertyPath[1].propertyURI
           let L2URI = this.propertyPath[2].propertyURI
@@ -286,7 +287,7 @@ export default {
           }
       }
 
-      if (this.propertyPath.length==3){
+      if (propertyPathLength==3){
           let L0URI = this.propertyPath[0].propertyURI
           let L1URI = this.propertyPath[1].propertyURI
           let L2URI = this.propertyPath[2].propertyURI
@@ -338,11 +339,10 @@ export default {
             }
           }
       }
-      if (this.propertyPath.length==2){
+      if (propertyPathLength==2){
 
           let L0URI = this.propertyPath[0].propertyURI
           let L1URI = this.propertyPath[1].propertyURI
-
           if (userValue[L0URI] && userValue[L0URI][0] && userValue[L0URI][0][L1URI]){
             for (let v of userValue[L0URI][0][L1URI]){
               let label = null 
@@ -390,8 +390,10 @@ export default {
             }
           }
       }
-      if (this.propertyPath.length==1){
+      if (propertyPathLength==1){
           let L0URI = this.propertyPath[0].propertyURI
+
+          console.log("!!!!!! HERE", L0URI, userValue,userValue[L0URI])
 
           if (userValue[L0URI]){
             for (let v of userValue[L0URI]){
@@ -428,18 +430,21 @@ export default {
                   label = uri
                 }
               }
-              this.activeLookupValue.push({
-                'http://www.w3.org/2000/01/rdf-schema#label' : label,
-                uri : uri,
-                uriGuid: uriGuid,
-                labelGuid: labelGuid
-              })
+
+              if (label !== null || uri !== null){
+                this.activeLookupValue.push({
+                  'http://www.w3.org/2000/01/rdf-schema#label' : label,
+                  uri : uri,
+                  uriGuid: uriGuid,
+                  labelGuid: labelGuid
+                })
+              }
             }
           }
       }
 
 
-
+      console.log('this.activeLookupValue',this.activeLookupValue)
 
       // if (propertyPath.length==3){
       //     let L0URI = propertyPath[0].propertyURI
@@ -1042,6 +1047,8 @@ export default {
 
       })
 
+      // sometimes you'll find code hacks circumvents ontology
+      this.displayList = this.displayList.filter((v)=>{ return (v === 'Englisch (eng)') ? false : true})
 
 
       this.displayList.sort()

@@ -20,6 +20,23 @@ const returnDOMParser = function(){
 	return p
 }
 
+const formatXML = function(xml, tab = '\t', nl = '\n') {
+	if (!xml){
+		return 'No XML'
+	}
+
+	let formatted = '', indent = '';
+	const nodes = xml.slice(1, -1).split(/>\s*</);
+	if (nodes[0][0] == '?') formatted += '<' + nodes.shift() + '>' + nl;
+	for (let i = 0; i < nodes.length; i++) {
+		const node = nodes[i];
+		if (node[0] == '/') indent = indent.slice(tab.length); // decrease indent
+		formatted += indent + '<' + node + '>' + nl;
+		if (node[0] != '/' && node[node.length - 1] != '/' && node.indexOf('</') == -1) indent += tab; // increase indent
+	}
+	return formatted;
+}
+
 
 
 const parser = returnDOMParser()
@@ -258,11 +275,11 @@ const exportXML = {
 			profileAsJson = 'Error converting profile to json'
 		}
 		// if we are doing local dev then just error out, but if not show a message
-		// if (config.returnUrls().dev){
+		if (config.returnUrls().dev){
 
-		// 	return await this.toBFXMLProcess(profile)
+			return await this.toBFXMLProcess(profile)
 
-		// }else{
+		}else{
 
 			try{
 				return await this.toBFXMLProcess(profile)	
@@ -318,7 +335,7 @@ const exportXML = {
 			}
 
 
-		// }
+		}
 
 
 
@@ -535,6 +552,8 @@ const exportXML = {
 		this.debugHistory = []
 		this.xmlLog = []
 
+		let componentXmlLookup = {}
+
 		let orginalProfile = profile
 		// cut the ref to the orginal
 		profile = JSON.parse(JSON.stringify(profile))
@@ -642,7 +661,7 @@ const exportXML = {
 
 				this.xmlLog.push(`Working on: ${pt}`)
 
-
+				console.log('ptObj.userValue',ptObj.userValue)
 
 				let userValue
 
@@ -653,6 +672,11 @@ const exportXML = {
 				}else{
 					userValue = ptObj.userValue 	
 				}
+				console.log("HEYYY THI SI USER VALEU")
+				console.log(userValue)
+				console.log('ptObj.propertyURI',ptObj.propertyURI)
+				console.log('ptObj.userValue[ptObj.propertyURI]',ptObj.userValue[ptObj.propertyURI])
+				// console.log(ptObj.userValue[ptObj.propertyURI][0])
 
 				this.xmlLog.push(['Set userValue to:', JSON.parse(JSON.stringify(userValue)) ])
 
@@ -991,171 +1015,200 @@ const exportXML = {
 						pLvl1.appendChild(bnodeLvl1)
 						rootEl.appendChild(pLvl1)
 
+						componentXmlLookup[`${rt}-${pt}`] = formatXML(pLvl1.outerHTML)
+						
 
 					}else{
 
 						this.debug(ptObj.propertyURI, 'root level element does not look like a bnode', userValue)
 						this.xmlLog.push(`Root level does not look like a bnode: ${ptObj.propertyURI}`)
+						let userValueArray = userValue
+						if (!Array.isArray(userValue)){
+							userValueArray = [userValue]
+						}
 
 						// but it might be a bnode, but with only a URI
+						for (let userValue of userValueArray){
+
+							if (userValue['@flags'] && userValue['@flags'].indexOf('simpleLookupTopLevelMulti') > -1){
+
+								this.xmlLog.push(`Found special flag rule for ${ptObj.propertyURI}`)
+								// an edge case here where we wanted to allow multiple simple lookups in root level fields
+								// like carrierType, loop through the labels, build the properties, if it doesnt have a @id its because its at te root lvl
+								
+								if (userValue['http://www.w3.org/2000/01/rdf-schema#label']){
+
+									let allXMLFragments = ''
+									for (let label of userValue['http://www.w3.org/2000/01/rdf-schema#label']){
+
+										let p = this.createElByBestNS(ptObj.propertyURI)
+										let bnode = this.createElByBestNS(await this.suggestType(ptObj.propertyURI))
+										this.xmlLog.push(`Created ${p.tagName} property and ${bnode.tagName} bnode`)
+										p.appendChild(bnode)
+										rootEl.appendChild(p)
+
+										if (label['http://www.w3.org/2000/01/rdf-schema#label']){
+											let lp = this.createElByBestNS('http://www.w3.org/2000/01/rdf-schema#label')
+											lp.innerHTML = label['http://www.w3.org/2000/01/rdf-schema#label']
+											bnode.appendChild(lp)
+										}
+
+										if (label['@id']){
+											this.xmlLog.push(`Set rdf:about from label bnode ${label['@id']}`)
+											bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', label['@id'])
+
+										}else if (userValue['@id']){
+											this.xmlLog.push(`Set rdf:about from root userValue @id ${userValue['@id']}`)
+											bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', userValue['@id'])
+										}
+
+										allXMLFragments = allXMLFragments + `\n${formatXML(p.outerHTML)}`
 
 
-						if (userValue['@flags'] && userValue['@flags'].indexOf('simpleLookupTopLevelMulti') > -1){
-
-							this.xmlLog.push(`Found special flag rule for ${ptObj.propertyURI}`)
-							// an edge case here where we wanted to allow multiple simple lookups in root level fields
-							// like carrierType, loop through the labels, build the properties, if it doesnt have a @id its because its at te root lvl
-							
-							if (userValue['http://www.w3.org/2000/01/rdf-schema#label']){
-
-								for (let label of userValue['http://www.w3.org/2000/01/rdf-schema#label']){
-
-									let p = this.createElByBestNS(ptObj.propertyURI)
-									let bnode = this.createElByBestNS(await this.suggestType(ptObj.propertyURI))
-									this.xmlLog.push(`Created ${p.tagName} property and ${bnode.tagName} bnode`)
-									p.appendChild(bnode)
-									rootEl.appendChild(p)
-
-									if (label['http://www.w3.org/2000/01/rdf-schema#label']){
-										let lp = this.createElByBestNS('http://www.w3.org/2000/01/rdf-schema#label')
-										lp.innerHTML = label['http://www.w3.org/2000/01/rdf-schema#label']
-										bnode.appendChild(lp)
 									}
+									componentXmlLookup[`${rt}-${pt}`] = allXMLFragments
 
-									if (label['@id']){
-										this.xmlLog.push(`Set rdf:about from label bnode ${label['@id']}`)
-										bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', label['@id'])
 
-									}else if (userValue['@id']){
-										this.xmlLog.push(`Set rdf:about from root userValue @id ${userValue['@id']}`)
-										bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', userValue['@id'])
+
+								}
+
+
+
+							}else if (userValue['@type'] && userValue['@id']){
+
+								this.debug(ptObj.propertyURI, 'But has @type, making bnode')
+
+								let p = this.createElByBestNS(ptObj.propertyURI)
+								let bnode = this.createElByBestNS(userValue['@type'])						
+								bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', userValue['@id'])
+
+								this.xmlLog.push(`Created ${p.tagName} property and ${bnode.tagName} bnode`)
+
+
+								p.appendChild(bnode)
+								rootEl.appendChild(p)
+								componentXmlLookup[`${rt}-${pt}`] = formatXML(p.outerHTML)
+
+
+							}else if (userValue['@type'] && !userValue['@id']){
+
+								this.debug(ptObj.propertyURI, 'Does not have URI, error', userValue)
+								this.xmlLog.push(`Should have a URI in ${ptObj.propertyURI} but can't find one`)
+
+
+								console.error("Does not have URI, ERROR")
+							}else if (await this.suggestType(ptObj.propertyURI) == 'http://www.w3.org/2000/01/rdf-schema#Literal'){
+
+
+								// its just a top level literal property
+								// loop through its keys and make the values
+								let allXMLFragments = ''
+								for (let key1 of Object.keys(userValue).filter(k => (!k.includes('@') ? true : false ) )){
+									// console.log('userValue',userValue)
+									// console.log('key1',key1)
+									// console.log("userValue[key1]",userValue[key1])
+									// are we at the right level?
+									if (typeof userValue[key1] === 'string' || typeof userValue[key1] === 'number'){
+													
+										let p1 = this.createLiteral(key1, userValue)
+										// console.log("p1",p1)
+										if (p1!==false) {
+											rootEl.appendChild(p1);
+											this.xmlLog.push(`Creating literal at root level for ${key1} with value ${p1.innerHTML}`)
+											allXMLFragments = allXMLFragments + `\n${formatXML(p1.outerHTML)}`																								
+										}
+
+
+
+
+									}else{
+										
+										for (let value1 of userValue[key1]){
+											for (let key2 of Object.keys(value1).filter(k => (!k.includes('@') ? true : false ) )){
+
+												if (typeof value1[key2] == 'string' || typeof value1[key2] == 'number'){
+													// its a label or some other literal
+													let p1 = this.createLiteral(key2, value1)
+													if (p1!==false) {
+														rootEl.appendChild(p1);
+														allXMLFragments = allXMLFragments + `\n${formatXML(p1.outerHTML)}`																								
+														this.xmlLog.push(`Creating literal at root level for ${key2} with value ${value1}`)
+													}
+												}else{
+													console.error('key2', key2, value1[key2], 'not a literal, should not happen')
+													this.xmlLog.push(`Not a literal at root level ${key2} with value ${value1[key2]}`)
+												}
+											}
+										}
+										
+
 									}
 
 
 
 
 								}
+								
+								componentXmlLookup[`${rt}-${pt}`] = allXMLFragments
 
-							}
+							}else if (await this.suggestType(ptObj.propertyURI) == 'http://www.w3.org/2000/01/rdf-schema#Resource'){
 
-
-
-						}else if (userValue['@type'] && userValue['@id']){
-
-							this.debug(ptObj.propertyURI, 'But has @type, making bnode')
-
-							let p = this.createElByBestNS(ptObj.propertyURI)
-							let bnode = this.createElByBestNS(userValue['@type'])						
-							bnode.setAttributeNS(this.namespace.rdf, 'rdf:about', userValue['@id'])
-
-							this.xmlLog.push(`Created ${p.tagName} property and ${bnode.tagName} bnode`)
-
-
-							p.appendChild(bnode)
-							rootEl.appendChild(p)
-						}else if (userValue['@type'] && !userValue['@id']){
-
-							this.debug(ptObj.propertyURI, 'Does not have URI, error', userValue)
-							this.xmlLog.push(`Should have a URI in ${ptObj.propertyURI} but can't find one`)
-
-
-							console.error("Does not have URI, ERROR")
-						}else if (await this.suggestType(ptObj.propertyURI) == 'http://www.w3.org/2000/01/rdf-schema#Literal'){
-
-
-							// its just a top level literal property
-							// loop through its keys and make the values
-							for (let key1 of Object.keys(userValue).filter(k => (!k.includes('@') ? true : false ) )){
-								// console.log('userValue',userValue)
-								// console.log('key1',key1)
-								// console.log("userValue[key1]",userValue[key1])
-								// are we at the right level?
-								if (typeof userValue[key1] === 'string' || typeof userValue[key1] === 'number'){
-												
-									let p1 = this.createLiteral(key1, userValue)
-									// console.log("p1",p1)
-									if (p1!==false) rootEl.appendChild(p1);
-									this.xmlLog.push(`Creating literal at root level for ${key1} with value ${p1.innerHTML}`)
-
-
-
-
-								}else{
+								// if it is a marked in the profile as a literal and has expected value of rdf:Resource flatten it to a string literal
+								let allXMLFragments = ''
+								for (let key1 of Object.keys(userValue).filter(k => (!k.includes('@') ? true : false ) )){
 
 									for (let value1 of userValue[key1]){
+
 										for (let key2 of Object.keys(value1).filter(k => (!k.includes('@') ? true : false ) )){
 
 											if (typeof value1[key2] == 'string' || typeof value1[key2] == 'number'){
 												// its a label or some other literal
 												let p1 = this.createLiteral(key2, value1)
-												if (p1!==false) rootEl.appendChild(p1);
-												this.xmlLog.push(`Creating literal at root level for ${key2} with value ${value1}`)
+												if (p1!==false) {
+													rootEl.appendChild(p1);
+													allXMLFragments = allXMLFragments + `\n${formatXML(p1.outerHTML)}`
+													this.xmlLog.push(`Listed as rdf:Resource but treating it a a literal, Creating literal for ${key2} with value ${p1.innerHTML}`)
+												}
 											}else{
 												console.error('key2', key2, value1[key2], 'not a literal, should not happen')
 												this.xmlLog.push(`Not a literal at root level ${key2} with value ${value1[key2]}`)
+
+
 											}
+
 										}
 									}
 
 								}
+								componentXmlLookup[`${rt}-${pt}`] = allXMLFragments
 
 
 
-							}
-						
+							}else if (userValue['@id']){
+								// it has a URI at least, so make that
+								let p = this.createElByBestNS(ptObj.propertyURI)
+								p.setAttributeNS(this.namespace.rdf, 'rdf:resource', userValue['@id'])
+								rootEl.appendChild(p)
+								componentXmlLookup[`${rt}-${pt}`] = formatXML(p.outerHTML)
 
-						}else if (await this.suggestType(ptObj.propertyURI) == 'http://www.w3.org/2000/01/rdf-schema#Resource'){
+							}else if (ptObj.propertyURI == 'http://www.w3.org/2000/01/rdf-schema#label'){
 
-							// if it is a marked in the profile as a literal and has expected value of rdf:Resource flatten it to a string literal
-
-							for (let key1 of Object.keys(userValue).filter(k => (!k.includes('@') ? true : false ) )){
-
-								for (let value1 of userValue[key1]){
-
-									for (let key2 of Object.keys(value1).filter(k => (!k.includes('@') ? true : false ) )){
-
-										if (typeof value1[key2] == 'string' || typeof value1[key2] == 'number'){
-											// its a label or some other literal
-											let p1 = this.createLiteral(key2, value1)
-											if (p1!==false) rootEl.appendChild(p1);
-											this.xmlLog.push(`Listed as rdf:Resource but treating it a a literal, Creating literal for ${key2} with value ${p1.innerHTML}`)
-										}else{
-											console.error('key2', key2, value1[key2], 'not a literal, should not happen')
-											this.xmlLog.push(`Not a literal at root level ${key2} with value ${value1[key2]}`)
+								// does it just have a label?
+								let p = this.createElByBestNS(ptObj.propertyURI)
+								p.innerHTML = userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
+								rootEl.appendChild(p)
+								componentXmlLookup[`${rt}-${pt}`] = formatXML(p.outerHTML)
 
 
-										}
-
-									}
-								}
-
+							}else{
+								this.debug(ptObj.propertyURI, 'Does not have @type, something is wrong here', userValue)
+								// console.log(ptObj.propertyURI, 'Does not have @type, something is wrong here', userValue)
+								// console.log("suggest type is:",await this.suggestType(ptObj.propertyURI))
+								console.warn("Should not be here")
+								// alert("Not everything entered was serialized into XML, please report this record and check the output.")
 							}
 
-
-
-
-						}else if (userValue['@id']){
-							// it has a URI at least, so make that
-							let p = this.createElByBestNS(ptObj.propertyURI)
-							p.setAttributeNS(this.namespace.rdf, 'rdf:resource', userValue['@id'])
-							rootEl.appendChild(p)
-						}else if (ptObj.propertyURI == 'http://www.w3.org/2000/01/rdf-schema#label'){
-
-							// does it just have a label?
-							let p = this.createElByBestNS(ptObj.propertyURI)
-							p.innerHTML = userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
-							rootEl.appendChild(p)
-
-
-						}else{
-							this.debug(ptObj.propertyURI, 'Does not have @type, something is wrong here', userValue)
-							// console.log(ptObj.propertyURI, 'Does not have @type, something is wrong here', userValue)
-							// console.log("suggest type is:",await this.suggestType(ptObj.propertyURI))
-							console.warn("Should not be here")
-							// alert("Not everything entered was serialized into XML, please report this record and check the output.")
 						}
-
-
 
 
 					}
@@ -1731,7 +1784,7 @@ const exportXML = {
 
 		// console.log(strBf2MarcXmlElBib, strXmlFormatted, strXmlBasic, strXml)
 			
-
+		// console.log("-------componentXmlLookup",componentXmlLookup)
 		return {
 			xmlDom: rdf,
 			xmlStringFormatted: strXmlFormatted,
@@ -1739,7 +1792,8 @@ const exportXML = {
 			bf2Marc: strBf2MarcXmlElBib,
 			xlmStringBasic: strXmlBasic,
 			voidTitle: xmlVoidDataTitle,
-			voidContributor:xmlVoidDataContributor
+			voidContributor:xmlVoidDataContributor,
+			componentXmlLookup:componentXmlLookup
 		}
 
 
