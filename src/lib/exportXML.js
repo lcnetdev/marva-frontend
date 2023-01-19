@@ -111,7 +111,7 @@ const exportXML = {
 
 	createElByBestNS: function(elStr){
 
-
+		console.log("elStr",elStr)
 		// HACK - bad marc2bf conversion
 		if (elStr == 'http://www.loc.gov/mads/rdf/v1#'){
 			elStr = 'http://www.loc.gov/mads/rdf/v1#Authority'
@@ -672,6 +672,15 @@ const exportXML = {
 				}else{
 					userValue = ptObj.userValue 	
 				}
+
+				// temp hack to clcean up bad data -- not perm required
+				for (let k of Object.keys(userValue)){
+					if (k === 'undefined'){
+						delete userValue[k]
+					}
+				}
+
+
 				console.log("HEYYY THI SI USER VALEU")
 				console.log(userValue)
 				console.log('ptObj.propertyURI',ptObj.propertyURI)
@@ -775,7 +784,7 @@ const exportXML = {
 						for (let key1 of Object.keys(userValue).filter(k => (!k.includes('@') ? true : false ) )){
 
 							this.xmlLog.push(`Looking at property : ${key1} in the userValue`)
-							
+							console.log('userValue',userValue)
 							let pLvl2 = this.createElByBestNS(key1)
 
 							if (key1 == 'http://www.loc.gov/mads/rdf/v1#componentList'){
