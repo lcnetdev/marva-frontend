@@ -979,7 +979,10 @@ export default {
       }
 
       this.$store.dispatch("removeValueSimple", { self: this, ptGuid: this.ptGuid, idGuid: toRemove.uriGuid, labelGuid: toRemove.labelGuid, propertyPath: this.propertyPath }).then(() => {
-       
+        
+        this.$refs.lookupInput.focus()
+
+
       })  
 
 
@@ -1161,8 +1164,9 @@ export default {
         //   event.preventDefault()
         //   return false
         // }
-
-        if (!this.nested && this.activeLookupValue.length>0){
+        // console.log(this.nested,this.activeLookupValue)
+        // if (!this.nested && this.activeLookupValue.length>0){
+        if (this.activeLookupValue.length>0){
           this.$refs['added-value'][0].classList.add('ani-shake');
           window.setTimeout(()=>{this.$refs['added-value'][0].classList.remove('ani-shake');},500)
           event.target.value = ""

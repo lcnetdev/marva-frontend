@@ -1362,9 +1362,16 @@ const parseProfile = {
                     let removed = false
                     let userValue = currentState.rt[rt].pt[pt].userValue
 
+
+                  // get the length of the properties, for our case we can filter out sameAs properties
+                  // as in simple lookups they are place holders and don't really need to be accounted for in the hierearchy of the properties
+                  let propertyPathLength = propertyPath.filter((p)=>{ return (p.propertyURI != 'http://www.w3.org/2002/07/owl#sameAs') ? true : false }).length     
+
+
+
                     // filter out any bnodes with that guid starting from the bottom of the hiearchy
                     // then go through and check if we left an empty bnode hiearchy and if so delete it
-                    if (propertyPath.length==4){
+                    if (propertyPathLength==4){
                         let L0URI = propertyPath[0].propertyURI
                         let L1URI = propertyPath[1].propertyURI
                         let L2URI = propertyPath[2].propertyURI
@@ -1387,7 +1394,7 @@ const parseProfile = {
                         }
                     }
 
-                    if (propertyPath.length==3){
+                    if (propertyPathLength==3){
                         let L0URI = propertyPath[0].propertyURI
                         let L1URI = propertyPath[1].propertyURI
                         let L2URI = propertyPath[2].propertyURI
@@ -1412,7 +1419,7 @@ const parseProfile = {
                         }
 
                     }
-                    if (propertyPath.length==2){
+                    if (propertyPathLength==2){
                         let L0URI = propertyPath[0].propertyURI
                         let L1URI = propertyPath[1].propertyURI
 
@@ -1437,7 +1444,7 @@ const parseProfile = {
 
 
                     }
-                    if (propertyPath.length==1){
+                    if (propertyPathLength==1){
                         let L0URI = propertyPath[0].propertyURI
                         
                         let f = userValue[L0URI].filter((v=>{ return (v['@guid'] && v['@guid'] != idGuid && v['@guid'] != labelGuid)}))
