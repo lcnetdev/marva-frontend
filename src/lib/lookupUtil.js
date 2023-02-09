@@ -1056,12 +1056,17 @@ const lookupUtil = {
               if (n['http://www.loc.gov/mads/rdf/v1#isMemberOfMADSCollection']){
                 nodeMap['MADS Collection'] = n['http://www.loc.gov/mads/rdf/v1#isMemberOfMADSCollection'].map(function(d){ return d['@id']})
               } 
-
-
               
+              if (n['http://www.loc.gov/mads/rdf/v1#code'] && n['http://www.loc.gov/mads/rdf/v1#code'][0]['@type'] == 'http://id.loc.gov/datatypes/codes/gac') {
+                nodeMap['GAC(s)'] = n['http://www.loc.gov/mads/rdf/v1#code'].map(function(d){ 
+                        if (d['@type'] == 'http://id.loc.gov/datatypes/codes/gac') { 
+                            return d['@value'] 
+                        }
+                    })
+              } 
 
-              if (n['@type'].includes('http://id.loc.gov/ontologies/lcc#ClassNumber')>-1){
 
+              if ( n['@type'].includes('http://id.loc.gov/ontologies/lcc#ClassNumber') !== false ){
                 if (!nodeMap['LC Classification']){
                   nodeMap['LC Classification'] = []
                 }
@@ -1093,7 +1098,7 @@ const lookupUtil = {
               Object.keys(nodeMap).forEach(function(k){
                 if (!results.nodeMap[k]) { results.nodeMap[k] = [] }
                 // loop through each uri we have for this type
-                  console.log(nodeMap[k])
+                //console.log(nodeMap[k])
                 nodeMap[k].forEach(function(uri){
 
                   if (k == 'MADS Collection'){
@@ -1109,7 +1114,12 @@ const lookupUtil = {
                       results.nodeMap[k]=nodeMap[k]
                     }   
 
-                  }else if (n['@id'] && n['@id'] == uri){
+                  } else if (k == 'GAC(s)'){
+                    if (nodeMap[k].length>0){
+                      results.nodeMap[k]=nodeMap[k]
+                    }   
+
+                  } else if (n['@id'] && n['@id'] == uri){
                    
                     if (n['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
                       n['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'].forEach(function(val){ 
@@ -1142,10 +1152,6 @@ const lookupUtil = {
 
                 })        
               })
-
-
-
-
 
 
 
@@ -1250,8 +1256,6 @@ const lookupUtil = {
               delete results.nodeMap[k]
             }
           })
-          
-
 
 
           

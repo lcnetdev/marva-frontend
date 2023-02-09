@@ -548,7 +548,11 @@ export default {
                 this.modeSelect = k
               }
 
-            })
+            });
+            // Sometimes there is no 'All' option.
+            if (!this.modeSelect) {
+                this.modeSelect = Object.keys(mode)[0];
+            }
           })
         }
       })
