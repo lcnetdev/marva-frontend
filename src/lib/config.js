@@ -1,5 +1,4 @@
 
-
 const config = {
 
 	versionMajor: 0,
@@ -10,18 +9,18 @@ const config = {
 
 		dev:{
 
-			ldpjs : 'http://localhost:9401/api-staging/',			
-			util  : 'http://localhost:9401/util/',
-			utilLang: 'http://localhost:9401/util-lang/',
-			scriptshifter: 'http://localhost:9401/scriptshifter/',
-			publish : 'http://localhost:9401/util/publish/staging',
-			bfdb : 'https://preprod-8230.id.loc.gov/',
-			profiles : 'http://localhost:9401/util/profiles/profile/prod',
-			starting: 'http://localhost:9401/util/profiles/starting/prod',
-			id: 'https://id.loc.gov/',
-			env : 'staging',
+			ldpjs : process.env.VUE_APP_ldpjs || 'http://localhost:9401/api-staging/',
+			util  : process.env.VUE_APP_util || 'http://localhost:9401/util/',
+			utilLang: process.env.VUE_APP_utilLang || 'http://localhost:9401/util-lang/',
+			scriptshifter: process.env.VUE_APP_scriptshifter || 'http://localhost:9401/scriptshifter/',
+			publish : process.env.VUE_APP_publish || 'http://localhost:9401/util/publish/staging',
+			bfdb : process.env.VUE_APP_bfdb || 'https://preprod-8230.id.loc.gov/',
+			profiles : process.env.VUE_APP_profiles || 'http://localhost:9401/util/profiles/profile/prod',
+			starting: process.env.VUE_APP_starting || 'http://localhost:9401/util/profiles/starting/prod',
+			id: process.env.VUE_APP_id || 'https://id.loc.gov/',
+			env : process.env.VUE_APP_env || 'staging',
 			dev: true,
-			displayLCOnlyFeatures: true,
+			displayLCOnlyFeatures: process.env.VUE_APP_ldpjs || true,
 
 
 		},
