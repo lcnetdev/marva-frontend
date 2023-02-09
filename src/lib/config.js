@@ -3,7 +3,7 @@ const config = {
 
 	versionMajor: 0,
 	versionMinor: 13,
-	versionPatch: 13,
+	versionPatch: 14,
 
 	regionUrls: {
 
@@ -295,7 +295,8 @@ const config = {
 
 			"modes":[
 				{
-					'All':{"url":"https://preprod-8288.id.loc.gov/authorities/names/suggest2/?q=<QUERY>&count=25&rdftype=HierarchicalGeographic", "all":true}, 					
+					// 'All':{"url":"https://preprod-8288.id.loc.gov/authorities/names/suggest2/?q=<QUERY>&count=25&rdftype=HierarchicalGeographic", "all":true}, 					
+					'All':{"url":"https://id.loc.gov/authorities/suggest2/?q=<QUERY>&rdftype=HierarchicalGeographic&count=25", "all":true},
 				}
 			]
 		},
