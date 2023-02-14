@@ -1030,10 +1030,28 @@ export default {
     },
     removeValue: function(){
 
+        
+        if (this.displayContext.uri) {
+            // console.log(this);
+            let uriToRemove = this.displayContext.uri;
 
+            this.$store.dispatch("removeValuebyURI", 
+                    { 
+                        self: this, 
+                        ptGuid: this.$attrs.ptGuid, 
+                        uriToRemove: uriToRemove 
+                    }
+            )
+            .then(() => {
+                this.checkForUserData()
+                    // put the focus back on the input
+                    setTimeout(()=>{
+                        document.getElementById(this.assignedId).focus();
+                    },0)
+            });
+        } else {
           this.userData = {}
           this.$store.dispatch("clearContext", { self: this}).then(() => {
-
             this.$store.dispatch("setValueComplex", { self: this, profileComponet: this.profileCompoent, template:this.activeTemplate, structure: this.structure, parentStructure: this.parentStructureObj, propertyPath: this.propertyPath })
             .then(() => {
 
@@ -1044,7 +1062,7 @@ export default {
               },0)
             })
           })   
-
+        }
 
     },
 

@@ -565,7 +565,6 @@ export default new Vuex.Store({
         commit('ACTIVEPROFILEMINI', nap)
 
       }else{
-
         nap = await parseProfile.setValueComplex(state.activeProfile, data.profileComponet, data.structure.propertyURI, state.activeProfileName, data.template, state.contextData, data.structure, data.parentStructure, data.propertyPath)
         nap = parseProfile.rebuildHubURI(nap)
 
@@ -804,7 +803,14 @@ export default new Vuex.Store({
 
     
     
-
+    async removeValuebyURI ({ commit, state }, data) {   
+      let results = parseProfile.removeValuebyURI(state.activeProfile, data.ptGuid, data.uriToRemove, data.propertyPath);
+      commit('ACTIVEPROFILE', results);
+      commit('ACTIVEEDITCOUNTER');
+      commit('ACTIVERECORDSAVED', false);
+      state.saveRecord(state,commit);
+      return results;
+    },
 
 
     async removeValueSimple ({ commit, state }, data) {   

@@ -1344,6 +1344,39 @@ const parseProfile = {
 
         return currentState
     },
+    
+    // eslint-disable-next-line
+    removeValuebyURI: function(currentState, ptGuid, uriToRemove, propertyPath){
+        // find the pt for the value we are editing
+        let removed = false;
+        for (let rt in currentState.rt){
+            for (let pt in currentState.rt[rt].pt){
+                if (currentState.rt[rt].pt[pt]['@guid'] == ptGuid){
+                    let propUri = currentState.rt[rt].pt[pt].propertyURI;
+                    let userValue = currentState.rt[rt].pt[pt].userValue
+                    
+                    // Select those that do NOT match the URI; these we want to keep.
+                    let f = userValue[propUri].filter((v=>{ return (v['@id'] && v['@id'] != uriToRemove)} ));
+                    if (f.length < userValue[propUri].length){
+                        removed = true;
+                        userValue[propUri] = f;
+                    }
+                    // If none left, let's clean up.
+                    if (userValue[propUri].length==0){
+                        delete userValue[propUri];
+                    }
+                    if (removed) {
+                        store.state.activeUndoLog.push(`Removed lookup value from ${exportXML.namespaceUri(propUri)}`)
+                        break;
+                    }
+                }
+            }
+            if (removed) {
+                break;
+            }
+        }
+        return currentState;
+    },
 
     // eslint-disable-next-line
     removeValueSimple: function(currentState, ptGuid, idGuid, labelGuid, propertyPath){
