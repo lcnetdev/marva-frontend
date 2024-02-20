@@ -3810,7 +3810,7 @@ const parseProfile = {
     * @return {results} - object of the uservalue for that bnode
     */    
     returnUserValues: function(currentState, activeRt, component, propertyURI, propertyPath){
-        // console.log(currentState, activeRt, component, propertyURI)
+        console.log(currentState, activeRt, component, propertyURI, propertyPath)
 
         let results = false
 

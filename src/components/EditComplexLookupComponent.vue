@@ -1123,7 +1123,8 @@ export default {
         // rootPropertyURI = parseProfile.returnRootPropertyURI(this.returnCorrectActiveProfile(), this.profileCompoent,this.structure.propertyURI)        
       // }
       
-
+      console.log("Normal userValue userValue userValue userValue")
+      console.log(userValue)
 
       
       
@@ -1171,159 +1172,6 @@ export default {
           }
 
         }
-
-
-
-      // }else if (this.parentStructureObj && this.parentStructureObj.propertyURI && userValue[this.parentStructureObj.propertyURI]){
-        
-      //   // the data is stored in the sub graph named under the parent
-      //   if (Array.isArray(userValue[this.parentStructureObj.propertyURI])){
-
-      //     if (userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/2000/01/rdf-schema#label']){
-
-
-
-      //       this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
-            
-      //       this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
-      //       if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
-      //         this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
-      //       }else{
-
-      //         this.displayContext = {
-      //           contextValue: true,
-      //           uri: (userValue[this.parentStructureObj.propertyURI][0]['@id']) ? userValue[this.parentStructureObj.propertyURI][0]['@id'] : null,
-      //           title: this.displayLabel,
-      //           nodeMap: {}
-      //         }
-
-      //       }
-
-
-            
-
-      //     }else if (userValue[this.parentStructureObj.propertyURI][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
-      //       this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
-            
-      //       this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
-      //       if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
-      //         this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
-      //       }else{
-
-      //         this.displayContext = {
-      //           contextValue: true,
-      //           uri: (userValue[this.parentStructureObj.propertyURI][0]['@id']) ? userValue[this.parentStructureObj.propertyURI][0]['@id'] : null,
-      //           title: this.displayLabel,
-      //           nodeMap: {}
-      //         }
-
-      //       }
-
-      //     }else if (userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']){
-      //       this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']
-            
-      //       this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
-      //       if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
-      //         this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
-      //       }else{
-
-      //         this.displayContext = {
-      //           contextValue: true,
-      //           uri: (userValue[this.parentStructureObj.propertyURI][0]['@id']) ? userValue[this.parentStructureObj.propertyURI][0]['@id'] : null,
-      //           title: this.displayLabel,
-      //           nodeMap: {}
-      //         }
-
-      //       }
-
-      //     }else if (userValue[this.parentStructureObj.propertyURI][0]['http://id.loc.gov/ontologies/bibframe/code']){
-      //       this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['http://id.loc.gov/ontologies/bibframe/code'][0]['http://id.loc.gov/ontologies/bibframe/code']
-            
-      //       this.displayGuid = userValue[this.parentStructureObj.propertyURI][0]['@guid']
-      //       if (userValue[this.parentStructureObj.propertyURI][0]['@context']){
-      //         this.displayContext = userValue[this.parentStructureObj.propertyURI][0]['@context']
-      //       }else{
-
-      //         this.displayContext = {
-      //           contextValue: true,
-      //           uri: (userValue[this.parentStructureObj.propertyURI][0]['@id']) ? userValue[this.parentStructureObj.propertyURI][0]['@id'] : null,
-      //           title: this.displayLabel,
-      //           nodeMap: {}
-      //         }
-
-      //       }
-
-      //     }
-          
-      //   }
-
-        
-      //   if (userValue[this.parentStructureObj.propertyURI] && userValue[this.parentStructureObj.propertyURI].length>0){
-      //     this.displayType = userValue[this.parentStructureObj.propertyURI][0]['@type']
-      //   }
-
-      //   if (!this.displayLabel){
-
-      //     if (userValue[this.parentStructureObj.propertyURI][0] && userValue[this.parentStructureObj.propertyURI][0]['@id']){
-            
-      //       this.displayLabel = userValue[this.parentStructureObj.propertyURI][0]['@id']
-            
-
-      //       this.displayContext = {
-      //         contextValue: true,
-      //         uri: userValue[this.parentStructureObj.propertyURI][0]['@id'],
-      //         title: this.displayLabel,
-      //         nodeMap: {}
-      //       }
-
-      //     }
-          
-
-      //   }
-
-        
-
-      // }else if (userValue['@root'] && userValue['@root'] == rootPropertyURI){
-
-        
-      //   if (userValue['http://www.w3.org/2000/01/rdf-schema#label']){
-      //     this.displayLabel = userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']      
-          
-      //   }else if (userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']){
-      //     this.displayLabel = userValue['http://www.loc.gov/mads/rdf/v1#authoritativeLabel'][0]['http://www.loc.gov/mads/rdf/v1#authoritativeLabel']
-          
-      //   }else if (userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']){
-      //     this.displayLabel = userValue['http://www.w3.org/1999/02/22-rdf-syntax-ns#value'][0]['http://www.w3.org/1999/02/22-rdf-syntax-ns#value']
-          
-      //   }else if (userValue['http://id.loc.gov/ontologies/bibframe/code']){
-      //     this.displayLabel = userValue['http://id.loc.gov/ontologies/bibframe/code'][0]['http://id.loc.gov/ontologies/bibframe/code']
-          
-      //   }
-        
-      //   if (userValue['@type']){
-      //     this.displayType = userValue['@type']
-      //   }
-        
-        
-      //   if (!this.displayLabel){
-      //     if (userValue['@id']){
-      //       this.displayLabel = userValue['@id']
-            
-      //     }
-      //   }
-        
-
-
-      //   if (userValue['@context']){
-      //     this.displayContext = userValue['@context']
-      //   }else{
-      //     this.displayContext = {
-      //       contextValue: true,
-      //       uri: (userValue['@id']) ? userValue['@id'] : null,
-      //       title: this.displayLabel,
-      //       nodeMap: {}
-      //     }
-      //   }
 
 
 
@@ -2175,7 +2023,7 @@ box-shadow: 10px 10px 15px -5px rgba(0,0,0,0.37);
 .complex-lookup-results{
   padding: 0 1em 0 1em;
   height: 73%; 
-  margin-top: 1.25em;
+  margin-top: 3.25em;
 
 }
 

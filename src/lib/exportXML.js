@@ -200,6 +200,9 @@ const exportXML = {
 			result = profileLookup
 		}
 
+		console.log("result of typing:",result, profileLookup)
+		console.log()
+		
 		// some try something else
 		// TODO if needed
 
@@ -247,11 +250,26 @@ const exportXML = {
 		if (propertyURI==='http://id.loc.gov/ontologies/bflc/simpleDate'){
 			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
 		}
+		if (propertyURI==='http://performedmusicontology.org/ontology/hasMediumComponent'){
+			result = 'http://www.w3.org/2000/01/rdf-schema#Resource'
+		}
+		if (propertyURI==='http://performedmusicontology.org/ontology/hasNumberOfHands'){
+			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
+		}
+		if (propertyURI==='http://performedmusicontology.org/ontology/hasMediumCount'){
+			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
+		}
+
+		
+
+
+
+
+
 
 		if (result===false){
 			console.warn('Could not @type this ',propertyURI)
 		}
-
 
 
 		// if fails

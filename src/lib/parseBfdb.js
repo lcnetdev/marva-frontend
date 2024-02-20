@@ -65,7 +65,9 @@ const parseBfdb = {
 		if (uri.match(/lclocal:[A-Z]/)){
 			return true
 		}
-
+		if (uri.match(/pmo:[A-Z]/)){
+			return true
+		}
 		// for (let nsKey of Object.keys(this.namespace)){
 
 		// 	let pattern = `${nsKey}:[A-Z]/`

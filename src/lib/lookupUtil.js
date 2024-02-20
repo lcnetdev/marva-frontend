@@ -32,8 +32,12 @@ const lookupUtil = {
         url = url.replace('http://','https://')
       }
 
+      // temp hack
+      url = url.replace('preprod-8080.id.loc.gov/vocabulary/pmocomponent.json','id.loc.gov/vocabulary/pmocomponent.json')
+
       // if we use the memberOf there might be a id URL in the params, make sure its not https
       url = url.replace('memberOf=https://id.loc.gov/','memberOf=http://id.loc.gov/')
+
 
       let options = {}
       if (json){
@@ -1495,8 +1499,7 @@ const lookupUtil = {
 
     saveRecord: async function(xml, eId){
 
-
-
+      
      const putMethod = {
        method: 'PUT', // Method itself
        headers: {
