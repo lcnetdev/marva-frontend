@@ -260,8 +260,11 @@ const exportXML = {
 			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
 		}
 
+		if (propertyURI==='http://id.loc.gov/ontologies/bflc/readMarc382'){
+			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
+		}
 		
-
+		
 
 
 

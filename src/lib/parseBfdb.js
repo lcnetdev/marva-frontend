@@ -1585,20 +1585,20 @@ const parseBfdb = {
 
 							// does it have a rdf type of that 
 							for (let typeEl of e.getElementsByTagName('rdf:type')){
-								if (typeEl.attributes['rdf:resource'] && typeEl.attributes['rdf:resource'].value == 'http://id.loc.gov/ontologies/bflc/PrimaryContribution'){
+								if (typeEl.attributes['rdf:resource'] && (typeEl.attributes['rdf:resource'].value == 'http://id.loc.gov/ontologies/bflc/PrimaryContribution' || typeEl.attributes['rdf:resource'].value == 'http://id.loc.gov/ontologies/bibframe/PrimaryContribution')){
 
 									isPrimaryContribXML = true
 								}
 							}
 
 							// or is using the <bflc:PrimaryContribution> element
-							if (e.getElementsByTagName('bflc:PrimaryContribution').length>0){
+							if (e.getElementsByTagName('bflc:PrimaryContribution').length>0 || e.getElementsByTagName('bf:PrimaryContribution').length>0){
 								isPrimaryContribXML = true
 							}
 
 
 
-							if (ptk.valueConstraint.valueDataType.dataTypeURI && ptk.valueConstraint.valueDataType.dataTypeURI == "http://id.loc.gov/ontologies/bflc/PrimaryContribution"){
+							if (ptk.valueConstraint.valueDataType.dataTypeURI && (ptk.valueConstraint.valueDataType.dataTypeURI == "http://id.loc.gov/ontologies/bflc/PrimaryContribution" || ptk.valueConstraint.valueDataType.dataTypeURI == "http://id.loc.gov/ontologies/bibframe/PrimaryContribution")){
 								// the ptk says yes, if the xml doesn't jump to next
 								console.log("HERE")
 								if (!isPrimaryContribXML){
