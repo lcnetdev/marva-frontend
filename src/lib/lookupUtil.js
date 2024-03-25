@@ -309,7 +309,7 @@ const lookupUtil = {
             label: r.aLabel,
             bfdbURL: config.returnUrls().bfdb + r.uri.split('id.loc.gov/')[1],
             idURL: config.returnUrls().id + r.uri.split('id.loc.gov/')[1],
-            bfdbPackageURL: config.returnUrls().bfdb + r.uri.split('id.loc.gov/')[1] + '.editor-pkg.xml'
+            bfdbPackageURL: config.returnUrls().bfdb + r.uri.split('id.loc.gov/')[1] + '.convertedit-pkg.xml'
           })
 
         }
