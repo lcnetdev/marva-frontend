@@ -1,4 +1,4 @@
-# proof-of-concept
+# Marva
 
 ## Project setup
 ```
