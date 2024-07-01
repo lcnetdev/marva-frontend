@@ -3,7 +3,7 @@ const config = {
 
 	versionMajor: 0,
 	versionMinor: 13,
-	versionPatch: 17,
+	versionPatch: 18,
 
 	regionUrls: {
 
