@@ -37,7 +37,7 @@
     </div>
 
     <div  style="display: flex; padding: 5px;">
-      <div style="flex:1; background-color: #f0f8ff8f; border-radius: 1em; text-align: center; min-height: 100px;">
+<!--       <div style="flex:1; background-color: #f0f8ff8f; border-radius: 1em; text-align: center; min-height: 100px;">
           <template v-if="isNonLatin">
           <div >Romanization / <span style="color:tomato;">Non-LC/ALA compliant</span></div>
           <ul>
@@ -64,7 +64,7 @@
         </template>
 
 
-      </div>
+      </div> -->
       <div style="flex:1; background-color: #fffff0db; border-radius: 1em; text-align: center; min-height: 100px;">
           <div >ScriptShifter Romanization</div>
 
@@ -320,31 +320,59 @@ export default {
     scriptShift: async function(){
 
 
-          let fromLang = this.$refs.scriptShifterSelected.value
-          let literal = 'text=' + this.$refs.textarea.value
 
 
-          let r = await fetch(`${config.returnUrls().scriptshifter}trans/${fromLang}`, {
+          let url = `${config.returnUrls().scriptshifter}trans`
+
+          let r = await fetch(url, {
             method: 'POST',
             headers: {
               'Accept': 'application/json, text/plain, */*',
-              'Content-Type': 'application/x-www-form-urlencoded'
+              'Content-Type': 'application/json'
             },
-            // body: JSON.stringify({value:"חצוף הארצישראלי : פרקים מחייו של הילד העברי הראשון"})
-            // body: JSON.stringify({value:"ha-Ḥatsuf ha-Eretsyiśreʼeli : peraḳim me-ḥayaṿ shel ha-yeled ha-ʻIvri ha-rishon"})
-            // body: JSON.stringify({value:"لأساس في تعليم العربية للناطقين بغيرها"})
-            // body: JSON.stringify({value:"Bader, Fawzīyah Aḥmad. Asās fī taʻlīm al-ʻArabīyah lil-nāṭiqīn bi-ghayrihā"})
-            // body: JSON.stringify({value:"Русская нация в XX веке : русское, советское, российское в этнополитической истории России : Монография"})
-            body: literal
+            body: JSON.stringify({
+              lang: this.$refs.scriptShifterSelected.value,
+              text:this.$refs.textarea.value,
+              capitalize:'no_change',
+              t_dir:"s2r"
+            })
             
           })
 
-          let results =  await r.text()
+          let results =  await r.json()
           if (r.status !== 200){
             alert(results)
+            return false
           }else{
-            this.inputValue = this.inputValue + '\n' + results  
+            this.inputValue = this.inputValue + '\n' + results.output
           }
+
+
+          // let fromLang = this.$refs.scriptShifterSelected.value
+          // let literal = 'text=' + this.$refs.textarea.value
+
+
+          // let r = await fetch(`${config.returnUrls().scriptshifter}trans/${fromLang}`, {
+          //   method: 'POST',
+          //   headers: {
+          //     'Accept': 'application/json, text/plain, */*',
+          //     'Content-Type': 'application/x-www-form-urlencoded'
+          //   },
+          //   // body: JSON.stringify({value:"חצוף הארצישראלי : פרקים מחייו של הילד העברי הראשון"})
+          //   // body: JSON.stringify({value:"ha-Ḥatsuf ha-Eretsyiśreʼeli : peraḳim me-ḥayaṿ shel ha-yeled ha-ʻIvri ha-rishon"})
+          //   // body: JSON.stringify({value:"لأساس في تعليم العربية للناطقين بغيرها"})
+          //   // body: JSON.stringify({value:"Bader, Fawzīyah Aḥmad. Asās fī taʻlīm al-ʻArabīyah lil-nāṭiqīn bi-ghayrihā"})
+          //   // body: JSON.stringify({value:"Русская нация в XX веке : русское, советское, российское в этнополитической истории России : Монография"})
+          //   body: literal
+            
+          // })
+
+          // let results =  await r.text()
+          // if (r.status !== 200){
+          //   alert(results)
+          // }else{
+          //   this.inputValue = this.inputValue + '\n' + results  
+          // }
           
           
 
