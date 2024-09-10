@@ -4,6 +4,14 @@ import uiUtils from "./uiUtils";
 import parseProfile from "./parseProfile";
 import config from "./config";
 
+const escapeHTML = str => str.replace(/[&<>'"]/g, 
+  tag => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;'
+    }[tag]));
 
 // we will use the built in DOMParser() in the browser 
 // but when unit tests are run it will use the jsdom module 
@@ -535,7 +543,7 @@ const exportXML = {
 			if (userValue[property].trim()==''){
 				return false
 			}
-			p.innerHTML = userValue[property]
+			p.innerHTML = escapeHTML(userValue[property])
 		}
 
 		// does it also have a URI?
@@ -826,7 +834,7 @@ const exportXML = {
 									continue
 								}else if (userValue[key1] && userValue[key1][0] && userValue[key1][0]['http://www.w3.org/2000/01/rdf-schema#label']){
 									let rdftype = this.createElByBestNS(key1)
-									rdftype.innerHTML=userValue[key1][0]['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
+									rdftype.innerHTML=escapeHTML(userValue[key1][0]['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label'])
 									this.xmlLog.push(`This bnode just has a rdf:type and label : ${rdftype} setting it an continuing`)									
 									bnodeLvl1.appendChild(rdftype)
 									continue
@@ -1079,7 +1087,7 @@ const exportXML = {
 
 										if (label['http://www.w3.org/2000/01/rdf-schema#label']){
 											let lp = this.createElByBestNS('http://www.w3.org/2000/01/rdf-schema#label')
-											lp.innerHTML = label['http://www.w3.org/2000/01/rdf-schema#label']
+											lp.innerHTML = escapeHTML(label['http://www.w3.org/2000/01/rdf-schema#label'])
 											bnode.appendChild(lp)
 										}
 
@@ -1225,7 +1233,7 @@ const exportXML = {
 
 								// does it just have a label?
 								let p = this.createElByBestNS(ptObj.propertyURI)
-								p.innerHTML = userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label']
+								p.innerHTML = escapeHTML(userValue['http://www.w3.org/2000/01/rdf-schema#label'][0]['http://www.w3.org/2000/01/rdf-schema#label'])
 								rootEl.appendChild(p)
 								componentXmlLookup[`${rt}-${pt}`] = formatXML(p.outerHTML)
 
@@ -1689,54 +1697,54 @@ const exportXML = {
 
 		for (let x of xmlVoidDataRtsUsed){
 			el = document.createElementNS(this.namespace.lclocal, 'lclocal:rtsused')
-			el.innerHTML = x
+			el.innerHTML = escapeHTML(x)
 			datasetDescriptionEl.appendChild(el)
 		}
 
 		for (let x of xmlVoidDataType){
 			el = document.createElementNS(this.namespace.lclocal, 'lclocal:profiletypes')
-			el.innerHTML = x
+			el.innerHTML = escapeHTML(x)
 			datasetDescriptionEl.appendChild(el)
 		}
 
 
 		el = document.createElementNS(this.namespace.lclocal, 'lclocal:title')
-		el.innerHTML = xmlVoidDataTitle
+		el.innerHTML = escapeHTML(xmlVoidDataTitle)
 		datasetDescriptionEl.appendChild(el)
 
 
 		el = document.createElementNS(this.namespace.lclocal, 'lclocal:contributor')
-		el.innerHTML = xmlVoidDataContributor
+		el.innerHTML = escapeHTML(xmlVoidDataContributor)
 		datasetDescriptionEl.appendChild(el)
 
 		el = document.createElementNS(this.namespace.lclocal, 'lclocal:lccn')
-		el.innerHTML = xmlVoidDataLccn
+		el.innerHTML = escapeHTML(xmlVoidDataLccn)
 		datasetDescriptionEl.appendChild(el)
 
 		el = document.createElementNS(this.namespace.lclocal, 'lclocal:user')
-		el.innerHTML = profile.user
+		el.innerHTML = escapeHTML(profile.user)
 		datasetDescriptionEl.appendChild(el)
 
 		el = document.createElementNS(this.namespace.lclocal, 'lclocal:status')
-		el.innerHTML = profile.status
+		el.innerHTML = escapeHTML(profile.status)
 		datasetDescriptionEl.appendChild(el)
 
 		el = document.createElementNS(this.namespace.lclocal, 'lclocal:eid')
-		el.innerHTML = profile.eId
+		el.innerHTML = escapeHTML(profile.eId)
 		datasetDescriptionEl.appendChild(el)
 
 		el = document.createElementNS(this.namespace.lclocal, 'lclocal:typeid')
-		el.innerHTML = profile.id
+		el.innerHTML = escapeHTML(profile.id)
 		datasetDescriptionEl.appendChild(el)
 
 		el = document.createElementNS(this.namespace.lclocal, 'lclocal:procinfo')
-		el.innerHTML = orginalProfile.procInfo
+		el.innerHTML = escapeHTML(orginalProfile.procInfo)
 		datasetDescriptionEl.appendChild(el)
 
 
 		for (let x of xmlVoidExternalID){
 			el = document.createElementNS(this.namespace.lclocal, 'lclocal:externalid')
-			el.innerHTML = x
+			el.innerHTML = escapeHTML(x)
 			datasetDescriptionEl.appendChild(el)
 		}
 
