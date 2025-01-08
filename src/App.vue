@@ -246,8 +246,8 @@ export default {
 
 
 
-    let r = await lookupUtil.checkVersionOutOfDate()
-    this.outOfDate = r
+    //let r = await lookupUtil.checkVersionOutOfDate()
+    //this.outOfDate = r
     
     
 
