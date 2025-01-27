@@ -208,9 +208,7 @@ const exportXML = {
 			result = profileLookup
 		}
 
-		console.log("result of typing:",result, profileLookup)
-		console.log()
-		
+
 		// some try something else
 		// TODO if needed
 
@@ -272,11 +270,18 @@ const exportXML = {
 			result = 'http://www.w3.org/2000/01/rdf-schema#Literal'
 		}
 		
+		if (propertyURI==='http://id.loc.gov/ontologies/bibframe/subject'){
+			result = 'http://www.w3.org/2000/01/rdf-schema#Resource'
+		}
+		if (propertyURI==='http://id.loc.gov/ontologies/bibframe/Note'){
+			result = 'http://www.w3.org/2000/01/rdf-schema#Resource'
+		}
+		if (propertyURI==='http://id.loc.gov/ontologies/bibframe/note'){
+			result = 'http://www.w3.org/2000/01/rdf-schema#Resource'
+		}
+		console.log("result of typing:",result, profileLookup)
+		console.log()
 		
-
-
-
-
 
 		if (result===false){
 			console.warn('Could not @type this ',propertyURI)

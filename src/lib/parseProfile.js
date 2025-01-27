@@ -777,7 +777,7 @@ const parseProfile = {
 
                                     if (subpt.valueConstraint.defaults[0].defaultURI){
                                         // console.log('subpt',subpt)
-                                        if (userValue[subpt.propertyURI][0]){
+                                        if (userValue[subpt.propertyURI] && userValue[subpt.propertyURI][0]){
                                             userValue[subpt.propertyURI][0]['@id'] = subpt.valueConstraint.defaults[0].defaultURI    
                                             if (subpt.valueConstraint.valueDataType && subpt.valueConstraint.valueDataType.dataTypeURI){
                                                 userValue[subpt.propertyURI][0]['@type'] = subpt.valueConstraint.valueDataType.dataTypeURI
