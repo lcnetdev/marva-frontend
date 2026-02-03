@@ -94,6 +94,8 @@ const config = {
 				return this.regionUrls.production
 			}else if (window && window.location.href.includes('bibframe.org/marva')){
 				return this.regionUrls.bibframeDotOrg
+			}else if (window && window.location.href.includes('bibframe.org/classic')){
+				return this.regionUrls.bibframeDotOrg
 			}
 		}else{
 			return this.regionUrls.dev
